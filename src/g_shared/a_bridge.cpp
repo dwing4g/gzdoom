@@ -18,15 +18,15 @@ static FRandom pr_orbit ("Orbit");
 		up to 128, it goes counterclockwise; 129-255 is clockwise, substracting
 		256 from it to get the angle. A few example values:
 		  0: Hexen default
-	     11:  15° / seconds
-		 21:  30° / seconds
-		 32:  45° / seconds
-		 64:  90° / seconds
-		128: 180° / seconds
-		192: -90° / seconds
-		223: -45° / seconds
-		233: -30° / seconds
-		244: -15° / seconds
+	     11:  15 degrees / seconds
+		 21:  30 degrees / seconds
+		 32:  45 degrees / seconds
+		 64:  90 degrees / seconds
+		128: 180 degrees / seconds
+		192: -90 degrees / seconds
+		223: -45 degrees / seconds
+		233: -30 degrees / seconds
+		244: -15 degrees / seconds
 		This value only matters if args[2] is not zero.
 	args[4]: Rotation radius of bridge balls, in bridge radius %.
 		If 0, use Hexen default: ORBIT_RADIUS, regardless of bridge radius.
@@ -105,7 +105,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_BridgeOrbit)
 	int rotationradius = ORBIT_RADIUS * FRACUNIT;
 	// If the bridge is custom, set non-default values if any.
 
-	// Set angular speed; 1--128: counterclockwise rotation ~=1--180°; 129--255: clockwise rotation ~= 180--1°
+	// Set angular speed; 1--128: counterclockwise rotation ~=1--180 degrees; 129--255: clockwise rotation ~= 180--1 degrees
 	if (self->target->args[3] > 128) rotationspeed = ANGLE_45/32 * (self->target->args[3]-256) / TICRATE;
 	else if (self->target->args[3] > 0) rotationspeed = ANGLE_45/32 * (self->target->args[3]) / TICRATE;
 	// Set rotation radius

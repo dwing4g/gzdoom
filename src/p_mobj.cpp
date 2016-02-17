@@ -3207,7 +3207,7 @@ bool AActor::IsOkayToAttack (AActor *link)
 	if (P_CheckSight (this, link))
 	{
 		// AMageStaffFX2::IsOkayToAttack had an extra check here, generalized with a flag,
-		// to only allow the check to succeed if the enemy was in a ~84� FOV of the player
+		// to only allow the check to succeed if the enemy was in a ~84 degrees FOV of the player
 		if (flags3 & MF3_SCREENSEEKER)
 		{
 			angle_t angle = Friend->AngleTo(link) - Friend->angle;

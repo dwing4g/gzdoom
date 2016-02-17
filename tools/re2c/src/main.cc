@@ -23,7 +23,7 @@ std::string yySetupRule = "";
 
 using namespace re2c;
 
-int main(int, char *argv[])
+int __cdecl main(int, char *argv[])
 {
 	switch (parse_opts (argv, opts))
 	{

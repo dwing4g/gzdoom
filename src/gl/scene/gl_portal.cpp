@@ -1120,7 +1120,7 @@ int GLLineToLinePortal::ClipPoint(fixed_t x, fixed_t y)
 // are 2 problems with it:
 //
 // 1. Setting this up completely negates any performance gains.
-// 2. It doesn't work with a 360° field of view (as when you are looking up.)
+// 2. It doesn't work with a 360 degrees field of view (as when you are looking up.)
 //
 //
 // So the brute force mechanism is just as good.
