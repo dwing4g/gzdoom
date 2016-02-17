@@ -69,6 +69,7 @@ IMPLEMENT_CLASS(OpenGLFrameBuffer)
 EXTERN_CVAR (Float, vid_brightness)
 EXTERN_CVAR (Float, vid_contrast)
 EXTERN_CVAR (Bool, vid_vsync)
+EXTERN_CVAR (Int, vid_sleep)
 
 CVAR(Bool, gl_aalines, false, CVAR_ARCHIVE)
 
@@ -210,14 +211,20 @@ void OpenGLFrameBuffer::Swap()
 {
 //	static FILE* fp = fopen("fps.log", "wb");
 	static DWORD s_t = 0;
+//	static int s_dt = 0;
 	Finish.Reset();
 	Finish.Clock();
 	DWORD t0 = timeGetTime();
-	if(t0 - s_t < 16) // 1000 / 60
+	int dt = vid_sleep - (t0 - s_t);
+	if(dt > 0)
 	{
-		glFlush();
-		Sleep(16 - (t0 - s_t));
-		t0 = timeGetTime();
+//		s_dt = ((uint32)(GetLastFPS() - 1) < 58 ? s_dt - 1 : 0);
+//		if((dt += s_dt) > 0)
+		{
+			glFlush();
+			Sleep(dt);
+			t0 = timeGetTime();
+		}
 	}
 	glFinish();
 	DWORD t1 = timeGetTime();
