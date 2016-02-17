@@ -196,7 +196,7 @@ FString M_GetCajunPath(const char *botfilename)
 FString M_GetConfigPath(bool for_reading)
 {
 	FString path;
-	HRESULT hr;
+//	HRESULT hr;
 
 	// Construct a user-specific config name
 	if (UseKnownFolders() && GetKnownFolder(CSIDL_APPDATA, FOLDERID_RoamingAppData, true, path))
@@ -207,11 +207,11 @@ FString M_GetConfigPath(bool for_reading)
 	}
 	else
 	{ // construct "$PROGDIR/zdoom-$USER.ini"
-		TCHAR uname[UNLEN+1];
-		DWORD unamelen = countof(uname);
+//		TCHAR uname[UNLEN+1];
+//		DWORD unamelen = countof(uname);
 
 		path = progdir;
-		hr = GetUserName(uname, &unamelen);
+/*		hr = GetUserName(uname, &unamelen);
 		if (SUCCEEDED(hr) && uname[0] != 0)
 		{
 			// Is it valid for a user name to have slashes?
@@ -226,7 +226,7 @@ FString M_GetConfigPath(bool for_reading)
 			path << GAMENAMELOWERCASE "-" << uname << ".ini";
 		}
 		else
-		{ // Couldn't get user name, so just use zdoom.ini
+*/		{ // Couldn't get user name, so just use zdoom.ini
 			path += GAMENAMELOWERCASE ".ini";
 		}
 	}

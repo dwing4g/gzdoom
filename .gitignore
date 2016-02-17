@@ -4,6 +4,10 @@
 *.pdb
 *.ilk
 *.aps
+*.sdf
+*.opensdf
+*.exe
+*.pk3
 /Release
 /wadsrc_wad
 *.user

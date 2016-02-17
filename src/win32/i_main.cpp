@@ -1231,6 +1231,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE nothing, LPSTR cmdline, int n
 {
 	g_hInst = hInstance;
 
+	SetProcessAffinityMask(GetCurrentProcess(), 1);
+
 	InitCommonControls ();			// Load some needed controls and be pretty under XP
 
 	// We need to load riched20.dll so that we can create the control.

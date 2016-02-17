@@ -1114,7 +1114,8 @@ void Win32GLFrameBuffer::SetVSync (bool vsync)
 
 void Win32GLFrameBuffer::SwapBuffers()
 {
-	::SwapBuffers(static_cast<Win32GLVideo *>(Video)->m_hDC);
+//	::SwapBuffers(static_cast<Win32GLVideo *>(Video)->m_hDC);
+	wglSwapLayerBuffers(static_cast<Win32GLVideo *>(Video)->m_hDC, WGL_SWAP_MAIN_PLANE);
 }
 
 //==========================================================================

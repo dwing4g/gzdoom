@@ -208,18 +208,31 @@ void OpenGLFrameBuffer::Update()
 
 void OpenGLFrameBuffer::Swap()
 {
+//	static FILE* fp = fopen("fps.log", "wb");
+	static DWORD s_t = 0;
 	Finish.Reset();
 	Finish.Clock();
+	DWORD t0 = timeGetTime();
+	if(t0 - s_t < 16) // 1000 / 60
+	{
+		glFlush();
+		Sleep(16 - (t0 - s_t));
+		t0 = timeGetTime();
+	}
 	glFinish();
+	DWORD t1 = timeGetTime();
 	if (needsetgamma) 
 	{
 		//DoSetGamma();
 		needsetgamma = false;
 	}
 	SwapBuffers();
+	DWORD t2 = timeGetTime();
 	Finish.Unclock();
 	swapped = true;
 	FHardwareTexture::UnbindAll();
+//	if(fp) fprintf(fp, "%3d %3d %3d\n", t0 - s_t, t1 - t0, t2 - t1);
+	s_t = t2 - (t1 - t0);
 }
 
 //===========================================================================
