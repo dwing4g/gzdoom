@@ -76,7 +76,6 @@
 #include "actorptrselect.h"
 #include "farchive.h"
 #include "decallib.h"
-#include "portal.h"
 #include "p_terrain.h"
 #include "version.h"
 #include "p_effect.h"
@@ -4179,49 +4178,19 @@ bool DLevelScript::DoCheckActorTexture(int tid, AActor *activator, int string, b
 	  // they're obviously not the same.
 		return 0;
 	}
-	int i, numff;
 	FTextureID secpic;
-	sector_t *sec = actor->Sector;
-	numff = sec->e->XFloor.ffloors.Size();
+	sector_t *resultsec;
+	F3DFloor *resffloor;
 
 	if (floor)
 	{
-		// Looking through planes from top to bottom
-		for (i = 0; i < numff; ++i)
-		{
-			F3DFloor *ff = sec->e->XFloor.ffloors[i];
-
-			if ((ff->flags & (FF_EXISTS | FF_SOLID)) == (FF_EXISTS | FF_SOLID) &&
-				actor->Z() >= ff->top.plane->ZatPoint(actor))
-			{ // This floor is beneath our feet.
-				secpic = *ff->top.texture;
-				break;
-			}
-		}
-		if (i == numff)
-		{ // Use sector's floor
-			secpic = sec->GetTexture(sector_t::floor);
-		}
+		actor->Sector->NextLowestFloorAt(actor, actor->Z(), 0, &resultsec, &resffloor);
+		secpic = resffloor ? *resffloor->top.texture : resultsec->planes[sector_t::floor].Texture;
 	}
 	else
 	{
-		fixed_t z = actor->Top();
-		// Looking through planes from bottom to top
-		for (i = numff-1; i >= 0; --i)
-		{
-			F3DFloor *ff = sec->e->XFloor.ffloors[i];
-
-			if ((ff->flags & (FF_EXISTS | FF_SOLID)) == (FF_EXISTS | FF_SOLID) &&
-				z <= ff->bottom.plane->ZatPoint(actor))
-			{ // This floor is above our eyes.
-				secpic = *ff->bottom.texture;
-				break;
-			}
-		}
-		if (i < 0)
-		{ // Use sector's ceiling
-			secpic = sec->GetTexture(sector_t::ceiling);
-		}
+		actor->Sector->NextHighestCeilingAt(actor, actor->Top(), 0, &resultsec, &resffloor);
+		secpic = resffloor ? *resffloor->bottom.texture : resultsec->planes[sector_t::ceiling].Texture;
 	}
 	return tex == TexMan[secpic];
 }
@@ -4564,13 +4533,13 @@ bool GetVarAddrType(AActor *self, FName varname, int index, void *&addr, PType *
 {
 	PField *var = dyn_cast<PField>(self->GetClass()->Symbols.FindSymbol(varname, true));
 	PArray *arraytype;
-	BYTE *baddr = reinterpret_cast<BYTE *>(self) + var->Offset;
 
 	if (var == NULL || (var->Flags & VARF_Native))
 	{
 		return false;
 	}
 	type = var->Type;
+	BYTE *baddr = reinterpret_cast<BYTE *>(self) + var->Offset;
 	arraytype = dyn_cast<PArray>(type);
 	if (arraytype != NULL)
 	{
