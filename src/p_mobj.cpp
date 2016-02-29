@@ -473,10 +473,7 @@ void AActor::Serialize (FArchive &arc)
 				Speed = GetDefault()->Speed;
 			}
 		}
-		PrevX = X();
-		PrevY = Y();
-		PrevZ = Z();
-		PrevAngle = angle;
+		ClearInterpolation();
 		UpdateWaterLevel(Z(), false);
 	}
 }
@@ -3288,6 +3285,50 @@ void AActor::SetRoll(angle_t r, bool interpolate)
 	}
 }
 
+
+void AActor::CheckPortalTransition(bool islinked)
+{
+	bool moved = false;
+	while (!Sector->PortalBlocksMovement(sector_t::ceiling))
+	{
+		AActor *port = Sector->SkyBoxes[sector_t::ceiling];
+		if (Z() > port->threshold)
+		{
+			fixedvec3 oldpos = Pos();
+			if (islinked && !moved) UnlinkFromWorld();
+			SetXYZ(PosRelative(port->Sector));
+			PrevX += X() - oldpos.x;
+			PrevY += Y() - oldpos.y;
+			PrevZ += Z() - oldpos.z;
+			Sector = P_PointInSector(X(), Y());
+			PrevPortalGroup = Sector->PortalGroup;
+			moved = true;
+		}
+		else break;
+	}
+	if (!moved)
+	{
+		while (!Sector->PortalBlocksMovement(sector_t::floor))
+		{
+			AActor *port = Sector->SkyBoxes[sector_t::floor];
+			if (Z() < port->threshold && floorz < port->threshold)
+			{
+				fixedvec3 oldpos = Pos();
+				if (islinked && !moved) UnlinkFromWorld();
+				SetXYZ(PosRelative(port->Sector));
+				PrevX += X() - oldpos.x;
+				PrevY += Y() - oldpos.y;
+				PrevZ += Z() - oldpos.z;
+				Sector = P_PointInSector(X(), Y());
+				PrevPortalGroup = Sector->PortalGroup;
+				moved = true;
+			}
+			else break;
+		}
+	}
+	if (islinked && moved) LinkToWorld();
+}
+
 //
 // P_MobjThinker
 //
@@ -3326,10 +3367,7 @@ void AActor::Tick ()
 
 	// This is necessary to properly interpolate movement outside this function
 	// like from an ActorMover
-	PrevX = X();
-	PrevY = Y();
-	PrevZ = Z();
-	PrevAngle = angle;
+	ClearInterpolation();
 
 	if (flags5 & MF5_NOINTERACTION)
 	{
@@ -3355,7 +3393,7 @@ void AActor::Tick ()
 		UnlinkFromWorld ();
 		flags |= MF_NOBLOCKMAP;
 		SetXYZ(Vec3Offset(velx, vely, velz));
-		SetMovement(velx, vely, velz);
+		CheckPortalTransition(false);
 		LinkToWorld ();
 	}
 	else
@@ -3822,6 +3860,8 @@ void AActor::Tick ()
 			Crash();
 		}
 
+		CheckPortalTransition(true);
+
 		UpdateWaterLevel (oldz);
 
 		// [RH] Don't advance if predicting a player
@@ -4112,9 +4152,6 @@ AActor *AActor::StaticSpawn (PClassActor *type, fixed_t ix, fixed_t iy, fixed_t 
 		actor->Conversation = NULL;
 	}
 
-	actor->PrevX = ix;
-	actor->PrevY = iy;
-	actor->PrevZ = iz;
 	actor->SetXYZ(ix, iy, iz);
 	actor->picnum.SetInvalid();
 	actor->health = actor->SpawnHealth();
@@ -4150,6 +4187,7 @@ AActor *AActor::StaticSpawn (PClassActor *type, fixed_t ix, fixed_t iy, fixed_t 
 
 	// set subsector and/or block links
 	actor->LinkToWorld (SpawningMapThing);
+	actor->ClearInterpolation();
 
 	actor->dropoffz =			// killough 11/98: for tracking dropoffs
 	actor->floorz = actor->Sector->floorplane.ZatPoint (ix, iy);
@@ -5777,6 +5815,7 @@ bool P_CheckMissileSpawn (AActor* th, fixed_t maxdist)
 			return false;
 		}
 	}
+	th->ClearInterpolation();
 	return true;
 }
 

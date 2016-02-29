@@ -1695,9 +1695,9 @@ bool AM_clipMline (mline_t *ml, fline_t *fl)
 		TOP		=8
 	};
 
-	register int outcode1 = 0;
-	register int outcode2 = 0;
-	register int outside;
+	int outcode1 = 0;
+	int outcode2 = 0;
+	int outside;
 
 	fpoint_t tmp = { 0, 0 };
 	int dx;
@@ -1974,8 +1974,8 @@ void AM_drawSubsectors()
 			}
 			else
 			{
-				secx = FIXED2DBL(sec->soundorg[0]);
-				secy = FIXED2DBL(sec->soundorg[1]);
+				secx = FIXED2DBL(sec->centerspot.x);
+				secy = FIXED2DBL(sec->centerspot.y);
 			}
 			seczb = floorplane->ZatPoint(secx, secy);
 			seczt = sec->ceilingplane.ZatPoint(secx, secy);

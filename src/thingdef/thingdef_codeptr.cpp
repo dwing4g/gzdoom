@@ -323,6 +323,40 @@ DEFINE_ACTION_FUNCTION_PARAMS(AActor, GetDistance)
 	return 0;
 }
 
+//==========================================================================
+//
+// GetSpawnHealth
+//
+//==========================================================================
+DEFINE_ACTION_FUNCTION_PARAMS(AActor, GetSpawnHealth)
+{
+	if (numret > 0)
+	{
+		PARAM_PROLOGUE;
+		PARAM_OBJECT(self, AActor);
+		ret->SetInt(self->SpawnHealth());
+		return 1;
+	}
+	return 0;
+}
+
+//==========================================================================
+//
+// GetGibHealth
+//
+//==========================================================================
+DEFINE_ACTION_FUNCTION_PARAMS(AActor, GetGibHealth)
+{
+	if (numret > 0)
+	{
+		PARAM_PROLOGUE;
+		PARAM_OBJECT(self, AActor);
+		ret->SetInt(self->GetGibHealth());
+		return 1;
+	}
+	return 0;
+}
+
 //===========================================================================
 //
 // __decorate_internal_state__
@@ -4983,7 +5017,6 @@ void A_Weave(AActor *self, int xyspeed, int zspeed, fixed_t xydist, fixed_t zdis
 			newX -= self->X();
 			newY -= self->Y();
 			self->SetXY(self->Vec2Offset(newX, newY));
-			self->SetMovement(newX, newY, 0);
 			self->LinkToWorld ();
 		}
 		self->WeaveIndexXY = weaveXY;
@@ -5148,7 +5181,7 @@ DEFINE_ACTION_FUNCTION_PARAMS(AActor, A_WolfAttack)
 			if (spawnblood)
 			{
 				P_SpawnBlood(bloodpos, angle, newdam > 0 ? newdam : damage, self->target);
-				P_TraceBleed(newdam > 0 ? newdam : damage, self->target, self->AngleTo(dx, dy, self->target), 0);
+				P_TraceBleed(newdam > 0 ? newdam : damage, self->target, self);
 			}
 		}
 	}
@@ -5381,13 +5414,13 @@ enum RadiusGiveFlags
 static bool DoRadiusGive(AActor *self, AActor *thing, PClassActor *item, int amount, fixed_t distance, int flags, PClassActor *filter, FName species, fixed_t mindist)
 {
 	// [MC] We only want to make an exception for missiles here. Nothing else.
-	bool missilePass = !!((flags & RGF_MISSILES) && thing->isMissile());
+	bool missilePass = !!((flags & RGF_MISSILES) && thing->flags & MF_MISSILE);
 	if (thing == self)
 	{
 		if (!(flags & RGF_GIVESELF))
 			return false;
 	}
-	else if (thing->isMissile())
+	else if (thing->flags & MF_MISSILE)
 	{
 		if (!missilePass)
 			return false;

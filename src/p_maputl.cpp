@@ -152,7 +152,7 @@ void P_LineOpening (FLineOpening &open, AActor *actor, const line_t *linedef,
 		sector_t *front, *back;
 		fixed_t fc, ff, bc, bf;
 
-		if (linedef->sidedef[1] == NULL)
+		if (linedef->backsector == NULL)
 		{
 			// single sided line
 			open.range = 0;
@@ -416,6 +416,7 @@ bool AActor::FixMapthingPos()
 				// Get the distance we have to move the object away from the wall
 				distance = radius - distance;
 				SetXY(X() + FixedMul(distance, finecosine[finean]), Y() + FixedMul(distance, finesine[finean]));
+				ClearInterpolation();
 				success = true;
 			}
 		}
@@ -533,9 +534,9 @@ void AActor::SetOrigin (fixed_t ix, fixed_t iy, fixed_t iz, bool moving)
 {
 	UnlinkFromWorld ();
 	SetXYZ(ix, iy, iz);
-	if (moving) SetMovement(ix - X(), iy - Y(), iz - Z());
 	LinkToWorld ();
 	P_FindFloorCeiling(this, FFCF_ONLYSPAWNPOS);
+	if (!moving) ClearInterpolation();
 }
 
 //===========================================================================
@@ -855,7 +856,7 @@ bool FMultiBlockLinesIterator::Next(FMultiBlockLinesIterator::CheckResult *item)
 
 void FMultiBlockLinesIterator::startIteratorForGroup(int group)
 {
-	offset = Displacements(basegroup, group);
+	offset = Displacements.getOffset(basegroup, group);
 	offset.x += checkpoint.x;
 	offset.y += checkpoint.y;
 	bbox.setBox(offset.x, offset.y, checkpoint.z);
@@ -1087,7 +1088,7 @@ bool FMultiBlockThingsIterator::Next(FMultiBlockThingsIterator::CheckResult *ite
 	if (thing != NULL)
 	{
 		item->thing = thing;
-		item->position = checkpoint + Displacements(basegroup, thing->Sector->PortalGroup);
+		item->position = checkpoint + Displacements.getOffset(basegroup, thing->Sector->PortalGroup);
 		item->portalflags = portalflags;
 		return true;
 	}
@@ -1126,7 +1127,7 @@ bool FMultiBlockThingsIterator::Next(FMultiBlockThingsIterator::CheckResult *ite
 
 void FMultiBlockThingsIterator::startIteratorForGroup(int group)
 {
-	fixedvec2 offset = Displacements(basegroup, group);
+	fixedvec2 offset = Displacements.getOffset(basegroup, group);
 	offset.x += checkpoint.x;
 	offset.y += checkpoint.y;
 	bbox.setBox(offset.x, offset.y, checkpoint.z);
@@ -1397,7 +1398,7 @@ intercept_t *FPathTraverse::Next()
 //
 //===========================================================================
 
-FPathTraverse::FPathTraverse (fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2, int flags)
+void FPathTraverse::init (fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2, int flags)
 {
 	fixed_t 	xt1, xt2;
 	fixed_t 	yt1, yt2;

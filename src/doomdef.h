@@ -302,7 +302,7 @@ enum
 };
 
 // [RH] Compatibility flags.
-enum
+enum : unsigned int
 {
 	COMPATF_SHORTTEX		= 1 << 0,	// Use Doom's shortest texture around behavior?
 	COMPATF_STAIRINDEX		= 1 << 1,	// Don't fix loop index for stair building?
@@ -341,6 +341,7 @@ enum
 	COMPATF2_FLOORMOVE		= 1 << 1,	// Use the same floor motion behavior as Doom.
 	COMPATF2_SOUNDCUTOFF	= 1 << 2,	// Cut off sounds when an actor vanishes instead of making it owner-less
 	COMPATF2_POINTONLINE	= 1 << 3,	// Use original but buggy P_PointOnLineSide() and P_PointOnDivlineSide()
+	COMPATF2_MULTIEXIT		= 1 << 4,	// Level exit can be triggered multiple times (required by Daedalus's travel tubes, thanks to a faulty script)
 };
 
 // Emulate old bugs for select maps. These are not exposed by a cvar

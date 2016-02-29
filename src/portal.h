@@ -30,10 +30,6 @@ struct FDisplacement
 	bool isSet;
 	BYTE indirect;	// just for illustration.
 
-	operator fixedvec2()
-	{
-		return pos;
-	}
 };
 
 struct FDisplacementTable
@@ -55,12 +51,70 @@ struct FDisplacementTable
 
 	FDisplacement &operator()(int x, int y)
 	{
-		if (x == y) return data[0];	// shortcut for the most common case
 		return data[x + size*y];
+	}
+
+	fixedvec2 getOffset(int x, int y) const
+	{
+		if (x == y)
+		{
+			fixedvec2 nulvec = { 0,0 };
+			return nulvec;	// shortcut for the most common case
+		}
+		return data[x + size*y].pos;
 	}
 };
 
 extern FDisplacementTable Displacements;
+
+
+//============================================================================
+//
+// A blockmap that only contains crossable portals
+// This is used for quick checks if a vector crosses through one.
+//
+//============================================================================
+
+struct FPortalBlock
+{
+	bool neighborContainsLines;	// this is for skipping the traverser and exiting early if we can quickly decide that there's no portals nearby.
+	TArray<line_t*> portallines;
+
+	FPortalBlock()
+	{
+		neighborContainsLines = false;
+	}
+};
+
+struct FPortalBlockmap
+{
+	TArray<FPortalBlock> data;
+	int dx, dy;
+	bool containsLines;
+
+	void Create(int blockx, int blocky)
+	{
+		data.Resize(blockx*blocky);
+		dx = blockx;
+		dy = blocky;
+	}
+
+	void Clear()
+	{
+		data.Clear();
+		data.ShrinkToFit();
+		dx = dy = 0;
+		containsLines = false;
+	}
+
+	FPortalBlock &operator()(int x, int y)
+	{
+		return data[x + dx*y];
+	}
+};
+
+extern FPortalBlockmap PortalBlockmap;
+
 
 //============================================================================
 //
@@ -143,44 +197,7 @@ void P_TranslatePortalVXVY(line_t* src, line_t* dst, fixed_t& vx, fixed_t& vy);
 void P_TranslatePortalAngle(line_t* src, line_t* dst, angle_t& angle);
 void P_TranslatePortalZ(line_t* src, line_t* dst, fixed_t& z);
 void P_NormalizeVXVY(fixed_t& vx, fixed_t& vy);
-
-//============================================================================
-//
-// basically, this is a teleporting tracer function,
-// which can be used by itself (to calculate portal-aware offsets, say, for projectiles)
-// or to teleport normal tracers (like hitscan, railgun, autoaim tracers)
-//
-//============================================================================
-
-class PortalTracer
-{
-public:
-	PortalTracer(fixed_t startx, fixed_t starty, fixed_t endx, fixed_t endy);
-
-	// trace to next portal
-	bool TraceStep();
-	// trace to last available portal on the path
-	void TraceAll() { while (TraceStep()) continue; }
-
-	int depth;
-	fixed_t startx;
-	fixed_t starty;
-	fixed_t intx;
-	fixed_t inty;
-	fixed_t intxIn;
-	fixed_t intyIn;
-	fixed_t endx;
-	fixed_t endy;
-	angle_t angle;
-	fixed_t z;
-	fixed_t frac;
-	line_t* in;
-	line_t* out;
-	fixed_t vx;
-	fixed_t vy;
-};
-
-/* new code */
 fixed_t P_PointLineDistance(line_t* line, fixed_t x, fixed_t y);
+fixedvec2 P_GetOffsetPosition(AActor *actor, fixed_t dx, fixed_t dy);
 
 #endif

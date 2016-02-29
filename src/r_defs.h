@@ -371,6 +371,11 @@ struct secplane_t
 		return -TMulScale16 (a, x, y, b, z, c);
 	}
 
+	fixed_t PointToDist(fixedvec2 xy, fixed_t z) const
+	{
+		return -TMulScale16(a, xy.x, xy.y, b, z, c);
+	}
+
 	fixed_t PointToDist (const vertex_t *v, fixed_t z) const
 	{
 		return -TMulScale16 (a, v->x, b, v->y, z, c);
@@ -833,14 +838,14 @@ struct sector_t
 	}
 
 	// These may only be called if the portal has been validated
-	FDisplacement &FloorDisplacement()
+	fixedvec2 FloorDisplacement()
 	{
-		return Displacements(PortalGroup, SkyBoxes[sector_t::floor]->Sector->PortalGroup);
+		return Displacements.getOffset(PortalGroup, SkyBoxes[sector_t::floor]->Sector->PortalGroup);
 	}
 
-	FDisplacement &CeilingDisplacement()
+	fixedvec2 CeilingDisplacement()
 	{
-		return Displacements(PortalGroup, SkyBoxes[sector_t::ceiling]->Sector->PortalGroup);
+		return Displacements.getOffset(PortalGroup, SkyBoxes[sector_t::ceiling]->Sector->PortalGroup);
 	}
 
 	int GetTerrain(int pos) const;
@@ -878,8 +883,8 @@ struct sector_t
 	}
 
 	// Member variables
-	fixed_t		CenterFloor () const { return floorplane.ZatPoint (soundorg[0], soundorg[1]); }
-	fixed_t		CenterCeiling () const { return ceilingplane.ZatPoint (soundorg[0], soundorg[1]); }
+	fixed_t		CenterFloor () const { return floorplane.ZatPoint (centerspot); }
+	fixed_t		CenterCeiling () const { return ceilingplane.ZatPoint (centerspot); }
 
 	// [RH] store floor and ceiling planes instead of heights
 	secplane_t	floorplane, ceilingplane;
@@ -897,7 +902,7 @@ struct sector_t
 	int			sky;
 	FNameNoInit	SeqName;		// Sound sequence name. Setting seqType non-negative will override this.
 
-	fixed_t		soundorg[2];	// origin for any sounds played by the sector
+	fixedvec2	centerspot;		// origin for any sounds played by the sector
 	int 		validcount;		// if == validcount, already checked
 	AActor* 	thinglist;		// list of mobjs in sector
 
@@ -1178,6 +1183,11 @@ struct line_t
 	unsigned	portalindex;
 	TObjPtr<ASkyViewpoint> skybox;
 
+	FLinePortal *getPortal() const
+	{
+		return portalindex >= linePortals.Size() ? (FLinePortal*)NULL : &linePortals[portalindex];
+	}
+
 	// returns true if the portal is crossable by actors
 	bool isLinePortal() const
 	{
@@ -1365,24 +1375,35 @@ inline sector_t *P_PointInSector(fixed_t x, fixed_t y)
 	return P_PointInSubsector(x, y)->sector;
 }
 
-inline fixedvec3 AActor::PosRelative(AActor *other) const
+inline fixedvec3 AActor::PosRelative(const AActor *other) const
 {
-	return __pos + Displacements(Sector->PortalGroup, other->Sector->PortalGroup);
+	return __pos + Displacements.getOffset(Sector->PortalGroup, other->Sector->PortalGroup);
 }
 
 inline fixedvec3 AActor::PosRelative(sector_t *sec) const
 {
-	return __pos + Displacements(Sector->PortalGroup, sec->PortalGroup);
+	return __pos + Displacements.getOffset(Sector->PortalGroup, sec->PortalGroup);
 }
 
 inline fixedvec3 AActor::PosRelative(line_t *line) const
 {
-	return __pos + Displacements(Sector->PortalGroup, line->frontsector->PortalGroup);
+	return __pos + Displacements.getOffset(Sector->PortalGroup, line->frontsector->PortalGroup);
 }
 
 inline fixedvec3 PosRelative(const fixedvec3 &pos, line_t *line, sector_t *refsec = NULL)
 {
-	return pos + Displacements(refsec->PortalGroup, line->frontsector->PortalGroup);
+	return pos + Displacements.getOffset(refsec->PortalGroup, line->frontsector->PortalGroup);
 }
+
+inline void AActor::ClearInterpolation()
+{
+	PrevX = X();
+	PrevY = Y();
+	PrevZ = Z();
+	PrevAngle = angle;
+	if (Sector) PrevPortalGroup = Sector->PortalGroup;
+	else PrevPortalGroup = 0;
+}
+
 
 #endif

@@ -3221,9 +3221,9 @@ static void P_GroupLines (bool buildmap)
 			}
 		}
 
-		// set the soundorg to the middle of the bounding box
-		sector->soundorg[0] = bbox.Right()/2 + bbox.Left()/2;
-		sector->soundorg[1] = bbox.Top()/2 + bbox.Bottom()/2;
+		// set the center to the middle of the bounding box
+		sector->centerspot.x = bbox.Right()/2 + bbox.Left()/2;
+		sector->centerspot.y = bbox.Top()/2 + bbox.Bottom()/2;
 
 		// For triangular sectors the above does not calculate good points unless the longest of the triangle's lines is perfectly horizontal and vertical
 		if (sector->linecount == 3)
@@ -3245,8 +3245,8 @@ static void P_GroupLines (bool buildmap)
 					if (DMulScale32 (v->y - Triangle[0]->y, dx,
 									Triangle[0]->x - v->x, dy) != 0)
 					{
-						sector->soundorg[0] = Triangle[0]->x / 3 + Triangle[1]->x / 3 + v->x / 3;
-						sector->soundorg[1] = Triangle[0]->y / 3 + Triangle[1]->y / 3 + v->y / 3;
+						sector->centerspot.x = Triangle[0]->x / 3 + Triangle[1]->x / 3 + v->x / 3;
+						sector->centerspot.y = Triangle[0]->y / 3 + Triangle[1]->y / 3 + v->y / 3;
 						break;
 					}
 				}
@@ -4045,7 +4045,8 @@ void P_SetupLevel (const char *lumpname, int position)
 
 	times[16].Clock();
 	if (reloop) P_LoopSidedefs (false);
-	PO_Init ();	// Initialize the polyobjs
+	PO_Init ();				// Initialize the polyobjs
+	P_FinalizePortals();	// finalize line portals after polyobjects have been initialized. This info is needed for properly flagging them.
 	times[16].Unclock();
 
 	assert(sidetemp != NULL);

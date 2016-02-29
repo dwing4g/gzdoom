@@ -54,6 +54,36 @@
 #include "vmbuilder.h"
 #include "v_text.h"
 
+struct FLOP
+{
+	ENamedName Name;
+	int Flop;
+	double (*Evaluate)(double);
+};
+
+// Decorate operates on degrees, so the evaluate functions need to convert
+// degrees to radians for those that work with angles.
+static const FLOP FxFlops[] =
+{
+	{ NAME_Exp,		FLOP_EXP,		[](double v) { return exp(v); } },
+	{ NAME_Log,		FLOP_LOG,		[](double v) { return log(v); } },
+	{ NAME_Log10,	FLOP_LOG10,		[](double v) { return log10(v); } },
+	{ NAME_Sqrt,	FLOP_SQRT,		[](double v) { return sqrt(v); } },
+	{ NAME_Ceil,	FLOP_CEIL,		[](double v) { return ceil(v); } },
+	{ NAME_Floor,	FLOP_FLOOR,		[](double v) { return floor(v); } },
+
+	{ NAME_ACos,	FLOP_ACOS_DEG,	[](double v) { return acos(v) * (180.0 / M_PI); } },
+	{ NAME_ASin,	FLOP_ASIN_DEG,	[](double v) { return asin(v) * (180.0 / M_PI); } },
+	{ NAME_ATan,	FLOP_ATAN_DEG,	[](double v) { return atan(v) * (180.0 / M_PI); } },
+	{ NAME_Cos,		FLOP_COS_DEG,	[](double v) { return cos(v * (M_PI / 180.0)); } },
+	{ NAME_Sin,		FLOP_SIN_DEG,	[](double v) { return sin(v * (M_PI / 180.0)); } },
+	{ NAME_Tan,		FLOP_TAN_DEG,	[](double v) { return tan(v * (M_PI / 180.0)); } },
+
+	{ NAME_CosH,	FLOP_COSH,		[](double v) { return cosh(v); } },
+	{ NAME_SinH,	FLOP_SINH,		[](double v) { return sinh(v); } },
+	{ NAME_TanH,	FLOP_TANH,		[](double v) { return tanh(v); } },
+};
+
 ExpEmit::ExpEmit(VMFunctionBuilder *build, int type)
 : RegNum(build->Registers[type].Get(1)), RegType(type), Konst(false), Fixed(false)
 {
@@ -2043,6 +2073,225 @@ ExpEmit FxAbs::Emit(VMFunctionBuilder *build)
 //
 //
 //==========================================================================
+FxMinMax::FxMinMax(TArray<FxExpression*> &expr, FName type, const FScriptPosition &pos)
+: FxExpression(pos), Type(type)
+{
+	assert(expr.Size() > 0);
+	assert(type == NAME_Min || type == NAME_Max);
+
+	ValueType = VAL_Unknown;
+	choices.Resize(expr.Size());
+	for (unsigned i = 0; i < expr.Size(); ++i)
+	{
+		choices[i] = expr[i];
+	}
+}
+
+//==========================================================================
+//
+//
+//
+//==========================================================================
+FxExpression *FxMinMax::Resolve(FCompileContext &ctx)
+{
+	unsigned int i;
+	int intcount, floatcount;
+
+	CHECKRESOLVED();
+
+	// Determine if float or int
+	intcount = floatcount = 0;
+	for (i = 0; i < choices.Size(); ++i)
+	{
+		RESOLVE(choices[i], ctx);
+		ABORT(choices[i]);
+
+		if (choices[i]->ValueType == VAL_Float)
+		{
+			floatcount++;
+		}
+		else if (choices[i]->ValueType == VAL_Int)
+		{
+			intcount++;
+		}
+		else
+		{
+			ScriptPosition.Message(MSG_ERROR, "Arguments must be of type int or float");
+			delete this;
+			return NULL;
+		}
+	}
+	if (floatcount != 0)
+	{
+		ValueType = VAL_Float;
+		if (intcount != 0)
+		{ // There are some ints that need to be cast to floats
+			for (i = 0; i < choices.Size(); ++i)
+			{
+				if (choices[i]->ValueType == VAL_Int)
+				{
+					choices[i] = new FxFloatCast(choices[i]);
+					RESOLVE(choices[i], ctx);
+					ABORT(choices[i]);
+				}
+			}
+		}
+	}
+	else
+	{
+		ValueType = VAL_Int;
+	}
+
+	// If at least two arguments are constants, they can be solved now.
+
+	// Look for first constant
+	for (i = 0; i < choices.Size(); ++i)
+	{
+		if (choices[i]->isConstant())
+		{
+			ExpVal best = static_cast<FxConstant *>(choices[i])->GetValue();
+			// Compare against remaining constants, which are removed.
+			// The best value gets stored in this one.
+			for (unsigned j = i + 1; j < choices.Size(); )
+			{
+				if (!choices[j]->isConstant())
+				{
+					j++;
+				}
+				else
+				{
+					ExpVal value = static_cast<FxConstant *>(choices[j])->GetValue();
+					assert(value.Type == ValueType.Type);
+					if (Type == NAME_Min)
+					{
+						if (value.Type == VAL_Float)
+						{
+							if (value.Float < best.Float)
+							{
+								best.Float = value.Float;
+							}
+						}
+						else
+						{
+							if (value.Int < best.Int)
+							{
+								best.Int = value.Int;
+							}
+						}
+					}
+					else
+					{
+						if (value.Type == VAL_Float)
+						{
+							if (value.Float > best.Float)
+							{
+								best.Float = value.Float;
+							}
+						}
+						else
+						{
+							if (value.Int > best.Int)
+							{
+								best.Int = value.Int;
+							}
+						}
+					}
+					delete choices[j];
+					choices[j] = NULL;
+					choices.Delete(j);
+				}
+			}
+			FxExpression *x = new FxConstant(best, ScriptPosition);
+			if (i == 0 && choices.Size() == 1)
+			{ // Every choice was constant
+				delete this;
+				return x;
+			}
+			delete choices[i];
+			choices[i] = x;
+			break;
+		}
+	}
+	return this;
+}
+
+//==========================================================================
+//
+//
+//
+//==========================================================================
+static void EmitLoad(VMFunctionBuilder *build, const ExpEmit resultreg, const ExpVal &value)
+{
+	if (resultreg.RegType == REGT_FLOAT)
+	{
+		build->Emit(OP_LKF, resultreg.RegNum, build->GetConstantFloat(value.GetFloat()));
+	}
+	else
+	{
+		build->EmitLoadInt(resultreg.RegNum, value.GetInt());
+	}
+}
+
+ExpEmit FxMinMax::Emit(VMFunctionBuilder *build)
+{
+	unsigned i;
+	int opcode, opA;
+
+	assert(choices.Size() > 0);
+	assert(OP_LTF_RK == OP_LTF_RR+1);
+	assert(OP_LT_RK == OP_LT_RR+1);
+	assert(OP_LEF_RK == OP_LEF_RR+1);
+	assert(OP_LE_RK == OP_LE_RR+1);
+
+	if (Type == NAME_Min)
+	{
+		opcode = ValueType.Type == VAL_Float ? OP_LEF_RR : OP_LE_RR;
+		opA = 1;
+	}
+	else
+	{
+		opcode = ValueType.Type == VAL_Float ? OP_LTF_RR : OP_LT_RR;
+		opA = 0;
+	}
+
+	ExpEmit bestreg;
+
+	// Get first value into a register. This will also be the result register.
+	if (choices[0]->isConstant())
+	{
+		bestreg = ExpEmit(build, ValueType.Type == VAL_Float ? REGT_FLOAT : REGT_INT);
+		EmitLoad(build, bestreg, static_cast<FxConstant *>(choices[0])->GetValue());
+	}
+	else
+	{
+		bestreg = choices[0]->Emit(build);
+	}
+
+	// Compare every choice. Better matches get copied to the bestreg.
+	for (i = 1; i < choices.Size(); ++i)
+	{
+		ExpEmit checkreg = choices[i]->Emit(build);
+		assert(checkreg.RegType == bestreg.RegType);
+		build->Emit(opcode + checkreg.Konst, opA, bestreg.RegNum, checkreg.RegNum);
+		build->Emit(OP_JMP, 1);
+		if (checkreg.Konst)
+		{
+			build->Emit(bestreg.RegType == REGT_FLOAT ? OP_LKF : OP_LK, bestreg.RegNum, checkreg.RegNum);
+		}
+		else
+		{
+			build->Emit(bestreg.RegType == REGT_FLOAT ? OP_MOVEF : OP_MOVE, bestreg.RegNum, checkreg.RegNum, 0);
+			checkreg.Free(build);
+		}
+	}
+	return bestreg;
+}
+
+//==========================================================================
+//
+//
+//
+//==========================================================================
 FxRandom::FxRandom(FRandom * r, FxExpression *mi, FxExpression *ma, const FScriptPosition &pos)
 : FxExpression(pos)
 {
@@ -2269,16 +2518,7 @@ ExpEmit FxRandomPick::Emit(VMFunctionBuilder *build)
 		build->BackpatchToHere(jumptable + i);
 		if (choices[i]->isConstant())
 		{
-			if (ValueType == VAL_Int)
-			{
-				int val = static_cast<FxConstant *>(choices[i])->GetValue().GetInt();
-				build->EmitLoadInt(resultreg.RegNum, val);
-			}
-			else
-			{
-				double val = static_cast<FxConstant *>(choices[i])->GetValue().GetFloat();
-				build->Emit(OP_LKF, resultreg.RegNum, build->GetConstantFloat(val));
-			}
+			EmitLoad(build, resultreg, static_cast<FxConstant *>(choices[i])->GetValue());
 		}
 		else
 		{
@@ -2936,20 +3176,21 @@ FxFunctionCall::~FxFunctionCall()
 
 FxExpression *FxFunctionCall::Resolve(FCompileContext& ctx)
 {
-	// There's currently only 3 global functions.
-	// If this changes later, it won't be here!
-	if (MethodName == NAME_Sin || MethodName == NAME_Cos || MethodName == NAME_Sqrt)
+	for (size_t i = 0; i < countof(FxFlops); ++i)
 	{
-		if (Self != NULL)
+		if (MethodName == FxFlops[i].Name)
 		{
-			ScriptPosition.Message(MSG_ERROR, "Global functions cannot have a self pointer");
+			if (Self != NULL)
+			{
+				ScriptPosition.Message(MSG_ERROR, "Global functions cannot have a self pointer");
+				delete this;
+				return NULL;
+			}
+			FxExpression *x = new FxFlopFunctionCall(i, ArgList, ScriptPosition);
+			ArgList = NULL;
 			delete this;
-			return NULL;
+			return x->Resolve(ctx);
 		}
-		FxExpression *x = new FxGlobalFunctionCall(MethodName, ArgList, ScriptPosition);
-		ArgList = NULL;
-		delete this;
-		return x->Resolve(ctx);
 	}
 
 	int min, max, special;
@@ -3273,10 +3514,11 @@ ExpEmit FxVMFunctionCall::Emit(VMFunctionBuilder *build, bool tailcall)
 //
 //==========================================================================
 
-FxGlobalFunctionCall::FxGlobalFunctionCall(FName fname, FArgumentList *args, const FScriptPosition &pos)
+FxFlopFunctionCall::FxFlopFunctionCall(size_t index, FArgumentList *args, const FScriptPosition &pos)
 : FxExpression(pos)
 {
-	Name = fname;
+	assert(index < countof(FxFlops) && "FLOP index out of range");
+	Index = index;
 	ArgList = args;
 }
 
@@ -3286,18 +3528,18 @@ FxGlobalFunctionCall::FxGlobalFunctionCall(FName fname, FArgumentList *args, con
 //
 //==========================================================================
 
-FxGlobalFunctionCall::~FxGlobalFunctionCall()
+FxFlopFunctionCall::~FxFlopFunctionCall()
 {
 	SAFE_DELETE(ArgList);
 }
 
-FxExpression *FxGlobalFunctionCall::Resolve(FCompileContext& ctx)
+FxExpression *FxFlopFunctionCall::Resolve(FCompileContext& ctx)
 {
 	CHECKRESOLVED();
 
 	if (ArgList == NULL || ArgList->Size() != 1)
 	{
-		ScriptPosition.Message(MSG_ERROR, "%s only has one parameter", Name.GetChars());
+		ScriptPosition.Message(MSG_ERROR, "%s only has one parameter", FName(FxFlops[Index].Name).GetChars());
 		delete this;
 		return NULL;
 	}
@@ -3318,15 +3560,7 @@ FxExpression *FxGlobalFunctionCall::Resolve(FCompileContext& ctx)
 	if ((*ArgList)[0]->isConstant())
 	{
 		double v = static_cast<FxConstant *>((*ArgList)[0])->GetValue().GetFloat();
-		if (Name == NAME_Sqrt)
-		{
-			v = sqrt(v);
-		}
-		else
-		{
-			v *= M_PI / 180.0;		// convert from degrees to radians
-			v = (Name == NAME_Sin) ? sin(v) : cos(v);
-		}
+		v = FxFlops[Index].Evaluate(v);
 		FxExpression *x = new FxConstant(v, ScriptPosition);
 		delete this;
 		return x;
@@ -3344,15 +3578,12 @@ FxExpression *FxGlobalFunctionCall::Resolve(FCompileContext& ctx)
 //
 //==========================================================================
 
-ExpEmit FxGlobalFunctionCall::Emit(VMFunctionBuilder *build)
+ExpEmit FxFlopFunctionCall::Emit(VMFunctionBuilder *build)
 {
 	ExpEmit v = (*ArgList)[0]->Emit(build);
 	assert(!v.Konst && v.RegType == REGT_FLOAT);
 
-	build->Emit(OP_FLOP, v.RegNum, v.RegNum,
-		(Name == NAME_Sqrt) ?	FLOP_SQRT :
-		(Name == NAME_Sin) ?	FLOP_SIN_DEG :
-								FLOP_COS_DEG);
+	build->Emit(OP_FLOP, v.RegNum, v.RegNum, FxFlops[Index].Flop);
 	return v;
 }
 
