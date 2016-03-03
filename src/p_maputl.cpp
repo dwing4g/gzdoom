@@ -150,7 +150,7 @@ void P_LineOpening (FLineOpening &open, AActor *actor, const line_t *linedef,
 	if (!(flags & FFCF_ONLY3DFLOORS))
 	{
 		sector_t *front, *back;
-		fixed_t fc, ff, bc, bf;
+		fixed_t fc = 0, ff = 0, bc = 0, bf = 0;
 
 		if (linedef->backsector == NULL)
 		{
@@ -162,28 +162,19 @@ void P_LineOpening (FLineOpening &open, AActor *actor, const line_t *linedef,
 		front = linedef->frontsector;
 		back = linedef->backsector;
 
-		if (!(flags & FFCF_NOPORTALS) && !linedef->frontsector->PortalBlocksMovement(sector_t::ceiling) && 
-			linedef->backsector->SkyBoxes[sector_t::ceiling] &&
-			linedef->frontsector->SkyBoxes[sector_t::ceiling]->Sector->PortalGroup == linedef->backsector->SkyBoxes[sector_t::ceiling]->Sector->PortalGroup)
+		if (!(flags & FFCF_NOPORTALS))
 		{
-			fc = bc = FIXED_MAX;
+			if (!linedef->frontsector->PortalBlocksMovement(sector_t::ceiling)) fc = FIXED_MAX;
+			if (!linedef->backsector->PortalBlocksMovement(sector_t::ceiling)) bc = FIXED_MAX;
+			if (!linedef->frontsector->PortalBlocksMovement(sector_t::floor)) ff = FIXED_MIN;
+			if (!linedef->backsector->PortalBlocksMovement(sector_t::floor)) bf = FIXED_MIN;
 		}
-		else
-		{
-			fc = front->ceilingplane.ZatPoint(x, y);
-			bc = back->ceilingplane.ZatPoint(x, y);
-		}
-		if (!(flags & FFCF_NOPORTALS) && !linedef->frontsector->PortalBlocksMovement(sector_t::floor) &&
-			linedef->backsector->SkyBoxes[sector_t::floor] &&
-			linedef->frontsector->SkyBoxes[sector_t::floor]->Sector->PortalGroup == linedef->backsector->SkyBoxes[sector_t::floor]->Sector->PortalGroup)
-		{
-			ff = bf = FIXED_MIN;
-		}
-		else
-		{
-			ff = front->floorplane.ZatPoint(x, y);
-			bf = back->floorplane.ZatPoint(x, y);
-		}
+
+		if (fc == 0) fc = front->ceilingplane.ZatPoint(x, y);
+		if (bc == 0) bc = back->ceilingplane.ZatPoint(x, y);
+		if (ff == 0) ff = front->floorplane.ZatPoint(x, y);
+		if (bf == 0) bf = back->floorplane.ZatPoint(x, y);
+
 
 		/*Printf ("]]]]]] %d %d\n", ff, bf);*/
 
@@ -198,8 +189,7 @@ void P_LineOpening (FLineOpening &open, AActor *actor, const line_t *linedef,
 		// that imprecisions in the plane equation mean there is a
 		// good chance that even if a slope and non-slope look like
 		// they line up, they won't be perfectly aligned.
-		if (refx == FIXED_MIN ||
-			abs (ff-bf) > 256)
+		if (ff == FIXED_MIN || bf == FIXED_MIN || (refx == FIXED_MIN || abs (ff-bf) > 256))
 		{
 			usefront = (ff > bf);
 		}
@@ -219,7 +209,13 @@ void P_LineOpening (FLineOpening &open, AActor *actor, const line_t *linedef,
 			open.bottomsec = front;
 			open.floorpic = front->GetTexture(sector_t::floor);
 			open.floorterrain = front->GetTerrain(sector_t::floor);
-			open.lowfloor = bf;
+			if (bf != FIXED_MIN) open.lowfloor = bf;
+			else if (!(flags & FFCF_NODROPOFF))
+			{
+				// We must check through the portal for the actual dropoff.
+				// If there's no lines in the lower sections we'd never get a usable value otherwise.
+				open.lowfloor = back->NextLowestFloorAt(refx, refy, back->SkyBoxes[sector_t::floor]->threshold-1);
+			}
 		}
 		else
 		{
@@ -227,7 +223,13 @@ void P_LineOpening (FLineOpening &open, AActor *actor, const line_t *linedef,
 			open.bottomsec = back;
 			open.floorpic = back->GetTexture(sector_t::floor);
 			open.floorterrain = back->GetTerrain(sector_t::floor);
-			open.lowfloor = ff;
+			if (ff != FIXED_MIN) open.lowfloor = ff;
+			else if (!(flags & FFCF_NODROPOFF))
+			{
+				// We must check through the portal for the actual dropoff.
+				// If there's no lines in the lower sections we'd never get a usable value otherwise.
+				open.lowfloor = front->NextLowestFloorAt(refx, refy, front->SkyBoxes[sector_t::floor]->threshold - 1);
+			}
 		}
 		open.frontfloorplane = front->floorplane;
 		open.backfloorplane = back->floorplane;
@@ -262,7 +264,8 @@ void P_LineOpening (FLineOpening &open, AActor *actor, const line_t *linedef,
 		open.abovemidtex = open.touchmidtex = false;
 	}
 
-	open.range = open.top - open.bottom;
+	// avoid overflows in the opening.
+	open.range = (fixed_t)MIN<QWORD>((QWORD)open.top - open.bottom, FIXED_MAX);
 }
 
 
@@ -1201,7 +1204,7 @@ void FPathTraverse::AddLineIntercepts(int bx, int by)
 		P_MakeDivline (ld, &dl);
 		frac = P_InterceptVector (&trace, &dl);
 
-		if (frac < 0 || frac > FRACUNIT) continue;	// behind source or beyond end point
+		if (frac < startfrac || frac > FRACUNIT) continue;	// behind source or beyond end point
 			
 		intercept_t newintercept;
 
@@ -1282,11 +1285,35 @@ void FPathTraverse::AddThingIntercepts (int bx, int by, FBlockThingsIterator &it
 					{
 						// It's a hit
 						fixed_t frac = P_InterceptVector (&trace, &line);
-						if (frac < 0)
+						if (frac < startfrac)
 						{ // behind source
+							if (startfrac > 0)
+							{
+								// check if the trace starts within this actor
+								switch (i)
+								{
+								case 0:
+									line.y -= 2 * thing->radius;
+									break;
+
+								case 1:
+									line.x -= 2 * thing->radius;
+									break;
+
+								case 2:
+									line.y += 2 * thing->radius;
+									break;
+
+								case 3:
+									line.x += 2 * thing->radius;
+									break;
+								}
+								fixed_t frac2 = P_InterceptVector(&trace, &line);
+								if (frac2 >= startfrac) goto addit;
+							}
 							continue;
 						}
-
+					addit:
 						intercept_t newintercept;
 						newintercept.frac = frac;
 						newintercept.isaline = false;
@@ -1350,7 +1377,7 @@ void FPathTraverse::AddThingIntercepts (int bx, int by, FBlockThingsIterator &it
 				
 				frac = P_InterceptVector (&trace, &dl);
 
-				if (frac >= 0)
+				if (frac >= startfrac)
 				{
 					intercept_t newintercept;
 					newintercept.frac = frac;
@@ -1398,7 +1425,7 @@ intercept_t *FPathTraverse::Next()
 //
 //===========================================================================
 
-void FPathTraverse::init (fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2, int flags)
+void FPathTraverse::init (fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2, int flags, fixed_t startfrac)
 {
 	fixed_t 	xt1, xt2;
 	fixed_t 	yt1, yt2;
@@ -1419,15 +1446,6 @@ void FPathTraverse::init (fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2, int fl
 	int 		mapystep;
 
 	int 		count;
-				
-	validcount++;
-	intercept_index = intercepts.Size();
-		
-	if ( ((x1-bmaporgx)&(MAPBLOCKSIZE-1)) == 0)
-		x1 += FRACUNIT; // don't side exactly on a line
-	
-	if ( ((y1-bmaporgy)&(MAPBLOCKSIZE-1)) == 0)
-		y1 += FRACUNIT; // don't side exactly on a line
 
 	trace.x = x1;
 	trace.y = y1;
@@ -1441,6 +1459,27 @@ void FPathTraverse::init (fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2, int fl
 		trace.dx = x2 - x1;
 		trace.dy = y2 - y1;
 	}
+	if (startfrac > 0)
+	{
+		fixed_t startdx = FixedMul(trace.dx, startfrac);
+		fixed_t startdy = FixedMul(trace.dy, startfrac);
+
+		x1 += startdx;
+		y1 += startdy;
+		x2 = trace.dx - startdx;
+		y2 = trace.dy - startdy;
+		flags |= PT_DELTA;
+	}
+
+	validcount++;
+	intercept_index = intercepts.Size();
+	this->startfrac = startfrac;
+
+	if ( ((x1-bmaporgx)&(MAPBLOCKSIZE-1)) == 0)
+		x1 += FRACUNIT; // don't side exactly on a line
+	
+	if ( ((y1-bmaporgy)&(MAPBLOCKSIZE-1)) == 0)
+		y1 += FRACUNIT; // don't side exactly on a line
 
 	_x1 = (long long)x1 - bmaporgx;
 	_y1 = (long long)y1 - bmaporgy;
@@ -1605,6 +1644,41 @@ void FPathTraverse::init (fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2, int fl
 		}
 	}
 }
+
+//===========================================================================
+//
+// Relocates the trace when going through a line portal
+//
+//===========================================================================
+
+int FPathTraverse::PortalRelocate(intercept_t *in, int flags, fixedvec3 *optpos)
+{
+	if (!in->isaline || !in->d.line->isLinePortal()) return false;
+	if (P_PointOnLineSidePrecise(trace.x, trace.y, in->d.line) == 1) return false;
+
+	fixed_t hitx = trace.x;
+	fixed_t hity = trace.y;
+	fixed_t endx = trace.x + trace.dx;
+	fixed_t endy = trace.y + trace.dy;
+	line_t *out = in->d.line->getPortalDestination();
+
+	P_TranslatePortalXY(in->d.line, out, hitx, hity);
+	P_TranslatePortalXY(in->d.line, out, endx, endy);
+	if (optpos != NULL)
+	{
+		P_TranslatePortalXY(in->d.line, out, optpos->x, optpos->y);
+		P_TranslatePortalZ(in->d.line, out, optpos->z);
+	}
+	intercepts.Resize(intercept_index);
+	init(hitx, hity, endx, endy, flags, in->frac);
+	return in->d.line->getPortal()->mType == PORTT_LINKED? 1:-1;
+}
+
+//===========================================================================
+//
+//
+//
+//===========================================================================
 
 FPathTraverse::~FPathTraverse()
 {

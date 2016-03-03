@@ -26,7 +26,6 @@ struct intercept_t
 	} d;
 };
 
-
 //==========================================================================
 //
 // P_PointOnLineSide
@@ -107,6 +106,10 @@ struct FLineOpening
 };
 
 void	P_LineOpening (FLineOpening &open, AActor *thing, const line_t *linedef, fixed_t x, fixed_t y, fixed_t refx=FIXED_MIN, fixed_t refy=0, int flags=0);
+inline void	P_LineOpening(FLineOpening &open, AActor *thing, const line_t *linedef, fixedvec2 xy, fixed_t refx = FIXED_MIN, fixed_t refy = 0, int flags = 0)
+{
+	P_LineOpening(open, thing, linedef, xy.x, xy.y, refx, refy, flags);
+}
 
 class FBoundingBox;
 struct polyblock_t;
@@ -129,6 +132,14 @@ struct polyblock_t;
 
 struct FPortalGroupArray
 {
+	// Controls how groups are connected
+	enum
+	{
+		PGA_NoSectorPortals,// only collect line portals
+		PGA_CheckPosition,	// only collects sector portals at the actual position
+		PGA_Full3d,			// Goes up and down sector portals at any linedef within the bounding box (this is a lot slower and should only be done if really needed.)
+	};
+
 	enum
 	{
 		LOWER = 0x4000,
@@ -141,8 +152,9 @@ struct FPortalGroupArray
 		MAX_STATIC = 4
 	};
 
-	FPortalGroupArray()
+	FPortalGroupArray(int collectionmethod = PGA_CheckPosition)
 	{
+		method = collectionmethod;
 		varused = 0;
 		inited = false;
 	}
@@ -171,6 +183,7 @@ struct FPortalGroupArray
 	}
 
 	bool inited;
+	int method;
 
 private:
 	WORD entry[MAX_STATIC];
@@ -329,6 +342,7 @@ protected:
 	static TArray<intercept_t> intercepts;
 
 	divline_t trace;
+	fixed_t startfrac;
 	unsigned int intercept_index;
 	unsigned int intercept_count;
 	unsigned int count;
@@ -340,13 +354,24 @@ public:
 
 	intercept_t *Next();
 
-	FPathTraverse(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2, int flags)
+	FPathTraverse(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2, int flags, fixed_t startfrac = 0)
 	{
-		init(x1, y1, x2, y2, flags);
+		init(x1, y1, x2, y2, flags, startfrac);
 	}
-	void init(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2, int flags);
+	void init(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2, int flags, fixed_t startfrac = 0);
+	int PortalRelocate(intercept_t *in, int flags, fixedvec3 *optpos = NULL);
 	virtual ~FPathTraverse();
 	const divline_t &Trace() const { return trace; }
+
+	inline fixedvec2 InterceptPoint(const intercept_t *in)
+	{
+		return
+		{
+			trace.x + FixedMul(trace.dx, in->frac),
+			trace.y + FixedMul(trace.dy, in->frac) 
+		};
+	}
+
 };
 
 //============================================================================
@@ -383,6 +408,5 @@ fixed_t P_InterceptVector (const divline_t *v2, const divline_t *v1);
 #define PT_ADDTHINGS	2
 #define PT_COMPATIBLE	4
 #define PT_DELTA		8		// x2,y2 is passed as a delta, not as an endpoint
-
 
 #endif
