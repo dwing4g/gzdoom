@@ -100,7 +100,7 @@ bool	 GLPortal::inskybox;
 UniqueList<GLSkyInfo> UniqueSkies;
 UniqueList<GLHorizonInfo> UniqueHorizons;
 UniqueList<secplane_t> UniquePlaneMirrors;
-UniqueList<GLLineToLineInfo> UniqueLineToLines;
+UniqueList<FGLLinePortal> UniqueLineToLines;
 
 
 
@@ -950,33 +950,24 @@ void GLMirrorPortal::DrawContents()
 }
 
 
-int GLMirrorPortal::ClipSeg(seg_t *seg) 
+int GLLinePortal::ClipSeg(seg_t *seg) 
 { 
-	//we cannot use P_PointOnLineSide here because it loses the special meaning of 0 == 'on the line'.
-	int side1 = DMulScale32(seg->v1->y - linedef->v1->y, linedef->dx, linedef->v1->x - seg->v1->x, linedef->dy);
-	int side2 = DMulScale32(seg->v2->y - linedef->v1->y, linedef->dx, linedef->v1->x - seg->v2->x, linedef->dy);
-
-	if (side1 >= 0 && side2 >= 0)
-	// this seg is completely behind the mirror.
-	{
-		return PClip_InFront;
-	}
-	return PClip_Inside; 
+	return PClip_Inside;// P_ClipLineToPortal(seg->linedef, line(), viewx, viewy) ? PClip_InFront : PClip_Inside;
 }
 
-int GLMirrorPortal::ClipSubsector(subsector_t *sub) 
+int GLLinePortal::ClipSubsector(subsector_t *sub)
 { 
 	// this seg is completely behind the mirror!
 	for(unsigned int i=0;i<sub->numlines;i++)
 	{
-		if (P_PointOnLineSidePrecise(sub->firstline[i].v1->x, sub->firstline[i].v1->y, linedef) == 0) return PClip_Inside;
+		if (P_PointOnLineSidePrecise(sub->firstline[i].v1->x, sub->firstline[i].v1->y, line()) == 0) return PClip_Inside;
 	}
 	return PClip_InFront; 
 }
 
-int GLMirrorPortal::ClipPoint(fixed_t x, fixed_t y) 
+int GLLinePortal::ClipPoint(fixed_t x, fixed_t y) 
 { 
-	if (P_PointOnLineSidePrecise(x, y, linedef)) 
+	if (P_PointOnLineSidePrecise(x, y, line())) 
 	{
 		return PClip_InFront;
 	}
@@ -994,47 +985,6 @@ int GLMirrorPortal::ClipPoint(fixed_t x, fixed_t y)
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 
-static void glTranslatePortal(line_t* src, line_t* dst, fixed_t& x, fixed_t& y, angle_t & angle)
-{
-	// Get the angle between the two linedefs, for rotating
-	// orientation and velocity. Rotate 180 degrees, and flip
-	// the position across the exit linedef, if reversed.
-
-	double xangle = atan2(double(dst->dy), double(dst->dx)) - atan2(double(src->dy), double(src->dx)) + M_PI;
-	double s = sin(xangle);
-	double c = cos(xangle);
-
-	fixed_t nposx = x - src->v1->x;
-	fixed_t nposy = y - src->v1->y;
-
-	// Rotate position along normal to match exit linedef
-	x = xs_RoundToInt(nposx * c - nposy * s) + dst->v2->x;
-	y = xs_RoundToInt(nposy * c + nposx * s) + dst->v2->y;
-	angle += xs_CRoundToInt(xangle * (ANGLE_180 / M_PI));
-}
-
-void GLLineToLineInfo::init(line_t *line)
-{
-	static const divline_t divlx = { 0, 0, 128 * FRACUNIT, 0 };
-	static const divline_t divly = { 0, 0, 0, 128 * FRACUNIT };
-
-	// store some info about the portal line
-	divline_t divl;
-	P_MakeDivline(line, &divl);
-	x0 = P_InterceptVector(&divlx, &divl);
-	y0 = P_InterceptVector(&divly, &divl);
-	lineangle = R_PointToAnglePrecise(line->v1->x, line->v1->y, line->v2->x, line->v2->y);
-
-	// and some info about the viewpoint translation
-	viewx = ::viewx;
-	viewy = ::viewy;
-	viewz = ::viewz;
-	viewangle = ::viewangle;
-	glTranslatePortal(line, line->getPortalDestination(), viewx, viewy, viewangle);
-	P_TranslatePortalZ(line, line->getPortalDestination(), viewz);
-}
-
-
 //-----------------------------------------------------------------------------
 //
 //
@@ -1051,10 +1001,11 @@ void GLLineToLinePortal::DrawContents()
 
 	GLRenderer->mCurrentPortal = this;
 
-	viewx = l2l->viewx;
-	viewy = l2l->viewy;
-	viewz = l2l->viewz;
-	viewangle = l2l->viewangle;
+	line_t *origin = glport->reference->mOrigin;
+	P_TranslatePortalXY(origin, viewx, viewy);
+	P_TranslatePortalAngle(origin, viewangle);
+	P_TranslatePortalZ(origin, viewz);
+
 	SaveMapSection();
 
 	for (unsigned i = 0; i < lines.Size(); i++)
@@ -1078,6 +1029,7 @@ void GLLineToLinePortal::DrawContents()
 }
 
 
+/*
 int GLLineToLinePortal::ClipSeg(seg_t *seg) 
 { 
 	line_t *linedef = lines[0].seg->linedef->getPortalDestination();
@@ -1113,6 +1065,7 @@ int GLLineToLinePortal::ClipPoint(fixed_t x, fixed_t y)
 	}
 	return PClip_Inside; 
 }
+*/
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
