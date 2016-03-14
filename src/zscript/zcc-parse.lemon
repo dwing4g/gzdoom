@@ -262,6 +262,7 @@ struct_body(X) ::= struct_member(A) struct_body(B).		{ X = A; A->AppendSibling(B
 
 struct_member(X) ::= declarator_no_fun(A).				{ X = A; }
 struct_member(X) ::= enum_def(A).						{ X = A; }
+struct_member(X) ::= const_def(A).						{ X = A; }
 
 /*----- Constant Definition ------*/
 /* Like UnrealScript, a constant's type is implied by its value's type. */
@@ -671,7 +672,7 @@ declarator(X) ::= decl_flags(A) type_list_or_void(B) variables_or_function(C).
 		X = NULL;
 	}
 }
-declarator_no_fun(X) ::= decl_flags(A) type(B) variable_list(C).
+declarator_no_fun(X) ::= decl_flags(A) type(B) variable_list(C) SEMICOLON.
 {
 	NEW_AST_NODE(VarDeclarator, decl, A.SourceLoc ? A.SourceLoc : B->SourceLoc);
 	decl->Type = B;

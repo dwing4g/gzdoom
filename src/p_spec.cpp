@@ -2277,7 +2277,7 @@ void DPusher::Tick ()
 		// point pusher. Crosses sectors, so use blockmap.
 
 		FPortalGroupArray check(FPortalGroupArray::PGA_NoSectorPortals);	// no sector portals because this thing is utterly z-unaware.
-		FMultiBlockThingsIterator it(check, m_X, m_Y, 0, 0, m_Radius);
+		FMultiBlockThingsIterator it(check, m_X, m_Y, 0, 0, m_Radius, false, m_Source->Sector);
 		FMultiBlockThingsIterator::CheckResult cres;
 
 
@@ -2310,8 +2310,8 @@ void DPusher::Tick ()
 					if (m_Source->GetClass()->TypeName == NAME_PointPusher)
 						pushangle += ANG180;    // away
 					pushangle >>= ANGLETOFINESHIFT;
-					thing->velx += FixedMul (speed, finecosine[pushangle]);
-					thing->vely += FixedMul (speed, finesine[pushangle]);
+					thing->vel.x += FixedMul (speed, finecosine[pushangle]);
+					thing->vel.y += FixedMul (speed, finesine[pushangle]);
 				}
 			}
 		}
@@ -2385,8 +2385,8 @@ void DPusher::Tick ()
 				yspeed = m_Ymag;
 			}
 		}
-		thing->velx += xspeed<<(FRACBITS-PUSH_FACTOR);
-		thing->vely += yspeed<<(FRACBITS-PUSH_FACTOR);
+		thing->vel.x += xspeed<<(FRACBITS-PUSH_FACTOR);
+		thing->vel.y += yspeed<<(FRACBITS-PUSH_FACTOR);
 	}
 }
 
