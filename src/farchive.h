@@ -166,7 +166,14 @@ public:
 virtual	void Write (const void *mem, unsigned int len);
 virtual void Read (void *mem, unsigned int len);
 
+		void WriteString(const FString &str);
 		void WriteString (const char *str);
+
+		void WriteByte(BYTE val);
+		void WriteInt16(WORD val);
+		void WriteInt32(DWORD val);
+		void WriteInt64(QWORD val);
+
 		void WriteCount (DWORD count);
 		DWORD ReadCount ();
 
@@ -323,6 +330,10 @@ FArchive &operator<< (FArchive &arc, const sector_t *&sec);
 FArchive &operator<< (FArchive &arc, line_t *&line);
 FArchive &operator<< (FArchive &arc, vertex_t *&vert);
 FArchive &operator<< (FArchive &arc, side_t *&side);
+
+FArchive &operator<<(FArchive &arc, DAngle &ang);
+FArchive &operator<<(FArchive &arc, DVector3 &vec);
+FArchive &operator<<(FArchive &arc, DVector2 &vec);
 
 
 

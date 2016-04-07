@@ -264,7 +264,7 @@ unsigned char *gl_CreateUpsampledTextureBuffer ( const FTexture *inputTexture, u
 		return inputBuffer;
 
 	// already scaled?
-	if (inputTexture->xScale >= FRACUNIT*2 && inputTexture->yScale >= FRACUNIT*2)
+	if (inputTexture->Scale.X >= 2 && inputTexture->Scale.Y >= 2)
 		return inputBuffer;
 
 	switch (inputTexture->UseType)
@@ -289,8 +289,8 @@ unsigned char *gl_CreateUpsampledTextureBuffer ( const FTexture *inputTexture, u
 		outWidth = inWidth;
 		outHeight = inHeight;
 #ifdef HAVE_MMX
-		// ASM-hqNx does not preserve the alpha channel so fall back to C-version for such textures
-		if (!hasAlpha && type > 6 && type <= 9)
+		// hqNx MMX does not preserve the alpha channel so fall back to C-version for such textures
+		if (hasAlpha && type > 6 && type <= 9)
 		{
 			type -= 3;
 		}

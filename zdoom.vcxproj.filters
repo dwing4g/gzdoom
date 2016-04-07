@@ -140,6 +140,9 @@
     <Filter Include="gl">
       <UniqueIdentifier>{a1cf6c04-3045-4620-9cfd-85487e7bf0de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{fbe0314a-f14f-4a53-9b35-42d93c02cffd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\__autostart.cpp">
@@ -1642,6 +1645,60 @@
     <ClCompile Include="src\win32\win32gliface.cpp">
       <Filter>Win32 Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\math\asin.c">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\atan.c">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\const.c">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\cosh.c">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\exp.c">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\isnan.c">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\log.c">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\log10.c">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\mtherr.c">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\polevl.c">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\sin.c">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\sinh.c">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\sqrt.c">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\tan.c">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\tanh.c">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\fastsin.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\p_pusher.cpp">
+      <Filter>!Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\p_scroll.cpp">
+      <Filter>!Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\sc_man_scanner.h">
@@ -2351,6 +2408,12 @@
     </ClInclude>
     <ClInclude Include="src\portal.h">
       <Filter>Portals</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\cmath.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\mconf.h">
+      <Filter>math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

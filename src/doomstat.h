@@ -212,7 +212,6 @@ extern bool ToggleFullscreen;
 extern int Net_Arbitrator;
 
 EXTERN_CVAR (Bool, var_friction)
-EXTERN_CVAR (Bool, var_pushers)
 
 
 // [RH] Miscellaneous info for DeHackEd support
@@ -234,7 +233,7 @@ struct DehInfo
 	int KFAAC;
 	char PlayerSprite[5];
 	BYTE ExplosionStyle;
-	fixed_t ExplosionAlpha;
+	double ExplosionAlpha;
 	int NoAutofreeze;
 	int BFGCells;
 };

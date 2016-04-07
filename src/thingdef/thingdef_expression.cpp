@@ -53,6 +53,7 @@
 #include "m_fixed.h"
 #include "vmbuilder.h"
 #include "v_text.h"
+#include "math/cmath.h"
 
 struct FLOP
 {
@@ -65,23 +66,23 @@ struct FLOP
 // degrees to radians for those that work with angles.
 static const FLOP FxFlops[] =
 {
-	{ NAME_Exp,		FLOP_EXP,		[](double v) { return exp(v); } },
-	{ NAME_Log,		FLOP_LOG,		[](double v) { return log(v); } },
-	{ NAME_Log10,	FLOP_LOG10,		[](double v) { return log10(v); } },
-	{ NAME_Sqrt,	FLOP_SQRT,		[](double v) { return sqrt(v); } },
+	{ NAME_Exp,		FLOP_EXP,		[](double v) { return g_exp(v); } },
+	{ NAME_Log,		FLOP_LOG,		[](double v) { return g_log(v); } },
+	{ NAME_Log10,	FLOP_LOG10,		[](double v) { return g_log10(v); } },
+	{ NAME_Sqrt,	FLOP_SQRT,		[](double v) { return g_sqrt(v); } },
 	{ NAME_Ceil,	FLOP_CEIL,		[](double v) { return ceil(v); } },
 	{ NAME_Floor,	FLOP_FLOOR,		[](double v) { return floor(v); } },
 
-	{ NAME_ACos,	FLOP_ACOS_DEG,	[](double v) { return acos(v) * (180.0 / M_PI); } },
-	{ NAME_ASin,	FLOP_ASIN_DEG,	[](double v) { return asin(v) * (180.0 / M_PI); } },
-	{ NAME_ATan,	FLOP_ATAN_DEG,	[](double v) { return atan(v) * (180.0 / M_PI); } },
-	{ NAME_Cos,		FLOP_COS_DEG,	[](double v) { return cos(v * (M_PI / 180.0)); } },
-	{ NAME_Sin,		FLOP_SIN_DEG,	[](double v) { return sin(v * (M_PI / 180.0)); } },
-	{ NAME_Tan,		FLOP_TAN_DEG,	[](double v) { return tan(v * (M_PI / 180.0)); } },
+	{ NAME_ACos,	FLOP_ACOS_DEG,	[](double v) { return g_acos(v) * (180.0 / M_PI); } },
+	{ NAME_ASin,	FLOP_ASIN_DEG,	[](double v) { return g_asin(v) * (180.0 / M_PI); } },
+	{ NAME_ATan,	FLOP_ATAN_DEG,	[](double v) { return g_atan(v) * (180.0 / M_PI); } },
+	{ NAME_Cos,		FLOP_COS_DEG,	[](double v) { return g_cosdeg(v); } },
+	{ NAME_Sin,		FLOP_SIN_DEG,	[](double v) { return g_sindeg(v); } },
+	{ NAME_Tan,		FLOP_TAN_DEG,	[](double v) { return g_tan(v * (M_PI / 180.0)); } },
 
-	{ NAME_CosH,	FLOP_COSH,		[](double v) { return cosh(v); } },
-	{ NAME_SinH,	FLOP_SINH,		[](double v) { return sinh(v); } },
-	{ NAME_TanH,	FLOP_TANH,		[](double v) { return tanh(v); } },
+	{ NAME_CosH,	FLOP_COSH,		[](double v) { return g_cosh(v); } },
+	{ NAME_SinH,	FLOP_SINH,		[](double v) { return g_sinh(v); } },
+	{ NAME_TanH,	FLOP_TANH,		[](double v) { return g_tanh(v); } },
 };
 
 ExpEmit::ExpEmit(VMFunctionBuilder *build, int type)
@@ -2994,10 +2995,10 @@ FxExpression *FxArrayElement::Resolve(FCompileContext &ctx)
 	}
 
 	ValueType = arraytype->ElementType;
-	if (ValueType->GetRegType() != REGT_INT)
+	if (ValueType->GetRegType() != REGT_INT && ValueType->GetRegType() != REGT_FLOAT)
 	{
 		// int arrays only for now
-		ScriptPosition.Message(MSG_ERROR, "Only integer arrays are supported.");
+		ScriptPosition.Message(MSG_ERROR, "Only numeric arrays are supported.");
 		delete this;
 		return NULL;
 	}
@@ -3014,7 +3015,10 @@ FxExpression *FxArrayElement::Resolve(FCompileContext &ctx)
 ExpEmit FxArrayElement::Emit(VMFunctionBuilder *build)
 {
 	ExpEmit start = Array->Emit(build);
-	ExpEmit dest(build, REGT_INT);
+	PArray *const arraytype = static_cast<PArray*>(Array->ValueType);
+	PType *const elementtype = arraytype->ElementType;
+	ExpEmit dest(build, elementtype->GetRegType());
+
 	if (start.Konst)
 	{
 		ExpEmit tmpstart(build, REGT_POINTER);
@@ -3024,19 +3028,30 @@ ExpEmit FxArrayElement::Emit(VMFunctionBuilder *build)
 	if (index->isConstant())
 	{
 		unsigned indexval = static_cast<FxConstant *>(index)->GetValue().GetInt();
-		if (indexval >= static_cast<PArray*>(Array->ValueType)->ElementCount)
+		if (indexval >= arraytype->ElementCount)
 		{
 			I_Error("Array index out of bounds");
 		}
-		indexval <<= 2;
-		build->Emit(OP_LW, dest.RegNum, start.RegNum, build->GetConstantInt(indexval));
+		indexval *= arraytype->ElementSize;
+		build->Emit(arraytype->ElementType->GetLoadOp(), dest.RegNum,
+			start.RegNum, build->GetConstantInt(indexval));
 	}
 	else
 	{
 		ExpEmit indexv(index->Emit(build));
-		build->Emit(OP_SLL_RI, indexv.RegNum, indexv.RegNum, 2);
-		build->Emit(OP_BOUND, indexv.RegNum, static_cast<PArray*>(Array->ValueType)->ElementCount);
-		build->Emit(OP_LW_R, dest.RegNum, start.RegNum, indexv.RegNum);
+		int shiftbits = 0;
+		while (1u << shiftbits < arraytype->ElementSize)
+		{ 
+			shiftbits++;
+		}
+		assert(1 << shiftbits == arraytype->ElementSize && "Element sizes other than power of 2 are not implemented");
+		build->Emit(OP_BOUND, indexv.RegNum, arraytype->ElementCount);
+		if (shiftbits > 0)
+		{
+			build->Emit(OP_SLL_RI, indexv.RegNum, indexv.RegNum, shiftbits);
+		}
+		build->Emit(arraytype->ElementType->GetLoadOp() + 1,	// added 1 to use the *_R version that
+			dest.RegNum, start.RegNum, indexv.RegNum);			// takes the offset from a register
 		indexv.Free(build);
 	}
 	start.Free(build);

@@ -117,9 +117,9 @@ void GLWall::SetupLights()
 
 			Vector fn, pos;
 
-			float x = FIXED2FLOAT(node->lightsource->X());
-			float y = FIXED2FLOAT(node->lightsource->Y());
-			float z = FIXED2FLOAT(node->lightsource->Z());
+			float x = node->lightsource->X();
+			float y = node->lightsource->Y();
+			float z = node->lightsource->Z();
 			float dist = fabsf(p.DistToPoint(x, z, y));
 			float radius = (node->lightsource->GetRadius() * gl_lights_size);
 			float scale = 1.0f / ((2.f * radius) - dist);
@@ -346,8 +346,8 @@ void GLWall::RenderTextured(int rflags)
 		{
 			secplane_t &lowplane = i == (*lightlist).Size() - 1 ? bottomplane : (*lightlist)[i + 1].plane;
 			// this must use the exact same calculation method as GLWall::Process etc.
-			float low1 = FIXED2FLOAT(lowplane.ZatPoint(vertexes[0]));
-			float low2 = FIXED2FLOAT(lowplane.ZatPoint(vertexes[1]));
+			float low1 = lowplane.ZatPoint(vertexes[0]);
+			float low2 = lowplane.ZatPoint(vertexes[1]);
 
 			if (low1 < ztop[0] || low2 < ztop[1])
 			{

@@ -46,6 +46,14 @@ inline FArchive &operator<< (FArchive &arc, DCeiling::ECeiling &type)
 	return arc;
 }
 
+inline FArchive &operator<< (FArchive &arc, DCeiling::ECrushMode &type)
+{
+	BYTE val = (BYTE)type;
+	arc << val;
+	type = (DCeiling::ECrushMode)val;
+	return arc;
+}
+
 //============================================================================
 //
 // CEILINGS
@@ -80,7 +88,7 @@ void DCeiling::Serialize (FArchive &arc)
 		<< m_NewSpecial
 		<< m_Tag
 		<< m_OldDirection
-		<< m_Hexencrush;
+		<< m_CrushMode;
 }
 
 //============================================================================
@@ -159,7 +167,7 @@ void DCeiling::Tick ()
 		
 	case -1:
 		// DOWN
-		res = MoveCeiling (m_Speed, m_BottomHeight, m_Crush, m_Direction, m_Hexencrush);
+		res = MoveCeiling (m_Speed, m_BottomHeight, m_Crush, m_Direction, m_CrushMode == ECrushMode::crushHexen);
 		
 		if (res == pastdest)
 		{
@@ -196,8 +204,8 @@ void DCeiling::Tick ()
 				{
 				case ceilCrushAndRaise:
 				case ceilLowerAndCrush:
-					if (m_Speed1 == FRACUNIT && m_Speed2 == FRACUNIT)
-						m_Speed = FRACUNIT / 8;
+					if (m_CrushMode == ECrushMode::crushSlowdown)
+						m_Speed = 1. / 8;
 						break;
 
 				default:
@@ -220,11 +228,11 @@ DCeiling::DCeiling (sector_t *sec)
 {
 }
 
-DCeiling::DCeiling (sector_t *sec, fixed_t speed1, fixed_t speed2, int silent)
+DCeiling::DCeiling (sector_t *sec, double speed1, double speed2, int silent)
 	: DMovingCeiling (sec)
 {
 	m_Crush = -1;
-	m_Hexencrush = false;
+	m_CrushMode = ECrushMode::crushDoom;
 	m_Speed = m_Speed1 = speed1;
 	m_Speed2 = speed2;
 	m_Silent = silent;
@@ -237,10 +245,10 @@ DCeiling::DCeiling (sector_t *sec, fixed_t speed1, fixed_t speed2, int silent)
 //============================================================================
 
 DCeiling *DCeiling::Create(sector_t *sec, DCeiling::ECeiling type, line_t *line, int tag, 
-				   fixed_t speed, fixed_t speed2, fixed_t height,
-				   int crush, int silent, int change, bool hexencrush)
+				   double speed, double speed2, double height,
+				   int crush, int silent, int change, ECrushMode hexencrush)
 {
-	fixed_t		targheight = 0;	// Silence, GCC
+	double		targheight = 0;	// Silence, GCC
 
 	// if ceiling already moving, don't start a second function on it
 	if (sec->PlaneMoving(sector_t::ceiling))
@@ -256,7 +264,7 @@ DCeiling *DCeiling::Create(sector_t *sec, DCeiling::ECeiling type, line_t *line,
 	{
 	case ceilCrushAndRaise:
 	case ceilCrushRaiseAndStay:
-		ceiling->m_TopHeight = sec->ceilingplane.d;
+		ceiling->m_TopHeight = sec->ceilingplane.fD();
 	case ceilLowerAndCrush:
 		targheight = sec->FindHighestFloorPoint (&spot);
 		targheight += height;
@@ -284,7 +292,7 @@ DCeiling *DCeiling::Create(sector_t *sec, DCeiling::ECeiling type, line_t *line,
 
 	case ceilMoveToValue:
 		{
-			int diff = height - sec->ceilingplane.ZatPoint (spot);
+			double diff = height - sec->ceilingplane.ZatPoint (spot);
 
 			targheight = height;
 			if (diff < 0)
@@ -387,20 +395,20 @@ DCeiling *DCeiling::Create(sector_t *sec, DCeiling::ECeiling type, line_t *line,
 	ceiling->m_Tag = tag;
 	ceiling->m_Type = type;
 	ceiling->m_Crush = crush;
-	ceiling->m_Hexencrush = hexencrush;
+	ceiling->m_CrushMode = hexencrush;
 
 	// Do not interpolate instant movement ceilings.
 	// Note for ZDoomGL: Check to make sure that you update the sector
 	// after the ceiling moves, because it hasn't actually moved yet.
-	fixed_t movedist;
+	double movedist;
 
 	if (ceiling->m_Direction < 0)
 	{
-		movedist = sec->ceilingplane.d - ceiling->m_BottomHeight;
+		movedist = sec->ceilingplane.fD() - ceiling->m_BottomHeight;
 	}
 	else
 	{
-		movedist = ceiling->m_TopHeight - sec->ceilingplane.d;
+		movedist = ceiling->m_TopHeight - sec->ceilingplane.fD();
 	}
 	if (ceiling->m_Speed >= movedist)
 	{
@@ -475,8 +483,8 @@ DCeiling *DCeiling::Create(sector_t *sec, DCeiling::ECeiling type, line_t *line,
 //============================================================================
 
 bool EV_DoCeiling (DCeiling::ECeiling type, line_t *line,
-				   int tag, fixed_t speed, fixed_t speed2, fixed_t height,
-				   int crush, int silent, int change, bool hexencrush)
+				   int tag, double speed, double speed2, double height,
+				   int crush, int silent, int change, DCeiling::ECrushMode hexencrush)
 {
 	int 		secnum;
 	bool 		rtn;
