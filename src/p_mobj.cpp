@@ -5129,12 +5129,14 @@ AActor *P_SpawnPuff (AActor *source, PClassActor *pufftype, const DVector3 &pos,
 // 
 //---------------------------------------------------------------------------
 
-void P_SpawnBlood (const DVector3 &pos, DAngle dir, int damage, AActor *originator)
+void P_SpawnBlood (const DVector3 &pos1, DAngle dir, int damage, AActor *originator)
 {
 	AActor *th;
 	PalEntry bloodcolor = originator->GetBloodColor();
 	PClassActor *bloodcls = originator->GetBloodType();
-	
+	DVector3 pos = pos1;
+	pos.Z += pr_spawnblood.Random2() / 64.;
+
 	int bloodtype = cl_bloodtype;
 	
 	if (bloodcls != NULL && !(GetDefaultByType(bloodcls)->flags4 & MF4_ALLOWPARTICLES))
@@ -5142,8 +5144,7 @@ void P_SpawnBlood (const DVector3 &pos, DAngle dir, int damage, AActor *originat
 
 	if (bloodcls != NULL)
 	{
-		double z = pr_spawnblood.Random2 () / 64.;
-		th = Spawn(bloodcls, pos + DVector3(0, 0, z), NO_REPLACE); // GetBloodType already performed the replacement
+		th = Spawn(bloodcls, pos, NO_REPLACE); // GetBloodType already performed the replacement
 		th->Vel.Z = 2;
 		th->Angles.Yaw = dir;
 		// [NG] Applying PUFFGETSOWNER to the blood will make it target the owner
@@ -5955,8 +5956,7 @@ AActor *P_SpawnPlayerMissile (AActor *source, double x, double y, double z,
 							  PClassActor *type, DAngle angle, FTranslatedLineTarget *pLineTarget, AActor **pMissileActor,
 							  bool nofreeaim, bool noautoaim, int aimflags)
 {
-	//static const double angdiff[3] = { -5.625, 5.625, 0 };
-	static const int angdiff[3] = { -(1<<26), 1<<26, 0 };
+	static const double angdiff[3] = { -5.625, 5.625, 0 };
 	DAngle an = angle;
 	DAngle pitch;
 	FTranslatedLineTarget scratch;
