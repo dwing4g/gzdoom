@@ -6,6 +6,8 @@
 *.aps
 *.sdf
 *.opensdf
+*.db
+*.opendb
 *.exe
 *.pk3
 /fmodapi*/
