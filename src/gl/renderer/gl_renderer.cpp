@@ -299,7 +299,7 @@ void FGLRenderer::ClearBorders()
 //
 //==========================================================================
 
-void FGLRenderer::DrawTexture(FTexture *img, DCanvas::DrawParms &parms)
+void FGLRenderer::DrawTexture(FTexture *img, DrawParms &parms)
 {
 	double xscale = parms.destwidth / parms.texwidth;
 	double yscale = parms.destheight / parms.texheight;
@@ -359,11 +359,12 @@ void FGLRenderer::DrawTexture(FTexture *img, DCanvas::DrawParms &parms)
 
 	if (parms.windowleft > 0 || parms.windowright < parms.texwidth)
 	{
+		double wi = MIN(parms.windowright, parms.texwidth);
 		x += parms.windowleft * xscale;
-		w -= (parms.texwidth - parms.windowright + parms.windowleft) * xscale;
+		w -= (parms.texwidth - wi + parms.windowleft) * xscale;
 
 		u1 = float(u1 + parms.windowleft / parms.texwidth);
-		u2 = float(u2 - (parms.texwidth - parms.windowright) / parms.texwidth);
+		u2 = float(u2 - (parms.texwidth - wi) / parms.texwidth);
 	}
 
 	PalEntry color;

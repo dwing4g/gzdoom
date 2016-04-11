@@ -648,9 +648,28 @@ struct secspecial_t
 
 FArchive &operator<< (FArchive &arc, secspecial_t &p);
 
+enum class EMoveResult { ok, crushed, pastdest };
+
 struct sector_t
 {
 	// Member functions
+
+private:
+	bool MoveAttached(int crush, double move, int floorOrCeiling, bool resetfailed);
+public:
+	EMoveResult MoveFloor(double speed, double dest, int crush, int direction, bool hexencrush);
+	EMoveResult MoveCeiling(double speed, double dest, int crush, int direction, bool hexencrush);
+
+	inline EMoveResult MoveFloor(double speed, double dest, int direction)
+	{
+		return MoveFloor(speed, dest, -1, direction, false);
+	}
+
+	inline EMoveResult MoveCeiling(double speed, double dest, int direction)
+	{
+		return MoveCeiling(speed, dest, -1, direction, false);
+	}
+
 	bool IsLinked(sector_t *other, bool ceiling) const;
 	double FindLowestFloorSurrounding(vertex_t **v) const;
 	double FindHighestFloorSurrounding(vertex_t **v) const;
@@ -1307,6 +1326,10 @@ struct side_t
 	fixed_t GetTextureXScale(int which) const
 	{
 		return textures[which].xscale;
+	}
+	double GetTextureXScaleF(int which) const
+	{
+		return FIXED2DBL(textures[which].xscale);
 	}
 	void MultiplyTextureXScale(int which, double delta)
 	{
