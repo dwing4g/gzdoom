@@ -2507,7 +2507,7 @@ void FBehavior::LoadScriptsDirectory ()
 	}
 }
 
-int STACK_ARGS FBehavior::SortScripts (const void *a, const void *b)
+int FBehavior::SortScripts (const void *a, const void *b)
 {
 	ScriptPtr *ptr1 = (ScriptPtr *)a;
 	ScriptPtr *ptr2 = (ScriptPtr *)b;
@@ -8637,8 +8637,11 @@ scriptwait:
 					else
 					{
 						item = activator->GiveInventoryType (static_cast<PClassAmmo *>(type));
-						item->MaxAmount = STACK(1);
-						item->Amount = 0;
+						if (item != NULL)
+						{
+							item->MaxAmount = STACK(1);
+							item->Amount = 0;
+						}
 					}
 				}
 			}
@@ -8897,10 +8900,11 @@ scriptwait:
 			break;
 
 		case PCD_ENDTRANSLATION:
-			// This might be useful for hardware rendering, but
-			// for software it is superfluous.
-			translation->UpdateNative();
-			translation = NULL;
+			if (translation != NULL)
+			{
+				translation->UpdateNative();
+				translation = NULL;
+			}
 			break;
 
 		case PCD_SIN:
@@ -9997,7 +10001,7 @@ void ClearProfiles(TArray<ProfileCollector> &profiles)
 	}
 }
 
-static int STACK_ARGS sort_by_total_instr(const void *a_, const void *b_)
+static int sort_by_total_instr(const void *a_, const void *b_)
 {
 	const ProfileCollector *a = (const ProfileCollector *)a_;
 	const ProfileCollector *b = (const ProfileCollector *)b_;
@@ -10007,7 +10011,7 @@ static int STACK_ARGS sort_by_total_instr(const void *a_, const void *b_)
 	return (int)(b->ProfileData->TotalInstr - a->ProfileData->TotalInstr);
 }
 
-static int STACK_ARGS sort_by_min(const void *a_, const void *b_)
+static int sort_by_min(const void *a_, const void *b_)
 {
 	const ProfileCollector *a = (const ProfileCollector *)a_;
 	const ProfileCollector *b = (const ProfileCollector *)b_;
@@ -10015,7 +10019,7 @@ static int STACK_ARGS sort_by_min(const void *a_, const void *b_)
 	return b->ProfileData->MinInstrPerRun - a->ProfileData->MinInstrPerRun;
 }
 
-static int STACK_ARGS sort_by_max(const void *a_, const void *b_)
+static int sort_by_max(const void *a_, const void *b_)
 {
 	const ProfileCollector *a = (const ProfileCollector *)a_;
 	const ProfileCollector *b = (const ProfileCollector *)b_;
@@ -10023,7 +10027,7 @@ static int STACK_ARGS sort_by_max(const void *a_, const void *b_)
 	return b->ProfileData->MaxInstrPerRun - a->ProfileData->MaxInstrPerRun;
 }
 
-static int STACK_ARGS sort_by_avg(const void *a_, const void *b_)
+static int sort_by_avg(const void *a_, const void *b_)
 {
 	const ProfileCollector *a = (const ProfileCollector *)a_;
 	const ProfileCollector *b = (const ProfileCollector *)b_;
@@ -10033,7 +10037,7 @@ static int STACK_ARGS sort_by_avg(const void *a_, const void *b_)
 	return b_avg - a_avg;
 }
 
-static int STACK_ARGS sort_by_runs(const void *a_, const void *b_)
+static int sort_by_runs(const void *a_, const void *b_)
 {
 	const ProfileCollector *a = (const ProfileCollector *)a_;
 	const ProfileCollector *b = (const ProfileCollector *)b_;
@@ -10042,7 +10046,7 @@ static int STACK_ARGS sort_by_runs(const void *a_, const void *b_)
 }
 
 static void ShowProfileData(TArray<ProfileCollector> &profiles, long ilimit,
-	int (STACK_ARGS *sorter)(const void *, const void *), bool functions)
+	int (*sorter)(const void *, const void *), bool functions)
 {
 	static const char *const typelabels[2] = { "script", "function" };
 
@@ -10113,7 +10117,7 @@ static void ShowProfileData(TArray<ProfileCollector> &profiles, long ilimit,
 
 CCMD(acsprofile)
 {
-	static int (STACK_ARGS *sort_funcs[])(const void*, const void *) =
+	static int (*sort_funcs[])(const void*, const void *) =
 	{
 		sort_by_total_instr,
 		sort_by_min,
@@ -10126,7 +10130,7 @@ CCMD(acsprofile)
 
 	TArray<ProfileCollector> ScriptProfiles, FuncProfiles;
 	long limit = 10;
-	int (STACK_ARGS *sorter)(const void *, const void *) = sort_by_total_instr;
+	int (*sorter)(const void *, const void *) = sort_by_total_instr;
 
 	assert(countof(sort_names) == countof(sort_match_len));
 

@@ -1246,9 +1246,20 @@ void R_AddSprites (sector_t *sec, int lightlevel, int fakeside)
 	// Handle all things in sector.
 	for (thing = sec->thinglist; thing; thing = thing->snext)
 	{
+		FIntCVar *cvar = thing->GetClass()->distancecheck;
+		if (cvar != NULL && *cvar >= 0)
+		{
+			double dist = thing->Distance2DSquared(camera);
+			double check = (double)**cvar;
+			if (dist >= check * check)
+			{
+				continue;
+			}
+		}
+
 		// find fake level
-		for(int i = 0; i < (int)frontsector->e->XFloor.ffloors.Size(); i++) {
-			rover = frontsector->e->XFloor.ffloors[i];
+		for(auto rover : frontsector->e->XFloor.ffloors) 
+		{
 			if(!(rover->flags & FF_EXISTS) || !(rover->flags & FF_RENDERPLANES)) continue;
 			if(!(rover->flags & FF_SOLID) || rover->alpha != 255) continue;
 			if(!fakefloor)
@@ -1709,13 +1720,13 @@ static drawseg_t **drawsegsorter;
 static int drawsegsortersize = 0;
 
 // Sort vissprites by leftmost column, left to right
-static int STACK_ARGS sv_comparex (const void *arg1, const void *arg2)
+static int sv_comparex (const void *arg1, const void *arg2)
 {
 	return (*(vissprite_t **)arg2)->x1 - (*(vissprite_t **)arg1)->x1;
 }
 
 // Sort drawsegs by rightmost column, left to right
-static int STACK_ARGS sd_comparex (const void *arg1, const void *arg2)
+static int sd_comparex (const void *arg1, const void *arg2)
 {
 	return (*(drawseg_t **)arg2)->x2 - (*(drawseg_t **)arg1)->x2;
 }
