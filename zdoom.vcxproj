@@ -385,6 +385,7 @@
     <ClCompile Include="src\gl\shaders\gl_shader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_texshader.cpp" />
     <ClCompile Include="src\gl\stereo3d\gl_anaglyph.cpp" />
+    <ClCompile Include="src\gl\stereo3d\gl_quadstereo.cpp" />
     <ClCompile Include="src\gl\stereo3d\gl_stereo3d.cpp" />
     <ClCompile Include="src\gl\stereo3d\gl_stereo_cvars.cpp" />
     <ClCompile Include="src\gl\stereo3d\gl_stereo_leftright.cpp" />

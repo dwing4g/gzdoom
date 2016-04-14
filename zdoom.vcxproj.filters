@@ -1699,6 +1699,9 @@
     <ClCompile Include="src\p_scroll.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\gl\stereo3d\gl_quadstereo.cpp">
+      <Filter>gl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\sc_man_scanner.h">
