@@ -644,7 +644,8 @@ void GLSkyboxPortal::DrawContents()
 	}
 
 	skyboxrecursion++;
-	origin->flags |= MF_JUSTHIT;
+	AActor *origin = portal->mSkybox;
+	portal->mFlags |= PORTSF_INSKYBOX;
 	extralight = 0;
 
 	PlaneMirrorMode = 0;
@@ -661,7 +662,6 @@ void GLSkyboxPortal::DrawContents()
 
 	GLRenderer->mViewActor = origin;
 
-	validcount++;
 	inskybox = true;
 	GLRenderer->SetupView(ViewPos.X, ViewPos.Y, ViewPos.Z, ViewAngle, !!(MirrorFlag & 1), !!(PlaneMirrorFlag & 1));
 	GLRenderer->SetViewArea();
@@ -673,7 +673,7 @@ void GLSkyboxPortal::DrawContents()
 	currentmapsection[mapsection >> 3] |= 1 << (mapsection & 7);
 
 	GLRenderer->DrawScene();
-	origin->flags &= ~MF_JUSTHIT;
+	portal->mFlags &= ~PORTSF_INSKYBOX;
 	inskybox = false;
 	gl_RenderState.SetDepthClamp(oldclamp);
 	skyboxrecursion--;
@@ -755,9 +755,6 @@ void GLSectorStackPortal::DrawContents()
 	ViewPos += origin->mDisplacement;
 	GLRenderer->mViewActor = NULL;
 
-
-	validcount++;
-
 	// avoid recursions!
 	if (origin->plane != -1) instack[origin->plane]++;
 
@@ -802,8 +799,6 @@ void GLPlaneMirrorPortal::DrawContents()
 	GLRenderer->mViewActor = NULL;
 	PlaneMirrorMode = origin->fC() < 0 ? -1 : 1;
 	r_showviewer = true;
-
-	validcount++;
 
 	PlaneMirrorFlag++;
 	GLRenderer->SetupView(ViewPos.X, ViewPos.Y, ViewPos.Z, ViewAngle, !!(MirrorFlag&1), !!(PlaneMirrorFlag&1));
@@ -916,8 +911,6 @@ void GLMirrorPortal::DrawContents()
 	GLRenderer->mViewActor = NULL;
 	r_showviewer = true;
 
-	validcount++;
-
 	MirrorFlag++;
 	GLRenderer->SetupView(ViewPos.X, ViewPos.Y, ViewPos.Z, ViewAngle, !!(MirrorFlag&1), !!(PlaneMirrorFlag&1));
 
@@ -1028,7 +1021,6 @@ void GLLineToLinePortal::DrawContents()
 	}
 
 	GLRenderer->mViewActor = NULL;
-	validcount++;
 	GLRenderer->SetupView(ViewPos.X, ViewPos.Y, ViewPos.Z, ViewAngle, !!(MirrorFlag&1), !!(PlaneMirrorFlag&1));
 
 	ClearClipper();
@@ -1189,34 +1181,35 @@ void GLHorizonPortal::DrawContents()
 void GLEEHorizonPortal::DrawContents()
 {
 	PortalAll.Clock();
-	if (origin->Sector->GetTexture(sector_t::floor) == skyflatnum ||
-		origin->Sector->GetTexture(sector_t::ceiling) == skyflatnum)
+	sector_t *sector = portal->mOrigin;
+	if (sector->GetTexture(sector_t::floor) == skyflatnum ||
+		sector->GetTexture(sector_t::ceiling) == skyflatnum)
 	{
 		GLSkyInfo skyinfo;
-		skyinfo.init(origin->Sector->sky, 0);
+		skyinfo.init(sector->sky, 0);
 		GLSkyPortal sky(&skyinfo, true);
 		sky.DrawContents();
 	}
-	if (origin->Sector->GetTexture(sector_t::ceiling) != skyflatnum)
+	if (sector->GetTexture(sector_t::ceiling) != skyflatnum)
 	{
 		GLHorizonInfo horz;
-		horz.plane.GetFromSector(origin->Sector, true);
-		horz.lightlevel = gl_ClampLight(origin->Sector->GetCeilingLight());
-		horz.colormap = origin->Sector->ColorMap;
-		if (origin->special1 == SKYBOX_PLANE)
+		horz.plane.GetFromSector(sector, true);
+		horz.lightlevel = gl_ClampLight(sector->GetCeilingLight());
+		horz.colormap = sector->ColorMap;
+		if (portal->mType == PORTS_PLANE)
 		{
 			horz.plane.Texheight = ViewPos.Z + fabs(horz.plane.Texheight);
 		}
 		GLHorizonPortal ceil(&horz, true);
 		ceil.DrawContents();
 	}
-	if (origin->Sector->GetTexture(sector_t::floor) != skyflatnum)
+	if (sector->GetTexture(sector_t::floor) != skyflatnum)
 	{
 		GLHorizonInfo horz;
-		horz.plane.GetFromSector(origin->Sector, false);
-		horz.lightlevel = gl_ClampLight(origin->Sector->GetFloorLight());
-		horz.colormap = origin->Sector->ColorMap;
-		if (origin->special1 == SKYBOX_PLANE)
+		horz.plane.GetFromSector(sector, false);
+		horz.lightlevel = gl_ClampLight(sector->GetFloorLight());
+		horz.colormap = sector->ColorMap;
+		if (portal->mType == PORTS_PLANE)
 		{
 			horz.plane.Texheight = ViewPos.Z - fabs(horz.plane.Texheight);
 		}

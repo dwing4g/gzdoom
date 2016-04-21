@@ -341,7 +341,7 @@ void P_SerializeWorld (FArchive &arc)
 	{
 		arc << sec->floorplane
 			<< sec->ceilingplane;
-			arc << sec->lightlevel;
+		arc << sec->lightlevel;
 		arc << sec->special;
 		arc << sec->soundtraversed
 			<< sec->seqType
@@ -358,18 +358,16 @@ void P_SerializeWorld (FArchive &arc)
 			<< sec->heightsec
 			<< sec->bottommap << sec->midmap << sec->topmap
 			<< sec->gravity;
-			P_SerializeTerrain(arc, sec->terrainnum[0]);
-			P_SerializeTerrain(arc, sec->terrainnum[1]);
-			arc << sec->damageamount;
-			arc << sec->damageinterval
-				<< sec->leakydamage
-				<< sec->damagetype;
-		arc << sec->SoundTarget
-			<< sec->SecActTarget
+		P_SerializeTerrain(arc, sec->terrainnum[0]);
+		P_SerializeTerrain(arc, sec->terrainnum[1]);
+		arc << sec->damageamount;
+		arc << sec->damageinterval
+			<< sec->leakydamage
+			<< sec->damagetype
 			<< sec->sky
 			<< sec->MoreFlags
 			<< sec->Flags
-			<< sec->SkyBoxes[sector_t::floor] << sec->SkyBoxes[sector_t::ceiling]
+			<< sec->Portals[sector_t::floor] << sec->Portals[sector_t::ceiling]
 			<< sec->ZoneNumber;
 		arc	<< sec->interpolations[0]
 			<< sec->interpolations[1]
@@ -417,10 +415,7 @@ void P_SerializeWorld (FArchive &arc)
 		arc << li->args[1] << li->args[2] << li->args[3] << li->args[4];
 
 			arc << li->portalindex;
-		if (SaveVersion >= 4531)
-		{
-			arc << li->skybox;
-		}
+			arc << li->portaltransferred;	// GZDoom addition.
 
 		for (j = 0; j < 2; j++)
 		{
@@ -457,8 +452,24 @@ void P_SerializeWorld (FArchive &arc)
 		arc << zn->Environment;
 	}
 
-		arc << linePortals;
+	arc << linePortals << sectorPortals;
 	P_CollectLinkedPortals();
+}
+
+void P_SerializeWorldActors(FArchive &arc)
+{
+	int i, j;
+	sector_t *sec;
+
+	for (i = 0, sec = sectors; i < numsectors; i++, sec++)
+	{
+		arc << sec->SoundTarget
+			<< sec->SecActTarget;
+	}
+	for (auto &s : sectorPortals)
+	{
+		arc << s.mSkybox;
+	}
 }
 
 void extsector_t::Serialize(FArchive &arc)
@@ -547,7 +558,7 @@ void P_SerializePolyobjs (FArchive &arc)
 		arc << seg << po_NumPolyobjs;
 		for(i = 0, po = polyobjs; i < po_NumPolyobjs; i++, po++)
 		{
-			arc << po->tag << po->Angle << po->StartSpot.pos << po->interpolation;
+			arc << po->tag << po->Angle << po->StartSpot.pos << po->interpolation << po->bBlocked << po->bHasPortals;
   		}
 	}
 	else
@@ -573,6 +584,9 @@ void P_SerializePolyobjs (FArchive &arc)
 				I_Error ("UnarchivePolyobjs: Invalid polyobj tag");
 			}
 			arc << angle << delta << po->interpolation;
+			arc << po->bBlocked;
+			arc << po->bHasPortals;
+
 			po->RotatePolyobj (angle, true);
 			delta -= po->StartSpot.pos;
 			po->MovePolyobj (delta, true);

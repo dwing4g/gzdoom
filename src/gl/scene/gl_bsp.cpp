@@ -95,7 +95,7 @@ static void UnclipSubsector(subsector_t *sub)
 static subsector_t *currentsubsector;
 static sector_t *currentsector;
 
-static void AddLine (seg_t *seg)
+static void AddLine (seg_t *seg, bool portalclip)
 {
 #ifdef _DEBUG
 	if (seg->linedef - lines == 38)
@@ -108,7 +108,7 @@ static void AddLine (seg_t *seg)
 	sector_t * backsector = NULL;
 	sector_t bs;
 
-	if (GLRenderer->mCurrentPortal)
+	if (portalclip)
 	{
 		int clipres = GLRenderer->mCurrentPortal->ClipSeg(seg);
 		if (clipres == GLPortal::PClip_InFront) return;
@@ -141,11 +141,13 @@ static void AddLine (seg_t *seg)
 	}
 	currentsubsector->flags |= SSECF_DRAWN;
 
+	BYTE ispoly = BYTE(seg->sidedef->Flags & WALLF_POLYOBJ);
+
 	if (!seg->backsector)
 	{
 		clipper.SafeAddClipRange(startAngle, endAngle);
 	}
-	else if (!(seg->sidedef->Flags & WALLF_POLYOBJ))	// Two-sided polyobjects never obstruct the view
+	else if (!ispoly)	// Two-sided polyobjects never obstruct the view
 	{
 		if (currentsector->sectornum == seg->backsector->sectornum)
 		{
@@ -179,9 +181,9 @@ static void AddLine (seg_t *seg)
 
 	seg->linedef->flags |= ML_MAPPED;
 
-	if ((seg->sidedef->Flags & WALLF_POLYOBJ) || seg->linedef->validcount!=validcount) 
+	if (ispoly || seg->linedef->validcount!=validcount) 
 	{
-		if (!(seg->sidedef->Flags & WALLF_POLYOBJ)) seg->linedef->validcount=validcount;
+		if (!ispoly) seg->linedef->validcount=validcount;
 
 		if (gl_render_walls)
 		{
@@ -215,7 +217,7 @@ static void PolySubsector(subsector_t * sub)
 	{
 		if (line->linedef)
 		{
-			AddLine (line);
+			AddLine (line, GLRenderer->mCurrentPortal != NULL);
 		}
 		line++;
 	}
@@ -310,14 +312,48 @@ static inline void AddLines(subsector_t * sub, sector_t * sector)
 		{
 			if (seg->linedef == NULL)
 			{
-				if (!(sub->flags & SSECF_DRAWN)) AddLine (seg);
+				if (!(sub->flags & SSECF_DRAWN)) AddLine (seg, GLRenderer->mCurrentPortal != NULL);
 			}
 			else if (!(seg->sidedef->Flags & WALLF_POLYOBJ)) 
 			{
-				AddLine (seg);
+				AddLine (seg, GLRenderer->mCurrentPortal != NULL);
 			}
 			seg++;
 		}
+	}
+	ClipWall.Unclock();
+}
+
+//==========================================================================
+//
+// Adds lines that lie directly on the portal boundary.
+// Only two-sided lines will be handled here, and no polyobjects
+//
+//==========================================================================
+
+inline bool PointOnLine(const DVector2 &pos, const line_t *line)
+{
+	double v = (pos.Y - line->v1->fY()) * line->Delta().X + (line->v1->fX() - pos.X) * line->Delta().Y;
+	return fabs(v) <= EQUAL_EPSILON;
+}
+
+static inline void AddSpecialPortalLines(subsector_t * sub, sector_t * sector, line_t *line)
+{
+	currentsector = sector;
+	currentsubsector = sub;
+
+	ClipWall.Clock();
+	int count = sub->numlines;
+	seg_t * seg = sub->firstline;
+
+	while (count--)
+	{
+		if (seg->linedef != NULL && seg->PartnerSeg != NULL)
+		{
+			if (PointOnLine(seg->v1->fPos(), line) && PointOnLine(seg->v2->fPos(), line))
+				AddLine(seg, false);
+		}
+		seg++;
 	}
 	ClipWall.Unclock();
 }
@@ -334,24 +370,37 @@ static inline void RenderThings(subsector_t * sub, sector_t * sector)
 
 	SetupSprite.Clock();
 	sector_t * sec=sub->sector;
-	if (sec->thinglist != NULL)
+	// Handle all things in sector.
+	for (AActor * thing = sec->thinglist; thing; thing = thing->snext)
 	{
-		// Handle all things in sector.
-		for (AActor * thing = sec->thinglist; thing; thing = thing->snext)
+		FIntCVar *cvar = thing->GetClass()->distancecheck;
+		if (cvar != NULL && *cvar >= 0)
 		{
-			FIntCVar *cvar = thing->GetClass()->distancecheck;
-			if (cvar != NULL && *cvar >= 0)
+			double dist = (thing->Pos() - ViewPos).LengthSquared();
+			double check = (double)**cvar;
+			if (dist >= check * check)
 			{
-				double dist = (thing->Pos() - ViewPos).LengthSquared();
-				double check = (double)**cvar;
-				if (dist >= check * check)
-				{
-					continue;
-				}
+				continue;
 			}
-
-			GLRenderer->ProcessSprite(thing, sector);
 		}
+
+		GLRenderer->ProcessSprite(thing, sector, false);
+	}
+	for (msecnode_t *node = sec->render_thinglist; node; node = node->m_snext)
+	{
+		AActor *thing = node->m_thing;
+		FIntCVar *cvar = thing->GetClass()->distancecheck;
+		if (cvar != NULL && *cvar >= 0)
+		{
+			double dist = (thing->Pos() - ViewPos).LengthSquared();
+			double check = (double)**cvar;
+			if (dist >= check * check)
+			{
+				continue;
+			}
+		}
+
+		GLRenderer->ProcessSprite(thing, sector, true);
 	}
 	SetupSprite.Unclock();
 }
@@ -395,15 +444,19 @@ static void DoSubsector(subsector_t * sub)
 		UnclipSubsector(sub);
 	}
 
+	fakesector=gl_FakeFlat(sector, &fake, false);
+
 	if (GLRenderer->mCurrentPortal)
 	{
 		int clipres = GLRenderer->mCurrentPortal->ClipSubsector(sub);
-		if (clipres == GLPortal::PClip_InFront) return;
+		if (clipres == GLPortal::PClip_InFront)
+		{
+			line_t *line = GLRenderer->mCurrentPortal->ClipLine();
+			// The subsector is out of range, but we still have to check lines that lie directly on the boundary and may expose their upper or lower parts.
+			if (line) AddSpecialPortalLines(sub, fakesector, line);
+			return;
+		}
 	}
-
-
-
-	fakesector=gl_FakeFlat(sector, &fake, false);
 
 	if (sector->validcount != validcount)
 	{
@@ -443,7 +496,7 @@ static void DoSubsector(subsector_t * sub)
 
 	if (gl_render_flats)
 	{
-		// Subsectors with only 2 lines cannot have any area!
+		// Subsectors with only 2 lines cannot have any area
 		if (sub->numlines>2 || (sub->hacked&1)) 
 		{
 			// Exclude the case when it tries to render a sector with a heightsec
@@ -476,17 +529,17 @@ static void DoSubsector(subsector_t * sub)
 
 				FPortal *portal;
 
-				portal = fakesector->portals[sector_t::ceiling];
+				portal = fakesector->GetGLPortal(sector_t::ceiling);
 				if (portal != NULL)
 				{
-					GLSectorStackPortal *glportal = portal->GetGLPortal();
+					GLSectorStackPortal *glportal = portal->GetRenderState();
 					glportal->AddSubsector(sub);
 				}
 
-				portal = fakesector->portals[sector_t::floor];
+				portal = fakesector->GetGLPortal(sector_t::floor);
 				if (portal != NULL)
 				{
-					GLSectorStackPortal *glportal = portal->GetGLPortal();
+					GLSectorStackPortal *glportal = portal->GetRenderState();
 					glportal->AddSubsector(sub);
 				}
 			}

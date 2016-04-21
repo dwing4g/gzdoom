@@ -69,10 +69,12 @@ bool gl_CheckClip(side_t * sidedef, sector_t * frontsector, sector_t * backsecto
 	// Mirrors and horizons always block the view
 	//if (linedef->special==Line_Mirror || linedef->special==Line_Horizon) return true;
 
-	// Lines with stacked sectors must never block!
-
-	if (backsector->portals[sector_t::ceiling] != NULL || backsector->portals[sector_t::floor] != NULL ||
-		frontsector->portals[sector_t::ceiling] != NULL || frontsector->portals[sector_t::floor] != NULL)
+	// Lines with portals must never block.
+	// Portals which require the sky flat are excluded here, because for them the special sky semantics apply.
+	if (!(frontsector->GetPortal(sector_t::ceiling)->mFlags & PORTSF_SKYFLATONLY) ||
+		!(frontsector->GetPortal(sector_t::floor)->mFlags & PORTSF_SKYFLATONLY) ||
+		!(backsector->GetPortal(sector_t::ceiling)->mFlags & PORTSF_SKYFLATONLY) ||
+		!(backsector->GetPortal(sector_t::floor)->mFlags & PORTSF_SKYFLATONLY))
 	{
 		return false;
 	}
@@ -212,8 +214,8 @@ sector_t * gl_FakeFlat(sector_t * sec, sector_t * dest, area_t in_area, bool bac
 				dest->ceilingplane=sec->floorplane;
 				dest->ceilingplane.FlipVert();
 				dest->planes[sector_t::ceiling].TexZ = dest->planes[sector_t::floor].TexZ;
-				dest->portals[sector_t::ceiling] = NULL;
-				dest->portals[sector_t::floor] = NULL;
+				dest->ClearPortal(sector_t::ceiling);
+				dest->ClearPortal(sector_t::floor);
 				return dest;
 			}
 		}
@@ -314,7 +316,7 @@ sector_t * gl_FakeFlat(sector_t * sec, sector_t * dest, area_t in_area, bool bac
 		dest->vboindex[sector_t::ceiling] = sec->vboindex[sector_t::vbo_fakefloor];
 		dest->vboheight[sector_t::ceiling] = s->vboheight[sector_t::floor];
 
-		dest->portals[sector_t::ceiling] = NULL;
+		dest->ClearPortal(sector_t::ceiling);
 
 		if (!(s->MoreFlags & SECF_NOFAKELIGHT))
 		{
@@ -367,7 +369,7 @@ sector_t * gl_FakeFlat(sector_t * sec, sector_t * dest, area_t in_area, bool bac
 		dest->vboindex[sector_t::ceiling] = sec->vboindex[sector_t::ceiling];
 		dest->vboheight[sector_t::ceiling] = sec->vboheight[sector_t::ceiling];
 
-		dest->portals[sector_t::floor] = NULL;
+		dest->ClearPortal(sector_t::floor);
 
 		if (!(s->MoreFlags & SECF_NOFAKELIGHT))
 		{

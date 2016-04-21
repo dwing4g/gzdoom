@@ -694,10 +694,9 @@ void R_InterpolateView (player_t *player, double Frac, InterpolationViewer *ivie
 	bool moved = false;
 	while (!viewsector->PortalBlocksMovement(sector_t::ceiling))
 	{
-		AActor *point = viewsector->SkyBoxes[sector_t::ceiling];
-		if (ViewPos.Z > point->specialf1)
+		if (ViewPos.Z > viewsector->GetPortalPlaneZ(sector_t::ceiling))
 		{
-			ViewPos += point->Scale;
+			ViewPos += viewsector->GetPortalDisplacement(sector_t::ceiling);
 			viewsector = R_PointInSubsector(ViewPos)->sector;
 			moved = true;
 		}
@@ -707,10 +706,9 @@ void R_InterpolateView (player_t *player, double Frac, InterpolationViewer *ivie
 	{
 		while (!viewsector->PortalBlocksMovement(sector_t::floor))
 		{
-			AActor *point = viewsector->SkyBoxes[sector_t::floor];
-			if (ViewPos.Z < point->specialf1)
+			if (ViewPos.Z < viewsector->GetPortalPlaneZ(sector_t::floor))
 			{
-				ViewPos += point->Scale;
+				ViewPos += viewsector->GetPortalDisplacement(sector_t::floor);
 				viewsector = R_PointInSubsector(ViewPos)->sector;
 				moved = true;
 			}
@@ -937,8 +935,10 @@ void R_SetupFrame (AActor *actor)
 		sector_t *oldsector = R_PointInSubsector(iview->Old.Pos)->sector;
 		// [RH] Use chasecam view
 		DVector3 campos;
-		P_AimCamera (camera, campos, viewsector, unlinked);	// fixme: This needs to translate the angle, too.
+		DAngle camangle;
+		P_AimCamera (camera, campos, camangle, viewsector, unlinked);	// fixme: This needs to translate the angle, too.
 		iview->New.Pos = campos;
+		iview->New.Angles.Yaw = camangle;
 		r_showviewer = true;
 		// Interpolating this is a very complicated thing because nothing keeps track of the aim camera's movement, so whenever we detect a portal transition
 		// it's probably best to just reset the interpolation for this move.
@@ -947,6 +947,7 @@ void R_SetupFrame (AActor *actor)
 		{
 			iview->otic = nowtic;
 			iview->Old = iview->New;
+			r_NoInterpolate = true;
 		}
 	}
 	else

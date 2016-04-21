@@ -350,7 +350,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_SorcBallOrbit)
 		break;
 	}
 
-	if (deltaangle(angle, prevangle) < 0 && (parent->args[4]==SORCBALL_TERMINAL_SPEED))
+	if ( angle.BAMs() < prevangle.BAMs() && (parent->args[4]==SORCBALL_TERMINAL_SPEED))
 	{
 		parent->args[1]++;			// Bump rotation counter
 		// Completed full rotation - make woosh sound
@@ -824,6 +824,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_SorcFX2Orbit)
 	else							// Clock wise
 	{
 		self->specialf1 -= 10;
+		angle = self->specialf1;
 		pos = parent->Vec3Angle(dist, angle, parent->Floorclip + SORC_DEFENSE_HEIGHT);
 		pos.Z += 20 * angle.Sin();
 		// Spawn trailer

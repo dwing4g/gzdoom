@@ -656,20 +656,21 @@ double P_GetMoveFactor(const AActor *mo, double *frictionp)
 // - 0 when intersecting
 // - -1 when outside the portal
 //
+// Note that this check is done from the 'other' side of the portal
+// so plane names seem to be inverted.
+//
 //==========================================================================
 
 static int LineIsAbove(line_t *line, AActor *actor)
 {
-	AActor *point = line->frontsector->SkyBoxes[sector_t::floor];
-	if (point == NULL) return -1;
-	return point->specialf1 >= actor->Top();
+	if (line->frontsector->PortalBlocksMovement(sector_t::floor)) return -1;
+	return line->frontsector->GetPortalPlaneZ(sector_t::floor) >= actor->Top();
 }
 
 static int LineIsBelow(line_t *line, AActor *actor)
 {
-	AActor *point = line->frontsector->SkyBoxes[sector_t::ceiling];
-	if (point == NULL) return -1;
-	return point->specialf1 <= actor->Z();
+	if (line->frontsector->PortalBlocksMovement(sector_t::ceiling)) return -1;
+	return line->frontsector->GetPortalPlaneZ(sector_t::ceiling) <= actor->Z();
 }
 
 //
@@ -762,7 +763,7 @@ bool PIT_CheckLine(FMultiBlockLinesIterator &mit, FMultiBlockLinesIterator::Chec
 				if (state == 1)
 				{
 					// the line should not block but we should set the ceilingz to the portal boundary so that we can't float up into that line.
-					double portalz = cres.line->frontsector->SkyBoxes[sector_t::floor]->specialf1;
+					double portalz = cres.line->frontsector->GetPortalPlaneZ(sector_t::floor);
 					if (portalz < tm.ceilingz)
 					{
 						tm.ceilingz = portalz;
@@ -778,7 +779,7 @@ bool PIT_CheckLine(FMultiBlockLinesIterator &mit, FMultiBlockLinesIterator::Chec
 				if (state == -1) return true;
 				if (state == 1)
 				{
-					double portalz = cres.line->frontsector->SkyBoxes[sector_t::ceiling]->specialf1;
+					double portalz = cres.line->frontsector->GetPortalPlaneZ(sector_t::ceiling);
 					if (portalz > tm.floorz)
 					{
 						tm.floorz = portalz;
@@ -3529,20 +3530,20 @@ struct aim_t
 
 	void EnterSectorPortal(int position, double frac, sector_t *entersec, DAngle newtoppitch, DAngle newbottompitch)
 	{
-		AActor *portal = entersec->SkyBoxes[position];
+		double portalz = entersec->GetPortalPlaneZ(position);
 
-		if (position == sector_t::ceiling && portal->specialf1 < limitz) return;
-		else if (position == sector_t::floor && portal->specialf1 > limitz) return;
+		if (position == sector_t::ceiling && portalz < limitz) return;
+		else if (position == sector_t::floor && portalz > limitz) return;
 		aim_t newtrace = Clone();
 
 
 		newtrace.toppitch = newtoppitch;
 		newtrace.bottompitch = newbottompitch;
 		newtrace.aimdir = position == sector_t::ceiling? aim_t::aim_up : aim_t::aim_down;
-		newtrace.startpos = startpos + portal->Scale;
+		newtrace.startpos = startpos + entersec->GetPortalDisplacement(position);
 		newtrace.startfrac = frac + 1. / attackrange;	// this is to skip the transition line to the portal which would produce a bogus opening
 		newtrace.lastsector = P_PointInSector(newtrace.startpos + aimtrace * newtrace.startfrac);
-		newtrace.limitz = portal->specialf1;
+		newtrace.limitz = portalz;
 		if (aimdebug)
 			Printf("-----Entering %s portal from sector %d to sector %d\n", position ? "ceiling" : "floor", lastsector->sectornum, newtrace.lastsector->sectornum);
 		newtrace.AimTraverse();
@@ -4598,14 +4599,7 @@ void P_RailAttack(FRailParams *p)
 	rail_data.StopAtInvul = (puffDefaults->flags3 & MF3_FOILINVUL) ? false : true;
 	rail_data.ThruSpecies = (puffDefaults->flags6 & MF6_MTHRUSPECIES) ? true : false;
 
-	// to make things easier, push the start position and directional vector onto the PortalHits array as its first element
-	SPortalHit phit = { start, start, vec };
-	rail_data.PortalHits.Push(phit);
 	Trace(start, source->Sector, vec, p->distance, MF_SHOOTABLE, ML_BLOCKEVERYTHING, source, trace,	flags, ProcessRailHit, &rail_data);
-
-	// and push the hit position, too, so that the array contains the entire trace with all transition points.
-	phit = { trace.HitPos, trace.HitPos, trace.HitVector };
-	rail_data.PortalHits.Push(phit);
 
 	// Hurt anything the trace hit
 	unsigned int i;
@@ -4709,7 +4703,7 @@ void P_RailAttack(FRailParams *p)
 	}
 
 	// Draw the slug's trail.
-	P_DrawRailTrail(source, start, rail_data.PortalHits, trace.HitPos, p->color1, p->color2, p->maxdiff, p->flags, p->spawnclass, angle, p->duration, p->sparsity, p->drift, p->SpiralOffset);
+	P_DrawRailTrail(source, rail_data.PortalHits, p->color1, p->color2, p->maxdiff, p->flags, p->spawnclass, angle, p->duration, p->sparsity, p->drift, p->SpiralOffset);
 }
 
 //==========================================================================
@@ -4721,7 +4715,7 @@ void P_RailAttack(FRailParams *p)
 CVAR(Float, chase_height, -8.f, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
 CVAR(Float, chase_dist, 90.f, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
 
-void P_AimCamera(AActor *t1, DVector3 &campos, sector_t *&CameraSector, bool &unlinked)
+void P_AimCamera(AActor *t1, DVector3 &campos, DAngle &camangle, sector_t *&CameraSector, bool &unlinked)
 {
 	double distance = clamp<double>(chase_dist, 0, 30000);
 	DAngle angle = t1->Angles.Yaw - 180;
@@ -4747,6 +4741,7 @@ void P_AimCamera(AActor *t1, DVector3 &campos, sector_t *&CameraSector, bool &un
 	}
 	CameraSector = trace.Sector;
 	unlinked = trace.unlinked;
+	camangle = trace.SrcAngleFromTarget - 180.;
 }
 
 
@@ -5561,6 +5556,7 @@ int P_PushUp(AActor *thing, FChangePosition *cpos)
 			intersect->SetZ(oldz);
 			return 2;
 		}
+		intersect->UpdateRenderSectorList();
 	}
 	thing->CheckPortalTransition(true);
 	return 0;
@@ -5608,6 +5604,7 @@ int P_PushDown(AActor *thing, FChangePosition *cpos)
 				intersect->SetZ(oldz);
 				return 2;
 			}
+			intersect->UpdateRenderSectorList();
 		}
 	}
 	thing->CheckPortalTransition(true);
@@ -5640,6 +5637,7 @@ void PIT_FloorDrop(AActor *thing, FChangePosition *cpos)
 		{
 			thing->SetZ(thing->floorz);
 			P_CheckFakeFloorTriggers(thing, oldz);
+			thing->UpdateRenderSectorList();
 		}
 	}
 	else if ((thing->Z() != oldfloorz && !(thing->flags & MF_NOLIFTDROP)))
@@ -5648,6 +5646,7 @@ void PIT_FloorDrop(AActor *thing, FChangePosition *cpos)
 		{
 			thing->AddZ(-oldfloorz + thing->floorz);
 			P_CheckFakeFloorTriggers(thing, oldz);
+			thing->UpdateRenderSectorList();
 		}
 	}
 	if (thing->player && thing->player->mo == thing)
@@ -5695,10 +5694,12 @@ void PIT_FloorRaise(AActor *thing, FChangePosition *cpos)
 	{
 	default:
 		P_CheckFakeFloorTriggers(thing, oldz);
+		thing->UpdateRenderSectorList();
 		break;
 	case 1:
 		P_DoCrunch(thing, cpos);
 		P_CheckFakeFloorTriggers(thing, oldz);
+		thing->UpdateRenderSectorList();
 		break;
 	case 2:
 		P_DoCrunch(thing, cpos);
@@ -5741,6 +5742,7 @@ void PIT_CeilingLower(AActor *thing, FChangePosition *cpos)
 		{
 			thing->SetZ(thing->floorz);
 		}
+		thing->UpdateRenderSectorList();
 		switch (P_PushDown(thing, cpos))
 		{
 		case 2:
@@ -5750,9 +5752,11 @@ void PIT_CeilingLower(AActor *thing, FChangePosition *cpos)
 				thing->SetZ(thing->floorz);
 			P_DoCrunch(thing, cpos);
 			P_CheckFakeFloorTriggers(thing, oldz);
+			thing->UpdateRenderSectorList();
 			break;
 		default:
 			P_CheckFakeFloorTriggers(thing, oldz);
+			thing->UpdateRenderSectorList();
 			break;
 		}
 	}
@@ -5788,6 +5792,7 @@ void PIT_CeilingRaise(AActor *thing, FChangePosition *cpos)
 			thing->SetZ(thing->ceilingz - thing->Height);
 		}
 		P_CheckFakeFloorTriggers(thing, oldz);
+		thing->UpdateRenderSectorList();
 	}
 	else if ((thing->flags2 & MF2_PASSMOBJ) && !isgood && thing->Top() < thing->ceilingz)
 	{
@@ -5795,6 +5800,7 @@ void PIT_CeilingRaise(AActor *thing, FChangePosition *cpos)
 		if (!P_TestMobjZ(thing, true, &onmobj) && onmobj->Z() <= thing->Z())
 		{
 			thing->SetZ(MIN(thing->ceilingz - thing->Height, onmobj->Top()));
+			thing->UpdateRenderSectorList();
 		}
 	}
 	if (thing->player && thing->player->mo == thing)
@@ -6029,7 +6035,7 @@ void P_PutSecnode(msecnode_t *node)
 //
 //=============================================================================
 
-msecnode_t *P_AddSecnode(sector_t *s, AActor *thing, msecnode_t *nextnode)
+msecnode_t *P_AddSecnode(sector_t *s, AActor *thing, msecnode_t *nextnode, msecnode_t *&sec_thinglist)
 {
 	msecnode_t *node;
 
@@ -6067,10 +6073,10 @@ msecnode_t *P_AddSecnode(sector_t *s, AActor *thing, msecnode_t *nextnode)
 	// Add new node at head of sector thread starting at s->touching_thinglist
 
 	node->m_sprev = NULL;			// prev node on sector thread
-	node->m_snext = s->touching_thinglist; // next node on sector thread
-	if (s->touching_thinglist)
+	node->m_snext = sec_thinglist; // next node on sector thread
+	if (sec_thinglist)
 		node->m_snext->m_sprev = node;
-	s->touching_thinglist = node;
+	sec_thinglist = node;
 	return node;
 }
 
@@ -6084,7 +6090,7 @@ msecnode_t *P_AddSecnode(sector_t *s, AActor *thing, msecnode_t *nextnode)
 //
 //=============================================================================
 
-msecnode_t *P_DelSecnode(msecnode_t *node)
+msecnode_t *P_DelSecnode(msecnode_t *node, msecnode_t *sector_t::*listhead)
 {
 	msecnode_t* tp;  // prev node on thing thread
 	msecnode_t* tn;  // next node on thing thread
@@ -6111,7 +6117,7 @@ msecnode_t *P_DelSecnode(msecnode_t *node)
 		if (sp)
 			sp->m_snext = sn;
 		else
-			node->m_sector->touching_thinglist = sn;
+			node->m_sector->*listhead = sn;
 		if (sn)
 			sn->m_sprev = sp;
 
@@ -6151,7 +6157,7 @@ void P_DelSector_List()
 void P_DelSeclist(msecnode_t *node)
 {
 	while (node)
-		node = P_DelSecnode(node);
+		node = P_DelSecnode(node, &sector_t::touching_thinglist);
 }
 
 //=============================================================================
@@ -6195,7 +6201,7 @@ void P_CreateSecNodeList(AActor *thing)
 		// allowed to move to this position, then the sector_list
 		// will be attached to the Thing's AActor at touching_sectorlist.
 
-		sector_list = P_AddSecnode(ld->frontsector, thing, sector_list);
+		sector_list = P_AddSecnode(ld->frontsector, thing, sector_list, ld->frontsector->touching_thinglist);
 
 		// Don't assume all lines are 2-sided, since some Things
 		// like MT_TFOG are allowed regardless of whether their radius takes
@@ -6205,12 +6211,12 @@ void P_CreateSecNodeList(AActor *thing)
 		// Use sidedefs instead of 2s flag to determine two-sidedness.
 
 		if (ld->backsector)
-			sector_list = P_AddSecnode(ld->backsector, thing, sector_list);
+			sector_list = P_AddSecnode(ld->backsector, thing, sector_list, ld->backsector->touching_thinglist);
 	}
 
 	// Add the sector of the (x,y) point to sector_list.
 
-	sector_list = P_AddSecnode(thing->Sector, thing, sector_list);
+	sector_list = P_AddSecnode(thing->Sector, thing, sector_list, thing->Sector->touching_thinglist);
 
 	// Now delete any nodes that won't be used. These are the ones where
 	// m_thing is still NULL.
@@ -6222,7 +6228,7 @@ void P_CreateSecNodeList(AActor *thing)
 		{
 			if (node == sector_list)
 				sector_list = node->m_tnext;
-			node = P_DelSecnode(node);
+			node = P_DelSecnode(node, &sector_t::touching_thinglist);
 		}
 		else
 		{
@@ -6230,6 +6236,54 @@ void P_CreateSecNodeList(AActor *thing)
 		}
 	}
 }
+
+
+//==========================================================================
+//
+// Handle the lists used to render actors from other portal areas
+//
+//==========================================================================
+
+void AActor::UpdateRenderSectorList()
+{
+	static const double SPRITE_SPACE = 64.;
+	if (Pos() != OldRenderPos && !(flags & MF_NOSECTOR))
+	{
+		sector_t *sec = Sector;
+		double lasth = -FLT_MAX;
+		ClearRenderSectorList();
+		while (!sec->PortalBlocksMovement(sector_t::ceiling))
+		{
+			double planeh = sec->GetPortalPlaneZ(sector_t::ceiling);
+			if (planeh < lasth) break;	// broken setup.
+			if (Top() + SPRITE_SPACE < planeh) break;
+			lasth = planeh;
+			DVector2 newpos = Pos() + sec->GetPortalDisplacement(sector_t::ceiling);
+			sec = P_PointInSector(newpos);
+			render_sectorlist = P_AddSecnode(sec, this, render_sectorlist, sec->render_thinglist);
+		}
+		lasth = FLT_MAX;
+		while (!sec->PortalBlocksMovement(sector_t::floor))
+		{
+			double planeh = sec->GetPortalPlaneZ(sector_t::floor);
+			if (planeh > lasth) break;	// broken setup.
+			if (Z() - SPRITE_SPACE > planeh) break;
+			lasth = planeh;
+			DVector2 newpos = Pos() + sec->GetPortalDisplacement(sector_t::floor);
+			sec = P_PointInSector(newpos);
+			render_sectorlist = P_AddSecnode(sec, this, render_sectorlist, sec->render_thinglist);
+		}
+	}
+}
+
+void AActor::ClearRenderSectorList()
+{
+	msecnode_t *node = render_sectorlist;
+	while (node)
+		node = P_DelSecnode(node, &sector_t::render_thinglist);
+	render_sectorlist = NULL;
+}
+
 
 //==========================================================================
 //

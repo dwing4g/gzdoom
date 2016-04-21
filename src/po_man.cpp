@@ -421,12 +421,18 @@ bool EV_RotatePoly (line_t *line, int polyNum, int speed, int byteAngle,
 
 	while ((poly = it.NextMirror()) != NULL)
 	{
-		if (poly->specialdata != NULL && !overRide)
+		if ((poly->specialdata != NULL || poly->bBlocked) && !overRide)
 		{ // poly is already in motion
+			break;
+		}
+		if (poly->bHasPortals == 2)
+		{
+			// cannot do rotations on linked polyportals.
 			break;
 		}
 		pe = new DRotatePoly(poly->tag);
 		poly->specialdata = pe;
+		poly->bBlocked = false;
 		if (byteAngle != 0)
 		{
 			if (byteAngle == 255)
@@ -475,6 +481,7 @@ void DMovePoly::Tick ()
 				m_Speed = m_Dist * (m_Speed < 0 ? -1 : 1);
 				m_Speedv = m_Angle.ToVector(m_Speed);
 			}
+			poly->UpdateLinks();
 		}
 	}
 }
@@ -501,12 +508,13 @@ bool EV_MovePoly (line_t *line, int polyNum, double speed, DAngle angle,
 
 	while ((poly = it.NextMirror()) != NULL)
 	{
-		if (poly->specialdata != NULL && !overRide)
+		if ((poly->specialdata != NULL || poly->bBlocked) && !overRide)
 		{ // poly is already in motion
 			break;
 		}
 		pe = new DMovePoly(poly->tag);
 		poly->specialdata = pe;
+		poly->bBlocked = false;
 		pe->m_Dist = dist; // Distance
 		pe->m_Speed = speed;
 		pe->m_Angle = angle;
@@ -553,6 +561,7 @@ void DMovePolyTo::Tick ()
 				m_Speed = m_Dist * (m_Speed < 0 ? -1 : 1);
 				m_Speedv = m_Target - poly->StartSpot.pos;
 			}
+			poly->UpdateLinks();
 		}
 	}
 }
@@ -581,12 +590,13 @@ bool EV_MovePolyTo(line_t *line, int polyNum, double speed, const DVector2 &targ
 	distlen = dist.MakeUnit();
 	while ((poly = it.NextMirror()) != NULL)
 	{
-		if (poly->specialdata != NULL && !overRide)
+		if ((poly->specialdata != NULL || poly->bBlocked) && !overRide)
 		{ // poly is already in motion
 			break;
 		}
 		pe = new DMovePolyTo(poly->tag);
 		poly->specialdata = pe;
+		poly->bBlocked = false;
 		pe->m_Dist = distlen;
 		pe->m_Speed = speed;
 		pe->m_Speedv = dist * speed;
@@ -630,7 +640,7 @@ void DPolyDoor::Tick ()
 			if (m_Dist <= 0)
 			{
 				SN_StopSequence (poly);
-				if (!m_Close)
+				if (!m_Close && m_WaitTics >= 0)
 				{
 					m_Dist = m_TotalDist;
 					m_Close = true;
@@ -640,9 +650,13 @@ void DPolyDoor::Tick ()
 				}
 				else
 				{
+					// if set to wait infinitely, Hexen kept the dead thinker to block the polyobject from getting activated again but that causes some problems
+					// with the subsectorlinks and the interpolation. Better delete the thinker and use a different means to block it.
+					if (!m_Close) poly->bBlocked = true;
 					Destroy ();
 				}
 			}
+			poly->UpdateLinks();
 		}
 		else
 		{
@@ -669,7 +683,7 @@ void DPolyDoor::Tick ()
 			if (m_Dist <= 0)
 			{
 				SN_StopSequence (poly);
-				if (!m_Close)
+				if (!m_Close && m_WaitTics >= 0)
 				{
 					m_Dist = m_TotalDist;
 					m_Close = true;
@@ -678,6 +692,7 @@ void DPolyDoor::Tick ()
 				}
 				else
 				{
+					if (!m_Close) poly->bBlocked = true;
 					Destroy ();
 				}
 			}
@@ -724,10 +739,16 @@ bool EV_OpenPolyDoor(line_t *line, int polyNum, double speed, DAngle angle, int 
 
 	while ((poly = it.NextMirror()) != NULL)
 	{
-		if (poly->specialdata != NULL)
+		if ((poly->specialdata != NULL || poly->bBlocked))
 		{ // poly is already moving
 			break;
 		}
+		if (poly->bHasPortals == 2 && type == PODOOR_SWING)
+		{
+			// cannot do rotations on linked polyportals.
+			break;
+		}
+
 		pd = new DPolyDoor(poly->tag, type);
 		poly->specialdata = pd;
 		if (type == PODOOR_SLIDE)
@@ -815,6 +836,7 @@ FPolyObj::FPolyObj()
 	bHurtOnTouch = false;
 	seqType = 0;
 	Size = 0;
+	bBlocked = false;
 	subsectorlinks = NULL;
 	specialdata = NULL;
 	interpolation = NULL;
@@ -890,6 +912,36 @@ void FPolyObj::ThrustMobj (AActor *actor, side_t *side)
 // UpdateSegBBox
 //
 //==========================================================================
+
+void FPolyObj::UpdateLinks()
+{
+	if (bHasPortals == 2)
+	{
+		TMap<int, bool> processed;
+		for (unsigned i = 0; i < Linedefs.Size(); i++)
+		{
+			if (Linedefs[i]->isLinePortal())
+			{
+				FLinePortal *port = Linedefs[i]->getPortal();
+				if (port->mType == PORTT_LINKED)
+				{
+					DVector2 old = port->mDisplacement;
+					port->mDisplacement = port->mDestination->v2->fPos() - port->mOrigin->v1->fPos();
+					FLinePortal *port2 = port->mDestination->getPortal();
+					if (port2) port2->mDisplacement = -port->mDisplacement;
+					int destgroup = port->mDestination->frontsector->PortalGroup;
+					bool *done = processed.CheckKey(destgroup);
+					if (!done || !*done)
+					{
+						processed[destgroup] = true;
+						DVector2 delta = port->mDisplacement - old;
+						Displacements.MoveGroup(destgroup, delta);
+					}
+				}
+			}
+		}
+	}
+}
 
 void FPolyObj::UpdateBBox ()
 {
@@ -1157,11 +1209,21 @@ bool FPolyObj::CheckMobjBlocking (side_t *sd)
 							performBlockingThrust = true;
 						}
 
-						FBoundingBox box(mobj->X(), mobj->Y(), mobj->radius);
+						DVector2 pos = mobj->PosRelative(ld);
+						FBoundingBox box(pos.X, pos.Y, mobj->radius);
 
 						if (!box.inRange(ld) || box.BoxOnLineSide(ld) != -1)
 						{
 							continue;
+						}
+
+						if (ld->isLinePortal())
+						{
+							// Fixme: this still needs to figure out if the polyobject move made the player cross the portal line.
+							if (P_TryMove(mobj, mobj->Pos(), false))
+							{
+								continue;
+							}
 						}
 						// We have a two-sided linedef so we should only check one side
 						// so that the thrust from both sides doesn't cancel each other out.
@@ -1487,6 +1549,8 @@ static void SpawnPolyobj (int index, int tag, int type)
 		{
 			continue;
 		}
+		po->bBlocked = false;
+		po->bHasPortals = 0;
 
 		side_t *sd = &sides[i];
 		
@@ -1554,6 +1618,12 @@ static void SpawnPolyobj (int index, int tag, int type)
 
 		if (l->validcount != validcount)
 		{
+			FLinePortal *port = l->getPortal();
+			if (port && (port->mDefFlags & PORTF_PASSABLE))
+			{
+				int type = port->mType == PORTT_LINKED ? 2 : 1;
+				if (po->bHasPortals < type) po->bHasPortals = (BYTE)type;
+			}
 			l->validcount = validcount;
 			po->Linedefs.Push(l);
 

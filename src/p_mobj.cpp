@@ -398,7 +398,8 @@ void AActor::Serialize(FArchive &arc)
 	if (arc.IsLoading ())
 	{
 		touching_sectorlist = NULL;
-		LinkToWorld (false, Sector);
+		LinkToWorld(false, Sector);
+
 		AddToHash ();
 		SetShade (fillcolor);
 		if (player)
@@ -419,7 +420,6 @@ void AActor::Serialize(FArchive &arc)
 		UpdateWaterLevel(false);
 	}
 }
-
 
 AActor::AActor () throw()
 {
@@ -2396,7 +2396,7 @@ void P_ZMovement (AActor *mo, double oldfloorz)
 		{ // [RH] Let the sector do something to the actor
 			mo->Sector->SecActTarget->TriggerAction (mo, SECSPAC_HitFloor);
 		}
-		P_CheckFor3DFloorHit(mo);
+		P_CheckFor3DFloorHit(mo, mo->floorz);
 		// [RH] Need to recheck this because the sector action might have
 		// teleported the actor so it is no longer below the floor.
 		if (mo->Z() <= mo->floorz)
@@ -2496,7 +2496,7 @@ void P_ZMovement (AActor *mo, double oldfloorz)
 		{ // [RH] Let the sector do something to the actor
 			mo->Sector->SecActTarget->TriggerAction (mo, SECSPAC_HitCeiling);
 		}
-		P_CheckFor3DCeilingHit(mo);
+		P_CheckFor3DCeilingHit(mo, mo->ceilingz);
 		// [RH] Need to recheck this because the sector action might have
 		// teleported the actor so it is no longer above the ceiling.
 		if (mo->Top() > mo->ceilingz)
@@ -3166,10 +3166,9 @@ DVector3 AActor::GetPortalTransition(double byoffset, sector_t **pSec)
 
 	while (!sec->PortalBlocksMovement(sector_t::ceiling))
 	{
-		AActor *port = sec->SkyBoxes[sector_t::ceiling];
-		if (testz > port->specialf1)
+		if (testz > sec->GetPortalPlaneZ(sector_t::ceiling))
 		{
-			pos = PosRelative(port->Sector);
+			pos = PosRelative(sec->GetOppositePortalGroup(sector_t::ceiling));
 			sec = P_PointInSector(pos);
 			moved = true;
 		}
@@ -3179,10 +3178,9 @@ DVector3 AActor::GetPortalTransition(double byoffset, sector_t **pSec)
 	{
 		while (!sec->PortalBlocksMovement(sector_t::floor))
 		{
-			AActor *port = sec->SkyBoxes[sector_t::floor];
-			if (testz <= port->specialf1)
+			if (testz <= sec->GetPortalPlaneZ(sector_t::floor))
 			{
-				pos = PosRelative(port->Sector);
+				pos = PosRelative(sec->GetOppositePortalGroup(sector_t::floor));
 				sec = P_PointInSector(pos);
 			}
 			else break;
@@ -3199,12 +3197,11 @@ void AActor::CheckPortalTransition(bool islinked)
 	bool moved = false;
 	while (!Sector->PortalBlocksMovement(sector_t::ceiling))
 	{
-		AActor *port = Sector->SkyBoxes[sector_t::ceiling];
-		if (Z() > port->specialf1)
+		if (Z() > Sector->GetPortalPlaneZ(sector_t::ceiling))
 		{
 			DVector3 oldpos = Pos();
 			if (islinked && !moved) UnlinkFromWorld();
-			SetXYZ(PosRelative(port->Sector));
+			SetXYZ(PosRelative(Sector->GetOppositePortalGroup(sector_t::ceiling)));
 			Prev = Pos() - oldpos;
 			Sector = P_PointInSector(Pos());
 			PrevPortalGroup = Sector->PortalGroup;
@@ -3216,12 +3213,12 @@ void AActor::CheckPortalTransition(bool islinked)
 	{
 		while (!Sector->PortalBlocksMovement(sector_t::floor))
 		{
-			AActor *port = Sector->SkyBoxes[sector_t::floor];
-			if (Z() < port->specialf1 && floorz < port->specialf1)
+			double portalz = Sector->GetPortalPlaneZ(sector_t::floor);
+			if (Z() < portalz && floorz < portalz)
 			{
 				DVector3 oldpos = Pos();
 				if (islinked && !moved) UnlinkFromWorld();
-				SetXYZ(PosRelative(port->Sector));
+				SetXYZ(PosRelative(Sector->GetOppositePortalGroup(sector_t::floor)));
 				Prev = Pos() - oldpos;
 				Sector = P_PointInSector(Pos());
 				PrevPortalGroup = Sector->PortalGroup;
@@ -3752,6 +3749,9 @@ void AActor::Tick ()
 	if (!CheckNoDelay())
 		return; // freed itself
 	// cycle through states, calling action functions at transitions
+
+	UpdateRenderSectorList();
+
 	if (tics != -1)
 	{
 		// [RH] Use tics <= 0 instead of == 0 so that spawnstates
@@ -3858,11 +3858,11 @@ void AActor::CheckSectorTransition(sector_t *oldsec)
 		}
 		if (Z() == floorz)
 		{
-			P_CheckFor3DFloorHit(this);
+			P_CheckFor3DFloorHit(this, Z());
 		}
 		if (Top() == ceilingz)
 		{
-			P_CheckFor3DCeilingHit(this);
+			P_CheckFor3DCeilingHit(this, Top());
 		}
 	}
 }
@@ -4011,6 +4011,7 @@ AActor *AActor::StaticSpawn (PClassActor *type, const DVector3 &pos, replace_t a
 	}
 
 	actor->SetXYZ(pos);
+	actor->OldRenderPos = { FLT_MAX, FLT_MAX, FLT_MAX };
 	actor->picnum.SetInvalid();
 	actor->health = actor->SpawnHealth();
 
@@ -4322,12 +4323,15 @@ void AActor::Deactivate (AActor *activator)
 	}
 }
 
+
 //
 // P_RemoveMobj
 //
 
 void AActor::Destroy ()
 {
+	ClearRenderSectorList();
+
 	// [RH] Destroy any inventory this actor is carrying
 	DestroyAllInventory ();
 

@@ -23,6 +23,11 @@ struct FPortal;
 struct FFlatVertex;
 struct FGLLinePortal;
 
+enum
+{
+	GLSector_NoSkyDraw = 89,
+	GLSector_Skybox = 90,
+};
 
 enum WallTypes
 {
@@ -144,7 +149,7 @@ public:
 	union
 	{
 		// it's either one of them but never more!
-		AActor * skybox;			// for skyboxes
+		FSectorPortal *secportal;	// sector portal (formerly skybox)
 		GLSkyInfo * sky;			// for normal sky
 		GLHorizonInfo * horizon;	// for horizon information
 		FPortal * portal;			// stacked sector portals
@@ -290,6 +295,7 @@ public:
 	void SetupSubsectorLights(int pass, subsector_t * sub, int *dli = NULL);
 	void DrawSubsector(subsector_t * sub);
 	void DrawSubsectorLights(subsector_t * sub, int pass);
+	void DrawSkyboxSector(int pass, bool processlights);
 	void DrawSubsectors(int pass, bool processlights, bool istrans);
 	void ProcessLights(bool istrans);
 
@@ -328,6 +334,9 @@ public:
 	int index;
 	int depth;
 
+	float topclip;
+	float bottomclip;
+
 	float x,y,z;	// needed for sorting!
 
 	float ul,ur;
@@ -348,7 +357,7 @@ public:
 
 	void Draw(int pass);
 	void PutSprite(bool translucent);
-	void Process(AActor* thing,sector_t * sector);
+	void Process(AActor* thing,sector_t * sector, bool thruportal = false);
 	void ProcessParticle (particle_t *particle, sector_t *sector);//, int shade, int fakeside)
 	void SetThingColor(PalEntry);
 

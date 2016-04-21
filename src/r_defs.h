@@ -38,6 +38,7 @@
 #include "actor.h"
 struct FLightNode;
 struct FGLSection;
+struct FPortal;
 struct seg_t;
 
 #include "dthinker.h"
@@ -60,19 +61,6 @@ enum
 
 extern size_t MaxDrawSegs;
 struct FDisplacement;
-
-
-enum
-{
-	SKYBOX_ANCHOR = -1,
-	SKYBOX_SKYVIEWPOINT = 0,				// a regular skybox
-	SKYBOX_STACKEDSECTORTHING,	// stacked sectors with the thing method
-	SKYBOX_PORTAL,				// stacked sectors with Sector_SetPortal
-	SKYBOX_LINKEDPORTAL,		// linked portal (interactive)
-	SKYBOX_PLANE,				// EE-style plane portal (not implemented in SW renderer)
-	SKYBOX_HORIZON,				// EE-style horizon portal (not implemented in SW renderer)
-};
-
 
 //
 // INTERNAL MAP TYPES
@@ -499,7 +487,6 @@ struct subsector_t;
 struct sector_t;
 struct side_t;
 extern bool gl_plane_reflection_i;
-struct FPortal;
 
 // Ceiling/floor flags
 enum
@@ -514,6 +501,7 @@ enum
 	PLANEF_BLOCKSOUND	= 32,
 	PLANEF_DISABLED		= 64,
 	PLANEF_OBSTRUCTED	= 128,	// if the portal plane is beyond the sector's floor or ceiling.
+	PLANEF_LINKED		= 256	// plane is flagged as a linked portal
 };
 
 // Internal sector flags
@@ -528,8 +516,6 @@ enum
 	SECF_UNDERWATERMASK	= 32+64,
 	SECF_DRAWN			= 128,	// sector has been drawn at least once
 	SECF_HIDDEN			= 256,	// Do not draw on textured automap
-	SECF_NOFLOORSKYBOX	= 512,	// force use of regular sky 
-	SECF_NOCEILINGSKYBOX	= 1024,	// force use of regular sky (do not separate from NOFLOORSKYBOX!!!)
 };
 
 enum
@@ -699,7 +685,7 @@ public:
 
 	DInterpolation *SetInterpolation(int position, bool attach);
 
-	ASkyViewpoint *GetSkyBox(int which);
+	FSectorPortal *ValidatePortal(int which);
 	void CheckPortalPlane(int plane);
 
 	enum
@@ -962,43 +948,59 @@ public:
 
 	bool PortalBlocksView(int plane)
 	{
-		if (SkyBoxes[plane] == NULL) return true;
-		if (SkyBoxes[plane]->special1 != SKYBOX_LINKEDPORTAL) return false;
+		if (GetPortalType(plane) != PORTS_LINKEDPORTAL) return false;
 		return !!(planes[plane].Flags & (PLANEF_NORENDER | PLANEF_DISABLED | PLANEF_OBSTRUCTED));
 	}
 
 	bool PortalBlocksSight(int plane)
 	{
-		if (SkyBoxes[plane] == NULL || SkyBoxes[plane]->special1 != SKYBOX_LINKEDPORTAL) return true;
-		return !!(planes[plane].Flags & (PLANEF_NORENDER | PLANEF_NOPASS | PLANEF_DISABLED | PLANEF_OBSTRUCTED));
+		return PLANEF_LINKED != (planes[plane].Flags & (PLANEF_NORENDER | PLANEF_NOPASS | PLANEF_DISABLED | PLANEF_OBSTRUCTED | PLANEF_LINKED));
 	}
 
 	bool PortalBlocksMovement(int plane)
 	{
-		if (SkyBoxes[plane] == NULL || SkyBoxes[plane]->special1 != SKYBOX_LINKEDPORTAL) return true;
-		return !!(planes[plane].Flags & (PLANEF_NOPASS | PLANEF_DISABLED | PLANEF_OBSTRUCTED));
+		return PLANEF_LINKED != (planes[plane].Flags & (PLANEF_NOPASS | PLANEF_DISABLED | PLANEF_OBSTRUCTED | PLANEF_LINKED));
 	}
 
 	bool PortalBlocksSound(int plane)
 	{
-		if (SkyBoxes[plane] == NULL || SkyBoxes[plane]->special1 != SKYBOX_LINKEDPORTAL) return true;
-		return !!(planes[plane].Flags & (PLANEF_BLOCKSOUND | PLANEF_DISABLED | PLANEF_OBSTRUCTED));
+		return PLANEF_LINKED != (planes[plane].Flags & (PLANEF_BLOCKSOUND | PLANEF_DISABLED | PLANEF_OBSTRUCTED | PLANEF_LINKED));
 	}
 
 	bool PortalIsLinked(int plane)
 	{
-		return (SkyBoxes[plane] != NULL && SkyBoxes[plane]->special1 == SKYBOX_LINKEDPORTAL);
+		return (GetPortalType(plane) == PORTS_LINKEDPORTAL);
 	}
 
-	// These may only be called if the portal has been validated
-	DVector2 FloorDisplacement()
+	void ClearPortal(int plane)
 	{
-		return Displacements.getOffset(PortalGroup, SkyBoxes[sector_t::floor]->Sector->PortalGroup);
+		Portals[plane] = 0;
+		portals[plane] = nullptr;
 	}
 
-	DVector2 CeilingDisplacement()
+	FSectorPortal *GetPortal(int plane)
 	{
-		return Displacements.getOffset(PortalGroup, SkyBoxes[sector_t::ceiling]->Sector->PortalGroup);
+		return &sectorPortals[Portals[plane]];
+	}
+
+	double GetPortalPlaneZ(int plane)
+	{
+		return sectorPortals[Portals[plane]].mPlaneZ;
+	}
+
+	DVector2 GetPortalDisplacement(int plane)
+	{
+		return sectorPortals[Portals[plane]].mDisplacement;
+	}
+
+	int GetPortalType(int plane)
+	{
+		return sectorPortals[Portals[plane]].mType;
+	}
+
+	int GetOppositePortalGroup(int plane)
+	{
+		return sectorPortals[Portals[plane]].mDestination->PortalGroup;
 	}
 
 	void SetVerticesDirty()	
@@ -1102,6 +1104,7 @@ public:
 	// list of mobjs that are at least partially in the sector
 	// thinglist is a subset of touching_thinglist
 	struct msecnode_t *touching_thinglist;				// phares 3/14/98
+	struct msecnode_t *render_thinglist;				// for cross-portal rendering.
 
 	double gravity;			// [RH] Sector gravity (1.0 is normal)
 	FNameNoInit damagetype;		// [RH] Means-of-death for applied damage
@@ -1119,9 +1122,8 @@ public:
 	// occurs, SecActTarget's TriggerAction method is called.
 	TObjPtr<ASectorAction> SecActTarget;
 
-	// [RH] The sky box to render for this sector. NULL means use a
-	// regular sky.
-	TObjPtr<AActor> SkyBoxes[2];
+	// [RH] The portal or skybox to render for this sector.
+	unsigned Portals[2];
 	int PortalGroup;
 
 	int							sectornum;			// for comparing sector copies
@@ -1150,6 +1152,7 @@ public:
 
 	float GetReflect(int pos) { return gl_plane_reflection_i? reflect[pos] : 0; }
 	bool VBOHeightcheck(int pos) const { return vboheight[pos] == GetPlaneTexZ(pos); }
+	FPortal *GetGLPortal(int plane) { return portals[plane]; }
 
 	enum
 	{
@@ -1401,7 +1404,7 @@ public:
 	int 		validcount;	// if == validcount, already checked
 	int			locknumber;	// [Dusk] lock number for special
 	unsigned	portalindex;
-	TObjPtr<ASkyViewpoint> skybox;
+	unsigned	portaltransferred;
 
 	DVector2 Delta() const
 	{
@@ -1416,6 +1419,11 @@ public:
 	void setAlpha(double a)
 	{
 		Alpha = FLOAT2FIXED(a);
+	}
+
+	FSectorPortal *GetTransferredPortal()
+	{
+		return portaltransferred >= sectorPortals.Size() ? (FSectorPortal*)NULL : &sectorPortals[portaltransferred];
 	}
 
 	FLinePortal *getPortal() const

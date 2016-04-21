@@ -174,7 +174,7 @@ void P_LineOpening (FLineOpening &open, AActor *actor, const line_t *linedef, co
 			{
 				// We must check through the portal for the actual dropoff.
 				// If there's no lines in the lower sections we'd never get a usable value otherwise.
-				open.lowfloor = back->NextLowestFloorAt(pos.X, pos.Y, back->SkyBoxes[sector_t::floor]->specialf1-1);
+				open.lowfloor = back->NextLowestFloorAt(pos.X, pos.Y, back->GetPortalPlaneZ(sector_t::floor) - EQUAL_EPSILON);
 			}
 		}
 		else
@@ -188,7 +188,7 @@ void P_LineOpening (FLineOpening &open, AActor *actor, const line_t *linedef, co
 			{
 				// We must check through the portal for the actual dropoff.
 				// If there's no lines in the lower sections we'd never get a usable value otherwise.
-				open.lowfloor = front->NextLowestFloorAt(pos.X, pos.Y, front->SkyBoxes[sector_t::floor]->specialf1 - 1);
+				open.lowfloor = front->NextLowestFloorAt(pos.X, pos.Y, front->GetPortalPlaneZ(sector_t::floor) - EQUAL_EPSILON);
 			}
 		}
 		open.frontfloorplane = front->floorplane;
@@ -396,14 +396,19 @@ bool AActor::FixMapthingPos()
 
 void AActor::LinkToWorld(bool spawningmapthing, sector_t *sector)
 {
-	if (spawningmapthing && (flags4 & MF4_FIXMAPTHINGPOS) && sector == NULL)
+	bool spawning = spawningmapthing;
+
+	if (spawning)
 	{
-		if (FixMapthingPos()) spawningmapthing = false;
+		if ((flags4 & MF4_FIXMAPTHINGPOS) && sector == NULL)
+		{
+			if (FixMapthingPos()) spawning = false;
+		}
 	}
 
 	if (sector == NULL)
 	{
-		if (!spawningmapthing || numgamenodes == 0)
+		if (!spawning || numgamenodes == 0)
 		{
 			sector = P_PointInSector(Pos());
 		}
@@ -450,13 +455,13 @@ void AActor::LinkToWorld(bool spawningmapthing, sector_t *sector)
 	// link into blockmap (inert things don't need to be in the blockmap)
 	if (!(flags & MF_NOBLOCKMAP))
 	{
-		FPortalGroupArray check(FPortalGroupArray::PGA_NoSectorPortals);
+		FPortalGroupArray check;
 
 		P_CollectConnectedGroups(Sector->PortalGroup, Pos(), Top(), radius, check);
 
 		for (int i = -1; i < (int)check.Size(); i++)
 		{
-			DVector3 pos = i==-1? Pos() : PosRelative(check[i]);
+			DVector3 pos = i==-1? Pos() : PosRelative(check[i] & ~FPortalGroupArray::FLAT);
 
 			int x1 = GetBlockX(pos.X - radius);
 			int x2 = GetBlockX(pos.X + radius);
@@ -499,6 +504,8 @@ void AActor::LinkToWorld(bool spawningmapthing, sector_t *sector)
 			}
 		}
 	}
+	// Portal links cannot be done unless the level is fully initialized.
+	if (!spawningmapthing) UpdateRenderSectorList();
 }
 
 void AActor::SetOrigin(double x, double y, double z, bool moving)
@@ -728,7 +735,7 @@ bool FMultiBlockLinesIterator::GoUp(double x, double y)
 	{
 		if (!cursector->PortalBlocksMovement(sector_t::ceiling))
 		{
-			startIteratorForGroup(cursector->SkyBoxes[sector_t::ceiling]->Sector->PortalGroup);
+			startIteratorForGroup(cursector->GetOppositePortalGroup(sector_t::ceiling));
 			portalflags = FFCF_NOFLOOR;
 			return true;
 		}
@@ -749,7 +756,7 @@ bool FMultiBlockLinesIterator::GoDown(double x, double y)
 	{
 		if (!cursector->PortalBlocksMovement(sector_t::floor))
 		{
-			startIteratorForGroup(cursector->SkyBoxes[sector_t::floor]->Sector->PortalGroup);
+			startIteratorForGroup(cursector->GetOppositePortalGroup(sector_t::floor));
 			portalflags = FFCF_NOCEILING;
 			return true;
 		}
@@ -1616,10 +1623,20 @@ int FPathTraverse::PortalRelocate(intercept_t *in, int flags, DVector3 *optpos)
 		P_TranslatePortalXY(in->d.line, optpos->X, optpos->Y);
 		P_TranslatePortalZ(in->d.line, optpos->Z);
 	}
-	line_t *saved = in->d.line;	// this gets overwriitten by the init call.
+	line_t *saved = in->d.line;	// this gets overwritten by the init call.
 	intercepts.Resize(intercept_index);
-	init(hitx, hity, endx, endy, flags, in->frac);
+	init(hitx, hity, endx, endy, flags, in->frac + EQUAL_EPSILON);
 	return saved->getPortal()->mType == PORTT_LINKED? 1:-1;
+}
+
+void FPathTraverse::PortalRelocate(const DVector2 &displacement, int flags, double hitfrac)
+{
+	double hitx = trace.x + displacement.X;
+	double hity = trace.y + displacement.Y;
+	double endx = hitx + trace.dx;
+	double endy = hity + trace.dy;
+	intercepts.Resize(intercept_index);
+	init(hitx, hity, endx, endy, flags, hitfrac);
 }
 
 //===========================================================================

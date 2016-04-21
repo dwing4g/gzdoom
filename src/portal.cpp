@@ -64,6 +64,8 @@ FPortalBlockmap PortalBlockmap;
 TArray<FLinePortal> linePortals;
 TArray<FLinePortal*> linkedPortals;	// only the linked portals, this is used to speed up looking for them in P_CollectConnectedGroups.
 
+TArray<FSectorPortal> sectorPortals;
+
 //============================================================================
 //
 // This is used to mark processed portals for some collection functions.
@@ -210,6 +212,25 @@ FArchive &operator<< (FArchive &arc, FLinePortal &port)
 		<< port.mFlags
 		<< port.mDefFlags
 		<< port.mAlign;
+	return arc;
+}
+
+//============================================================================
+//
+// Save a sector portal for savegames.
+//
+//============================================================================
+
+FArchive &operator<< (FArchive &arc, FSectorPortal &port)
+{
+	arc << port.mType
+		<< port.mFlags
+		<< port.mPartner
+		<< port.mPlane
+		<< port.mOrigin
+		<< port.mDestination
+		<< port.mDisplacement
+		<< port.mPlaneZ;
 	return arc;
 }
 
@@ -384,8 +405,7 @@ void P_UpdatePortal(FLinePortal *port)
 			}
 			else
 			{
-				port->mDisplacement.X = port->mDestination->v2->fX() - port->mOrigin->v1->fX();
-				port->mDisplacement.Y = port->mDestination->v2->fY() - port->mOrigin->v1->fY();
+				port->mDisplacement = port->mDestination->v2->fPos() - port->mOrigin->v1->fPos();
 			}
 		}
  	}
@@ -488,7 +508,7 @@ bool P_ChangePortal(line_t *ln, int thisid, int destid)
 
 //============================================================================
 //
-// clears all portal dat for a new level start
+// clears all portal data for a new level start
 //
 //============================================================================
 
@@ -497,8 +517,16 @@ void P_ClearPortals()
 	Displacements.Create(1);
 	linePortals.Clear();
 	linkedPortals.Clear();
+	sectorPortals.Resize(2);
+	// The first entry must always be the default skybox. This is what every sector gets by default.
+	memset(&sectorPortals[0], 0, sizeof(sectorPortals[0]));
+	sectorPortals[0].mType = PORTS_SKYVIEWPOINT;
+	sectorPortals[0].mFlags = PORTSF_SKYFLATONLY;
+	// The second entry will be the default sky. This is for forcing a regular sky through the skybox picker
+	memset(&sectorPortals[1], 0, sizeof(sectorPortals[0]));
+	sectorPortals[1].mType = PORTS_SKYVIEWPOINT;
+	sectorPortals[1].mFlags = PORTSF_SKYFLATONLY;
 }
-
 
 //============================================================================
 //
@@ -640,6 +668,74 @@ void P_TranslatePortalZ(line_t* src, double& z)
 
 //============================================================================
 //
+// P_GetSkyboxPortal
+//
+// Gets a portal for a SkyViewpoint
+// If none exists yet, it will create a new one.
+//
+//============================================================================
+
+unsigned P_GetSkyboxPortal(ASkyViewpoint *actor)
+{
+	if (actor == NULL) return 1;	// this means a regular sky.
+	for (unsigned i = 0;i<sectorPortals.Size();i++)
+	{
+		if (sectorPortals[i].mSkybox == actor) return i;
+	}
+	unsigned i = sectorPortals.Reserve(1);
+	memset(&sectorPortals[i], 0, sizeof(sectorPortals[i]));
+	sectorPortals[i].mType = PORTS_SKYVIEWPOINT;
+	sectorPortals[i].mFlags = actor->GetClass()->IsDescendantOf(RUNTIME_CLASS(ASkyCamCompat)) ? 0 : PORTSF_SKYFLATONLY;
+	sectorPortals[i].mSkybox = actor;
+	sectorPortals[i].mDestination = actor->Sector;
+	return i;
+}
+
+//============================================================================
+//
+// P_GetPortal
+//
+// Creates a portal struct for a linedef-based portal
+//
+//============================================================================
+
+unsigned P_GetPortal(int type, int plane, sector_t *from, sector_t *to, const DVector2 &displacement)
+{
+	unsigned i = sectorPortals.Reserve(1);
+	memset(&sectorPortals[i], 0, sizeof(sectorPortals[i]));
+	sectorPortals[i].mType = type;
+	sectorPortals[i].mPlane = plane;
+	sectorPortals[i].mOrigin = from;
+	sectorPortals[i].mDestination = to;
+	sectorPortals[i].mDisplacement = displacement;
+	sectorPortals[i].mPlaneZ = type == PORTS_LINKEDPORTAL? from->GetPlaneTexZF(plane) : FLT_MAX;
+	return i;
+}
+
+//============================================================================
+//
+// P_GetStackPortal
+//
+// Creates a portal for a stacked sector thing
+//
+//============================================================================
+
+unsigned P_GetStackPortal(AActor *point, int plane)
+{
+	unsigned i = sectorPortals.Reserve(1);
+	memset(&sectorPortals[i], 0, sizeof(sectorPortals[i]));
+	sectorPortals[i].mType = PORTS_STACKEDSECTORTHING;
+	sectorPortals[i].mPlane = plane;
+	sectorPortals[i].mOrigin = point->target->Sector;
+	sectorPortals[i].mDestination = point->Sector;
+	sectorPortals[i].mPlaneZ = FLT_MAX;
+	sectorPortals[i].mSkybox = point;
+	return i;
+}
+
+
+//============================================================================
+//
 // P_GetOffsetPosition
 //
 // Offsets a given coordinate if the trace from the origin crosses an 
@@ -661,10 +757,10 @@ DVector2 P_GetOffsetPosition(double x, double y, double dx, double dy)
 			if (blockx < 0 || blocky < 0 || blockx >= bmapwidth || blocky >= bmapheight || !PortalBlockmap(blockx, blocky).neighborContainsLines) return dest;
 		}
 
-		FLinePortalTraverse it;
 		bool repeat;
 		do
 		{
+			FLinePortalTraverse it;
 			it.init(actx, acty, dx, dy, PT_ADDLINES|PT_DELTA);
 			intercept_t *in;
 
@@ -696,6 +792,8 @@ DVector2 P_GetOffsetPosition(double x, double y, double dx, double dy)
 					// update the fields, end this trace and restart from the new position
 					dx = dest.X - hit.X;
 					dy = dest.Y - hit.Y;
+					actx = hit.X;
+					acty = hit.Y;
 					repeat = true;
 				}
 
@@ -755,35 +853,35 @@ static bool CollectSectors(int groupid, sector_t *origin)
 //
 //============================================================================
 
-static void AddDisplacementForPortal(AStackPoint *portal)
+static void AddDisplacementForPortal(FSectorPortal *portal)
 {
-	int thisgroup = portal->Mate->Sector->PortalGroup;
-	int othergroup = portal->Sector->PortalGroup;
+	int thisgroup = portal->mOrigin->PortalGroup;
+	int othergroup = portal->mDestination->PortalGroup;
 	if (thisgroup == othergroup)
 	{
-		Printf("Portal between sectors %d and %d has both sides in same group and will be disabled\n", portal->Sector->sectornum, portal->Mate->Sector->sectornum);
-		portal->special1 = portal->Mate->special1 = SKYBOX_PORTAL;
+		Printf("Portal between sectors %d and %d has both sides in same group and will be disabled\n", portal->mOrigin->sectornum, portal->mDestination->sectornum);
+		portal->mType = PORTS_PORTAL;
 		return;
 	}
 	if (thisgroup <= 0 || thisgroup >= Displacements.size || othergroup <= 0 || othergroup >= Displacements.size)
 	{
-		Printf("Portal between sectors %d and %d has invalid group and will be disabled\n", portal->Sector->sectornum, portal->Mate->Sector->sectornum);
-		portal->special1 = portal->Mate->special1 = SKYBOX_PORTAL;
+		Printf("Portal between sectors %d and %d has invalid group and will be disabled\n", portal->mOrigin->sectornum, portal->mDestination->sectornum);
+		portal->mType = PORTS_PORTAL;
 		return;
 	}
 
 	FDisplacement & disp = Displacements(thisgroup, othergroup);
 	if (!disp.isSet)
 	{
-		disp.pos = portal->Scale;
+		disp.pos = portal->mDisplacement;
 		disp.isSet = true;
 	}
 	else
 	{
-		if (disp.pos != portal->Scale)
+		if (disp.pos != portal->mDisplacement)
 		{
-			Printf("Portal between sectors %d and %d has displacement mismatch and will be disabled\n", portal->Sector->sectornum, portal->Mate->Sector->sectornum);
-			portal->special1 = portal->Mate->special1 = SKYBOX_PORTAL;
+			Printf("Portal between sectors %d and %d has displacement mismatch and will be disabled\n", portal->mOrigin->sectornum, portal->mDestination->sectornum);
+			portal->mType = PORTS_PORTAL;
 			return;
 		}
 	}
@@ -894,55 +992,43 @@ static bool ConnectGroups()
 
 void P_CreateLinkedPortals()
 {
-	TThinkerIterator<AStackPoint> it;
-	AStackPoint *mo;
-	TArray<AStackPoint *> orgs;
+	TArray<FSectorPortal *> orgs;
 	int id = 1;
 	bool bogus = false;
 
-	while ((mo = it.Next()))
+	for(auto &s : sectorPortals)
 	{
-		if (mo->special1 == SKYBOX_LINKEDPORTAL)
+		if (s.mType == PORTS_LINKEDPORTAL)
 		{
-			if (mo->Mate != NULL)
-			{
-				orgs.Push(mo);
-				mo->reactiontime = ++id;
-			}
-			else
-			{
-				// this should never happen, but if it does, the portal needs to be removed
-				mo->Destroy();
-			}
+			orgs.Push(&s);
 		}
 	}
 	id = 1;
 	if (orgs.Size() != 0)
 	{
-	for (int i = 0; i < numsectors; i++)
-	{
-		for (int j = 0; j < 2; j++)
+		for (int i = 0; i < numsectors; i++)
 		{
-			AActor *box = sectors[i].SkyBoxes[j];
-			if (box != NULL && box->special1 == SKYBOX_LINKEDPORTAL)
+			for (int j = 0; j < 2; j++)
 			{
-				secplane_t &plane = j == 0 ? sectors[i].floorplane : sectors[i].ceilingplane;
-				if (plane.isSlope())
+				if (sectors[i].GetPortalType(j) == PORTS_LINKEDPORTAL)
 				{
-					// The engine cannot deal with portals on a sloped plane.
-					sectors[i].SkyBoxes[j] = NULL;
+					secplane_t &plane = j == 0 ? sectors[i].floorplane : sectors[i].ceilingplane;
+					if (plane.isSlope())
+					{
+						// The engine cannot deal with portals on a sloped plane.
+						sectors[i].ClearPortal(j);
 						Printf("Portal on %s of sector %d is sloped and will be disabled\n", j == 0 ? "floor" : "ceiling", i);
+					}
 				}
 			}
 		}
-	}
 
-	// Group all sectors, starting at each portal origin.
-	for (unsigned i = 0; i < orgs.Size(); i++)
-	{
-		if (CollectSectors(id, orgs[i]->Sector)) id++;
-		if (CollectSectors(id, orgs[i]->Mate->Sector)) id++;
-	}
+		// Group all sectors, starting at each portal origin.
+		for (unsigned i = 0; i < orgs.Size(); i++)
+		{
+			if (CollectSectors(id, orgs[i]->mOrigin)) id++;
+			if (CollectSectors(id, orgs[i]->mDestination)) id++;
+		}
 	}
 	for (unsigned i = 0; i < linePortals.Size(); i++)
 	{
@@ -959,17 +1045,9 @@ void P_CreateLinkedPortals()
 	{
 		for (int j = 0; j < 2; j++)
 		{
-			ASkyViewpoint *box = barrier_cast<ASkyViewpoint*>(sectors[i].SkyBoxes[j]);
-			if (box != NULL)
+			if (sectors[i].GetPortalType(j) == PORTS_LINKEDPORTAL && sectors[i].PortalGroup == 0)
 			{
-				if (box->special1 == SKYBOX_LINKEDPORTAL && sectors[i].PortalGroup == 0)
-				{
-					// Note: the linked actor will be on the other side of the portal.
-					// To get this side's group we will have to look at the mate object.
-					CollectSectors(box->Mate->Sector->PortalGroup, &sectors[i]);
-					// We cannot process the backlink here because all we can access is the anchor object
-					// If necessary that will have to be done for the other side's portal.
-				}
+				CollectSectors(sectors[i].GetOppositePortalGroup(j), &sectors[i]);
 			}
 		}
 	}
@@ -1049,24 +1127,27 @@ void P_CreateLinkedPortals()
 		}
 		if (sectors[i].PortalIsLinked(sector_t::ceiling) && sectors[i].PortalIsLinked(sector_t::floor))
 		{
-			double cz = sectors[i].SkyBoxes[sector_t::ceiling]->specialf1;
-			double fz = sectors[i].SkyBoxes[sector_t::floor]->specialf1;
+			double cz = sectors[i].GetPortalPlaneZ(sector_t::ceiling);
+			double fz = sectors[i].GetPortalPlaneZ(sector_t::floor);
 			if (cz < fz)
 			{
 				// This is a fatal condition. We have to remove one of the two portals. Choose the one that doesn't match the current plane
 				Printf("Error in sector %d: Ceiling portal at z=%f is below floor portal at z=%f\n", i, cz, fz);
 				double cp = -sectors[i].ceilingplane.fD();
-				double fp = -sectors[i].ceilingplane.fD();
+				double fp = sectors[i].floorplane.fD();
 				if (cp < fp || fz == fp)
 				{
-					sectors[i].SkyBoxes[sector_t::ceiling] = NULL;
+					sectors[i].ClearPortal(sector_t::ceiling);
 				}
 				else
 				{
-					sectors[i].SkyBoxes[sector_t::floor] = NULL;
+					sectors[i].ClearPortal(sector_t::floor);
 				}
 			}
 		}
+		// mark all sector planes that check out ok for everything.
+		if (sectors[i].PortalIsLinked(sector_t::floor)) sectors[i].planes[sector_t::floor].Flags |= PLANEF_LINKED;
+		if (sectors[i].PortalIsLinked(sector_t::ceiling)) sectors[i].planes[sector_t::ceiling].Flags |= PLANEF_LINKED;
 	}
 	if (linkedPortals.Size() > 0)
 	{
@@ -1158,22 +1239,22 @@ bool P_CollectConnectedGroups(int startgroup, const DVector3 &position, double u
 	{
 		sector_t *sec = P_PointInSector(position);
 		sector_t *wsec = sec;
-		while (!wsec->PortalBlocksMovement(sector_t::ceiling) && upperz > wsec->SkyBoxes[sector_t::ceiling]->specialf1)
+		while (!wsec->PortalBlocksMovement(sector_t::ceiling) && upperz > wsec->GetPortalPlaneZ(sector_t::ceiling))
 		{
-			sector_t *othersec = wsec->SkyBoxes[sector_t::ceiling]->Sector;
-			DVector2 pos = Displacements.getOffset(startgroup, othersec->PortalGroup) + position;
-			processMask.setBit(othersec->PortalGroup);
-			out.Add(othersec->PortalGroup | FPortalGroupArray::UPPER);
+			int othergroup = wsec->GetOppositePortalGroup(sector_t::ceiling);
+			DVector2 pos = Displacements.getOffset(startgroup, othergroup) + position;
+			processMask.setBit(othergroup);
+			out.Add(othergroup | FPortalGroupArray::UPPER);
 			wsec = P_PointInSector(pos);	// get upper sector at the exact spot we want to check and repeat
 			retval = true;
 		}
 		wsec = sec;
-		while (!wsec->PortalBlocksMovement(sector_t::floor) && position.Z < wsec->SkyBoxes[sector_t::floor]->specialf1)
+		while (!wsec->PortalBlocksMovement(sector_t::floor) && position.Z < wsec->GetPortalPlaneZ(sector_t::floor))
 		{
-			sector_t *othersec = wsec->SkyBoxes[sector_t::floor]->Sector;
-			DVector2 pos = Displacements.getOffset(startgroup, othersec->PortalGroup) + position;
-			processMask.setBit(othersec->PortalGroup | FPortalGroupArray::LOWER);
-			out.Add(othersec->PortalGroup);
+			int othergroup = wsec->GetOppositePortalGroup(sector_t::floor);
+			DVector2 pos = Displacements.getOffset(startgroup, othergroup) + position;
+			processMask.setBit(othergroup | FPortalGroupArray::LOWER);
+			out.Add(othergroup);
 			wsec = P_PointInSector(pos);	// get lower sector at the exact spot we want to check and repeat
 			retval = true;
 		}
@@ -1200,9 +1281,9 @@ bool P_CollectConnectedGroups(int startgroup, const DVector3 &position, double u
 							sector_t *sec = s ? ld->backsector : ld->frontsector;
 							if (sec && !(sec->PortalBlocksMovement(sector_t::ceiling)))
 							{
-								if (sec->SkyBoxes[sector_t::ceiling]->specialf1 < upperz)
+								if (sec->GetPortalPlaneZ(sector_t::ceiling) < upperz)
 								{
-									int grp = sec->SkyBoxes[sector_t::ceiling]->Sector->PortalGroup;
+									int grp = sec->GetOppositePortalGroup(sector_t::ceiling);
 									if (!(processMask.getBit(grp)))
 									{
 										processMask.setBit(grp);
@@ -1219,9 +1300,9 @@ bool P_CollectConnectedGroups(int startgroup, const DVector3 &position, double u
 							sector_t *sec = s ? ld->backsector : ld->frontsector;
 							if (sec && !(sec->PortalBlocksMovement(sector_t::floor)))
 							{
-								if (sec->SkyBoxes[sector_t::floor]->specialf1 > position.Z)
+								if (sec->GetPortalPlaneZ(sector_t::floor) > position.Z)
 								{
-									int grp = sec->SkyBoxes[sector_t::floor]->Sector->PortalGroup;
+									int grp = sec->GetOppositePortalGroup(sector_t::floor);
 									if (!(processMask.getBit(grp)))
 									{
 										processMask.setBit(grp);

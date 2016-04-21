@@ -137,7 +137,7 @@ public:
 	{
 		PClip_InFront,
 		PClip_Inside,
-		PClip_Behind
+		PClip_Behind,
 	};
 
 	void RenderPortal(bool usestencil, bool doquery)
@@ -165,6 +165,7 @@ public:
 	virtual int ClipSeg(seg_t *seg) { return PClip_Inside; }
 	virtual int ClipSubsector(subsector_t *sub) { return PClip_Inside; }
 	virtual int ClipPoint(const DVector2 &pos) { return PClip_Inside; }
+	virtual line_t *ClipLine() { return NULL; }
 
 	static void BeginScene();
 	static void StartFrame();
@@ -251,6 +252,7 @@ protected:
 	virtual void DrawContents();
 	virtual void * GetSource() const { return glport; }
 	virtual const char *GetName();
+	virtual line_t *ClipLine() { return line(); }
 
 public:
 	
@@ -264,20 +266,20 @@ public:
 
 struct GLSkyboxPortal : public GLPortal
 {
-	AActor * origin;
+	FSectorPortal * portal;
 
 protected:
 	virtual void DrawContents();
-	virtual void * GetSource() const { return origin; }
+	virtual void * GetSource() const { return portal; }
 	virtual bool IsSky() { return true; }
 	virtual const char *GetName();
 
 public:
 
 	
-	GLSkyboxPortal(AActor * pt)
+	GLSkyboxPortal(FSectorPortal * pt)
 	{
-		origin=pt;
+		portal=pt;
 	}
 
 };
@@ -375,20 +377,20 @@ public:
 
 struct GLEEHorizonPortal : public GLPortal
 {
-	AActor * origin;
+	FSectorPortal * portal;
 
 protected:
 	virtual void DrawContents();
-	virtual void * GetSource() const { return origin; }
+	virtual void * GetSource() const { return portal; }
 	virtual bool NeedDepthBuffer() { return false; }
 	virtual bool NeedCap() { return false; }
 	virtual const char *GetName();
 
 public:
 	
-	GLEEHorizonPortal(AActor *pt)
+	GLEEHorizonPortal(FSectorPortal *pt)
 	{
-		origin=pt;
+		portal=pt;
 	}
 
 };
