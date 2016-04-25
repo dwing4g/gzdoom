@@ -231,8 +231,8 @@ bool P_GetMidTexturePosition(const line_t *line, int sideno, double *ptextop, do
 	FTexture * tex= TexMan(texnum);
 	if (!tex) return false;
 
-	double totalscale = fabs(side->GetTextureYScaleF(side_t::mid)) * tex->GetScaleY();
-	double y_offset = side->GetTextureYOffsetF(side_t::mid);
+	double totalscale = fabs(side->GetTextureYScale(side_t::mid)) * tex->GetScaleY();
+	double y_offset = side->GetTextureYOffset(side_t::mid);
 	double textureheight = tex->GetHeight() / totalscale;
 	if (totalscale != 1. && !tex->bWorldPanning)
 	{ 
@@ -242,14 +242,14 @@ bool P_GetMidTexturePosition(const line_t *line, int sideno, double *ptextop, do
 	if(line->flags & ML_DONTPEGBOTTOM)
 	{
 		*ptexbot = y_offset +
-			MAX(line->frontsector->GetPlaneTexZF(sector_t::floor), line->backsector->GetPlaneTexZF(sector_t::floor));
+			MAX(line->frontsector->GetPlaneTexZ(sector_t::floor), line->backsector->GetPlaneTexZ(sector_t::floor));
 
 		*ptextop = *ptexbot + textureheight;
 	}
 	else
 	{
 		*ptextop = y_offset +
-		   MIN(line->frontsector->GetPlaneTexZF(sector_t::ceiling), line->backsector->GetPlaneTexZF(sector_t::ceiling));
+		   MIN(line->frontsector->GetPlaneTexZ(sector_t::ceiling), line->backsector->GetPlaneTexZ(sector_t::ceiling));
 		
 		*ptexbot = *ptextop - textureheight;
 	}

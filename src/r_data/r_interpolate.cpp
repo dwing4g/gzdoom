@@ -441,12 +441,12 @@ void DSectorPlaneInterpolation::UpdateInterpolation()
 	if (!ceiling)
 	{
 		oldheight = sector->floorplane.fD();
-		oldtexz = sector->GetPlaneTexZF(sector_t::floor);
+		oldtexz = sector->GetPlaneTexZ(sector_t::floor);
 	}
 	else
 	{
 		oldheight = sector->ceilingplane.fD();
-		oldtexz = sector->GetPlaneTexZF(sector_t::ceiling);
+		oldtexz = sector->GetPlaneTexZ(sector_t::ceiling);
 	}
 }
 
@@ -495,7 +495,7 @@ void DSectorPlaneInterpolation::Interpolate(double smoothratio)
 	}
 
 	bakheight = pplane->fD();
-	baktexz = sector->GetPlaneTexZF(pos);
+	baktexz = sector->GetPlaneTexZ(pos);
 
 	if (refcount == 0 && oldheight == bakheight)
 	{
@@ -604,8 +604,8 @@ void DSectorScrollInterpolation::Destroy()
 
 void DSectorScrollInterpolation::UpdateInterpolation()
 {
-	oldx = sector->GetXOffsetF(ceiling);
-	oldy = sector->GetYOffsetF(ceiling, false);
+	oldx = sector->GetXOffset(ceiling);
+	oldy = sector->GetYOffset(ceiling, false);
 }
 
 //==========================================================================
@@ -628,8 +628,8 @@ void DSectorScrollInterpolation::Restore()
 
 void DSectorScrollInterpolation::Interpolate(double smoothratio)
 {
-	bakx = sector->GetXOffsetF(ceiling);
-	baky = sector->GetYOffsetF(ceiling, false);
+	bakx = sector->GetXOffset(ceiling);
+	baky = sector->GetYOffset(ceiling, false);
 
 	if (refcount == 0 && oldx == bakx && oldy == baky)
 	{
@@ -695,8 +695,8 @@ void DWallScrollInterpolation::Destroy()
 
 void DWallScrollInterpolation::UpdateInterpolation()
 {
-	oldx = side->GetTextureXOffsetF(part);
-	oldy = side->GetTextureYOffsetF(part);
+	oldx = side->GetTextureXOffset(part);
+	oldy = side->GetTextureYOffset(part);
 }
 
 //==========================================================================
@@ -719,8 +719,8 @@ void DWallScrollInterpolation::Restore()
 
 void DWallScrollInterpolation::Interpolate(double smoothratio)
 {
-	bakx = side->GetTextureXOffsetF(part);
-	baky = side->GetTextureYOffsetF(part);
+	bakx = side->GetTextureXOffset(part);
+	baky = side->GetTextureYOffset(part);
 
 	if (refcount == 0 && oldx == bakx && oldy == baky)
 	{

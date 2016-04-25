@@ -119,8 +119,8 @@ static void BuildBlockmap()
 			while (*list != -1)
 			{
 				line_t *ld = &lines[*list++];
-
-				if (ld->isLinePortal())
+				FLinePortal *port = ld->getPortal();
+				if (port && port->mType != PORTT_VISUAL)
 				{
 					PortalBlockmap.containsLines = true;
 					block.portallines.Push(ld);
@@ -708,7 +708,7 @@ unsigned P_GetPortal(int type, int plane, sector_t *from, sector_t *to, const DV
 	sectorPortals[i].mOrigin = from;
 	sectorPortals[i].mDestination = to;
 	sectorPortals[i].mDisplacement = displacement;
-	sectorPortals[i].mPlaneZ = type == PORTS_LINKEDPORTAL? from->GetPlaneTexZF(plane) : FLT_MAX;
+	sectorPortals[i].mPlaneZ = type == PORTS_LINKEDPORTAL? from->GetPlaneTexZ(plane) : FLT_MAX;
 	return i;
 }
 

@@ -150,8 +150,8 @@ static int WriteSIDEDEFS (FILE *file)
 
 	for (int i = 0; i < numsides; ++i)
 	{
-		msd.textureoffset = LittleShort(short(sides[i].GetTextureXOffsetF(side_t::mid)));
-		msd.rowoffset = LittleShort(short(sides[i].GetTextureYOffsetF(side_t::mid)));
+		msd.textureoffset = LittleShort(short(sides[i].GetTextureXOffset(side_t::mid)));
+		msd.rowoffset = LittleShort(short(sides[i].GetTextureYOffset(side_t::mid)));
 		msd.sector = LittleShort(short(sides[i].sector - sectors));
 		uppercopy (msd.toptexture, GetTextureName (sides[i].GetTexture(side_t::top)));
 		uppercopy (msd.bottomtexture, GetTextureName (sides[i].GetTexture(side_t::bottom)));
@@ -196,8 +196,8 @@ static int WriteSECTORS (FILE *file)
 
 	for (int i = 0; i < numsectors; ++i)
 	{
-		ms.floorheight = LittleShort(short(sectors[i].GetPlaneTexZF(sector_t::floor)));
-		ms.ceilingheight = LittleShort(short(sectors[i].GetPlaneTexZF(sector_t::ceiling)));
+		ms.floorheight = LittleShort(short(sectors[i].GetPlaneTexZ(sector_t::floor)));
+		ms.ceilingheight = LittleShort(short(sectors[i].GetPlaneTexZ(sector_t::ceiling)));
 		uppercopy (ms.floorpic, GetTextureName (sectors[i].GetTexture(sector_t::floor)));
 		uppercopy (ms.ceilingpic, GetTextureName (sectors[i].GetTexture(sector_t::ceiling)));
 		ms.lightlevel = LittleShort((short)sectors[i].lightlevel);

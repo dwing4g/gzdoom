@@ -86,8 +86,8 @@ void GLSkyInfo::init(int sky1, PalEntry FadeColor)
 		texture[0] = FMaterial::ValidateTexture(texno, false, true);
 		if (!texture[0] || texture[0]->tex->UseType == FTexture::TEX_Null) goto normalsky;
 		skytexno1 = texno;
-		x_offset[0] = s->GetTextureXOffsetF(pos) * (360.f/65536.f);
-		y_offset = s->GetTextureYOffsetF(pos);
+		x_offset[0] = s->GetTextureXOffset(pos) * (360.f/65536.f);
+		y_offset = s->GetTextureYOffset(pos);
 		mirrored = !l->args[2];
 	}
 	else
@@ -154,7 +154,7 @@ void GLWall::SkyPlane(sector_t *sector, int plane, bool allowreflect)
 		case PORTS_PORTAL:
 		case PORTS_LINKEDPORTAL:
 		{
-			FPortal *glport = sector->portals[plane];
+			FPortal *glport = sector->GetGLPortal(plane);
 			if (glport != NULL)
 			{
 				if (sector->PortalBlocksView(plane)) return;
@@ -262,7 +262,7 @@ void GLWall::SkyTop(seg_t * seg,sector_t * fs,sector_t * bs,vertex_t * v1,vertex
 			// one more check for some ugly transparent door hacks
 			if (!bs->floorplane.isSlope() && !fs->floorplane.isSlope())
 			{
-				if (bs->GetPlaneTexZ(sector_t::floor)==fs->GetPlaneTexZ(sector_t::floor)+FRACUNIT)
+				if (bs->GetPlaneTexZ(sector_t::floor)==fs->GetPlaneTexZ(sector_t::floor)+1.)
 				{
 					FTexture * tex = TexMan(seg->sidedef->GetTexture(side_t::bottom));
 					if (!tex || tex->UseType==FTexture::TEX_Null) return;
@@ -276,7 +276,7 @@ void GLWall::SkyTop(seg_t * seg,sector_t * fs,sector_t * bs,vertex_t * v1,vertex
 					{
 						ztop[0]=ztop[1]=32768.0f;
 						zbottom[0]=zbottom[1]= 
-							bs->ceilingplane.ZatPoint(v2) + seg->sidedef->GetTextureYOffsetF(side_t::mid);
+							bs->ceilingplane.ZatPoint(v2) + seg->sidedef->GetTextureYOffset(side_t::mid);
 						SkyPlane(fs, sector_t::ceiling, false);
 						return;
 					}

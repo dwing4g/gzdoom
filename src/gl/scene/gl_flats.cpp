@@ -595,14 +595,14 @@ void GLFlat::ProcessSector(sector_t * frontsector)
 			{
 				gl_drawinfo->AddFloorStack(sector);	// stacked sector things require visplane merging.
 			}
-			alpha = frontsector->GetAlpha(sector_t::floor) / 65536.0f;
+			alpha = frontsector->GetAlpha(sector_t::floor);
 		}
 		else
 		{
 			alpha = 1.0f - frontsector->GetReflect(sector_t::floor);
 		}
 
-		if (alpha != 0.f && sector->GetTexture(sector_t::floor) != skyflatnum)
+		if (alpha != 0.f && frontsector->GetTexture(sector_t::floor) != skyflatnum)
 		{
 			if (frontsector->VBOHeightcheck(sector_t::floor))
 			{
@@ -654,14 +654,14 @@ void GLFlat::ProcessSector(sector_t * frontsector)
 			{
 				gl_drawinfo->AddCeilingStack(sector);
 			}
-			alpha = frontsector->GetAlpha(sector_t::ceiling) / 65536.0f;
+			alpha = frontsector->GetAlpha(sector_t::ceiling);
 		}
 		else
 		{
 			alpha = 1.0f - frontsector->GetReflect(sector_t::ceiling);
 		}
 
-		if (alpha != 0.f && sector->GetTexture(sector_t::ceiling) != skyflatnum)
+		if (alpha != 0.f && frontsector->GetTexture(sector_t::ceiling) != skyflatnum)
 		{
 			if (frontsector->VBOHeightcheck(sector_t::ceiling))
 			{
