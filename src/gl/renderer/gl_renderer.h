@@ -69,7 +69,9 @@ public:
 	FSamplerManager *mSamplerManager;
 	int gl_spriteindex;
 	unsigned int mFBID;
+	unsigned int mVAOID;
 
+	FTexture *gllight;
 	FTexture *glpart2;
 	FTexture *glpart;
 	FTexture *mirrortexture;
@@ -99,6 +101,7 @@ public:
 	void Initialize();
 
 	void CreateScene();
+	void RenderMultipassStuff();
 	void RenderScene(int recursion);
 	void RenderTranslucent();
 	void DrawScene(bool toscreen = false);
