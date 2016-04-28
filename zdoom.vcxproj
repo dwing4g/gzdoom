@@ -340,6 +340,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\gl\compatibility\gl_20.cpp" />
     <ClCompile Include="src\gl\data\gl_data.cpp" />
     <ClCompile Include="src\gl\data\gl_matrix.cpp" />
     <ClCompile Include="src\gl\data\gl_portaldata.cpp" />
