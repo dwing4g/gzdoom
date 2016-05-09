@@ -59,6 +59,7 @@ class FGLRenderer
 public:
 
 	OpenGLFrameBuffer *framebuffer;
+	GLPortal *mClipPortal;
 	GLPortal *mCurrentPortal;
 	int mMirrorCount;
 	int mPlaneMirrorCount;
@@ -70,6 +71,7 @@ public:
 	int gl_spriteindex;
 	unsigned int mFBID;
 	unsigned int mVAOID;
+	int mOldFBID;
 
 	FTexture *gllight;
 	FTexture *glpart2;

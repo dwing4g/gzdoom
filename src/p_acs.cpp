@@ -5567,6 +5567,11 @@ doplaysound:			if (funcIndex == ACSF_PlayActorSound)
 			if (argCount >= 2)
 			{
 				const char *a, *b;
+				// If the string indicies are the same, then they are the same string.
+				if (args[0] == args[1])
+				{
+					return 0;
+				}
 				a = FBehavior::StaticLookupString(args[0]);
 				b = FBehavior::StaticLookupString(args[1]);
 
@@ -8750,23 +8755,24 @@ scriptwait:
 			{
 				int tag = STACK(3);
 				int secnum;
-				DVector2 pos(ACSToDouble(STACK(2)), ACSToDouble(STACK(1)));
+				double x = double(STACK(2));
+				double y = double(STACK(1));
 				double z = 0;
 
 				if (tag != 0)
 					secnum = P_FindFirstSectorFromTag (tag);
 				else
-					secnum = int(P_PointInSector (pos) - sectors);
+					secnum = int(P_PointInSector (x, y) - sectors);
 
 				if (secnum >= 0)
 				{
 					if (pcd == PCD_GETSECTORFLOORZ)
 					{
-						z = sectors[secnum].floorplane.ZatPoint (pos);
+						z = sectors[secnum].floorplane.ZatPoint (x, y);
 					}
 					else
 					{
-						z = sectors[secnum].ceilingplane.ZatPoint (pos);
+						z = sectors[secnum].ceilingplane.ZatPoint (x, y);
 					}
 				}
 				sp -= 2;

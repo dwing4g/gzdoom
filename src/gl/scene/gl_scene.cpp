@@ -73,7 +73,9 @@
 #include "gl/shaders/gl_shader.h"
 #include "gl/stereo3d/gl_stereo3d.h"
 #include "gl/stereo3d/scoped_view_shifter.h"
+#include "gl/textures/gl_translate.h"
 #include "gl/textures/gl_material.h"
+#include "gl/textures/gl_skyboxtexture.h"
 #include "gl/utility/gl_clock.h"
 #include "gl/utility/gl_convert.h"
 #include "gl/utility/gl_templates.h"
@@ -308,6 +310,7 @@ void FGLRenderer::CreateScene()
 	R_SetView();
 	validcount++;	// used for processing sidedefs only once by the renderer.
 	gl_RenderBSPNode (nodes + numnodes - 1);
+	if (GLRenderer->mCurrentPortal != NULL) GLRenderer->mCurrentPortal->RenderAttached();
 	Bsp.Unclock();
 
 	// And now the crappy hacks that have to be done to avoid rendering anomalies:
@@ -503,7 +506,7 @@ void FGLRenderer::DrawScene(bool toscreen)
 	static int recursion=0;
 
 	CreateScene();
-	GLRenderer->mCurrentPortal = NULL;	// this must be reset before any portal recursion takes place.
+	GLRenderer->mClipPortal = NULL;	// this must be reset before any portal recursion takes place.
 
 	// Up to this point in the main draw call no rendering is performed so we can wait
 	// with swapping the render buffer until now.
@@ -793,7 +796,7 @@ sector_t * FGLRenderer::RenderViewpoint (AActor * camera, GL_IRECT * bounds, flo
 	SetViewArea();
 
 	// We have to scale the pitch to account for the pixel stretching, because the playsim doesn't know about this and treats it as 1:1.
-	double radPitch = clamp(ViewPitch.Normalized180().Radians(), -PI / 2, PI / 2);
+	double radPitch = ViewPitch.Normalized180().Radians();
 	double angx = cos(radPitch);
 	double angy = sin(radPitch) * glset.pixelstretch;
 	double alen = sqrt(angx*angx + angy*angy);
@@ -835,7 +838,7 @@ sector_t * FGLRenderer::RenderViewpoint (AActor * camera, GL_IRECT * bounds, flo
 		SetProjection( eye->GetProjection(fov, ratio, fovratio) );
 		// SetProjection(fov, ratio, fovratio);	// switch to perspective mode and set up clipper
 		SetViewAngle(ViewAngle);
-		// Stereo mode specific viewpoint adjustment - temporarily shifts global viewx, viewy, viewz
+		// Stereo mode specific viewpoint adjustment - temporarily shifts global ViewPos
 		eye->GetViewShift(GLRenderer->mAngles.Yaw.Degrees, viewShift);
 		s3d::ScopedViewShifter viewShifter(viewShift);
 		SetViewMatrix(ViewPos.X, ViewPos.Y, ViewPos.Z, false, false);
@@ -922,7 +925,7 @@ void FGLRenderer::RenderView (player_t* player)
 	TThinkerIterator<ADynamicLight> it(STAT_DLIGHT);
 	GLRenderer->mLightCount = ((it.Next()) != NULL);
 
-	sector_t * viewsector = RenderViewpoint(player->camera, NULL, FieldOfView * 360.0f / FINEANGLES, ratio, fovratio, true, true);
+	sector_t * viewsector = RenderViewpoint(player->camera, NULL, FieldOfView.Degrees, ratio, fovratio, true, true);
 
 	All.Unclock();
 }
@@ -952,7 +955,7 @@ void FGLRenderer::WriteSavePic (player_t *player, FILE *file, int width, int hei
 	GLRenderer->mLightCount = ((it.Next()) != NULL);
 
 	sector_t *viewsector = RenderViewpoint(players[consoleplayer].camera, &bounds, 
-								FieldOfView * 360.0f / FINEANGLES, 1.6f, 1.6f, true, false);
+								FieldOfView.Degrees, 1.6f, 1.6f, true, false);
 	glDisable(GL_STENCIL_TEST);
 	gl_RenderState.SetFixedColormap(CM_DEFAULT);
 	gl_RenderState.SetSoftLightLevel(-1);
@@ -977,6 +980,8 @@ struct FGLInterface : public FRenderer
 {
 	bool UsesColormap() const;
 	void PrecacheTexture(FTexture *tex, int cache);
+	void PrecacheSprite(FTexture *tex, SpriteHits &hits);
+	void Precache(BYTE *texhitlist, TMap<PClassActor*, bool> &actorhitlist);
 	void RenderView(player_t *player);
 	void WriteSavePic (player_t *player, FILE *file, int width, int height);
 	void StateChanged(AActor *actor);
@@ -1014,18 +1019,174 @@ bool FGLInterface::UsesColormap() const
 
 void FGLInterface::PrecacheTexture(FTexture *tex, int cache)
 {
-	if (tex != NULL)
+	if (cache & (FTextureManager::HIT_Wall | FTextureManager::HIT_Flat | FTextureManager::HIT_Sky))
 	{
-		if (cache)
-		{
-			tex->PrecacheGL(cache);
-		}
-		else
-		{
-			tex->UncacheGL();
-		}
+		FMaterial * gltex = FMaterial::ValidateTexture(tex, false);
+		if (gltex) gltex->Precache();
 	}
 }
+
+//==========================================================================
+//
+// DFrameBuffer :: PrecacheSprite
+//
+//==========================================================================
+
+void FGLInterface::PrecacheSprite(FTexture *tex, SpriteHits &hits)
+{
+	FMaterial * gltex = FMaterial::ValidateTexture(tex, true);
+	if (gltex) gltex->PrecacheList(hits);
+}
+
+//==========================================================================
+//
+// DFrameBuffer :: Precache
+//
+//==========================================================================
+
+void FGLInterface::Precache(BYTE *texhitlist, TMap<PClassActor*, bool> &actorhitlist)
+{
+	SpriteHits *spritelist = new SpriteHits[sprites.Size()];
+	SpriteHits **spritehitlist = new SpriteHits*[TexMan.NumTextures()];
+	TMap<PClassActor*, bool>::Iterator it(actorhitlist);
+	TMap<PClassActor*, bool>::Pair *pair;
+	BYTE *modellist = new BYTE[Models.Size()];
+	memset(modellist, 0, Models.Size());
+	memset(spritehitlist, 0, sizeof(SpriteHits**) * TexMan.NumTextures());
+
+	// this isn't done by the main code so it needs to be done here first:
+	// check skybox textures and mark the separate faces as used
+	for (int i = 0; i<TexMan.NumTextures(); i++)
+	{
+		// HIT_Wall must be checked for MBF-style sky transfers. 
+		if (texhitlist[i] & (FTextureManager::HIT_Sky | FTextureManager::HIT_Wall))
+		{
+			FTexture *tex = TexMan.ByIndex(i);
+			if (tex->gl_info.bSkybox)
+			{
+				FSkyBox *sb = static_cast<FSkyBox*>(tex);
+				for (int i = 0; i<6; i++)
+				{
+					if (sb->faces[i])
+					{
+						int index = sb->faces[i]->id.GetIndex();
+						texhitlist[index] |= FTextureManager::HIT_Flat;
+					}
+				}
+			}
+		}
+	}
+
+	// Check all used actors.
+	// 1. mark all sprites associated with its states
+	// 2. mark all model data and skins associated with its states
+	while (it.NextPair(pair))
+	{
+		PClassActor *cls = pair->Key;
+		int gltrans = GLTranslationPalette::GetInternalTranslation(GetDefaultByType(cls)->Translation);
+
+		for (int i = 0; i < cls->NumOwnedStates; i++)
+		{
+			spritelist[cls->OwnedStates[i].sprite].Insert(gltrans, true);
+			FSpriteModelFrame * smf = gl_FindModelFrame(cls, cls->OwnedStates[i].sprite, cls->OwnedStates[i].Frame, false);
+			if (smf != NULL)
+			{
+				for (int i = 0; i < MAX_MODELS_PER_FRAME; i++)
+				{
+					if (smf->skinIDs[i].isValid())
+					{
+						texhitlist[smf->skinIDs[i].GetIndex()] |= FTexture::TEX_Flat;
+					}
+					else if (smf->modelIDs[i] != -1)
+					{
+						Models[smf->modelIDs[i]]->AddSkins(texhitlist);
+					}
+					if (smf->modelIDs[i] != -1)
+					{
+						modellist[smf->modelIDs[i]] = 1;
+					}
+				}
+			}
+		}
+	}
+
+	// mark all sprite textures belonging to the marked sprites.
+	for (int i = (int)(sprites.Size() - 1); i >= 0; i--)
+	{
+		if (spritelist[i].CountUsed())
+		{
+			int j, k;
+			for (j = 0; j < sprites[i].numframes; j++)
+			{
+				const spriteframe_t *frame = &SpriteFrames[sprites[i].spriteframes + j];
+
+				for (k = 0; k < 16; k++)
+				{
+					FTextureID pic = frame->Texture[k];
+					if (pic.isValid())
+					{
+						spritehitlist[pic.GetIndex()] = &spritelist[i];
+					}
+				}
+			}
+		}
+	}
+
+	// delete everything unused before creating any new resources to avoid memory usage peaks.
+
+	// delete unused models
+	for (unsigned i = 0; i < Models.Size(); i++)
+	{
+		if (!modellist[i]) Models[i]->DestroyVertexBuffer();
+	}
+
+	// delete unused textures
+	int cnt = TexMan.NumTextures();
+	for (int i = cnt - 1; i >= 0; i--)
+	{
+		FTexture *tex = TexMan.ByIndex(i);
+		if (tex != nullptr)
+		{
+			if (!texhitlist[i])
+			{
+				if (tex->gl_info.Material[0]) tex->gl_info.Material[0]->Clean(true);
+			}
+			if (spritehitlist[i] == nullptr || (*spritehitlist[i]).CountUsed() == 0)
+			{
+				if (tex->gl_info.Material[1]) tex->gl_info.Material[1]->Clean(true);
+			}
+		}
+	}
+
+	if (gl_precache)
+	{
+		// cache all used textures
+		for (int i = cnt - 1; i >= 0; i--)
+		{
+			FTexture *tex = TexMan.ByIndex(i);
+			if (tex != nullptr)
+			{
+				PrecacheTexture(tex, texhitlist[i]);
+				if (spritehitlist[i] != nullptr && (*spritehitlist[i]).CountUsed() > 0)
+				{
+					PrecacheSprite(tex, *spritehitlist[i]);
+				}
+			}
+		}
+
+		// cache all used models
+		for (unsigned i = 0; i < Models.Size(); i++)
+		{
+			if (modellist[i]) 
+				Models[i]->BuildVertexBuffer();
+		}
+	}
+
+	delete[] spritehitlist;
+	delete[] spritelist;
+	delete[] modellist;
+}
+
 
 //==========================================================================
 //

@@ -73,6 +73,7 @@ CVAR(Float, gl_sclipthreshold, 10.0, CVAR_ARCHIVE)
 CVAR(Float, gl_sclipfactor, 1.8, CVAR_ARCHIVE)
 CVAR(Int, gl_particles_style, 2, CVAR_ARCHIVE | CVAR_GLOBALCONFIG) // 0 = square, 1 = round, 2 = smooth
 CVAR(Int, gl_billboard_mode, 0, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
+CVAR(Bool, gl_billboard_faces_camera, false, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
 CVAR(Bool, gl_billboard_particles, true, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
 CVAR(Int, gl_enhanced_nv_stealth, 3, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
 CUSTOM_CVAR(Int, gl_fuzztype, 0, CVAR_ARCHIVE)
@@ -262,40 +263,60 @@ void GLSprite::Draw(int pass)
 				//&& GLRenderer->mViewActor != NULL
 				&& (gl_billboard_mode == 1 || (actor && actor->renderflags & RF_FORCEXYBILLBOARD))));
 
+			const bool drawBillboardFacingCamera = gl_billboard_faces_camera;
+
 			gl_RenderState.Apply();
 
-			Vector v1;
-			Vector v2;
-			Vector v3;
-			Vector v4;
+			FVector3 v1;
+			FVector3 v2;
+			FVector3 v3;
+			FVector3 v4;
 
-			if (drawWithXYBillboard)
+			if (drawWithXYBillboard || drawBillboardFacingCamera)
 			{
-				// Rotate the sprite about the vector starting at the center of the sprite
-				// triangle strip and with direction orthogonal to where the player is looking
-				// in the x/y plane.
+				// Compute center of sprite
 				float xcenter = (x1 + x2)*0.5;
 				float ycenter = (y1 + y2)*0.5;
 				float zcenter = (z1 + z2)*0.5;
-				float angleRad = (270. - GLRenderer->mAngles.Yaw).Radians();
 
 				Matrix3x4 mat;
 				mat.MakeIdentity();
-				mat.Translate(xcenter, zcenter, ycenter);
-				mat.Rotate(-sin(angleRad), 0, cos(angleRad), -GLRenderer->mAngles.Pitch.Degrees);
-				mat.Translate(-xcenter, -zcenter, -ycenter);
-				v1 = mat * Vector(x1, z1, y1);
-				v2 = mat * Vector(x2, z1, y2);
-				v3 = mat * Vector(x1, z2, y1);
-				v4 = mat * Vector(x2, z2, y2);
-			}
-			else
-			{
+				mat.Translate(xcenter, zcenter, ycenter); // move to sprite center
 
-				v1 = Vector(x1, z1, y1);
-				v2 = Vector(x2, z1, y2);
-				v3 = Vector(x1, z2, y1);
-				v4 = Vector(x2, z2, y2);
+				// Order of rotations matters. Perform yaw rotation (Y, face camera) before pitch (X, tilt up/down).
+				if (drawBillboardFacingCamera) {
+					// [CMB] Rotate relative to camera XY position, not just camera direction,
+					// which is nicer in VR
+					float xrel = xcenter - ViewPos.X;
+					float yrel = ycenter - ViewPos.Y;
+					float absAngleDeg = RAD2DEG(atan2(-yrel, xrel));
+					float counterRotationDeg = 270. - GLRenderer->mAngles.Yaw.Degrees; // counteracts existing sprite rotation
+					float relAngleDeg = counterRotationDeg + absAngleDeg;
+
+					mat.Rotate(0, 1, 0, relAngleDeg);
+				}
+
+				if (drawWithXYBillboard)
+				{
+					// Rotate the sprite about the vector starting at the center of the sprite
+					// triangle strip and with direction orthogonal to where the player is looking
+					// in the x/y plane.
+					float angleRad = (270. - GLRenderer->mAngles.Yaw).Radians();
+
+					mat.Rotate(-sin(angleRad), 0, cos(angleRad), -GLRenderer->mAngles.Pitch.Degrees);
+				}
+				mat.Translate(-xcenter, -zcenter, -ycenter); // retreat from sprite center
+				v1 = mat * FVector3(x1, z1, y1);
+				v2 = mat * FVector3(x2, z1, y2);
+				v3 = mat * FVector3(x1, z2, y1);
+				v4 = mat * FVector3(x2, z2, y2);
+			}
+			else // traditional "Y" billboard mode
+			{
+				v1 = FVector3(x1, z1, y1);
+				v2 = FVector3(x2, z1, y2);
+				v3 = FVector3(x1, z2, y1);
+				v4 = FVector3(x2, z2, y2);
 			}
 
 			FFlatVertex *ptr;
@@ -521,7 +542,7 @@ void GLSprite::PerformSpriteClipAdjustment(AActor *thing, const DVector2 &thingp
 //
 //==========================================================================
 
-void GLSprite::Process(AActor* thing, sector_t * sector, bool thruportal)
+void GLSprite::Process(AActor* thing, sector_t * sector, int thruportal)
 {
 	sector_t rs;
 	sector_t * rendersector;
@@ -552,7 +573,7 @@ void GLSprite::Process(AActor* thing, sector_t * sector, bool thruportal)
 
 	// [RH] Interpolate the sprite's position to make it look smooth
 	DVector3 thingpos = thing->InterpolatedPosition(r_TicFracF);
-	if (thruportal) thingpos += Displacements.getOffset(thing->Sector->PortalGroup, sector->PortalGroup);
+	if (thruportal == 1) thingpos += Displacements.getOffset(thing->Sector->PortalGroup, sector->PortalGroup);
 
 	// Too close to the camera. This doesn't look good if it is a sprite.
 	if (fabs(thingpos.X - ViewPos.X) < 2 && fabs(thingpos.Y - ViewPos.Y) < 2)
@@ -575,15 +596,19 @@ void GLSprite::Process(AActor* thing, sector_t * sector, bool thruportal)
 	{
 		if (!(thing->flags7 & MF7_FLYCHEAT) && thing->target == GLRenderer->mViewActor && GLRenderer->mViewActor != NULL)
 		{
-			double clipdist = clamp(thing->Speed, thing->target->radius, thing->target->radius * 2);
-			if ((thingpos - ViewPos).LengthSquared() < clipdist * clipdist) return;
+			double speed = thing->Vel.Length();
+			if (speed >= thing->target->radius / 2)
+			{
+				double clipdist = clamp(thing->Speed, thing->target->radius, thing->target->radius * 2);
+				if ((thingpos - ViewPos).LengthSquared() < clipdist * clipdist) return;
+			}
 		}
 		thing->flags7 |= MF7_FLYCHEAT;	// do this only once for the very first frame, but not if it gets into range again.
 	}
 
-	if (GLRenderer->mCurrentPortal)
+	if (thruportal != 2 && GLRenderer->mClipPortal)
 	{
-		int clipres = GLRenderer->mCurrentPortal->ClipPoint(thingpos);
+		int clipres = GLRenderer->mClipPortal->ClipPoint(thingpos);
 		if (clipres == GLPortal::PClip_InFront) return;
 	}
 
@@ -600,7 +625,6 @@ void GLSprite::Process(AActor* thing, sector_t * sector, bool thruportal)
 	}
 	topclip = rendersector->PortalBlocksMovement(sector_t::ceiling) ? LARGE_VALUE : rendersector->GetPortalPlaneZ(sector_t::ceiling);
 	bottomclip = rendersector->PortalBlocksMovement(sector_t::floor) ? -LARGE_VALUE : rendersector->GetPortalPlaneZ(sector_t::floor);
-
 
 	x = thingpos.X;
 	z = thingpos.Z - thing->Floorclip;
@@ -894,9 +918,9 @@ void GLSprite::Process(AActor* thing, sector_t * sector, bool thruportal)
 
 void GLSprite::ProcessParticle (particle_t *particle, sector_t *sector)//, int shade, int fakeside)
 {
-	if (GLRenderer->mCurrentPortal)
+	if (GLRenderer->mClipPortal)
 	{
-		int clipres = GLRenderer->mCurrentPortal->ClipPoint(particle->Pos);
+		int clipres = GLRenderer->mClipPortal->ClipPoint(particle->Pos);
 		if (clipres == GLPortal::PClip_InFront) return;
 	}
 
@@ -1019,5 +1043,56 @@ void GLSprite::ProcessParticle (particle_t *particle, sector_t *sector)//, int s
 	rendered_sprites++;
 }
 
+//==========================================================================
+//
+// 
+//
+//==========================================================================
 
+void gl_RenderActorsInPortal(FGLLinePortal *glport)
+{
+	TMap<AActor*, bool> processcheck;
+	if (glport->validcount == validcount) return;	// only process once per frame
+	glport->validcount = validcount;
+	for (auto port : glport->lines)
+	{
+		line_t *line = port->mOrigin;
+		if (line->isLinePortal())	// only crossable ones
+		{
+			FLinePortal *port2 = port->mDestination->getPortal();
+			// process only if the other side links back to this one.
+			if (port2 != nullptr && port->mDestination == port2->mOrigin && port->mOrigin == port2->mDestination)
+			{
 
+				for (portnode_t *node = port->render_thinglist; node != nullptr; node = node->m_snext)
+				{
+					AActor *th = node->m_thing;
+
+					// process each actor only once per portal.
+					bool *check = processcheck.CheckKey(th);
+					if (check && *check) continue;
+					processcheck[th] = true;
+
+					DAngle savedangle = th->Angles.Yaw;
+					DVector3 savedpos = th->Pos();
+					DVector3 newpos = savedpos;
+					sector_t fakesector;
+
+					P_TranslatePortalXY(line, newpos.X, newpos.Y);
+					P_TranslatePortalZ(line, newpos.Z);
+					P_TranslatePortalAngle(line, th->Angles.Yaw);
+					th->SetXYZ(newpos);
+					th->Prev += newpos - savedpos;
+
+					GLSprite spr;
+					th->fillcolor = 0xff0000ff;
+					spr.Process(th, gl_FakeFlat(th->Sector, &fakesector, false), 2);
+					th->fillcolor = 0xffffffff;
+					th->Angles.Yaw = savedangle;
+					th->SetXYZ(savedpos);
+					th->Prev -= newpos - savedpos;
+				}
+			}
+		}
+	}
+}

@@ -47,6 +47,7 @@
 #include "templates.h"
 #include "sc_man.h"
 #include "colormatcher.h"
+#include "textures/warpbuffer.h"
 
 //#include "gl/gl_intern.h"
 
@@ -72,7 +73,6 @@ EXTERN_CVAR(Bool, gl_texture_usehires)
 // The GL texture maintenance class
 //
 //===========================================================================
-BYTE *gl_WarpBuffer(BYTE *buffer, int Width, int Height, int warp, float Speed);
 
 //===========================================================================
 //
@@ -91,6 +91,7 @@ FGLTexture::FGLTexture(FTexture * tx, bool expandpatches)
 	bIsTransparent = -1;
 	bExpandFlag = expandpatches;
 	lastSampler = 254;
+	lastTranslation = -1;
 	tex->gl_info.SystemTexture[expandpatches] = this;
 }
 
@@ -165,14 +166,28 @@ unsigned char *FGLTexture::LoadHiresTexture(FTexture *tex, int *width, int *heig
 
 void FGLTexture::Clean(bool all)
 {
-	if (mHwTexture) 
+	if (mHwTexture != nullptr) 
 	{
 		if (!all) mHwTexture->Clean(false);
 		else
 		{
 			delete mHwTexture;
-			mHwTexture = NULL;
+			mHwTexture = nullptr;
 		}
+
+		lastSampler = 253;
+		lastTranslation = -1;
+	}
+}
+
+
+void FGLTexture::CleanUnused(SpriteHits &usedtranslations)
+{
+	if (mHwTexture != nullptr)
+	{
+		mHwTexture->CleanUnused(usedtranslations);
+		lastSampler = 253;
+		lastTranslation = -1;
 	}
 }
 
@@ -285,7 +300,7 @@ const FHardwareTexture *FGLTexture::Bind(int texunit, int clampmode, int transla
 		translation = GLTranslationPalette::GetInternalTranslation(translation);
 	}
 
-	bool needmipmap = (clampmode <= CLAMP_XY) || !(gl.flags & RFL_SAMPLER_OBJECTS);
+	bool needmipmap = (clampmode <= CLAMP_XY);
 
 	FHardwareTexture *hwtex = CreateHwTexture();
 
@@ -310,11 +325,15 @@ const FHardwareTexture *FGLTexture::Bind(int texunit, int clampmode, int transla
 			if (!tex->bHasCanvas)
 			{
 				buffer = CreateTexBuffer(translation, w, h, hirescheck, true, alphatrans);
-				if (tex->bWarped && gl.glslversion == 0)
+				if (tex->bWarped && gl.glslversion == 0 && w*h <= 256*256)	// do not software-warp larger textures, especially on the old systems that still need this fallback.
 				{
-					// need to warp
-					buffer = gl_WarpBuffer(buffer, w, h, tex->bWarped, static_cast<FWarpTexture*>(tex)->GetSpeed());
-					static_cast<FWarpTexture*>(tex)->GenTime = r_FrameTime;
+					// need to do software warping
+					FWarpTexture *wt = static_cast<FWarpTexture*>(tex);
+					unsigned char *warpbuffer = new unsigned char[w*h*4];
+					WarpBuffer((DWORD*)warpbuffer, (const DWORD*)buffer, w, h, wt->WidthOffsetMultiplier, wt->HeightOffsetMultiplier, r_FrameTime, wt->Speed, tex->bWarped);
+					delete[] buffer;
+					buffer = warpbuffer;
+					wt->GenTime = r_FrameTime;
 				}
 				tex->ProcessData(buffer, w, h, false);
 			}
@@ -326,10 +345,11 @@ const FHardwareTexture *FGLTexture::Bind(int texunit, int clampmode, int transla
 			}
 			delete[] buffer;
 		}
-		if (!needmipmap) clampmode = CLAMP_XY_NOMIP;
 		if (tex->bHasCanvas) static_cast<FCanvasTexture*>(tex)->NeedUpdate();
+		if (translation != lastTranslation) lastSampler = 254;
 		if (lastSampler != clampmode)
 			lastSampler = GLRenderer->mSamplerManager->Bind(texunit, clampmode, lastSampler);
+		lastTranslation = translation;
 		return hwtex; 
 	}
 	return NULL;
@@ -702,6 +722,19 @@ void FMaterial::Bind(int clampmode, int translation)
 void FMaterial::Precache()
 {
 	Bind(0, 0);
+}
+
+//===========================================================================
+//
+//
+//
+//===========================================================================
+void FMaterial::PrecacheList(SpriteHits &translations)
+{
+	if (mBaseLayer != nullptr) mBaseLayer->CleanUnused(translations);
+	SpriteHits::Iterator it(translations);
+	SpriteHits::Pair *pair;
+	while(it.NextPair(pair)) Bind(0, pair->Key);
 }
 
 //===========================================================================

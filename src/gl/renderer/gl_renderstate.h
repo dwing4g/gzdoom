@@ -37,6 +37,7 @@ enum EEffect
 	EFF_SPHEREMAP,
 	EFF_BURN,
 	EFF_STENCIL,
+	EFF_GAMMACORRECTION,
 
 	MAX_EFFECTS
 };
@@ -47,6 +48,7 @@ class FRenderState
 	bool mFogEnabled;
 	bool mGlowEnabled;
 	bool mSplitEnabled;
+	bool mClipLineEnabled;
 	bool mBrightmapEnabled;
 	bool mColorMask[4];
 	bool currentColorMask[4];
@@ -73,6 +75,7 @@ class FRenderState
 	FStateVec4 mGlowTop, mGlowBottom;
 	FStateVec4 mGlowTopPlane, mGlowBottomPlane;
 	FStateVec4 mSplitTopPlane, mSplitBottomPlane;
+	FStateVec4 mClipLine;
 	PalEntry mFogColor;
 	PalEntry mObjectColor;
 	FStateVec4 mDynColor;
@@ -143,6 +146,16 @@ public:
 	float GetClipHeightDirection()
 	{
 		return mClipHeightDirection;
+	}
+
+	FStateVec4 &GetClipLine()
+	{
+		return mClipLine;
+	}
+
+	bool GetClipLineState()
+	{
+		return mClipLineEnabled;
 	}
 
 	void SetClipHeight(float height, float direction);
@@ -237,6 +250,27 @@ public:
 			{
 				glDisable(GL_CLIP_DISTANCE3);
 				glDisable(GL_CLIP_DISTANCE4);
+			}
+		}
+	}
+
+	void SetClipLine(line_t *line)
+	{
+		mClipLine.Set(line->v1->fX(), line->v1->fY(), line->Delta().X, line->Delta().Y);
+	}
+
+	void EnableClipLine(bool on)
+	{
+		if (gl.glslversion >= 1.3f)
+		{
+			mClipLineEnabled = on;
+			if (on)
+			{
+				glEnable(GL_CLIP_DISTANCE0);
+			}
+			else
+			{
+				glDisable(GL_CLIP_DISTANCE0);
 			}
 		}
 	}
@@ -403,6 +437,11 @@ public:
 	void SetInterpolationFactor(float fac)
 	{
 		mInterpolationFactor = fac;
+	}
+
+	float GetInterpolationFactor()
+	{
+		return mInterpolationFactor;
 	}
 
 	// Backwards compatibility crap follows

@@ -40,7 +40,6 @@
 #include "p_enemy.h"
 #include "g_level.h"
 #include "v_palette.h"
-#include "tables.h"
 #include "i_system.h"
 #include "a_sharedglobal.h"
 #include "a_lightning.h"
@@ -1133,7 +1132,7 @@ FUNC(LS_Teleport_Line)
 
 static void ThrustThingHelper(AActor *it, DAngle angle, double force, INTBOOL nolimit)
 {
-	it->VelFromAngle(angle, force);
+	it->Thrust(angle, force);
 	if (!nolimit)
 	{
 		it->Vel.X = clamp(it->Vel.X, -MAXMOVE, MAXMOVE);

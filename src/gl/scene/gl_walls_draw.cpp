@@ -175,13 +175,7 @@ void GLWall::SetupLights()
 
 void GLWall::RenderWall(int textured, unsigned int *store)
 {
-	static texcoord tcs[4]; // making this variable static saves us a relatively costly stack integrity check.
 	bool split = (gl_seamless && !(textured&RWF_NOSPLIT) && seg->sidedef != NULL && !(seg->sidedef->Flags & WALLF_POLYOBJ) && !(flags & GLWF_NOSPLIT));
-
-	tcs[0]=lolft;
-	tcs[1]=uplft;
-	tcs[2]=uprgt;
-	tcs[3]=lorgt;
 
 	if (!(textured & RWF_NORENDER))
 	{
@@ -193,18 +187,18 @@ void GLWall::RenderWall(int textured, unsigned int *store)
 	FFlatVertex *ptr = GLRenderer->mVBO->GetBuffer();
 	unsigned int count, offset;
 
-	ptr->Set(glseg.x1, zbottom[0], glseg.y1, tcs[0].u, tcs[0].v);
+	ptr->Set(glseg.x1, zbottom[0], glseg.y1, tcs[LOLFT].u, tcs[LOLFT].v);
 	ptr++;
-	if (split && glseg.fracleft == 0) SplitLeftEdge(tcs, ptr);
-	ptr->Set(glseg.x1, ztop[0], glseg.y1, tcs[1].u, tcs[1].v);
+	if (split && glseg.fracleft == 0) SplitLeftEdge(ptr);
+	ptr->Set(glseg.x1, ztop[0], glseg.y1, tcs[UPLFT].u, tcs[UPLFT].v);
 	ptr++;
-	if (split && !(flags & GLWF_NOSPLITUPPER)) SplitUpperEdge(tcs, ptr);
-	ptr->Set(glseg.x2, ztop[1], glseg.y2, tcs[2].u, tcs[2].v);
+	if (split && !(flags & GLWF_NOSPLITUPPER)) SplitUpperEdge(ptr);
+	ptr->Set(glseg.x2, ztop[1], glseg.y2, tcs[UPRGT].u, tcs[UPRGT].v);
 	ptr++;
-	if (split && glseg.fracright == 1) SplitRightEdge(tcs, ptr);
-	ptr->Set(glseg.x2, zbottom[1], glseg.y2, tcs[3].u, tcs[3].v);
+	if (split && glseg.fracright == 1) SplitRightEdge(ptr);
+	ptr->Set(glseg.x2, zbottom[1], glseg.y2, tcs[LORGT].u, tcs[LORGT].v);
 	ptr++;
-	if (split && !(flags & GLWF_NOSPLITLOWER)) SplitLowerEdge(tcs, ptr);
+	if (split && !(flags & GLWF_NOSPLITLOWER)) SplitLowerEdge(ptr);
 	count = GLRenderer->mVBO->GetCount(ptr, &offset);
 	if (!(textured & RWF_NORENDER))
 	{
@@ -228,16 +222,23 @@ void GLWall::RenderFogBoundary()
 {
 	if (gl_fogmode && gl_fixedcolormap == 0)
 	{
-		int rel = rellight + getExtraLight();
-		gl_SetFog(lightlevel, rel, &Colormap, false);
-		gl_RenderState.SetEffect(EFF_FOGBOUNDARY);
-		gl_RenderState.AlphaFunc(GL_GEQUAL, 0.f);
-		glEnable(GL_POLYGON_OFFSET_FILL);
-		glPolygonOffset(-1.0f, -128.0f);
-		RenderWall(RWF_BLANK);
-		glPolygonOffset(0.0f, 0.0f);
-		glDisable(GL_POLYGON_OFFSET_FILL);
-		gl_RenderState.SetEffect(EFF_NONE);
+		if (gl.glslversion > 0.f)
+		{
+			int rel = rellight + getExtraLight();
+			gl_SetFog(lightlevel, rel, &Colormap, false);
+			gl_RenderState.SetEffect(EFF_FOGBOUNDARY);
+			gl_RenderState.AlphaFunc(GL_GEQUAL, 0.f);
+			glEnable(GL_POLYGON_OFFSET_FILL);
+			glPolygonOffset(-1.0f, -128.0f);
+			RenderWall(RWF_BLANK);
+			glPolygonOffset(0.0f, 0.0f);
+			glDisable(GL_POLYGON_OFFSET_FILL);
+			gl_RenderState.SetEffect(EFF_NONE);
+		}
+		else
+		{
+			RenderFogBoundaryCompat();
+		}
 	}
 }
 
@@ -255,12 +256,19 @@ void GLWall::RenderMirrorSurface()
 	Vector v(glseg.y2-glseg.y1, 0 ,-glseg.x2+glseg.x1);
 	v.Normalize();
 
-	// we use texture coordinates and texture matrix to pass the normal stuff to the shader so that the default vertex buffer format can be used as is.
-	lolft.u = lorgt.u = uplft.u = uprgt.u = v.X();
-	lolft.v = lorgt.v = uplft.v = uprgt.v = v.Z();
+	if (gl.glslversion >= 0.f)
+	{
+		// we use texture coordinates and texture matrix to pass the normal stuff to the shader so that the default vertex buffer format can be used as is.
+		tcs[LOLFT].u = tcs[LORGT].u = tcs[UPLFT].u = tcs[UPRGT].u = v.X();
+		tcs[LOLFT].v = tcs[LORGT].v = tcs[UPLFT].v = tcs[UPRGT].v = v.Z();
 
-	gl_RenderState.EnableTextureMatrix(true);
-	gl_RenderState.mTextureMatrix.computeNormalMatrix(gl_RenderState.mViewMatrix);
+		gl_RenderState.EnableTextureMatrix(true);
+		gl_RenderState.mTextureMatrix.computeNormalMatrix(gl_RenderState.mViewMatrix);
+	}
+	else
+	{
+		glNormal3fv(&v[0]);
+	}
 
 	// Use sphere mapping for this
 	gl_RenderState.SetEffect(EFF_SPHEREMAP);
@@ -434,5 +442,16 @@ void GLWall::Draw(int pass)
 			RenderTranslucentWall();
 			break;
 		}
+		break;
+
+	case GLPASS_LIGHTTEX:
+	case GLPASS_LIGHTTEX_ADDITIVE:
+		RenderLightsCompat(pass);
+		break;
+
+	case GLPASS_TEXONLY:
+		gl_RenderState.SetMaterial(gltexture, flags & 3, 0, -1, false);
+		RenderWall(RWF_TEXTURED);
+		break;
 	}
 }

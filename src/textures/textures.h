@@ -310,7 +310,6 @@ public:
 		FloatRect *areas;
 		int areacount;
 		int shaderindex;
-		unsigned int precacheTime;
 		float shaderspeed;
 		int mIsTransparent:2;
 		bool bGlowing:1;						// Texture glows
@@ -328,8 +327,6 @@ public:
 	};
 	MiscGLInfo gl_info;
 
-	virtual void PrecacheGL(int cache);
-	virtual void UncacheGL();
 	void GetGlowColor(float *data);
 	PalEntry GetSkyCapColor(bool bottom);
 	bool isGlowing() { return gl_info.bGlowing; }
@@ -448,7 +445,6 @@ public:
 	void UnloadAll ();
 
 	int NumTextures () const { return (int)Textures.Size(); }
-	void PrecacheLevel (void);
 
 	void WriteTexture (FArchive &arc, int picnum);
 	int ReadTexture (FArchive &arc);
@@ -458,8 +454,6 @@ public:
 
 	FSwitchDef *FindSwitch (FTextureID texture);
 	FDoorAnimation *FindAnimatedDoor (FTextureID picnum);
-
-	unsigned int precacheTime;
 
 private:
 
@@ -517,6 +511,12 @@ private:
 	TArray<FSwitchDef *> mSwitchDefs;
 	TArray<FDoorAnimation> mAnimatedDoors;
 	TArray<BYTE *> BuildTileFiles;
+public:
+	short sintable[2048];	// for texture warping
+	enum
+	{
+		SINMASK = 2047
+	};
 };
 
 // A texture that doesn't really exist
@@ -534,7 +534,7 @@ public:
 class FWarpTexture : public FTexture
 {
 public:
-	FWarpTexture (FTexture *source);
+	FWarpTexture (FTexture *source, int warptype);
 	~FWarpTexture ();
 
 	virtual int CopyTrueColorPixels(FBitmap *bmp, int x, int y, int rotate=0, FCopyInfo *inf = NULL);
@@ -549,26 +549,16 @@ public:
 	FTexture *GetRedirect(bool wantwarped);
 
 	DWORD GenTime;
+	float Speed;
+	int WidthOffsetMultiplier, HeightOffsetMultiplier;  // [mxd]
 protected:
 	FTexture *SourcePic;
 	BYTE *Pixels;
 	Span **Spans;
-	float Speed;
-	int WidthOffsetMultipiler, HeightOffsetMultipiler;  // [mxd]
 
 	virtual void MakeTexture (DWORD time);
 	int NextPo2 (int v); // [mxd]
 	void SetupMultipliers (int width, int height); // [mxd]
-};
-
-// [GRB] Eternity-like warping
-class FWarp2Texture : public FWarpTexture
-{
-public:
-	FWarp2Texture (FTexture *source);
-
-protected:
-	void MakeTexture (DWORD time);
 };
 
 // A texture that can be drawn to.

@@ -60,8 +60,8 @@ static void UnpackVector(unsigned short packed, float & nx, float & ny, float & 
 {
 	double lat = ( packed >> 8 ) & 0xff;
 	double lng = ( packed & 0xff );
-	lat *= PI/128;
-	lng *= PI/128;
+	lat *= M_PI/128;
+	lng *= M_PI/128;
 
 	nx = cos(lat) * sin(lng);
 	ny = sin(lat) * sin(lng);
@@ -77,45 +77,45 @@ static void UnpackVector(unsigned short packed, float & nx, float & ny, float & 
 #pragma pack(4)
 struct md3_header_t
 {
-	DWORD Magic;
-	DWORD Version;
+	uint32_t Magic;
+	uint32_t Version;
 	char Name[MAX_QPATH];
-	DWORD Flags;
-	DWORD Num_Frames;
-	DWORD Num_Tags;
-	DWORD Num_Surfaces;
-	DWORD Num_Skins;
-	DWORD Ofs_Frames;
-	DWORD Ofs_Tags;
-	DWORD Ofs_Surfaces;
-	DWORD Ofs_Eof;
+	uint32_t Flags;
+	uint32_t Num_Frames;
+	uint32_t Num_Tags;
+	uint32_t Num_Surfaces;
+	uint32_t Num_Skins;
+	uint32_t Ofs_Frames;
+	uint32_t Ofs_Tags;
+	uint32_t Ofs_Surfaces;
+	uint32_t Ofs_Eof;
 };
 
 struct md3_surface_t
 {
-	DWORD Magic;
+	uint32_t Magic;
 	char Name[MAX_QPATH];
-	DWORD Flags;
-	DWORD Num_Frames;
-	DWORD Num_Shaders;
-	DWORD Num_Verts;
-	DWORD Num_Triangles;
-	DWORD Ofs_Triangles;
-	DWORD Ofs_Shaders;
-	DWORD Ofs_Texcoord;
-	DWORD Ofs_XYZNormal;
-	DWORD Ofs_End;
+	uint32_t Flags;
+	uint32_t Num_Frames;
+	uint32_t Num_Shaders;
+	uint32_t Num_Verts;
+	uint32_t Num_Triangles;
+	uint32_t Ofs_Triangles;
+	uint32_t Ofs_Shaders;
+	uint32_t Ofs_Texcoord;
+	uint32_t Ofs_XYZNormal;
+	uint32_t Ofs_End;
 };
 
 struct md3_triangle_t
 {
-	DWORD vt_index[3];
+	uint32_t vt_index[3];
 };
 
 struct md3_shader_t
 {
 	char Name[MAX_QPATH];
-	DWORD index;
+	uint32_t index;
 };
 
 struct md3_texcoord_t
@@ -179,14 +179,14 @@ bool FMD3Model::Load(const char * path, int lumpnum, const char * buffer, int le
 
 		// copy shaders (skins)
 		md3_shader_t * shader = (md3_shader_t*)(((char*)ss) + LittleLong(ss->Ofs_Shaders));
-		s->skins = new FTexture *[s->numSkins];
+		s->skins = new FTextureID[s->numSkins];
 
 		for (int i = 0; i < s->numSkins; i++)
 		{
 			// [BB] According to the MD3 spec, Name is supposed to include the full path.
 			s->skins[i] = LoadSkin("", shader[i].Name);
 			// [BB] Fall back and check if Name is relative.
-			if (s->skins[i] == NULL)
+			if (!s->skins[i].isValid())
 				s->skins[i] = LoadSkin(path, shader[i].Name);
 		}
 	}
@@ -255,7 +255,7 @@ void FMD3Model::LoadGeometry()
 
 void FMD3Model::BuildVertexBuffer()
 {
-	if (mVBuf == NULL)
+	if (mVBuf == nullptr)
 	{
 		LoadGeometry();
 
@@ -269,11 +269,11 @@ void FMD3Model::BuildVertexBuffer()
 			ibufsize += 3 * surf->numTriangles;
 		}
 
-		mVBuf = new FModelVertexBuffer(true);
+		mVBuf = new FModelVertexBuffer(true, numFrames == 1);
 		FModelVertex *vertptr = mVBuf->LockVertexBuffer(vbufsize);
 		unsigned int *indxptr = mVBuf->LockIndexBuffer(ibufsize);
 
-		assert(vertptr != NULL && indxptr != NULL);
+		assert(vertptr != nullptr && indxptr != nullptr);
 
 		unsigned int vindex = 0, iindex = 0;
 
@@ -311,6 +311,27 @@ void FMD3Model::BuildVertexBuffer()
 
 //===========================================================================
 //
+// for skin precaching
+//
+//===========================================================================
+
+void FMD3Model::AddSkins(BYTE *hitlist)
+{
+	for (int i = 0; i < numSurfaces; i++)
+	{
+		MD3Surface * surf = &surfaces[i];
+		for (int j = 0; j < surf->numSkins; j++)
+		{
+			if (surf->skins[j].isValid())
+			{
+				hitlist[surf->skins[j].GetIndex()] |= FTexture::TEX_Flat;
+			}
+		}
+	}
+}
+
+//===========================================================================
+//
 //
 //
 //===========================================================================
@@ -344,8 +365,8 @@ void FMD3Model::RenderFrame(FTexture * skin, int frameno, int frameno2, double i
 		FTexture *surfaceSkin = skin;
 		if (!surfaceSkin)
 		{
-			if (surf->numSkins==0) return;
-			surfaceSkin = surf->skins[0];
+			if (surf->numSkins==0 || !surf->skins[0].isValid()) return;
+			surfaceSkin = TexMan(surf->skins[0]);
 			if (!surfaceSkin) return;
 		}
 
@@ -354,7 +375,7 @@ void FMD3Model::RenderFrame(FTexture * skin, int frameno, int frameno2, double i
 		gl_RenderState.SetMaterial(tex, CLAMP_NONE, translation, -1, false);
 
 		gl_RenderState.Apply();
-		mVBuf->SetupFrame(surf->vindex + frameno * surf->numVertices, surf->vindex + frameno2 * surf->numVertices);
+		mVBuf->SetupFrame(surf->vindex + frameno * surf->numVertices, surf->vindex + frameno2 * surf->numVertices, surf->numVertices);
 		glDrawElements(GL_TRIANGLES, surf->numTriangles * 3, GL_UNSIGNED_INT, (void*)(intptr_t)(surf->iindex * sizeof(unsigned int)));
 	}
 	gl_RenderState.SetInterpolationFactor(0.f);
@@ -370,6 +391,6 @@ FMD3Model::~FMD3Model()
 {
 	if (frames) delete [] frames;
 	if (surfaces) delete [] surfaces;
-	frames = NULL;
-	surfaces = NULL;
+	frames = nullptr;
+	surfaces = nullptr;
 }

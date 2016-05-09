@@ -61,6 +61,7 @@ enum Drawpasses
 	GLPASS_LIGHTTEX,	// lighttexture pass
 	GLPASS_TEXONLY,		// finishing texture pass
 	GLPASS_LIGHTTEX_ADDITIVE,	// lighttexture pass (additive)
+	GLPASS_LIGHTTEX_FOGGY,	// lighttexture pass on foggy surfaces (forces all lights to be additive)
 
 };
 
@@ -229,7 +230,7 @@ struct FDrawInfo
 
 	FDrawInfo * next;
 	GLDrawList drawlists[GLDL_TYPES];
-	GLDrawList *dldrawlists;	// only gets allocated when needed.
+	GLDrawList *dldrawlists = NULL;	// only gets allocated when needed.
 
 	FDrawInfo();
 	~FDrawInfo();
