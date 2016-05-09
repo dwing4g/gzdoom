@@ -529,9 +529,6 @@
     <ClCompile Include="src\strnatcmp.c">
       <Filter>!Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\tables.cpp">
-      <Filter>!Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\teaminfo.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>

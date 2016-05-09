@@ -591,7 +591,6 @@
     <ClCompile Include="src\stats.cpp" />
     <ClCompile Include="src\stringtable.cpp" />
     <ClCompile Include="src\strnatcmp.c" />
-    <ClCompile Include="src\tables.cpp" />
     <ClCompile Include="src\teaminfo.cpp" />
     <ClCompile Include="src\tempfiles.cpp" />
     <ClCompile Include="src\v_blend.cpp" />
