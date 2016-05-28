@@ -314,7 +314,7 @@ void P_SpawnLinePortal(line_t* line)
 		else
 		{
 			port->mAlign = BYTE(line->args[3] >= PORG_ABSOLUTE && line->args[3] <= PORG_CEILING ? line->args[3] : PORG_ABSOLUTE);
-			if (port->mType == PORTT_INTERACTIVE)
+			if (port->mType == PORTT_INTERACTIVE && port->mAlign != PORG_ABSOLUTE)
 			{
 				// Due to the way z is often handled, these pose a major issue for parts of the code that needs to transparently handle interactive portals.
 				Printf(TEXTCOLOR_RED "Warning: z-offsetting not allowed for interactive portals. Changing line %d to teleport-portal!\n", int(line - lines));
@@ -1111,7 +1111,7 @@ void P_CreateLinkedPortals()
 	}
 
 	// reject would just get in the way when checking sight through portals.
-	if (rejectmatrix != NULL)
+	if (Displacements.size > 1 && rejectmatrix != NULL)
 	{
 		delete[] rejectmatrix;
 		rejectmatrix = NULL;

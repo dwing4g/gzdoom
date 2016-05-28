@@ -120,30 +120,32 @@ void P_RandomChaseDir (AActor *actor);
 // PROC P_RecursiveSound
 //
 // Called by P_NoiseAlert.
-// Recursively traverse adjacent sectors,
+// Traverses adjacent sectors,
 // sound blocking lines cut off traversal.
 //----------------------------------------------------------------------------
 
-void P_RecursiveSound (sector_t *sec, AActor *soundtarget, bool splash, int soundblocks, AActor *emitter, double maxdist)
+struct NoiseTarget
 {
-	int 		i;
-	line_t* 	check;
-	sector_t*	other;
-	AActor*		actor;
-		
+	sector_t *sec;
+	int soundblocks;
+};
+static TArray<NoiseTarget> NoiseList(128);
+
+static void NoiseMarkSector(sector_t *sec, AActor *soundtarget, bool splash, AActor *emitter, int soundblocks, double maxdist)
+{
 	// wake up all monsters in this sector
 	if (sec->validcount == validcount
-		&& sec->soundtraversed <= soundblocks+1)
+		&& sec->soundtraversed <= soundblocks + 1)
 	{
 		return; 		// already flooded
 	}
-	
+
 	sec->validcount = validcount;
-	sec->soundtraversed = soundblocks+1;
+	sec->soundtraversed = soundblocks + 1;
 	sec->SoundTarget = soundtarget;
 
 	// [RH] Set this in the actors in the sector instead of the sector itself.
-	for (actor = sec->thinglist; actor != NULL; actor = actor->snext)
+	for (AActor *actor = sec->thinglist; actor != NULL; actor = actor->snext)
 	{
 		if (actor != soundtarget && (!splash || !(actor->flags4 & MF4_NOSPLASHALERT)) &&
 			(!maxdist || (actor->Distance2D(emitter) <= maxdist)))
@@ -151,31 +153,39 @@ void P_RecursiveSound (sector_t *sec, AActor *soundtarget, bool splash, int soun
 			actor->LastHeard = soundtarget;
 		}
 	}
+	NoiseList.Push({ sec, soundblocks });
+}
 
+
+static void P_RecursiveSound(sector_t *sec, AActor *soundtarget, bool splash, AActor *emitter, int soundblocks, double maxdist)
+{
 	bool checkabove = !sec->PortalBlocksSound(sector_t::ceiling);
 	bool checkbelow = !sec->PortalBlocksSound(sector_t::floor);
 
-	for (i = 0; i < sec->linecount; i++)
+	for (int i = 0; i < sec->linecount; i++)
 	{
-		check = sec->lines[i];
+		line_t *check = sec->lines[i];
 
+		// check sector portals
 		// I wish there was a better method to do this than randomly looking through the portal at a few places...
 		if (checkabove)
 		{
 			sector_t *upper = P_PointInSector(check->v1->fPos() + check->Delta() / 2 + sec->GetPortalDisplacement(sector_t::ceiling));
-			P_RecursiveSound(upper, soundtarget, splash, soundblocks, emitter, maxdist);
+			NoiseMarkSector(upper, soundtarget, splash, emitter, soundblocks, maxdist);
 		}
 		if (checkbelow)
 		{
 			sector_t *lower = P_PointInSector(check->v1->fPos() + check->Delta() / 2 + sec->GetPortalDisplacement(sector_t::floor));
-			P_RecursiveSound(lower, soundtarget, splash, soundblocks, emitter, maxdist);
+			NoiseMarkSector(lower, soundtarget, splash, emitter, soundblocks, maxdist);
 		}
+
+		// ... and line portals;
 		FLinePortal *port = check->getPortal();
 		if (port && (port->mFlags & PORTF_SOUNDTRAVERSE))
 		{
 			if (port->mDestination)
 			{
-				P_RecursiveSound(port->mDestination->frontsector, soundtarget, splash, soundblocks, emitter, maxdist);
+				NoiseMarkSector(port->mDestination->frontsector, soundtarget, splash, emitter, soundblocks, maxdist);
 			}
 		}
 
@@ -185,28 +195,29 @@ void P_RecursiveSound (sector_t *sec, AActor *soundtarget, bool splash, int soun
 		{
 			continue;
 		}
-		
+
 		// Early out for intra-sector lines
 		if (check->sidedef[0]->sector == check->sidedef[1]->sector) continue;
 
-		if ( check->sidedef[0]->sector == sec)
+		sector_t *other;
+		if (check->sidedef[0]->sector == sec)
 			other = check->sidedef[1]->sector;
 		else
 			other = check->sidedef[0]->sector;
 
 		// check for closed door
-		if ((sec->floorplane.ZatPoint (check->v1->fPos()) >=
-			 other->ceilingplane.ZatPoint (check->v1->fPos()) &&
-			 sec->floorplane.ZatPoint (check->v2->fPos()) >=
-			 other->ceilingplane.ZatPoint (check->v2->fPos()))
-		 || (other->floorplane.ZatPoint (check->v1->fPos()) >=
-			 sec->ceilingplane.ZatPoint (check->v1->fPos()) &&
-			 other->floorplane.ZatPoint (check->v2->fPos()) >=
-			 sec->ceilingplane.ZatPoint (check->v2->fPos()))
-		 || (other->floorplane.ZatPoint (check->v1->fPos()) >=
-			 other->ceilingplane.ZatPoint (check->v1->fPos()) &&
-			 other->floorplane.ZatPoint (check->v2->fPos()) >=
-			 other->ceilingplane.ZatPoint (check->v2->fPos())))
+		if ((sec->floorplane.ZatPoint(check->v1->fPos()) >=
+			other->ceilingplane.ZatPoint(check->v1->fPos()) &&
+			sec->floorplane.ZatPoint(check->v2->fPos()) >=
+			other->ceilingplane.ZatPoint(check->v2->fPos()))
+			|| (other->floorplane.ZatPoint(check->v1->fPos()) >=
+				sec->ceilingplane.ZatPoint(check->v1->fPos()) &&
+				other->floorplane.ZatPoint(check->v2->fPos()) >=
+				sec->ceilingplane.ZatPoint(check->v2->fPos()))
+			|| (other->floorplane.ZatPoint(check->v1->fPos()) >=
+				other->ceilingplane.ZatPoint(check->v1->fPos()) &&
+				other->floorplane.ZatPoint(check->v2->fPos()) >=
+				other->ceilingplane.ZatPoint(check->v2->fPos())))
 		{
 			continue;
 		}
@@ -214,14 +225,15 @@ void P_RecursiveSound (sector_t *sec, AActor *soundtarget, bool splash, int soun
 		if (check->flags & ML_SOUNDBLOCK)
 		{
 			if (!soundblocks)
-				P_RecursiveSound (other, soundtarget, splash, 1, emitter, maxdist);
+				NoiseMarkSector(other, soundtarget, splash, emitter, 1, maxdist);
 		}
 		else
 		{
-			P_RecursiveSound (other, soundtarget, splash, soundblocks, emitter, maxdist);
+			NoiseMarkSector(other, soundtarget, splash, emitter, soundblocks, maxdist);
 		}
 	}
 }
+
 
 
 
@@ -243,7 +255,12 @@ void P_NoiseAlert (AActor *target, AActor *emitter, bool splash, double maxdist)
 		return;
 
 	validcount++;
-	P_RecursiveSound (emitter->Sector, target, splash, 0, emitter, maxdist);
+	NoiseList.Clear();
+	NoiseMarkSector(emitter->Sector, target, splash, emitter, 0, maxdist);
+	for (unsigned i = 0; i < NoiseList.Size(); i++)
+	{
+		P_RecursiveSound(NoiseList[i].sec, target, splash, emitter, NoiseList[i].soundblocks, maxdist);
+	}
 }
 
 
@@ -538,15 +555,31 @@ bool P_Move (AActor *actor)
 
 	tm.FromPMove = true;
 
-	try_ok = true;
-	for(int i=1; i < steps; i++)
-	{
-		try_ok = P_TryMove(actor, DVector2(origx + deltax * i / steps, origy + deltay * i / steps), dropoff, NULL, tm);
-		if (!try_ok) break;
-	}
+	DVector2 start = { origx, origy };
+	DVector2 move = { deltax, deltay };
+	DAngle oldangle = actor->Angles.Yaw;
 
-	// killough 3/15/98: don't jump over dropoffs:
-	if (try_ok) try_ok = P_TryMove (actor, DVector2(tryx, tryy), dropoff, NULL, tm);
+	try_ok = true;
+	for (int i = 1; i <= steps; i++)
+	{
+		DVector2 ptry = start + move * i / steps;
+		// killough 3/15/98: don't jump over dropoffs:
+		try_ok = P_TryMove(actor, ptry, dropoff, NULL, tm);
+		if (!try_ok) break;
+
+		// Handle portal transitions just like P_XYMovement.
+		if (steps > 1 && actor->Pos().XY() != ptry)
+		{
+			DAngle anglediff = deltaangle(oldangle, actor->Angles.Yaw);
+
+			if (anglediff != 0)
+			{
+				move = move.Rotated(anglediff);
+				oldangle = actor->Angles.Yaw;
+			}
+			start = actor->Pos() - move * i / steps;
+		}
+	}
 
 	// [GrafZahl] Interpolating monster movement as it is done here just looks bad
 	// so make it switchable
