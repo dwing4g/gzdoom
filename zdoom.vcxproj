@@ -364,6 +364,7 @@
     <ClCompile Include="src\gl\models\gl_models_md3.cpp" />
     <ClCompile Include="src\gl\models\gl_voxels.cpp" />
     <ClCompile Include="src\gl\renderer\gl_lightdata.cpp" />
+    <ClCompile Include="src\gl\renderer\gl_renderbuffers.cpp" />
     <ClCompile Include="src\gl\renderer\gl_renderer.cpp" />
     <ClCompile Include="src\gl\renderer\gl_renderstate.cpp" />
     <ClCompile Include="src\gl\scene\gl_bsp.cpp" />
@@ -383,7 +384,9 @@
     <ClCompile Include="src\gl\scene\gl_walls.cpp" />
     <ClCompile Include="src\gl\scene\gl_walls_draw.cpp" />
     <ClCompile Include="src\gl\scene\gl_weapon.cpp" />
+    <ClCompile Include="src\gl\shaders\gl_presentshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_shader.cpp" />
+    <ClCompile Include="src\gl\shaders\gl_shaderprogram.cpp" />
     <ClCompile Include="src\gl\shaders\gl_texshader.cpp" />
     <ClCompile Include="src\gl\stereo3d\gl_anaglyph.cpp" />
     <ClCompile Include="src\gl\stereo3d\gl_quadstereo.cpp" />
