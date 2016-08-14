@@ -214,6 +214,7 @@ xx(Brainexplode)
 // Weapon animator names.
 xx(Select)
 xx(Deselect)
+xx(DeadLowered)
 xx(Ready)
 xx(Fire)
 xx(Hold)
@@ -653,6 +654,7 @@ xx(DecoCallLineSpecial)
 xx(DecoNameToClass)
 xx(DecoFindMultiNameState)
 xx(DecoFindSingleNameState)
+xx(DecoHandleRuntimeState)
 xx(Damage)
 
 // basic type names

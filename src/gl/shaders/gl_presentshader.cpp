@@ -53,15 +53,17 @@ void FPresentShader::Bind()
 {
 	if (!mShader)
 	{
-		mShader.Compile(FShaderProgram::Vertex, "shaders/glsl/present.vp");
-		mShader.Compile(FShaderProgram::Fragment, "shaders/glsl/present.fp");
+		mShader.Compile(FShaderProgram::Vertex, "shaders/glsl/screenquadscale.vp", "", 330);
+		mShader.Compile(FShaderProgram::Fragment, "shaders/glsl/present.fp", "", 330);
 		mShader.SetFragDataLocation(0, "FragColor");
 		mShader.Link("shaders/glsl/present");
 		mShader.SetAttribLocation(0, "PositionInProjection");
+		mShader.SetAttribLocation(1, "UV");
 		InputTexture.Init(mShader, "InputTexture");
 		Gamma.Init(mShader, "Gamma");
 		Contrast.Init(mShader, "Contrast");
 		Brightness.Init(mShader, "Brightness");
+		Scale.Init(mShader, "UVScale");
 	}
 	mShader.Bind();
 }

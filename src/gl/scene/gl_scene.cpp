@@ -72,7 +72,6 @@
 #include "gl/scene/gl_drawinfo.h"
 #include "gl/scene/gl_portal.h"
 #include "gl/shaders/gl_shader.h"
-#include "gl/shaders/gl_presentshader.h"
 #include "gl/stereo3d/gl_stereo3d.h"
 #include "gl/stereo3d/scoped_view_shifter.h"
 #include "gl/textures/gl_translate.h"
@@ -95,8 +94,6 @@ CVAR(Bool, gl_sort_textures, false, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
 
 EXTERN_CVAR (Bool, cl_capfps)
 EXTERN_CVAR (Bool, r_deathcamera)
-EXTERN_CVAR(Float, vid_brightness)
-EXTERN_CVAR(Float, vid_contrast)
 
 
 extern int viewpitch;
@@ -160,10 +157,7 @@ void FGLRenderer::SetViewArea()
 
 void FGLRenderer::Reset3DViewport()
 {
-	if (FGLRenderBuffers::IsSupported())
-		glViewport(0, 0, mOutputViewport.width, mOutputViewport.height);
-	else
-		glViewport(mOutputViewport.left, mOutputViewport.top, mOutputViewport.width, mOutputViewport.height);
+	glViewport(mScreenViewport.left, mScreenViewport.top, mScreenViewport.width, mScreenViewport.height);
 }
 
 //-----------------------------------------------------------------------------
@@ -172,21 +166,17 @@ void FGLRenderer::Reset3DViewport()
 //
 //-----------------------------------------------------------------------------
 
-void FGLRenderer::Set3DViewport()
+void FGLRenderer::Set3DViewport(bool mainview)
 {
-	const auto &bounds = mOutputViewportLB;
-	if (FGLRenderBuffers::IsSupported())
+	if (mainview && FGLRenderBuffers::IsEnabled())
 	{
-		mBuffers->Setup(mOutputViewport.width, mOutputViewport.height);
+		mBuffers->Setup(mScreenViewport.width, mScreenViewport.height, mSceneViewport.width, mSceneViewport.height);
 		mBuffers->BindSceneFB();
-		glViewport(0, 0, bounds.width, bounds.height);
-		glScissor(0, 0, bounds.width, bounds.height);
 	}
-	else
-	{
-		glViewport(bounds.left, bounds.top, bounds.width, bounds.height);
-		glScissor(bounds.left, bounds.top, bounds.width, bounds.height);
-	}
+
+	const auto &bounds = mSceneViewport;
+	glViewport(bounds.left, bounds.top, bounds.width, bounds.height);
+	glScissor(bounds.left, bounds.top, bounds.width, bounds.height);
 
 	glEnable(GL_SCISSOR_TEST);
 	
@@ -202,97 +192,6 @@ void FGLRenderer::Set3DViewport()
 	glEnable(GL_STENCIL_TEST);
 	glStencilFunc(GL_ALWAYS,0,~0);	// default stencil
 	glStencilOp(GL_KEEP,GL_KEEP,GL_REPLACE);
-}
-
-//-----------------------------------------------------------------------------
-//
-// Run post processing steps and copy to frame buffer
-//
-//-----------------------------------------------------------------------------
-
-void FGLRenderer::Flush()
-{
-	if (FGLRenderBuffers::IsSupported())
-	{
-		glDisable(GL_MULTISAMPLE);
-		glDisable(GL_DEPTH_TEST);
-		glDisable(GL_STENCIL_TEST);
-
-		mBuffers->BindOutputFB();
-
-		// Calculate letterbox
-		int clientWidth = framebuffer->GetClientWidth();
-		int clientHeight = framebuffer->GetClientHeight();
-		float scaleX = clientWidth / (float)mOutputViewport.width;
-		float scaleY = clientHeight / (float)mOutputViewport.height;
-		float scale = MIN(scaleX, scaleY);
-		int width = (int)round(mOutputViewport.width * scale);
-		int height = (int)round(mOutputViewport.height * scale);
-		int x = (clientWidth - width) / 2;
-		int y = (clientHeight - height) / 2;
-
-		// Black bars around the box:
-		glViewport(0, 0, clientWidth, clientHeight);
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glEnable(GL_SCISSOR_TEST);
-		if (y > 0)
-		{
-			glScissor(0, 0, clientWidth, y);
-			glClear(GL_COLOR_BUFFER_BIT);
-		}
-		if (clientHeight - y - height > 0)
-		{
-			glScissor(0, y + height, clientWidth, clientHeight - y - height);
-			glClear(GL_COLOR_BUFFER_BIT);
-		}
-		if (x > 0)
-		{
-			glScissor(0, y, x, height);
-			glClear(GL_COLOR_BUFFER_BIT);
-		}
-		if (clientWidth - x - width > 0)
-		{
-			glScissor(x + width, y, clientWidth - x - width, height);
-			glClear(GL_COLOR_BUFFER_BIT);
-		}
-		glDisable(GL_SCISSOR_TEST);
-
-		// Present what was rendered:
-		glViewport(x, y, width, height);
-
-		GLboolean blendEnabled;
-		GLint currentProgram;
-		glGetBooleanv(GL_BLEND, &blendEnabled);
-		glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
-		glDisable(GL_BLEND);
-
-		mPresentShader->Bind();
-		mPresentShader->InputTexture.Set(0);
-		if (framebuffer->IsHWGammaActive())
-		{
-			mPresentShader->Gamma.Set(1.0f);
-			mPresentShader->Contrast.Set(1.0f);
-			mPresentShader->Brightness.Set(0.0f);
-		}
-		else
-		{
-			mPresentShader->Gamma.Set(clamp<float>(Gamma, 0.1f, 4.f));
-			mPresentShader->Contrast.Set(clamp<float>(vid_contrast, 0.1f, 3.f));
-			mPresentShader->Brightness.Set(clamp<float>(vid_brightness, -0.8f, 0.8f));
-		}
-		mBuffers->BindSceneTexture(0);
-
-		FFlatVertex *ptr = GLRenderer->mVBO->GetBuffer();
-		ptr->Set(-1.0f, -1.0f, 0, 0.0f, 0.0f); ptr++;
-		ptr->Set(-1.0f, 1.0f, 0, 0.0f, 1.0f); ptr++;
-		ptr->Set(1.0f, -1.0f, 0, 1.0f, 0.0f); ptr++;
-		ptr->Set(1.0f, 1.0f, 0, 1.0f, 1.0f); ptr++;
-		GLRenderer->mVBO->RenderCurrent(ptr, GL_TRIANGLE_STRIP);
-
-		if (blendEnabled)
-			glEnable(GL_BLEND);
-		glUseProgram(currentProgram);
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -324,7 +223,6 @@ void FGLRenderer::SetProjection(float fov, float ratio, float fovratio)
 
 	float fovy = 2 * RAD2DEG(atan(tan(DEG2RAD(fov) / 2) / fovratio));
 	gl_RenderState.mProjectionMatrix.perspective(fovy, ratio, 5.f, 65536.f);
-	gl_RenderState.Set2DMode(false);
 }
 
 // raw matrix input from stereo 3d modes
@@ -332,7 +230,6 @@ void FGLRenderer::SetProjection(VSMatrix matrix)
 {
 	gl_RenderState.mProjectionMatrix.loadIdentity();
 	gl_RenderState.mProjectionMatrix.multMatrix(matrix);
-	gl_RenderState.Set2DMode(false);
 }
 
 //-----------------------------------------------------------------------------
@@ -626,16 +523,8 @@ void gl_FillScreen()
 	gl_RenderState.AlphaFunc(GL_GEQUAL, 0.f);
 	gl_RenderState.EnableTexture(false);
 	gl_RenderState.Apply();
-	FFlatVertex *ptr = GLRenderer->mVBO->GetBuffer();
-	ptr->Set(0, 0, 0, 0, 0);
-	ptr++;
-	ptr->Set(0, (float)SCREENHEIGHT, 0, 0, 0);
-	ptr++;
-	ptr->Set((float)SCREENWIDTH, 0, 0, 0, 0);
-	ptr++;
-	ptr->Set((float)SCREENWIDTH, (float)SCREENHEIGHT, 0, 0, 0);
-	ptr++;
-	GLRenderer->mVBO->RenderCurrent(ptr, GL_TRIANGLE_STRIP);
+	// The fullscreen quad is stored at index 4 in the main vertex buffer.
+	glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);
 }
 
 //==========================================================================
@@ -914,6 +803,20 @@ sector_t * FGLRenderer::RenderViewpoint (AActor * camera, GL_IRECT * bounds, flo
 		mViewActor=camera;
 	}
 
+	if (toscreen)
+	{
+		if (gl_exposure == 0.0f)
+		{
+			float light = viewsector->lightlevel / 255.0f;
+			float exposure = MAX(1.0f + (1.0f - light * light) * 0.9f, 0.5f);
+			mCameraExposure = mCameraExposure * 0.995f + exposure * 0.005f;
+		}
+		else
+		{
+			mCameraExposure = gl_exposure;
+		}
+	}
+
 	// 'viewsector' will not survive the rendering so it cannot be used anymore below.
 	retval = viewsector;
 
@@ -927,7 +830,8 @@ sector_t * FGLRenderer::RenderViewpoint (AActor * camera, GL_IRECT * bounds, flo
 		eye->SetUp();
 		// TODO: stereo specific viewport - needed when implementing side-by-side modes etc.
 		SetOutputViewport(bounds);
-		Set3DViewport();
+		Set3DViewport(mainview);
+		mDrawingScene2D = true;
 		mCurrentFoV = fov;
 		// Stereo mode specific perspective projection
 		SetProjection( eye->GetProjection(fov, ratio, fovratio) );
@@ -944,7 +848,15 @@ sector_t * FGLRenderer::RenderViewpoint (AActor * camera, GL_IRECT * bounds, flo
 		clipper.SafeAddClipRangeRealAngles(ViewAngle.BAMs() + a1, ViewAngle.BAMs() - a1);
 
 		ProcessScene(toscreen);
-		if (mainview) EndDrawScene(retval);	// do not call this for camera textures.
+		if (mainview && toscreen) EndDrawScene(retval);	// do not call this for camera textures.
+		if (mainview)
+		{
+			if (FGLRenderBuffers::IsEnabled()) mBuffers->BlitSceneToTexture();
+			BloomScene();
+			TonemapScene();
+			LensDistortScene();
+		}
+		mDrawingScene2D = false;
 		eye->TearDown();
 	}
 	stereo3dMode.TearDown();
@@ -1055,6 +967,7 @@ void FGLRenderer::WriteSavePic (player_t *player, FILE *file, int width, int hei
 	gl_RenderState.SetSoftLightLevel(-1);
 	screen->Begin2D(false);
 	DrawBlend(viewsector);
+	CopyToBackbuffer(&bounds, false);
 	glFlush();
 
 	byte * scr = (byte *)M_Malloc(width * height * 3);

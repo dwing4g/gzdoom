@@ -85,8 +85,91 @@ static const FLOP FxFlops[] =
 	{ NAME_TanH,	FLOP_TANH,		[](double v) { return g_tanh(v); } },
 };
 
+//==========================================================================
+//
+// FCompileContext
+//
+//==========================================================================
+
+FCompileContext::FCompileContext(PClassActor *cls, PPrototype *ret) : Class(cls), ReturnProto(ret)
+{
+}
+
+PSymbol *FCompileContext::FindInClass(FName identifier)
+{
+	return Class ? Class->Symbols.FindSymbol(identifier, true) : nullptr;
+}
+PSymbol *FCompileContext::FindGlobal(FName identifier)
+{
+	return GlobalSymbols.FindSymbol(identifier, true);
+}
+
+void FCompileContext::HandleJumps(int token, FxExpression *handler)
+{
+	for (unsigned int i = 0; i < Jumps.Size(); i++)
+	{
+		if (Jumps[i]->Token == token)
+		{
+			Jumps[i]->AddressResolver = handler;
+			handler->JumpAddresses.Push(Jumps[i]);
+			Jumps.Delete(i);
+			i--;
+		}
+	}
+}
+
+void FCompileContext::CheckReturn(PPrototype *proto, FScriptPosition &pos)
+{
+	assert(proto != nullptr);
+	bool fail = false;
+
+	if (ReturnProto == nullptr)
+	{
+		ReturnProto = proto;
+		return;
+	}
+
+	// A prototype that defines fewer return types can be compatible with
+	// one that defines more if the shorter one matches the initial types
+	// for the longer one.
+	if (ReturnProto->ReturnTypes.Size() < proto->ReturnTypes.Size())
+	{ // Make proto the shorter one to avoid code duplication below.
+		swapvalues(proto, ReturnProto);
+	}
+	// If one prototype returns nothing, they both must.
+	if (proto->ReturnTypes.Size() == 0)
+	{
+		if (ReturnProto->ReturnTypes.Size() != 0)
+		{
+			fail = true;
+		}
+	}
+	else
+	{
+		for (unsigned i = 0; i < proto->ReturnTypes.Size(); i++)
+		{
+			if (ReturnProto->ReturnTypes[i] != proto->ReturnTypes[i])
+			{ // Incompatible
+				fail = true;
+				break;
+			}
+		}
+	}
+
+	if (fail)
+	{
+		pos.Message(MSG_ERROR, "All return expressions must deduce to the same type");
+	}
+}
+
+//==========================================================================
+//
+// ExpEmit
+//
+//==========================================================================
+
 ExpEmit::ExpEmit(VMFunctionBuilder *build, int type)
-: RegNum(build->Registers[type].Get(1)), RegType(type), Konst(false), Fixed(false)
+: RegNum(build->Registers[type].Get(1)), RegType(type), Konst(false), Fixed(false), Final(false)
 {
 }
 
@@ -179,13 +262,34 @@ FxExpression *FxExpression::Resolve(FCompileContext &ctx)
 
 //==========================================================================
 //
-//
+// Returns true if we can write to the address.
 //
 //==========================================================================
 
-void FxExpression::RequestAddress()
+bool FxExpression::RequestAddress()
 {
 	ScriptPosition.Message(MSG_ERROR, "invalid dereference\n");
+	return false;
+}
+
+//==========================================================================
+//
+// Called by return statements.
+//
+//==========================================================================
+
+PPrototype *FxExpression::ReturnProto()
+{
+	assert(ValueType != nullptr);
+
+	TArray<PType *> ret(0);
+	TArray<PType *> none(0);
+	if (ValueType != TypeVoid)
+	{
+		ret.Push(ValueType);
+	}
+
+	return NewPrototype(ret, none);
 }
 
 //==========================================================================
@@ -375,7 +479,7 @@ ExpEmit FxBoolCast::Emit(VMFunctionBuilder *build)
 	{
 		build->Emit(OP_EQF_K, 1, from.RegNum, build->GetConstantFloat(0.));
 	}
-	else if (from.RegNum == REGT_POINTER)
+	else if (from.RegType == REGT_POINTER)
 	{
 		build->Emit(OP_EQA_K, 1, from.RegNum, build->GetConstantAddress(nullptr, ATAG_GENERIC));
 	}
@@ -846,6 +950,296 @@ ExpEmit FxUnaryNotBoolean::Emit(VMFunctionBuilder *build)
 	build->Emit(OP_NOT, from.RegNum, from.RegNum, 0);
 	build->Emit(OP_AND_RK, from.RegNum, from.RegNum, build->GetConstantInt(1));
 	return from;
+}
+
+//==========================================================================
+//
+// FxPreIncrDecr
+//
+//==========================================================================
+
+FxPreIncrDecr::FxPreIncrDecr(FxExpression *base, int token)
+: FxExpression(base->ScriptPosition), Base(base), Token(token)
+{
+	AddressRequested = false;
+	AddressWritable = false;
+}
+
+FxPreIncrDecr::~FxPreIncrDecr()
+{
+	SAFE_DELETE(Base);
+}
+
+bool FxPreIncrDecr::RequestAddress()
+{
+	AddressRequested = true;
+	return AddressWritable;
+}
+
+FxExpression *FxPreIncrDecr::Resolve(FCompileContext &ctx)
+{
+	CHECKRESOLVED();
+	SAFE_RESOLVE(Base, ctx);
+
+	ValueType = Base->ValueType;
+
+	if (!Base->IsNumeric())
+	{
+		ScriptPosition.Message(MSG_ERROR, "Numeric type expected");
+		delete this;
+		return nullptr;
+	}
+	else if (Base->ValueType == TypeBool)
+	{
+		ScriptPosition.Message(MSG_ERROR, "%s is not allowed on type bool", FScanner::TokenName(Token).GetChars());
+		delete this;
+		return nullptr;
+	}
+	if (!(AddressWritable = Base->RequestAddress()))
+	{
+		ScriptPosition.Message(MSG_ERROR, "Expression must be a modifiable value");
+		delete this;
+		return nullptr;
+	}
+
+	return this;
+}
+
+ExpEmit FxPreIncrDecr::Emit(VMFunctionBuilder *build)
+{
+	assert(Token == TK_Incr || Token == TK_Decr);
+	assert(ValueType == Base->ValueType && IsNumeric());
+
+	int zero = build->GetConstantInt(0);
+	int regtype = ValueType->GetRegType();
+	ExpEmit pointer = Base->Emit(build);
+
+	ExpEmit value(build, regtype);
+	build->Emit(ValueType->GetLoadOp(), value.RegNum, pointer.RegNum, zero);
+
+	if (regtype == REGT_INT)
+	{
+		build->Emit((Token == TK_Incr) ? OP_ADD_RK : OP_SUB_RK, value.RegNum, value.RegNum, build->GetConstantInt(1));
+	}
+	else
+	{
+		build->Emit((Token == TK_Incr) ? OP_ADDF_RK : OP_SUBF_RK, value.RegNum, value.RegNum, build->GetConstantFloat(1.));
+	}
+
+	build->Emit(ValueType->GetStoreOp(), pointer.RegNum, value.RegNum, zero);
+
+	if (AddressRequested)
+	{
+		value.Free(build);
+		return pointer;
+	}
+
+	pointer.Free(build);
+	return value;
+}
+
+//==========================================================================
+//
+// FxPostIncrDecr
+//
+//==========================================================================
+
+FxPostIncrDecr::FxPostIncrDecr(FxExpression *base, int token)
+: FxExpression(base->ScriptPosition), Base(base), Token(token)
+{
+}
+
+FxPostIncrDecr::~FxPostIncrDecr()
+{
+	SAFE_DELETE(Base);
+}
+
+FxExpression *FxPostIncrDecr::Resolve(FCompileContext &ctx)
+{
+	CHECKRESOLVED();
+	SAFE_RESOLVE(Base, ctx);
+
+	ValueType = Base->ValueType;
+
+	if (!Base->IsNumeric())
+	{
+		ScriptPosition.Message(MSG_ERROR, "Numeric type expected");
+		delete this;
+		return nullptr;
+	}
+	else if (Base->ValueType == TypeBool)
+	{
+		ScriptPosition.Message(MSG_ERROR, "%s is not allowed on type bool", FScanner::TokenName(Token).GetChars());
+		delete this;
+		return nullptr;
+	}
+	if (!Base->RequestAddress())
+	{
+		ScriptPosition.Message(MSG_ERROR, "Expression must be a modifiable value");
+		delete this;
+		return nullptr;
+	}
+
+	return this;
+}
+
+ExpEmit FxPostIncrDecr::Emit(VMFunctionBuilder *build)
+{
+	assert(Token == TK_Incr || Token == TK_Decr);
+	assert(ValueType == Base->ValueType && IsNumeric());
+
+	int zero = build->GetConstantInt(0);
+	int regtype = ValueType->GetRegType();
+	ExpEmit pointer = Base->Emit(build);
+
+	ExpEmit out(build, regtype);
+	build->Emit(ValueType->GetLoadOp(), out.RegNum, pointer.RegNum, zero);
+
+	ExpEmit assign(build, regtype);
+	if (regtype == REGT_INT)
+	{
+		build->Emit((Token == TK_Incr) ? OP_ADD_RK : OP_SUB_RK, assign.RegNum, out.RegNum, build->GetConstantInt(1));
+	}
+	else
+	{
+		build->Emit((Token == TK_Incr) ? OP_ADDF_RK : OP_SUBF_RK, assign.RegNum, out.RegNum, build->GetConstantFloat(1.));
+	}
+
+	build->Emit(ValueType->GetStoreOp(), pointer.RegNum, assign.RegNum, zero);
+
+	pointer.Free(build);
+	assign.Free(build);
+	return out;
+}
+
+//==========================================================================
+//
+// FxAssign
+//
+//==========================================================================
+
+FxAssign::FxAssign(FxExpression *base, FxExpression *right)
+: FxExpression(base->ScriptPosition), Base(base), Right(right)
+{
+	AddressRequested = false;
+	AddressWritable = false;
+}
+
+FxAssign::~FxAssign()
+{
+	SAFE_DELETE(Base);
+	SAFE_DELETE(Right);
+}
+
+bool FxAssign::RequestAddress()
+{
+	AddressRequested = true;
+	return AddressWritable;
+}
+
+FxExpression *FxAssign::Resolve(FCompileContext &ctx)
+{
+	CHECKRESOLVED();
+	SAFE_RESOLVE(Base, ctx);
+
+	ValueType = Base->ValueType;
+
+	SAFE_RESOLVE(Right, ctx);
+
+	if (!Base->IsNumeric() || !Right->IsNumeric())
+	{
+		ScriptPosition.Message(MSG_ERROR, "Numeric type expected");
+		delete this;
+		return nullptr;
+	}
+	if (!(AddressWritable = Base->RequestAddress()))
+	{
+		ScriptPosition.Message(MSG_ERROR, "Expression must be a modifiable value");
+		delete this;
+		return nullptr;
+	}
+
+	if (Right->ValueType != ValueType)
+	{
+		if (ValueType == TypeBool)
+		{
+			Right = new FxBoolCast(Right);
+		}
+		else if (ValueType->GetRegType() == REGT_INT)
+		{
+			Right = new FxIntCast(Right);
+		}
+		else
+		{
+			Right = new FxFloatCast(Right);
+		}
+		SAFE_RESOLVE(Right, ctx);
+	}
+
+	return this;
+}
+
+ExpEmit FxAssign::Emit(VMFunctionBuilder *build)
+{
+	assert(ValueType == Base->ValueType && IsNumeric());
+	assert(ValueType->GetRegType() == Right->ValueType->GetRegType());
+
+	ExpEmit pointer = Base->Emit(build);
+	Address = pointer;
+
+	ExpEmit result = Right->Emit(build);
+	
+	if (result.Konst)
+	{
+		ExpEmit temp(build, result.RegType);
+		build->Emit(result.RegType == REGT_FLOAT ? OP_LKF : OP_LK, temp.RegNum, result.RegNum);
+		result.Free(build);
+		result = temp;
+	}
+
+	build->Emit(ValueType->GetStoreOp(), pointer.RegNum, result.RegNum, build->GetConstantInt(0));
+
+	if (AddressRequested)
+	{
+		result.Free(build);
+		return pointer;
+	}
+
+	pointer.Free(build);
+	return result;
+}
+
+//==========================================================================
+//
+//	FxAssignSelf
+//
+//==========================================================================
+
+FxAssignSelf::FxAssignSelf(const FScriptPosition &pos)
+: FxExpression(pos)
+{
+	Assignment = nullptr;
+}
+
+FxExpression *FxAssignSelf::Resolve(FCompileContext &ctx)
+{
+	CHECKRESOLVED();
+
+	// This should never happen if FxAssignSelf is used correctly
+	assert(Assignment != nullptr);
+
+	ValueType = Assignment->ValueType;
+
+	return this;
+}
+
+ExpEmit FxAssignSelf::Emit(VMFunctionBuilder *build)
+{
+	assert(ValueType = Assignment->ValueType);
+	ExpEmit pointer = Assignment->Address; // FxAssign should have already emitted it
+	ExpEmit out(build, ValueType->GetRegType());
+	build->Emit(ValueType->GetLoadOp(), out.RegNum, pointer.RegNum, build->GetConstantInt(0));
+	return out;
 }
 
 //==========================================================================
@@ -2321,6 +2715,7 @@ ExpEmit FxMinMax::Emit(VMFunctionBuilder *build)
 FxRandom::FxRandom(FRandom * r, FxExpression *mi, FxExpression *ma, const FScriptPosition &pos)
 : FxExpression(pos)
 {
+	EmitTail = false;
 	if (mi != NULL && ma != NULL)
 	{
 		min = new FxIntCast(mi);
@@ -2341,6 +2736,18 @@ FxRandom::~FxRandom()
 {
 	SAFE_DELETE(min);
 	SAFE_DELETE(max);
+}
+
+//==========================================================================
+//
+//
+//
+//==========================================================================
+
+PPrototype *FxRandom::ReturnProto()
+{
+	EmitTail = true;
+	return FxExpression::ReturnProto();
 }
 
 //==========================================================================
@@ -2376,12 +2783,12 @@ int DecoRandom(VMFrameStack *stack, VMValue *param, int numparam, VMReturn *ret,
 	FRandom *rng = reinterpret_cast<FRandom *>(param[0].a);
 	if (numparam == 1)
 	{
-		ret->SetInt((*rng)());
+		ACTION_RETURN_INT((*rng)());
 	}
 	else if (numparam == 2)
 	{
 		int maskval = param[1].i;
-		ret->SetInt(rng->Random2(maskval));
+		ACTION_RETURN_INT(rng->Random2(maskval));
 	}
 	else if (numparam == 3)
 	{
@@ -2390,9 +2797,11 @@ int DecoRandom(VMFrameStack *stack, VMValue *param, int numparam, VMReturn *ret,
 		{
 			swapvalues(max, min);
 		}
-		ret->SetInt((*rng)(max - min + 1) + min);
+		ACTION_RETURN_INT((*rng)(max - min + 1) + min);
 	}
-	return 1;
+
+	// Shouldn't happen
+	return 0;
 }
 
 ExpEmit FxRandom::Emit(VMFunctionBuilder *build)
@@ -2405,17 +2814,27 @@ ExpEmit FxRandom::Emit(VMFunctionBuilder *build)
 	assert(((PSymbolVMFunction *)sym)->Function != NULL);
 	callfunc = ((PSymbolVMFunction *)sym)->Function;
 
+	int opcode = (EmitTail ? OP_TAIL_K : OP_CALL_K);
+
 	build->Emit(OP_PARAM, 0, REGT_POINTER | REGT_KONST, build->GetConstantAddress(rng, ATAG_RNG));
 	if (min != NULL && max != NULL)
 	{
 		EmitParameter(build, min, ScriptPosition);
 		EmitParameter(build, max, ScriptPosition);
-		build->Emit(OP_CALL_K, build->GetConstantAddress(callfunc, ATAG_OBJECT), 3, 1);
+		build->Emit(opcode, build->GetConstantAddress(callfunc, ATAG_OBJECT), 3, 1);
 	}
 	else
 	{
-		build->Emit(OP_CALL_K, build->GetConstantAddress(callfunc, ATAG_OBJECT), 1, 1);
+		build->Emit(opcode, build->GetConstantAddress(callfunc, ATAG_OBJECT), 1, 1);
 	}
+
+	if (EmitTail)
+	{
+		ExpEmit call;
+		call.Final = true;
+		return call;
+	}
+
 	ExpEmit out(build, REGT_INT);
 	build->Emit(OP_RESULT, 0, REGT_INT, out.RegNum);
 	return out;
@@ -2622,13 +3041,12 @@ int DecoFRandom(VMFrameStack *stack, VMValue *param, int numparam, VMReturn *ret
 		{
 			swapvalues(max, min);
 		}
-		ret->SetFloat(frandom * (max - min) + min);
+		ACTION_RETURN_FLOAT(frandom * (max - min) + min);
 	}
 	else
 	{
-		ret->SetFloat(frandom);
+		ACTION_RETURN_FLOAT(frandom);
 	}
-	return 1;
 }
 
 ExpEmit FxFRandom::Emit(VMFunctionBuilder *build)
@@ -2641,17 +3059,27 @@ ExpEmit FxFRandom::Emit(VMFunctionBuilder *build)
 	assert(((PSymbolVMFunction *)sym)->Function != NULL);
 	callfunc = ((PSymbolVMFunction *)sym)->Function;
 
+	int opcode = (EmitTail ? OP_TAIL_K : OP_CALL_K);
+
 	build->Emit(OP_PARAM, 0, REGT_POINTER | REGT_KONST, build->GetConstantAddress(rng, ATAG_RNG));
 	if (min != NULL && max != NULL)
 	{
 		EmitParameter(build, min, ScriptPosition);
 		EmitParameter(build, max, ScriptPosition);
-		build->Emit(OP_CALL_K, build->GetConstantAddress(callfunc, ATAG_OBJECT), 3, 1);
+		build->Emit(opcode, build->GetConstantAddress(callfunc, ATAG_OBJECT), 3, 1);
 	}
 	else
 	{
-		build->Emit(OP_CALL_K, build->GetConstantAddress(callfunc, ATAG_OBJECT), 1, 1);
+		build->Emit(opcode, build->GetConstantAddress(callfunc, ATAG_OBJECT), 1, 1);
 	}
+
+	if (EmitTail)
+	{
+		ExpEmit call;
+		call.Final = true;
+		return call;
+	}
+
 	ExpEmit out(build, REGT_FLOAT);
 	build->Emit(OP_RESULT, 0, REGT_FLOAT, out.RegNum);
 	return out;
@@ -2666,6 +3094,7 @@ ExpEmit FxFRandom::Emit(VMFunctionBuilder *build)
 FxRandom2::FxRandom2(FRandom *r, FxExpression *m, const FScriptPosition &pos)
 : FxExpression(pos)
 {
+	EmitTail = false;
 	rng = r;
 	if (m) mask = new FxIntCast(m);
 	else mask = new FxConstant(-1, pos);
@@ -2681,6 +3110,18 @@ FxRandom2::FxRandom2(FRandom *r, FxExpression *m, const FScriptPosition &pos)
 FxRandom2::~FxRandom2()
 {
 	SAFE_DELETE(mask);
+}
+
+//==========================================================================
+//
+//
+//
+//==========================================================================
+
+PPrototype *FxRandom2::ReturnProto()
+{
+	EmitTail = true;
+	return FxExpression::ReturnProto();
 }
 
 //==========================================================================
@@ -2712,9 +3153,19 @@ ExpEmit FxRandom2::Emit(VMFunctionBuilder *build)
 	assert(((PSymbolVMFunction *)sym)->Function != NULL);
 	callfunc = ((PSymbolVMFunction *)sym)->Function;
 
+	int opcode = (EmitTail ? OP_TAIL_K : OP_CALL_K);
+
 	build->Emit(OP_PARAM, 0, REGT_POINTER | REGT_KONST, build->GetConstantAddress(rng, ATAG_RNG));
 	EmitParameter(build, mask, ScriptPosition);
-	build->Emit(OP_CALL_K, build->GetConstantAddress(callfunc, ATAG_OBJECT), 2, 1);
+	build->Emit(opcode, build->GetConstantAddress(callfunc, ATAG_OBJECT), 2, 1);
+
+	if (EmitTail)
+	{
+		ExpEmit call;
+		call.Final = true;
+		return call;
+	}
+
 	ExpEmit out(build, REGT_INT);
 	build->Emit(OP_RESULT, 0, REGT_INT, out.RegNum);
 	return out;
@@ -2838,14 +3289,14 @@ FxSelf::FxSelf(const FScriptPosition &pos)
 FxExpression *FxSelf::Resolve(FCompileContext& ctx)
 {
 	CHECKRESOLVED();
-	if (!ctx.cls)
+	if (!ctx.Class)
 	{
 		// can't really happen with DECORATE's expression evaluator.
 		ScriptPosition.Message(MSG_ERROR, "self used outside of a member function");
 		delete this;
 		return NULL;
 	}
-	ValueType = ctx.cls;
+	ValueType = ctx.Class;
 	ValueType = NewPointer(RUNTIME_CLASS(DObject));
 	return this;
 }  
@@ -2956,9 +3407,10 @@ FxClassMember::~FxClassMember()
 //
 //==========================================================================
 
-void FxClassMember::RequestAddress()
+bool FxClassMember::RequestAddress()
 {
 	AddressRequested = true;
+	return !!(~membervar->Flags & VARF_ReadOnly);
 }
 
 //==========================================================================
@@ -2988,6 +3440,17 @@ ExpEmit FxClassMember::Emit(VMFunctionBuilder *build)
 	ExpEmit obj = classx->Emit(build);
 	assert(obj.RegType == REGT_POINTER);
 
+	if (obj.Konst)
+	{
+		// If the situation where we are dereferencing a constant
+		// pointer is common, then it would probably be worthwhile
+		// to add new opcodes for those. But as of right now, I
+		// don't expect it to be a particularly common case.
+		ExpEmit newobj(build, REGT_POINTER);
+		build->Emit(OP_LKP, newobj.RegNum, obj.RegNum);
+		obj = newobj;
+	}
+
 	if (AddressRequested)
 	{
 		if (membervar->Offset == 0)
@@ -3001,20 +3464,8 @@ ExpEmit FxClassMember::Emit(VMFunctionBuilder *build)
 	}
 
 	int offsetreg = build->GetConstantInt((int)membervar->Offset);
-	ExpEmit loc, tmp;
+	ExpEmit loc(build, membervar->Type->GetRegType());
 
-	if (obj.Konst)
-	{
-		// If the situation where we are dereferencing a constant
-		// pointer is common, then it would probably be worthwhile
-		// to add new opcodes for those. But as of right now, I
-		// don't expect it to be a particularly common case.
-		ExpEmit newobj(build, REGT_POINTER);
-		build->Emit(OP_LKP, newobj.RegNum, obj.RegNum);
-		obj = newobj;
-	}
-
-	loc = ExpEmit(build, membervar->Type->GetRegType());
 	build->Emit(membervar->Type->GetLoadOp(), loc.RegNum, obj.RegNum, offsetreg);
 	obj.Free(build);
 	return loc;
@@ -3032,7 +3483,8 @@ FxArrayElement::FxArrayElement(FxExpression *base, FxExpression *_index)
 {
 	Array=base;
 	index = _index;
-	//AddressRequested = false;
+	AddressRequested = false;
+	AddressWritable = false;
 }
 
 //==========================================================================
@@ -3053,12 +3505,11 @@ FxArrayElement::~FxArrayElement()
 //
 //==========================================================================
 
-/*
-void FxArrayElement::RequestAddress()
+bool FxArrayElement::RequestAddress()
 {
 	AddressRequested = true;
+	return AddressWritable;
 }
-*/
 
 //==========================================================================
 //
@@ -3097,6 +3548,16 @@ FxExpression *FxArrayElement::Resolve(FCompileContext &ctx)
 		delete this;
 		return NULL;
 	}
+	if (index->isConstant())
+	{
+		unsigned indexval = static_cast<FxConstant *>(index)->GetValue().GetInt();
+		if (indexval >= arraytype->ElementCount)
+		{
+			ScriptPosition.Message(MSG_ERROR, "Array index out of bounds");
+			delete this;
+			return NULL;
+		}
+	}
 
 	ValueType = arraytype->ElementType;
 	if (ValueType->GetRegType() != REGT_INT && ValueType->GetRegType() != REGT_FLOAT)
@@ -3106,7 +3567,7 @@ FxExpression *FxArrayElement::Resolve(FCompileContext &ctx)
 		delete this;
 		return NULL;
 	}
-	Array->RequestAddress();
+	AddressWritable = Array->RequestAddress();
 	return this;
 }
 
@@ -3120,25 +3581,33 @@ ExpEmit FxArrayElement::Emit(VMFunctionBuilder *build)
 {
 	ExpEmit start = Array->Emit(build);
 	PArray *const arraytype = static_cast<PArray*>(Array->ValueType);
-	PType *const elementtype = arraytype->ElementType;
-	ExpEmit dest(build, elementtype->GetRegType());
+	ExpEmit dest(build, arraytype->ElementType->GetRegType());
 
 	if (start.Konst)
 	{
 		ExpEmit tmpstart(build, REGT_POINTER);
 		build->Emit(OP_LKP, tmpstart.RegNum, start.RegNum);
+		start.Free(build);
 		start = tmpstart;
 	}
 	if (index->isConstant())
 	{
 		unsigned indexval = static_cast<FxConstant *>(index)->GetValue().GetInt();
-		if (indexval >= arraytype->ElementCount)
-		{
-			I_Error("Array index out of bounds");
-		}
+		assert(indexval < arraytype->ElementCount && "Array index out of bounds");
 		indexval *= arraytype->ElementSize;
-		build->Emit(arraytype->ElementType->GetLoadOp(), dest.RegNum,
-			start.RegNum, build->GetConstantInt(indexval));
+
+		if (AddressRequested)
+		{
+			if (indexval != 0)
+			{
+				build->Emit(OP_ADDA_RK, start.RegNum, start.RegNum, build->GetConstantInt(indexval));
+			}
+		}
+		else
+		{
+			build->Emit(arraytype->ElementType->GetLoadOp(), dest.RegNum,
+				start.RegNum, build->GetConstantInt(indexval));
+		}
 	}
 	else
 	{
@@ -3154,10 +3623,24 @@ ExpEmit FxArrayElement::Emit(VMFunctionBuilder *build)
 		{
 			build->Emit(OP_SLL_RI, indexv.RegNum, indexv.RegNum, shiftbits);
 		}
-		build->Emit(arraytype->ElementType->GetLoadOp() + 1,	// added 1 to use the *_R version that
-			dest.RegNum, start.RegNum, indexv.RegNum);			// takes the offset from a register
+
+		if (AddressRequested)
+		{
+			build->Emit(OP_ADDA_RR, start.RegNum, start.RegNum, indexv.RegNum);
+		}
+		else
+		{
+			build->Emit(arraytype->ElementType->GetLoadOp() + 1,	// added 1 to use the *_R version that
+				dest.RegNum, start.RegNum, indexv.RegNum);			// takes the offset from a register
+		}
 		indexv.Free(build);
 	}
+	if (AddressRequested)
+	{
+		dest.Free(build);
+		return start;
+	}
+	
 	start.Free(build);
 	return dest;
 }
@@ -3268,6 +3751,7 @@ FxActionSpecialCall::FxActionSpecialCall(FxExpression *self, int special, FArgum
 	Self = self;
 	Special = special;
 	ArgList = args;
+	EmitTail = false;
 }
 
 //==========================================================================
@@ -3280,6 +3764,18 @@ FxActionSpecialCall::~FxActionSpecialCall()
 {
 	SAFE_DELETE(Self);
 	SAFE_DELETE(ArgList);
+}
+
+//==========================================================================
+//
+//
+//
+//==========================================================================
+
+PPrototype *FxActionSpecialCall::ReturnProto()
+{
+	EmitTail = true;
+	return FxExpression::ReturnProto();
 }
 
 //==========================================================================
@@ -3340,7 +3836,6 @@ FxExpression *FxActionSpecialCall::Resolve(FCompileContext& ctx)
 int DecoCallLineSpecial(VMFrameStack *stack, VMValue *param, int numparam, VMReturn *ret, int numret)
 {
 	assert(numparam > 2 && numparam < 8);
-	assert(numret == 1);
 	assert(param[0].Type == REGT_INT);
 	assert(param[1].Type == REGT_POINTER);
 	int v[5] = { 0 };
@@ -3349,8 +3844,7 @@ int DecoCallLineSpecial(VMFrameStack *stack, VMValue *param, int numparam, VMRet
 	{
 		v[i - 2] = param[i].i;
 	}
-	ret->SetInt(P_ExecuteSpecial(param[0].i, NULL, reinterpret_cast<AActor*>(param[1].a), false, v[0], v[1], v[2], v[3], v[4]));
-	return 1;
+	ACTION_RETURN_INT(P_ExecuteSpecial(param[0].i, NULL, reinterpret_cast<AActor*>(param[1].a), false, v[0], v[1], v[2], v[3], v[4]));
 }
 
 ExpEmit FxActionSpecialCall::Emit(VMFunctionBuilder *build)
@@ -3395,6 +3889,14 @@ ExpEmit FxActionSpecialCall::Emit(VMFunctionBuilder *build)
 	assert(((PSymbolVMFunction *)sym)->Function != NULL);
 	callfunc = ((PSymbolVMFunction *)sym)->Function;
 
+	if (EmitTail)
+	{
+		build->Emit(OP_TAIL_K, build->GetConstantAddress(callfunc, ATAG_OBJECT), 2 + i, 0);
+		ExpEmit call;
+		call.Final = true;
+		return call;
+	}
+
 	ExpEmit dest(build, REGT_INT);
 	build->Emit(OP_CALL_K, build->GetConstantAddress(callfunc, ATAG_OBJECT), 2 + i, 1);
 	build->Emit(OP_RESULT, 0, REGT_INT, dest.RegNum);
@@ -3412,6 +3914,7 @@ FxVMFunctionCall::FxVMFunctionCall(PFunction *func, FArgumentList *args, const F
 {
 	Function = func;
 	ArgList = args;
+	EmitTail = false;
 }
 
 //==========================================================================
@@ -3423,6 +3926,38 @@ FxVMFunctionCall::FxVMFunctionCall(PFunction *func, FArgumentList *args, const F
 FxVMFunctionCall::~FxVMFunctionCall()
 {
 	SAFE_DELETE(ArgList);
+}
+
+//==========================================================================
+//
+//
+//
+//==========================================================================
+
+PPrototype *FxVMFunctionCall::ReturnProto()
+{
+	EmitTail = true;
+	return Function->Variants[0].Implementation->Proto;
+}
+
+//==========================================================================
+//
+//
+//
+//==========================================================================
+
+VMFunction *FxVMFunctionCall::GetDirectFunction()
+{
+	// If this return statement calls a function with no arguments,
+	// then it can be a "direct" function. That is, the DECORATE
+	// definition can call that function directly without wrapping
+	// it inside VM code.
+	if (EmitTail && (ArgList ? ArgList->Size() : 0) == 0 && (Function->Flags & VARF_Action))
+	{
+		return Function->Variants[0].Implementation;
+	}
+	
+	return nullptr;
 }
 
 //==========================================================================
@@ -3454,6 +3989,11 @@ FxExpression *FxVMFunctionCall::Resolve(FCompileContext& ctx)
 	{
 		ValueType = rets[0];
 	}
+	else
+	{
+		ValueType = TypeVoid;
+	}
+
 	return this;
 }
 
@@ -3467,18 +4007,13 @@ FxExpression *FxVMFunctionCall::Resolve(FCompileContext& ctx)
 
 ExpEmit FxVMFunctionCall::Emit(VMFunctionBuilder *build)
 {
-	return Emit(build, false);
-}
-
-ExpEmit FxVMFunctionCall::Emit(VMFunctionBuilder *build, bool tailcall)
-{
 	assert(build->Registers[REGT_POINTER].GetMostUsed() >= 3);
-	int count = GetArgCount();
+	int count = (ArgList ? ArgList->Size() : 0);
 
 	if (count == 1)
 	{
 		ExpEmit reg;
-		if (CheckEmitCast(build, tailcall, reg))
+		if (CheckEmitCast(build, EmitTail, reg))
 		{
 			return reg;
 		}
@@ -3507,10 +4042,12 @@ ExpEmit FxVMFunctionCall::Emit(VMFunctionBuilder *build, bool tailcall)
 	VMFunction *vmfunc = Function->Variants[0].Implementation;
 	int funcaddr = build->GetConstantAddress(vmfunc, ATAG_OBJECT);
 	// Emit the call
-	if (tailcall)
+	if (EmitTail)
 	{ // Tail call
 		build->Emit(OP_TAIL_K, funcaddr, count, 0);
-		return ExpEmit();
+		ExpEmit call;
+		call.Final = true;
+		return call;
 	}
 	else if (vmfunc->Proto->ReturnTypes.Size() > 0)
 	{ // Call, expecting one result
@@ -3558,6 +4095,7 @@ bool FxVMFunctionCall::CheckEmitCast(VMFunctionBuilder *build, bool returnit, Ex
 				where.Free(build);
 			}
 			reg = ExpEmit();
+			reg.Final = true;
 		}
 		else
 		{
@@ -3820,56 +4358,442 @@ ExpEmit FxIfStatement::Emit(VMFunctionBuilder *build)
 
 //==========================================================================
 //
+// FxWhileLoop
+//
 //==========================================================================
 
-FxReturnStatement::FxReturnStatement(FxVMFunctionCall *call, const FScriptPosition &pos)
-: FxExpression(pos), Call(call)
+FxWhileLoop::FxWhileLoop(FxExpression *condition, FxExpression *code, const FScriptPosition &pos)
+: FxExpression(pos), Condition(condition), Code(code)
 {
+	ValueType = TypeVoid;
+}
+
+FxWhileLoop::~FxWhileLoop()
+{
+	SAFE_DELETE(Condition);
+	SAFE_DELETE(Code);
+}
+
+FxExpression *FxWhileLoop::Resolve(FCompileContext &ctx)
+{
+	CHECKRESOLVED();
+	SAFE_RESOLVE(Condition, ctx);
+	SAFE_RESOLVE_OPT(Code, ctx);
+
+	ctx.HandleJumps(TK_Break, this);
+	ctx.HandleJumps(TK_Continue, this);
+
+	if (Condition->ValueType != TypeBool)
+	{
+		Condition = new FxBoolCast(Condition);
+		SAFE_RESOLVE(Condition, ctx);
+	}
+
+	if (Condition->isConstant())
+	{
+		if (static_cast<FxConstant *>(Condition)->GetValue().GetBool() == false)
+		{ // Nothing happens
+			FxExpression *nop = new FxNop(ScriptPosition);
+			delete this;
+			return nop;
+		}
+		else if (Code == nullptr)
+		{ // "while (true) { }"
+		  // Someone could be using this for testing.
+			ScriptPosition.Message(MSG_WARNING, "Infinite empty loop");
+		}
+	}
+
+	return this;
+}
+
+ExpEmit FxWhileLoop::Emit(VMFunctionBuilder *build)
+{
+	assert(Condition->ValueType == TypeBool);
+
+	size_t loopstart, loopend;
+	size_t jumpspot;
+
+	// Evaluate the condition and execute/break out of the loop.
+	loopstart = build->GetAddress();
+	if (!Condition->isConstant())
+	{
+		ExpEmit cond = Condition->Emit(build);
+		build->Emit(OP_TEST, cond.RegNum, 0);
+		jumpspot = build->Emit(OP_JMP, 0);
+		cond.Free(build);
+	}
+	else assert(static_cast<FxConstant *>(Condition)->GetValue().GetBool() == true);
+
+	// Execute the loop's content.
+	if (Code != nullptr)
+	{
+		ExpEmit code = Code->Emit(build);
+		code.Free(build);
+	}
+
+	// Loop back.
+	build->Backpatch(build->Emit(OP_JMP, 0), loopstart);
+	loopend = build->GetAddress();
+
+	if (!Condition->isConstant()) 
+	{
+		build->Backpatch(jumpspot, loopend);
+	}
+
+	// Give a proper address to any break/continue statement within this loop.
+	for (unsigned int i = 0; i < JumpAddresses.Size(); i++)
+	{
+		if (JumpAddresses[i]->Token == TK_Break)
+		{
+			build->Backpatch(JumpAddresses[i]->Address, loopend);
+		}
+		else
+		{ // Continue statement.
+			build->Backpatch(JumpAddresses[i]->Address, loopstart);
+		}
+	}
+
+	return ExpEmit();
+}
+
+//==========================================================================
+//
+// FxDoWhileLoop
+//
+//==========================================================================
+
+FxDoWhileLoop::FxDoWhileLoop(FxExpression *condition, FxExpression *code, const FScriptPosition &pos)
+: FxExpression(pos), Condition(condition), Code(code)
+{
+	ValueType = TypeVoid;
+}
+
+FxDoWhileLoop::~FxDoWhileLoop()
+{
+	SAFE_DELETE(Condition);
+	SAFE_DELETE(Code);
+}
+
+FxExpression *FxDoWhileLoop::Resolve(FCompileContext &ctx)
+{
+	CHECKRESOLVED();
+	SAFE_RESOLVE(Condition, ctx);
+	SAFE_RESOLVE_OPT(Code, ctx);
+
+	ctx.HandleJumps(TK_Break, this);
+	ctx.HandleJumps(TK_Continue, this);
+
+	if (Condition->ValueType != TypeBool)
+	{
+		Condition = new FxBoolCast(Condition);
+		SAFE_RESOLVE(Condition, ctx);
+	}
+
+	if (Condition->isConstant())
+	{
+		if (static_cast<FxConstant *>(Condition)->GetValue().GetBool() == false)
+		{ // The code executes once, if any.
+			if (JumpAddresses.Size() == 0)
+			{ // We would still have to handle the jumps however.
+				FxExpression *e = Code;
+				if (e == nullptr) e = new FxNop(ScriptPosition);
+				Code = nullptr;
+				delete this;
+				return e;
+			}
+		}
+		else if (Code == nullptr)
+		{ // "do { } while (true);"
+		  // Someone could be using this for testing.
+			ScriptPosition.Message(MSG_WARNING, "Infinite empty loop");
+		}
+	}
+
+	return this;
+}
+
+ExpEmit FxDoWhileLoop::Emit(VMFunctionBuilder *build)
+{
+	assert(Condition->ValueType == TypeBool);
+
+	size_t loopstart, loopend;
+	size_t codestart;
+
+	// Execute the loop's content.
+	codestart = build->GetAddress();
+	if (Code != nullptr)
+	{
+		ExpEmit code = Code->Emit(build);
+		code.Free(build);
+	}
+
+	// Evaluate the condition and execute/break out of the loop.
+	loopstart = build->GetAddress();
+	if (!Condition->isConstant())
+	{
+		ExpEmit cond = Condition->Emit(build);
+		build->Emit(OP_TEST, cond.RegNum, 1);
+		cond.Free(build);
+		build->Backpatch(build->Emit(OP_JMP, 0), codestart);
+	}
+	else if (static_cast<FxConstant *>(Condition)->GetValue().GetBool() == true)
+	{ // Always looping
+		build->Backpatch(build->Emit(OP_JMP, 0), codestart);
+	}
+	loopend = build->GetAddress();
+
+	// Give a proper address to any break/continue statement within this loop.
+	for (unsigned int i = 0; i < JumpAddresses.Size(); i++)
+	{
+		if (JumpAddresses[i]->Token == TK_Break)
+		{
+			build->Backpatch(JumpAddresses[i]->Address, loopend);
+		}
+		else
+		{ // Continue statement.
+			build->Backpatch(JumpAddresses[i]->Address, loopstart);
+		}
+	}
+
+	return ExpEmit();
+}
+
+//==========================================================================
+//
+// FxForLoop
+//
+//==========================================================================
+
+FxForLoop::FxForLoop(FxExpression *init, FxExpression *condition, FxExpression *iteration, FxExpression *code, const FScriptPosition &pos)
+: FxExpression(pos), Init(init), Condition(condition), Iteration(iteration), Code(code)
+{
+	ValueType = TypeVoid;
+}
+
+FxForLoop::~FxForLoop()
+{
+	SAFE_DELETE(Init);
+	SAFE_DELETE(Condition);
+	SAFE_DELETE(Iteration);
+	SAFE_DELETE(Code);
+}
+
+FxExpression *FxForLoop::Resolve(FCompileContext &ctx)
+{
+	CHECKRESOLVED();
+	SAFE_RESOLVE_OPT(Init, ctx);
+	SAFE_RESOLVE_OPT(Condition, ctx);
+	SAFE_RESOLVE_OPT(Iteration, ctx);
+	SAFE_RESOLVE_OPT(Code, ctx);
+
+	ctx.HandleJumps(TK_Break, this);
+	ctx.HandleJumps(TK_Continue, this);
+
+	if (Condition != nullptr)
+	{
+		if (Condition->ValueType != TypeBool)
+		{
+			Condition = new FxBoolCast(Condition);
+			SAFE_RESOLVE(Condition, ctx);
+		}
+
+		if (Condition->isConstant())
+		{
+			if (static_cast<FxConstant *>(Condition)->GetValue().GetBool() == false)
+			{ // Nothing happens
+				FxExpression *nop = new FxNop(ScriptPosition);
+				delete this;
+				return nop;
+			}
+			else
+			{ // "for (..; true; ..)"
+				delete Condition;
+				Condition = nullptr;
+			}
+		}
+	}
+	if (Condition == nullptr && Code == nullptr)
+	{ // "for (..; ; ..) { }"
+	  // Someone could be using this for testing.
+		ScriptPosition.Message(MSG_WARNING, "Infinite empty loop");
+	}
+
+	return this;
+}
+
+ExpEmit FxForLoop::Emit(VMFunctionBuilder *build)
+{
+	assert((Condition && Condition->ValueType == TypeBool && !Condition->isConstant()) || Condition == nullptr);
+
+	size_t loopstart, loopend;
+	size_t codestart;
+	size_t jumpspot;
+
+	// Init statement.
+	if (Init != nullptr)
+	{
+		ExpEmit init = Init->Emit(build);
+		init.Free(build);
+	}
+
+	// Evaluate the condition and execute/break out of the loop.
+	codestart = build->GetAddress();
+	if (Condition != nullptr)
+	{
+		ExpEmit cond = Condition->Emit(build);
+		build->Emit(OP_TEST, cond.RegNum, 0);
+		cond.Free(build);
+		jumpspot = build->Emit(OP_JMP, 0);
+	}
+
+	// Execute the loop's content.
+	if (Code != nullptr)
+	{
+		ExpEmit code = Code->Emit(build);
+		code.Free(build);
+	}
+
+	// Iteration statement.
+	loopstart = build->GetAddress();
+	if (Iteration != nullptr)
+	{
+		ExpEmit iter = Iteration->Emit(build);
+		iter.Free(build);
+	}
+	build->Backpatch(build->Emit(OP_JMP, 0), codestart);
+
+	// End of loop.
+	loopend = build->GetAddress();
+	if (Condition != nullptr)
+	{
+		build->Backpatch(jumpspot, loopend);
+	}
+
+	// Give a proper address to any break/continue statement within this loop.
+	for (unsigned int i = 0; i < JumpAddresses.Size(); i++)
+	{
+		if (JumpAddresses[i]->Token == TK_Break)
+		{
+			build->Backpatch(JumpAddresses[i]->Address, loopend);
+		}
+		else
+		{ // Continue statement.
+			build->Backpatch(JumpAddresses[i]->Address, loopstart);
+		}
+	}
+
+	return ExpEmit();
+}
+
+//==========================================================================
+//
+// FxJumpStatement
+//
+//==========================================================================
+
+FxJumpStatement::FxJumpStatement(int token, const FScriptPosition &pos)
+: FxExpression(pos), Token(token), AddressResolver(nullptr)
+{
+	ValueType = TypeVoid;
+}
+
+FxExpression *FxJumpStatement::Resolve(FCompileContext &ctx)
+{
+	CHECKRESOLVED();
+
+	ctx.Jumps.Push(this);
+
+	return this;
+}
+
+ExpEmit FxJumpStatement::Emit(VMFunctionBuilder *build)
+{
+	if (AddressResolver == nullptr)
+	{
+		ScriptPosition.Message(MSG_ERROR, "Jump statement %s has nowhere to go!", FScanner::TokenName(Token).GetChars());
+	}
+
+	Address = build->Emit(OP_JMP, 0);
+
+	return ExpEmit();
+}
+
+//==========================================================================
+//
+//==========================================================================
+
+FxReturnStatement::FxReturnStatement(FxExpression *value, const FScriptPosition &pos)
+: FxExpression(pos), Value(value)
+{
+	ValueType = TypeVoid;
 }
 
 FxReturnStatement::~FxReturnStatement()
 {
-	SAFE_DELETE(Call);
+	SAFE_DELETE(Value);
 }
 
 FxExpression *FxReturnStatement::Resolve(FCompileContext &ctx)
 {
 	CHECKRESOLVED();
-	if (Call != NULL)
+	SAFE_RESOLVE_OPT(Value, ctx);
+
+	PPrototype *retproto;
+	if (Value == nullptr)
 	{
-		Call = static_cast<FxVMFunctionCall *>(Call->Resolve(ctx));
-		ABORT(Call);
+		TArray<PType *> none(0);
+		retproto = NewPrototype(none, none);
 	}
+	else
+	{
+		retproto = Value->ReturnProto();
+	}
+
+	ctx.CheckReturn(retproto, ScriptPosition);
+
 	return this;
 }
 
 ExpEmit FxReturnStatement::Emit(VMFunctionBuilder *build)
 {
-	// If we return nothing, use a regular RET opcode. If we return
-	// something, use TAIL to call the function. Our return type
-	// should be compatible with the called function's return type.
-	if (Call == NULL)
+	// If we return nothing, use a regular RET opcode.
+	// Otherwise just return the value we're given.
+	if (Value == nullptr)
 	{
 		build->Emit(OP_RET, RET_FINAL, REGT_NIL, 0);
 	}
 	else
 	{
-		Call->Emit(build, true);
+		ExpEmit ret = Value->Emit(build);
+
+		// Check if it is a function call that simplified itself
+		// into a tail call in which case we don't emit anything.
+		if (!ret.Final)
+		{
+			if (Value->ValueType == TypeVoid)
+			{ // Nothing is returned.
+				build->Emit(OP_RET, RET_FINAL, REGT_NIL, 0);
+			}
+			else
+			{
+				build->Emit(OP_RET, RET_FINAL, ret.RegType | (ret.Konst ? REGT_KONST : 0), ret.RegNum);
+			}
+		}
 	}
-	return ExpEmit();
+
+	ExpEmit out;
+	out.Final = true;
+	return out;
 }
 
 VMFunction *FxReturnStatement::GetDirectFunction()
 {
-	// If this return statement calls a function with no arguments,
-	// then it can be a "direct" function. That is, the DECORATE
-	// definition can call that function directly without wrapping
-	// it inside VM code.
-	if (Call != NULL && Call->GetArgCount() == 0 && (Call->GetFunction()->Flags & VARF_Action))
+	if (Value != nullptr)
 	{
-		return Call->GetVMFunction();
+		return Value->GetDirectFunction();
 	}
-	return NULL;
+	return nullptr;
 }
 
 //==========================================================================
@@ -4008,23 +4932,121 @@ ExpEmit FxClassTypeCast::Emit(VMFunctionBuilder *build)
 FxExpression *FxStateByIndex::Resolve(FCompileContext &ctx)
 {
 	CHECKRESOLVED();
-	if (ctx.cls->NumOwnedStates == 0)
+	ABORT(ctx.Class);
+
+	if (ctx.Class->NumOwnedStates == 0)
 	{
 		// This can't really happen
 		assert(false);
 	}
-	if (ctx.cls->NumOwnedStates <= index)
+	if (ctx.Class->NumOwnedStates <= index)
 	{
 		ScriptPosition.Message(MSG_ERROR, "%s: Attempt to jump to non existing state index %d", 
-			ctx.cls->TypeName.GetChars(), index);
+			ctx.Class->TypeName.GetChars(), index);
 		delete this;
 		return NULL;
 	}
-	FxExpression *x = new FxConstant(ctx.cls->OwnedStates + index, ScriptPosition);
+	FxExpression *x = new FxConstant(ctx.Class->OwnedStates + index, ScriptPosition);
 	delete this;
 	return x;
 }
+
+//==========================================================================
+//
+//
+//
+//==========================================================================
+
+FxRuntimeStateIndex::FxRuntimeStateIndex(FxExpression *index)
+: FxExpression(index->ScriptPosition), Index(index)
+{
+	EmitTail = false;
+	ValueType = TypeState;
+}
+
+FxRuntimeStateIndex::~FxRuntimeStateIndex()
+{
+	SAFE_DELETE(Index);
+}
+
+PPrototype *FxRuntimeStateIndex::ReturnProto()
+{
+	EmitTail = true;
+	return FxExpression::ReturnProto();
+}
+
+FxExpression *FxRuntimeStateIndex::Resolve(FCompileContext &ctx)
+{
+	CHECKRESOLVED();
+	SAFE_RESOLVE(Index, ctx);
+
+	if (!Index->IsNumeric())
+	{
+		ScriptPosition.Message(MSG_ERROR, "Numeric type expected");
+		delete this;
+		return nullptr;
+	}
+	else if (Index->ValueType->GetRegType() != REGT_INT)
+	{ // Float.
+		Index = new FxIntCast(Index);
+		SAFE_RESOLVE(Index, ctx);
+	}
+
+	return this;
+}
+
+static int DecoHandleRuntimeState(VMFrameStack *stack, VMValue *param, int numparam, VMReturn *ret, int numret)
+{
+	PARAM_PROLOGUE;
+	PARAM_OBJECT(stateowner, AActor);
+	PARAM_POINTER(stateinfo, FStateParamInfo);
+	PARAM_INT(index);
+
+	if (index == 0 || !stateowner->GetClass()->OwnsState(stateinfo->mCallingState + index))
+	{
+		// Null is returned if the location was invalid which means that no jump will be performed
+		// if used as return value
+		// 0 always meant the same thing so we handle it here for compatibility
+		ACTION_RETURN_STATE(nullptr);
+	}
+	else
+	{
+		ACTION_RETURN_STATE(stateinfo->mCallingState + index);
+	}
+}
+
+ExpEmit FxRuntimeStateIndex::Emit(VMFunctionBuilder *build)
+{
+	assert(build->Registers[REGT_POINTER].GetMostUsed() >= 3);
+
+	ExpEmit out(build, REGT_POINTER);
+
+	build->Emit(OP_PARAM, 0, REGT_POINTER, 1); // stateowner
+	build->Emit(OP_PARAM, 0, REGT_POINTER, 2); // stateinfo
+	ExpEmit id = Index->Emit(build);
+	build->Emit(OP_PARAM, 0, REGT_INT | (id.Konst ? REGT_KONST : 0), id.RegNum); // index
+
+	VMFunction *callfunc;
+	PSymbol *sym;
 	
+	sym = FindDecorateBuiltinFunction(NAME_DecoHandleRuntimeState, DecoHandleRuntimeState);
+	assert(sym->IsKindOf(RUNTIME_CLASS(PSymbolVMFunction)));
+	assert(((PSymbolVMFunction *)sym)->Function != nullptr);
+	callfunc = ((PSymbolVMFunction *)sym)->Function;
+
+	if (EmitTail)
+	{
+		build->Emit(OP_TAIL_K, build->GetConstantAddress(callfunc, ATAG_OBJECT), 3, 1);
+		out.Final = true;
+	}
+	else
+	{
+		build->Emit(OP_CALL_K, build->GetConstantAddress(callfunc, ATAG_OBJECT), 3, 1);
+		build->Emit(OP_RESULT, 0, REGT_POINTER, out.RegNum);
+	}
+
+	return out;
+}
 
 //==========================================================================
 //
@@ -4062,13 +5084,15 @@ FxMultiNameState::FxMultiNameState(const char *_statestring, const FScriptPositi
 FxExpression *FxMultiNameState::Resolve(FCompileContext &ctx)
 {
 	CHECKRESOLVED();
+	ABORT(ctx.Class);
+
 	if (names[0] == NAME_None)
 	{
 		scope = NULL;
 	}
 	else if (names[0] == NAME_Super)
 	{
-		scope = dyn_cast<PClassActor>(ctx.cls->ParentClass);
+		scope = dyn_cast<PClassActor>(ctx.Class->ParentClass);
 	}
 	else
 	{
@@ -4079,9 +5103,9 @@ FxExpression *FxMultiNameState::Resolve(FCompileContext &ctx)
 			delete this;
 			return NULL;
 		}
-		else if (!scope->IsDescendantOf(ctx.cls))
+		else if (!scope->IsDescendantOf(ctx.Class))
 		{
-			ScriptPosition.Message(MSG_ERROR, "'%s' is not an ancestor of '%s'", names[0].GetChars(),ctx.cls->TypeName.GetChars());
+			ScriptPosition.Message(MSG_ERROR, "'%s' is not an ancestor of '%s'", names[0].GetChars(),ctx.Class->TypeName.GetChars());
 			delete this;
 			return NULL;
 		}

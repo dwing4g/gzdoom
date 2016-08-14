@@ -37,7 +37,6 @@ enum EEffect
 	EFF_SPHEREMAP,
 	EFF_BURN,
 	EFF_STENCIL,
-	EFF_GAMMACORRECTION,
 
 	MAX_EFFECTS
 };
@@ -61,13 +60,12 @@ class FRenderState
 	int mSrcBlend, mDstBlend;
 	float mAlphaThreshold;
 	int mBlendEquation;
-	bool m2D;
 	bool mModelMatrixEnabled;
 	bool mTextureMatrixEnabled;
+	bool mLastDepthClamp;
 	float mInterpolationFactor;
 	float mClipHeight, mClipHeightDirection;
 	float mShaderTimer;
-	bool mLastDepthClamp;
 
 	FVertexBuffer *mVertexBuffer, *mCurrentVertexBuffer;
 	FStateVec4 mColor;
@@ -238,7 +236,7 @@ public:
 
 	void EnableSplit(bool on)
 	{
-		if (gl.glslversion >= 1.3f)
+		if (!(gl.flags & RFL_NO_CLIP_PLANES))
 		{
 			mSplitEnabled = on;
 			if (on)
@@ -261,7 +259,7 @@ public:
 
 	void EnableClipLine(bool on)
 	{
-		if (gl.glslversion >= 1.3f)
+		if (!(gl.flags & RFL_NO_CLIP_PLANES))
 		{
 			mClipLineEnabled = on;
 			if (on)
@@ -427,11 +425,6 @@ public:
 		else glEnable(GL_DEPTH_CLAMP);
 		mLastDepthClamp = on;
 		return res;
-	}
-
-	void Set2DMode(bool on)
-	{
-		m2D = on;
 	}
 
 	void SetInterpolationFactor(float fac)

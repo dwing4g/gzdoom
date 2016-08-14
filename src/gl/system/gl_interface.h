@@ -20,6 +20,10 @@ enum RenderFlags
 	RFL_SHADER_STORAGE_BUFFER = 4,
 	RFL_BUFFER_STORAGE = 8,
 	RFL_SAMPLER_OBJECTS = 16,
+
+	RFL_NO_RGBA16F = 32,
+	RFL_NO_DEPTHSTENCIL = 64,
+	RFL_NO_CLIP_PLANES = 128
 };
 
 enum TexMode
@@ -41,6 +45,14 @@ enum ELightMethod
 	LM_DIRECT = 2,		// calculate lights on the fly along with the render data
 };
 
+enum EBufferMethod
+{
+	BM_CLIENTARRAY = 0,	// use a client array instead of a hardware buffer
+	BM_DEFERRED = 1,	// use a temporarily mapped buffer (only necessary on GL 3.x core profile, i.e. Apple)
+	BM_PERSISTENT = 2	// use a persistently mapped buffer
+};
+
+
 struct RenderContext
 {
 	unsigned int flags;
@@ -48,6 +60,7 @@ struct RenderContext
 	unsigned int maxuniformblock;
 	unsigned int uniformblockalignment;
 	int lightmethod;
+	int buffermethod;
 	float version;
 	float glslversion;
 	int max_texturesize;

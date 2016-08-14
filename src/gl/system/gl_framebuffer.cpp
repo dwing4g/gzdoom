@@ -64,6 +64,7 @@
 #include "gl/utility/gl_clock.h"
 #include "gl/utility/gl_templates.h"
 #include "gl/gl_functions.h"
+#include "gl/renderer/gl_2ddrawer.h"
 
 IMPLEMENT_CLASS(OpenGLFrameBuffer)
 EXTERN_CVAR (Float, vid_brightness)
@@ -94,6 +95,10 @@ CUSTOM_CVAR(Int, vid_hwgamma, 2, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVAR_NOINITC
 OpenGLFrameBuffer::OpenGLFrameBuffer(void *hMonitor, int width, int height, int bits, int refreshHz, bool fullscreen) : 
 	Super(hMonitor, width, height, bits, refreshHz, fullscreen) 
 {
+	// SetVSync needs to be at the very top to workaround a bug in Nvidia's OpenGL driver.
+	// If wglSwapIntervalEXT is called after glBindFramebuffer in a frame the setting is not changed!
+	SetVSync(vid_vsync);
+
 	GLRenderer = new FGLRenderer(this);
 	memcpy (SourcePalette, GPalette.BaseColors, sizeof(PalEntry)*256);
 	UpdatePalette ();
@@ -107,7 +112,6 @@ OpenGLFrameBuffer::OpenGLFrameBuffer(void *hMonitor, int width, int height, int 
 	needsetgamma = true;
 	swapped = false;
 	Accel2D = true;
-	SetVSync(vid_vsync);
 }
 
 OpenGLFrameBuffer::~OpenGLFrameBuffer()
@@ -157,11 +161,7 @@ void OpenGLFrameBuffer::InitializeState()
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//int trueH = GetTrueHeight();
-	//int h = GetHeight();
-	//glViewport(0, (trueH - h)/2, GetWidth(), GetHeight()); 
-
-	GLRenderer->Initialize();
+	GLRenderer->Initialize(GetWidth(), GetHeight());
 	GLRenderer->SetOutputViewport(nullptr);
 	Begin2D(false);
 }
@@ -188,13 +188,8 @@ void OpenGLFrameBuffer::Update()
 	DrawRateStuff();
 	GLRenderer->Flush();
 
-	if (GetTrueHeight() != GetHeight())
-	{
-		if (GLRenderer != NULL) 
-			GLRenderer->ClearBorders();
+	GLRenderer->SetOutputViewport(nullptr);
 
-		Begin2D(false);
-	}
 	if (gl_draw_sync || !swapped)
 	{
 		Swap();
@@ -406,7 +401,8 @@ bool OpenGLFrameBuffer::Begin2D(bool)
 
 void OpenGLFrameBuffer::DrawTextureParms(FTexture *img, DrawParms &parms)
 {
-	if (GLRenderer != NULL) GLRenderer->DrawTexture(img, parms);
+	if (GLRenderer != nullptr && GLRenderer->m2DDrawer != nullptr)
+		GLRenderer->m2DDrawer->AddTexture(img, parms);
 }
 
 //==========================================================================
@@ -416,8 +412,8 @@ void OpenGLFrameBuffer::DrawTextureParms(FTexture *img, DrawParms &parms)
 //==========================================================================
 void OpenGLFrameBuffer::DrawLine(int x1, int y1, int x2, int y2, int palcolor, uint32 color)
 {
-	if (GLRenderer != NULL) 
-		GLRenderer->DrawLine(x1, y1, x2, y2, palcolor, color);
+	if (GLRenderer != nullptr && GLRenderer->m2DDrawer != nullptr) 
+		GLRenderer->m2DDrawer->AddLine(x1, y1, x2, y2, palcolor, color);
 }
 
 //==========================================================================
@@ -427,8 +423,8 @@ void OpenGLFrameBuffer::DrawLine(int x1, int y1, int x2, int y2, int palcolor, u
 //==========================================================================
 void OpenGLFrameBuffer::DrawPixel(int x1, int y1, int palcolor, uint32 color)
 {
-	if (GLRenderer != NULL) 
-		GLRenderer->DrawPixel(x1, y1, palcolor, color);
+	if (GLRenderer != nullptr && GLRenderer->m2DDrawer != nullptr)
+		GLRenderer->m2DDrawer->AddPixel(x1, y1, palcolor, color);
 }
 
 //==========================================================================
@@ -445,8 +441,8 @@ void OpenGLFrameBuffer::Dim(PalEntry)
 
 void OpenGLFrameBuffer::Dim(PalEntry color, float damount, int x1, int y1, int w, int h)
 {
-	if (GLRenderer != NULL) 
-		GLRenderer->Dim(color, damount, x1, y1, w, h);
+	if (GLRenderer != nullptr && GLRenderer->m2DDrawer != nullptr)
+		GLRenderer->m2DDrawer->AddDim(color, damount, x1, y1, w, h);
 }
 
 //==========================================================================
@@ -457,8 +453,8 @@ void OpenGLFrameBuffer::Dim(PalEntry color, float damount, int x1, int y1, int w
 void OpenGLFrameBuffer::FlatFill (int left, int top, int right, int bottom, FTexture *src, bool local_origin)
 {
 
-	if (GLRenderer != NULL) 
-		GLRenderer->FlatFill(left, top, right, bottom, src, local_origin);
+	if (GLRenderer != nullptr && GLRenderer->m2DDrawer != nullptr)
+		GLRenderer->m2DDrawer->AddFlatFill(left, top, right, bottom, src, local_origin);
 }
 
 //==========================================================================
@@ -468,8 +464,8 @@ void OpenGLFrameBuffer::FlatFill (int left, int top, int right, int bottom, FTex
 //==========================================================================
 void OpenGLFrameBuffer::Clear(int left, int top, int right, int bottom, int palcolor, uint32 color)
 {
-	if (GLRenderer != NULL) 
-		GLRenderer->Clear(left, top, right, bottom, palcolor, color);
+	if (GLRenderer != nullptr && GLRenderer->m2DDrawer != nullptr)
+		GLRenderer->m2DDrawer->AddClear(left, top, right, bottom, palcolor, color);
 }
 
 //==========================================================================
@@ -484,10 +480,9 @@ void OpenGLFrameBuffer::FillSimplePoly(FTexture *texture, FVector2 *points, int 
 	double originx, double originy, double scalex, double scaley,
 	DAngle rotation, FDynamicColormap *colormap, int lightlevel)
 {
-	if (GLRenderer != NULL)
+	if (GLRenderer != nullptr && GLRenderer->m2DDrawer != nullptr && npoints >= 3)
 	{
-		GLRenderer->FillSimplePoly(texture, points, npoints, originx, originy, scalex, scaley,
-			rotation, colormap, lightlevel);
+		GLRenderer->m2DDrawer->AddPoly(texture, points, npoints, originx, originy, scalex, scaley, rotation, colormap, lightlevel);
 	}
 }
 
@@ -500,15 +495,41 @@ void OpenGLFrameBuffer::FillSimplePoly(FTexture *texture, FVector2 *points, int 
 
 void OpenGLFrameBuffer::GetScreenshotBuffer(const BYTE *&buffer, int &pitch, ESSType &color_type)
 {
+	const auto &viewport = GLRenderer->mOutputLetterbox;
+
+	// Grab what is in the back buffer.
+	// We cannot rely on SCREENWIDTH/HEIGHT here because the output may have been scaled.
+	TArray<uint8_t> pixels;
+	pixels.Resize(viewport.width * viewport.height * 3);
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+	glReadPixels(viewport.left, viewport.top, viewport.width, viewport.height, GL_RGB, GL_UNSIGNED_BYTE, &pixels[0]);
+	glPixelStorei(GL_PACK_ALIGNMENT, 4);
+
+	// Copy to screenshot buffer:
 	int w = SCREENWIDTH;
 	int h = SCREENHEIGHT;
 
 	ReleaseScreenshotBuffer();
 	ScreenshotBuffer = new BYTE[w * h * 3];
 
-	glPixelStorei(GL_PACK_ALIGNMENT, 1);
-	glReadPixels(0,(GetTrueHeight() - GetHeight()) / 2,w,h,GL_RGB,GL_UNSIGNED_BYTE,ScreenshotBuffer);
-	glPixelStorei(GL_PACK_ALIGNMENT, 4);
+	float rcpWidth = 1.0f / w;
+	float rcpHeight = 1.0f / h;
+	for (int y = 0; y < h; y++)
+	{
+		for (int x = 0; x < w; x++)
+		{
+			float u = (x + 0.5f) * rcpWidth;
+			float v = (y + 0.5f) * rcpHeight;
+			int sx = u * viewport.width;
+			int sy = v * viewport.height;
+			int sindex = (sx + sy * viewport.width) * 3;
+			int dindex = (x + y * w) * 3;
+			ScreenshotBuffer[dindex] = pixels[sindex];
+			ScreenshotBuffer[dindex + 1] = pixels[sindex + 1];
+			ScreenshotBuffer[dindex + 2] = pixels[sindex + 2];
+		}
+	}
+
 	pitch = -w*3;
 	color_type = SS_RGB;
 	buffer = ScreenshotBuffer + w * 3 * (h - 1);

@@ -397,6 +397,64 @@ DEFINE_ACTION_FUNCTION_PARAMS(AActor, GetGibHealth)
 
 //==========================================================================
 //
+// GetSpriteAngle
+//
+// NON-ACTION function returns the sprite angle of a pointer.
+//==========================================================================
+DEFINE_ACTION_FUNCTION_PARAMS(AActor, GetSpriteAngle)
+{
+	if (numret > 0)
+	{
+		assert(ret != NULL);
+		PARAM_SELF_PROLOGUE(AActor);
+		PARAM_INT_OPT(ptr) { ptr = AAPTR_DEFAULT; }
+
+		AActor *target = COPY_AAPTR(self, ptr);
+		if (target == nullptr)
+		{
+			ret->SetFloat(0.0);
+		}
+		else
+		{
+			const double ang = target->SpriteAngle.Degrees;
+			ret->SetFloat(ang);
+		}
+		return 1;
+	}
+	return 0;
+}
+
+//==========================================================================
+//
+// GetSpriteRotation
+//
+// NON-ACTION function returns the sprite rotation of a pointer.
+//==========================================================================
+DEFINE_ACTION_FUNCTION_PARAMS(AActor, GetSpriteRotation)
+{
+	if (numret > 0)
+	{
+		assert(ret != NULL);
+		PARAM_SELF_PROLOGUE(AActor);
+		PARAM_INT_OPT(ptr) { ptr = AAPTR_DEFAULT; }
+
+		AActor *target = COPY_AAPTR(self, ptr);
+		if (target == nullptr)
+		{
+			ret->SetFloat(0.0);
+		}
+		else
+		{
+			const double ang = target->SpriteRotation.Degrees;
+			ret->SetFloat(ang);
+		}
+		return 1;
+	}
+	return 0;
+}
+
+//==========================================================================
+//
 // GetZAt
 //
 // NON-ACTION function to get the floor or ceiling z at (x, y) with 
@@ -579,6 +637,38 @@ DEFINE_ACTION_FUNCTION_PARAMS(AActor, GetPlayerInput)
 		else
 		{
 			ret->SetInt(P_Thing_CheckInputNum(mobj->player, inputnum));
+		}
+		return 1;
+	}
+	return 0;
+}
+
+//==========================================================================
+//
+// CountProximity
+//
+// NON-ACTION function of A_CheckProximity that returns how much it counts.
+// Takes a pointer as anyone may or may not be a player.
+//==========================================================================
+
+DEFINE_ACTION_FUNCTION_PARAMS(AActor, CountProximity)
+{
+	if (numret > 0)
+	{
+		PARAM_SELF_PROLOGUE(AActor);
+		PARAM_CLASS(classname, AActor);
+		PARAM_FLOAT(distance);
+		PARAM_INT_OPT(flags) { flags = 0; }
+		PARAM_INT_OPT(ptr) { ptr = AAPTR_DEFAULT; }
+
+		AActor *mobj = COPY_AAPTR(self, ptr);
+		if (mobj == nullptr)
+		{
+			ret->SetInt(0);
+		}
+		else
+		{
+			ret->SetInt(P_Thing_CheckProximity(self, classname, distance, 0, flags, ptr, true));
 		}
 		return 1;
 	}
@@ -1324,13 +1414,13 @@ DEFINE_ACTION_FUNCTION_PARAMS(AActor, A_Explode)
 		}
 	}
 
-	P_RadiusAttack (self, self->target, damage, distance, self->DamageType, flags, fulldmgdistance);
+	int count = P_RadiusAttack (self, self->target, damage, distance, self->DamageType, flags, fulldmgdistance);
 	P_CheckSplash(self, distance);
 	if (alert && self->target != NULL && self->target->player != NULL)
 	{
 		P_NoiseAlert(self->target, self);
 	}
-	return 0;
+	ACTION_RETURN_INT(count);
 }
 
 //==========================================================================
@@ -3013,12 +3103,19 @@ DEFINE_ACTION_FUNCTION_PARAMS(AActor, A_Recoil)
 // A_SelectWeapon
 //
 //===========================================================================
+enum SW_Flags
+{
+	SWF_SELECTPRIORITY = 1,
+};
 DEFINE_ACTION_FUNCTION_PARAMS(AActor, A_SelectWeapon)
 {
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_CLASS(cls, AWeapon);
+	PARAM_INT_OPT(flags) { flags = 0; }
 
-	if (cls == NULL || self->player == NULL) 
+	bool selectPriority = !!(flags & SWF_SELECTPRIORITY);
+
+	if ((!selectPriority && cls == NULL) || self->player == NULL)
 	{
 		ACTION_RETURN_BOOL(false);
 	}
@@ -3031,6 +3128,14 @@ DEFINE_ACTION_FUNCTION_PARAMS(AActor, A_SelectWeapon)
 		{
 			self->player->PendingWeapon = weaponitem;
 		}
+		ACTION_RETURN_BOOL(true);
+	}
+	else if (selectPriority)
+	{
+		// [XA] if the named weapon cannot be found (or is a dummy like 'None'),
+		//      select the next highest priority weapon. This is basically
+		//      the same as A_CheckReload minus the ammo check. Handy.
+		self->player->mo->PickNewWeapon(NULL);
 		ACTION_RETURN_BOOL(true);
 	}
 	else
@@ -5783,24 +5888,63 @@ enum RadiusGiveFlags
 						RGF_OBJECTS |
 						RGF_VOODOO |
 						RGF_CORPSES | 
+						RGF_KILLED |
 						RGF_MISSILES |
 						RGF_ITEMS,
 };
 
 static bool DoRadiusGive(AActor *self, AActor *thing, PClassActor *item, int amount, double distance, int flags, PClassActor *filter, FName species, double mindist)
 {
-	// [MC] We only want to make an exception for missiles here. Nothing else.
-	bool missilePass = !!((flags & RGF_MISSILES) && thing->flags & MF_MISSILE);
+	
+	bool doPass = false;
+	// Always allow self to give, no matter what other flags are specified. Otherwise, not at all.
 	if (thing == self)
 	{
 		if (!(flags & RGF_GIVESELF))
 			return false;
+		doPass = true;
 	}
 	else if (thing->flags & MF_MISSILE)
 	{
-		if (!missilePass)
+		if (!(flags & RGF_MISSILES))
 			return false;
+		doPass = true;
 	}
+	else if (((flags & RGF_ITEMS) && thing->IsKindOf(RUNTIME_CLASS(AInventory))) ||
+			((flags & RGF_CORPSES) && thing->flags & MF_CORPSE) ||
+			((flags & RGF_KILLED) && thing->flags6 & MF6_KILLED))
+	{
+		doPass = true;
+	}
+	else if ((flags & (RGF_MONSTERS | RGF_OBJECTS | RGF_PLAYERS | RGF_VOODOO)))
+	{
+		// Make sure it's alive as we're not looking for corpses or killed here.
+		if (!doPass && thing->health > 0)
+		{
+			if (thing->player != nullptr)
+			{
+				if (((flags & RGF_PLAYERS) && (thing->player->mo == thing)) ||
+					((flags & RGF_VOODOO) && (thing->player->mo != thing)))
+				{
+					doPass = true;
+				}
+			}
+			else
+			{
+				if (((flags & RGF_MONSTERS) && (thing->flags3 & MF3_ISMONSTER)) ||
+					((flags & RGF_OBJECTS) && (!(thing->flags3 & MF3_ISMONSTER)) &&
+					(thing->flags & MF_SHOOTABLE || thing->flags6 & MF6_VULNERABLE)))
+				{
+					doPass = true;
+				}
+			}
+		}
+	}
+
+	// Nothing matched up so don't bother with the rest.
+	if (!doPass)
+		return false;
+
 	//[MC] Check for a filter, species, and the related exfilter/expecies/either flag(s).
 	bool filterpass = DoCheckClass(thing, filter, !!(flags & RGF_EXFILTER)),
 		speciespass = DoCheckSpecies(thing, species, !!(flags & RGF_EXSPECIES));
@@ -5811,13 +5955,14 @@ static bool DoRadiusGive(AActor *self, AActor *thing, PClassActor *item, int amo
 			return false;
 	}
 
-	//Check for target, master, and tracer flagging.
-	bool targetPass = true;
-	bool masterPass = true;
-	bool tracerPass = true;
-	bool ptrPass = false;
 	if ((thing != self) && (flags & (RGF_NOTARGET | RGF_NOMASTER | RGF_NOTRACER)))
 	{
+		//Check for target, master, and tracer flagging.
+		bool targetPass = true;
+		bool masterPass = true;
+		bool tracerPass = true;
+		bool ptrPass = false;
+
 		if ((thing == self->target) && (flags & RGF_NOTARGET))
 			targetPass = false;
 		if ((thing == self->master) && (flags & RGF_NOMASTER))
@@ -5832,35 +5977,8 @@ static bool DoRadiusGive(AActor *self, AActor *thing, PClassActor *item, int amo
 			return false;
 	}
 
-	//Next, actor flag checking.
-	bool selfPass = !!((flags & RGF_GIVESELF) && thing == self);
-	bool corpsePass = !!((flags & RGF_CORPSES) && thing->flags & MF_CORPSE);
-	bool killedPass = !!((flags & RGF_KILLED) && thing->flags6 & MF6_KILLED);
-	bool monsterPass = !!((flags & RGF_MONSTERS) && thing->flags3 & MF3_ISMONSTER);
-	bool objectPass = !!((flags & RGF_OBJECTS) && (thing->player == NULL) && (!(thing->flags3 & MF3_ISMONSTER))
-		&& ((thing->flags & MF_SHOOTABLE) || (thing->flags6 & MF6_VULNERABLE)));
-	bool playerPass = !!((flags & RGF_PLAYERS) && (thing->player != NULL) && (thing->player->mo == thing));
-	bool voodooPass = !!((flags & RGF_VOODOO) && (thing->player != NULL) && (thing->player->mo != thing));
-	//Self calls priority over the rest of this.
-	if (!selfPass)
+	if (doPass)
 	{
-		//If it's specifically a monster/object/player/voodoo... Can be either or...
-		if (monsterPass || objectPass || playerPass || voodooPass)
-		{
-			//...and is dead, without desire to give to the dead...
-			if (((thing->health <= 0) && !(corpsePass || killedPass)))
-			{
-				//Skip!
-				return false;
-			}
-		}
-	}
-
-	bool itemPass = !!((flags & RGF_ITEMS) && thing->IsKindOf(RUNTIME_CLASS(AInventory)));
-
-	if (selfPass || monsterPass || corpsePass || killedPass || itemPass || objectPass || missilePass || playerPass || voodooPass)
-	{
-
 		DVector3 diff = self->Vec3To(thing);
 		diff.Z += thing->Height *0.5;
 		if (flags & RGF_CUBE)
@@ -7188,3 +7306,80 @@ DEFINE_ACTION_FUNCTION_PARAMS(AActor, A_FaceMovementDirection)
 	ACTION_RETURN_BOOL(true);
 }
 
+//==========================================================================
+//
+// A_CopySpriteFrame(from, to, flags)
+//
+// Copies the sprite and/or frame from one pointer to another.
+//==========================================================================
+enum CPSFFlags
+{
+	CPSF_NOSPRITE =			1,
+	CPSF_NOFRAME =			1 << 1,
+};
+
+DEFINE_ACTION_FUNCTION_PARAMS(AActor, A_CopySpriteFrame)
+{
+	PARAM_ACTION_PROLOGUE;
+	PARAM_INT(from);
+	PARAM_INT(to);
+	PARAM_INT_OPT(flags) { flags = 0; }
+
+	AActor *copyfrom = COPY_AAPTR(self, from);
+	AActor *copyto = COPY_AAPTR(self, to);
+
+	if (copyfrom == copyto || copyfrom == nullptr || copyto == nullptr || ((flags & CPSF_NOSPRITE) && (flags & CPSF_NOFRAME)))
+	{
+		ACTION_RETURN_BOOL(false);
+	}
+	
+	if (!(flags & CPSF_NOSPRITE))	copyto->sprite = copyfrom->sprite;
+	if (!(flags & CPSF_NOFRAME))	copyto->frame = copyfrom->frame;
+	ACTION_RETURN_BOOL(true);
+}
+
+//==========================================================================
+//
+// A_SetSpriteAngle(angle, ptr)
+//
+// Specifies which angle the actor must always draw its sprite from.
+//==========================================================================
+
+DEFINE_ACTION_FUNCTION_PARAMS(AActor, A_SetSpriteAngle)
+{
+	PARAM_ACTION_PROLOGUE;
+	PARAM_FLOAT_OPT(angle)	{ angle = 0.; }
+	PARAM_INT_OPT(ptr)		{ ptr = AAPTR_DEFAULT; }
+
+	AActor *mobj = COPY_AAPTR(self, ptr);
+
+	if (mobj == nullptr)
+	{
+		ACTION_RETURN_BOOL(false);
+	}
+	mobj->SpriteAngle = angle;
+	ACTION_RETURN_BOOL(true);
+}
+
+//==========================================================================
+//
+// A_SetSpriteRotation(angle, ptr)
+//
+// Specifies how much to fake a sprite rotation.
+//==========================================================================
+
+DEFINE_ACTION_FUNCTION_PARAMS(AActor, A_SetSpriteRotation)
+{
+	PARAM_ACTION_PROLOGUE;
+	PARAM_ANGLE_OPT(angle) { angle = 0.; }
+	PARAM_INT_OPT(ptr) { ptr = AAPTR_DEFAULT; }
+
+	AActor *mobj = COPY_AAPTR(self, ptr);
+
+	if (mobj == nullptr)
+	{
+		ACTION_RETURN_BOOL(false);
+	}
+	mobj->SpriteRotation = angle;
+	ACTION_RETURN_BOOL(true);
+}

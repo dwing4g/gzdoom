@@ -19,7 +19,13 @@ class FLightBuffer;
 class FSamplerManager;
 class DPSprite;
 class FGLRenderBuffers;
+class FBloomExtractShader;
+class FBloomCombineShader;
+class FBlurShader;
+class FTonemapShader;
+class FLensShader;
 class FPresentShader;
+class F2DDrawer;
 
 inline float DEG2RAD(float deg)
 {
@@ -82,6 +88,11 @@ public:
 	int mOldFBID;
 
 	FGLRenderBuffers *mBuffers;
+	FBloomExtractShader *mBloomExtractShader;
+	FBloomCombineShader *mBloomCombineShader;
+	FBlurShader *mBlurShader;
+	FTonemapShader *mTonemapShader;
+	FLensShader *mLensShader;
 	FPresentShader *mPresentShader;
 
 	FTexture *gllight;
@@ -97,24 +108,31 @@ public:
 	FFlatVertexBuffer *mVBO;
 	FSkyVertexBuffer *mSkyVBO;
 	FLightBuffer *mLights;
+	F2DDrawer *m2DDrawer;
 
-	GL_IRECT mOutputViewportLB;
-	GL_IRECT mOutputViewport;
+	GL_IRECT mScreenViewport;
+	GL_IRECT mSceneViewport;
+	GL_IRECT mOutputLetterbox;
+	bool mDrawingScene2D = false;
+	float mCameraExposure = 1.0f;
 
 	FGLRenderer(OpenGLFrameBuffer *fb);
 	~FGLRenderer() ;
 
+	void SetOutputViewport(GL_IRECT *bounds);
+	int ScreenToWindowX(int x);
+	int ScreenToWindowY(int y);
+
 	angle_t FrustumAngle();
 	void SetViewArea();
-	void SetOutputViewport(GL_IRECT *bounds);
-	void Set3DViewport();
+	void Set3DViewport(bool mainview);
 	void Reset3DViewport();
 	sector_t *RenderViewpoint (AActor * camera, GL_IRECT * bounds, float fov, float ratio, float fovratio, bool mainview, bool toscreen);
 	void RenderView(player_t *player);
 	void SetViewAngle(DAngle viewangle);
 	void SetupView(float viewx, float viewy, float viewz, DAngle viewangle, bool mirror, bool planemirror);
 
-	void Initialize();
+	void Initialize(int width, int height);
 
 	void CreateScene();
 	void RenderMultipassStuff();
@@ -129,12 +147,6 @@ public:
 
 	void Begin2D();
 	void ClearBorders();
-	void DrawTexture(FTexture *img, DrawParms &parms);
-	void DrawLine(int x1, int y1, int x2, int y2, int palcolor, uint32 color);
-	void DrawPixel(int x1, int y1, int palcolor, uint32 color);
-	void Dim(PalEntry color, float damount, int x1, int y1, int w, int h);
-	void FlatFill (int left, int top, int right, int bottom, FTexture *src, bool local_origin);
-	void Clear(int left, int top, int right, int bottom, int palcolor, uint32 color);
 
 	void ProcessLowerMiniseg(seg_t *seg, sector_t * frontsector, sector_t * backsector);
 	void ProcessSprite(AActor *thing, sector_t *sector, bool thruportal);
@@ -144,10 +156,15 @@ public:
 	unsigned char *GetTextureBuffer(FTexture *tex, int &w, int &h);
 	void SetupLevel();
 
+	void RenderScreenQuad();
 	void SetFixedColormap (player_t *player);
 	void WriteSavePic (player_t *player, FILE *file, int width, int height);
 	void EndDrawScene(sector_t * viewsector);
-	void Flush();
+	void BloomScene();
+	void TonemapScene();
+	void LensDistortScene();
+	void CopyToBackbuffer(const GL_IRECT *bounds, bool applyGamma);
+	void Flush() { CopyToBackbuffer(nullptr, true); }
 
 	void SetProjection(float fov, float ratio, float fovratio);
 	void SetProjection(VSMatrix matrix); // raw matrix input from stereo 3d modes
@@ -156,6 +173,9 @@ public:
 
 	bool StartOffscreen();
 	void EndOffscreen();
+
+	void StartSimplePolys();
+	void FinishSimplePolys();
 
 	void FillSimplePoly(FTexture *texture, FVector2 *points, int npoints,
 		double originx, double originy, double scalex, double scaley,

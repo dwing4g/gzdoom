@@ -81,7 +81,6 @@ void FRenderState::Reset()
 	mAlphaThreshold = 0.5f;
 	mBlendEquation = GL_FUNC_ADD;
 	mObjectColor = 0xffffffff;
-	m2D = true;
 	mVertexBuffer = mCurrentVertexBuffer = NULL;
 	mColormapState = CM_DEFAULT;
 	mLightParms[3] = -1.f;
@@ -344,12 +343,12 @@ void FRenderState::SetClipHeight(float height, float direction)
 	mClipHeightDirection = direction;
 #if 1
 	// This still doesn't work... :(
-	if (gl.glslversion < 1.3f) return;
+	if (gl.flags & RFL_NO_CLIP_PLANES) return;
 #endif
 	if (direction != 0.f)
 	{
 		/*
-		if (gl.glslversion < 1.3f) 
+		if (gl.flags & RFL_NO_CLIP_PLANES)
 		{
 			glMatrixMode(GL_MODELVIEW);
 			glPushMatrix();

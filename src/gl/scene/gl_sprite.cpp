@@ -722,7 +722,11 @@ void GLSprite::Process(AActor* thing, sector_t * sector, int thruportal)
 	{
 		bool mirror;
 		DAngle ang = (thingpos - ViewPos).Angle();
-		FTextureID patch = gl_GetSpriteFrame(spritenum, thing->frame, -1, (ang - thing->Angles.Yaw).BAMs(), &mirror);
+		FTextureID patch;
+		if (thing->flags7 & MF7_SPRITEANGLE)
+			patch = gl_GetSpriteFrame(spritenum, thing->frame, -1, (thing->SpriteAngle).BAMs(), &mirror);
+		else
+			patch = gl_GetSpriteFrame(spritenum, thing->frame, -1, (ang - (thing->Angles.Yaw + thing->SpriteRotation)).BAMs(), &mirror);
 		if (!patch.isValid()) return;
 		int type = thing->renderflags & RF_SPRITETYPEMASK;
 		gltexture = FMaterial::ValidateTexture(patch, (type == RF_FACESPRITE), false);
@@ -968,7 +972,7 @@ void GLSprite::Process(AActor* thing, sector_t * sector, int thruportal)
 	if (thing->Sector->e->XFloor.lightlist.Size() != 0 && gl_fixedcolormap == CM_DEFAULT && !fullbright &&
 		RenderStyle.BlendOp != STYLEOP_Shadow && RenderStyle.BlendOp != STYLEOP_RevSub)
 	{
-		if (gl.glslversion < 1.3)	// on old hardware we are rather limited...
+		if (gl.flags & RFL_NO_CLIP_PLANES)	// on old hardware we are rather limited...
 		{
 			lightlist = NULL;
 			if (!drawWithXYBillboard && !modelframe)
