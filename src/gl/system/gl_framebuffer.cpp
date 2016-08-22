@@ -65,6 +65,7 @@
 #include "gl/utility/gl_templates.h"
 #include "gl/gl_functions.h"
 #include "gl/renderer/gl_2ddrawer.h"
+#include "gl_debug.h"
 
 IMPLEMENT_CLASS(OpenGLFrameBuffer)
 EXTERN_CVAR (Float, vid_brightness)
@@ -106,6 +107,8 @@ OpenGLFrameBuffer::OpenGLFrameBuffer(void *hMonitor, int width, int height, int 
 	LastCamera = NULL;
 
 	InitializeState();
+	mDebug = std::make_shared<FGLDebug>();
+	mDebug->Update();
 	gl_SetupMenu();
 	gl_GenerateGlobalBrightmapFromColormap();
 	DoSetGamma();
@@ -155,7 +158,7 @@ void OpenGLFrameBuffer::InitializeState()
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_CLAMP);
 	glDisable(GL_DEPTH_TEST);
-	glEnable(GL_TEXTURE_2D);
+	if (gl.glslversion == 0) glEnable(GL_TEXTURE_2D);
 	glDisable(GL_LINE_SMOOTH);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -237,6 +240,7 @@ void OpenGLFrameBuffer::Swap()
 	Finish.Unclock();
 	swapped = true;
 	FHardwareTexture::UnbindAll();
+	mDebug->Update();
 //	if(fp) fprintf(fp, "%3d %3d %3d\n", t0 - s_t, t1 - t0, t2 - t1);
 	s_t = t2 - (t1 - t0);
 }
