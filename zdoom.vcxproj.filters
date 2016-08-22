@@ -1732,6 +1732,9 @@
     <ClCompile Include="src\gl\shaders\gl_blurshader.cpp">
       <Filter>gl</Filter>
     </ClCompile>
+    <ClCompile Include="src\gl\system\gl_debug.cpp">
+      <Filter>gl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\sc_man_scanner.h">

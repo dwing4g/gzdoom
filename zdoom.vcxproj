@@ -401,6 +401,7 @@
     <ClCompile Include="src\gl\stereo3d\gl_stereo_cvars.cpp" />
     <ClCompile Include="src\gl\stereo3d\gl_stereo_leftright.cpp" />
     <ClCompile Include="src\gl\stereo3d\scoped_view_shifter.cpp" />
+    <ClCompile Include="src\gl\system\gl_debug.cpp" />
     <ClCompile Include="src\gl\system\gl_framebuffer.cpp" />
     <ClCompile Include="src\gl\system\gl_interface.cpp" />
     <ClCompile Include="src\gl\system\gl_load.c" />
