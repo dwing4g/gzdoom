@@ -49,6 +49,7 @@
 #include "gl/renderer/gl_renderstate.h"
 #include "gl/renderer/gl_colormap.h"
 #include "gl/dynlights//gl_lightbuffer.h"
+#include "gl/renderer/gl_renderbuffers.h"
 
 void gl_SetTextureMode(int type);
 
@@ -80,19 +81,43 @@ void FRenderState::Reset()
 	mDstBlend = GL_ONE_MINUS_SRC_ALPHA;
 	mAlphaThreshold = 0.5f;
 	mBlendEquation = GL_FUNC_ADD;
+	mModelMatrixEnabled = false;
+	mTextureMatrixEnabled = false;
 	mObjectColor = 0xffffffff;
 	mVertexBuffer = mCurrentVertexBuffer = NULL;
 	mColormapState = CM_DEFAULT;
+	mSoftLight = 0;
+	mLightParms[0] = mLightParms[1] = mLightParms[2] = 0.0f;
 	mLightParms[3] = -1.f;
 	mSpecialEffect = EFF_NONE;
 	mClipHeight = 0.f;
 	mClipHeightDirection = 0.f;
+	mShaderTimer = 0.0f;
 	ClearClipSplit();
 
 	stSrcBlend = stDstBlend = -1;
 	stBlendEquation = -1;
 	stAlphaThreshold = -1.f;
+	stAlphaTest = 0;
 	mLastDepthClamp = true;
+	mInterpolationFactor = 0.0f;
+
+	mColor.Set(1.0f, 1.0f, 1.0f, 1.0f);
+	mCameraPos.Set(0.0f, 0.0f, 0.0f, 0.0f);
+	mGlowTop.Set(0.0f, 0.0f, 0.0f, 0.0f);
+	mGlowBottom.Set(0.0f, 0.0f, 0.0f, 0.0f);
+	mGlowTopPlane.Set(0.0f, 0.0f, 0.0f, 0.0f);
+	mGlowBottomPlane.Set(0.0f, 0.0f, 0.0f, 0.0f);
+	mSplitTopPlane.Set(0.0f, 0.0f, 0.0f, 0.0f);
+	mSplitBottomPlane.Set(0.0f, 0.0f, 0.0f, 0.0f);
+	mClipLine.Set(0.0f, 0.0f, 0.0f, 0.0f);
+	mDynColor.Set(0.0f, 0.0f, 0.0f, 0.0f);
+	mEffectState = 0;
+	activeShader = nullptr;
+	mProjectionMatrix.loadIdentity();
+	mViewMatrix.loadIdentity();
+	mModelMatrix.loadIdentity();
+	mTextureMatrix.loadIdentity();
 }
 
 //==========================================================================
@@ -196,15 +221,24 @@ bool FRenderState::ApplyShader()
 		{
 			activeShader->muFixedColormap.Set(0);
 		}
-		else if (mColormapState < CM_MAXCOLORMAP)
+		else if (mColormapState > CM_DEFAULT && mColormapState < CM_MAXCOLORMAP)
 		{
-			FSpecialColormap *scm = &SpecialColormaps[gl_fixedcolormap - CM_FIRSTSPECIALCOLORMAP];
-			float m[] = { scm->ColorizeEnd[0] - scm->ColorizeStart[0],
-				scm->ColorizeEnd[1] - scm->ColorizeStart[1], scm->ColorizeEnd[2] - scm->ColorizeStart[2], 0.f };
+			if (FGLRenderBuffers::IsEnabled())
+			{
+				// When using postprocessing to apply the colormap, we must render the image fullbright here.
+				activeShader->muFixedColormap.Set(2);
+				activeShader->muColormapStart.Set(1, 1, 1, 1.f);
+			}
+			else
+			{
+				FSpecialColormap *scm = &SpecialColormaps[gl_fixedcolormap - CM_FIRSTSPECIALCOLORMAP];
+				float m[] = { scm->ColorizeEnd[0] - scm->ColorizeStart[0],
+					scm->ColorizeEnd[1] - scm->ColorizeStart[1], scm->ColorizeEnd[2] - scm->ColorizeStart[2], 0.f };
 
-			activeShader->muFixedColormap.Set(1);
-			activeShader->muColormapStart.Set(scm->ColorizeStart[0], scm->ColorizeStart[1], scm->ColorizeStart[2], 0.f);
-			activeShader->muColormapRange.Set(m);
+				activeShader->muFixedColormap.Set(1);
+				activeShader->muColormapStart.Set(scm->ColorizeStart[0], scm->ColorizeStart[1], scm->ColorizeStart[2], 0.f);
+				activeShader->muColormapRange.Set(m);
+			}
 		}
 		else if (mColormapState == CM_FOGLAYER)
 		{
@@ -290,7 +324,7 @@ void FRenderState::Apply()
 		else mVertexBuffer->BindVBO();
 		mCurrentVertexBuffer = mVertexBuffer;
 	}
-	if (gl.glslversion > 0) 
+	if (!gl.legacyMode) 
 	{
 		ApplyShader();
 	}
@@ -327,7 +361,7 @@ void FRenderState::ApplyMatrices()
 
 void FRenderState::ApplyLightIndex(int index)
 {
-	if (gl.lightmethod != LM_SOFTWARE)
+	if (!gl.legacyMode)
 	{
 		if (index > -1 && GLRenderer->mLights->GetBufferType() == GL_UNIFORM_BUFFER)
 		{

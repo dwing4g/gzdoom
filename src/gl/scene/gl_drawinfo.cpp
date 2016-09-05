@@ -57,6 +57,7 @@
 #include "gl/utility/gl_templates.h"
 #include "gl/shaders/gl_shader.h"
 #include "gl/stereo3d/scoped_color_mask.h"
+#include "gl/renderer/gl_quaddrawer.h"
 
 FDrawInfo * gl_drawinfo;
 
@@ -321,9 +322,10 @@ void GLDrawList::SortWallIntoPlane(SortNode * head,SortNode * sort)
 		AddWall(&w);
 	
 		// Splitting is done in the shader with clip planes, if available
-		if (gl.glslversion < 1.3f)
+		if (gl.flags & RFL_NO_CLIP_PLANES)
 		{
 			GLWall * ws1;
+			ws->vertcount = 0;	// invalidate current vertices.
 			ws1=&walls[walls.Size()-1];
 			ws=&walls[drawitems[sort->itemindex].index];	// may have been reallocated!
 			float newtexv = ws->tcs[GLWall::UPLFT].v + ((ws->tcs[GLWall::LOLFT].v - ws->tcs[GLWall::UPLFT].v) / (ws->zbottom[0] - ws->ztop[0])) * (fh->z - ws->ztop[0]);
@@ -380,7 +382,7 @@ void GLDrawList::SortSpriteIntoPlane(SortNode * head,SortNode * sort)
 		AddSprite(&s);	// add a copy to avoid reallocation issues.
 	
 		// Splitting is done in the shader with clip planes, if available
-		if (gl.glslversion < 1.3f)
+		if (gl.flags & RFL_NO_CLIP_PLANES)
 		{
 			GLSprite * ss1;
 			ss1=&sprites[sprites.Size()-1];
@@ -466,6 +468,7 @@ void GLDrawList::SortWallIntoWall(SortNode * head,SortNode * sort)
 		float izt=(float)(ws->ztop[0]+r*(ws->ztop[1]-ws->ztop[0]));
 		float izb=(float)(ws->zbottom[0]+r*(ws->zbottom[1]-ws->zbottom[0]));
 
+		ws->vertcount = 0;	// invalidate current vertices.
 		GLWall w=*ws;
 		AddWall(&w);
 		ws1=&walls[walls.Size()-1];
@@ -473,9 +476,15 @@ void GLDrawList::SortWallIntoWall(SortNode * head,SortNode * sort)
 
 		ws1->glseg.x1=ws->glseg.x2=ix;
 		ws1->glseg.y1=ws->glseg.y2=iy;
+		ws1->glseg.fracleft = ws->glseg.fracright = ws->glseg.fracleft + r*(ws->glseg.fracright - ws->glseg.fracleft);
 		ws1->ztop[0]=ws->ztop[1]=izt;
 		ws1->zbottom[0]=ws->zbottom[1]=izb;
 		ws1->tcs[GLWall::LOLFT].u = ws1->tcs[GLWall::UPLFT].u = ws->tcs[GLWall::LORGT].u = ws->tcs[GLWall::UPRGT].u = iu;
+		if (gl.buffermethod == BM_DEFERRED)
+		{
+			ws->MakeVertices(false);
+			ws1->MakeVertices(false);
+		}
 
 		SortNode * sort2=SortNodes.GetNew();
 		memset(sort2,0,sizeof(SortNode));
@@ -802,17 +811,19 @@ void GLDrawList::DrawSorted()
 
 	if (!sorted)
 	{
+		GLRenderer->mVBO->Map();
 		MakeSortList();
 		sorted=DoSort(SortNodes[SortNodeStart]);
+		GLRenderer->mVBO->Unmap();
 	}
 	gl_RenderState.ClearClipSplit();
-	if (gl.glslversion >= 1.3f)
+	if (!(gl.flags & RFL_NO_CLIP_PLANES))
 	{
 		glEnable(GL_CLIP_DISTANCE1);
 		glEnable(GL_CLIP_DISTANCE2);
 	}
 	DoDrawSorted(sorted);
-	if (gl.glslversion >= 1.3f)
+	if (!(gl.flags & RFL_NO_CLIP_PLANES))
 	{
 		glDisable(GL_CLIP_DISTANCE1);
 		glDisable(GL_CLIP_DISTANCE2);
@@ -991,7 +1002,7 @@ static FDrawInfoList di_list;
 FDrawInfo::FDrawInfo()
 {
 	next = NULL;
-	if (gl.lightmethod == LM_SOFTWARE)
+	if (gl.legacyMode)
 	{
 		dldrawlists = new GLDrawList[GLLDL_TYPES];
 	}
@@ -1079,17 +1090,12 @@ void FDrawInfo::SetupFloodStencil(wallseg * ws)
 		glDepthMask(true);
 
 		gl_RenderState.Apply();
-		FFlatVertex *ptr = GLRenderer->mVBO->GetBuffer();
-		ptr->Set(ws->x1, ws->z1, ws->y1, 0, 0);
-		ptr++;
-		ptr->Set(ws->x1, ws->z2, ws->y1, 0, 0);
-		ptr++;
-		ptr->Set(ws->x2, ws->z2, ws->y2, 0, 0);
-		ptr++;
-		ptr->Set(ws->x2, ws->z1, ws->y2, 0, 0);
-		ptr++;
-		GLRenderer->mVBO->RenderCurrent(ptr, GL_TRIANGLE_FAN);
-
+		FQuadDrawer qd;
+		qd.Set(0, ws->x1, ws->z1, ws->y1, 0, 0);
+		qd.Set(1, ws->x1, ws->z2, ws->y1, 0, 0);
+		qd.Set(2, ws->x2, ws->z2, ws->y2, 0, 0);
+		qd.Set(3, ws->x2, ws->z1, ws->y2, 0, 0);
+		qd.Render(GL_TRIANGLE_FAN);
 
 		glStencilFunc(GL_EQUAL, recursion + 1, ~0);		// draw sky into stencil
 		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);		// this stage doesn't modify the stencil
@@ -1112,16 +1118,12 @@ void FDrawInfo::ClearFloodStencil(wallseg * ws)
 		gl_RenderState.ResetColor();
 
 		gl_RenderState.Apply();
-		FFlatVertex *ptr = GLRenderer->mVBO->GetBuffer();
-		ptr->Set(ws->x1, ws->z1, ws->y1, 0, 0);
-		ptr++;
-		ptr->Set(ws->x1, ws->z2, ws->y1, 0, 0);
-		ptr++;
-		ptr->Set(ws->x2, ws->z2, ws->y2, 0, 0);
-		ptr++;
-		ptr->Set(ws->x2, ws->z1, ws->y2, 0, 0);
-		ptr++;
-		GLRenderer->mVBO->RenderCurrent(ptr, GL_TRIANGLE_FAN);
+		FQuadDrawer qd;
+		qd.Set(0, ws->x1, ws->z1, ws->y1, 0, 0);
+		qd.Set(1, ws->x1, ws->z2, ws->y1, 0, 0);
+		qd.Set(2, ws->x2, ws->z2, ws->y2, 0, 0);
+		qd.Set(3, ws->x2, ws->z1, ws->y2, 0, 0);
+		qd.Render(GL_TRIANGLE_FAN);
 
 		// restore old stencil op.
 		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
@@ -1192,16 +1194,12 @@ void FDrawInfo::DrawFloodedPlane(wallseg * ws, float planez, sector_t * sec, boo
 	float px4 = fviewx + prj_fac1 * (ws->x2-fviewx);
 	float py4 = fviewy + prj_fac1 * (ws->y2-fviewy);
 
-	FFlatVertex *ptr = GLRenderer->mVBO->GetBuffer();
-	ptr->Set(px1, planez, py1, px1 / 64, -py1 / 64);
-	ptr++;
-	ptr->Set(px2, planez, py2, px2 / 64, -py2 / 64);
-	ptr++;
-	ptr->Set(px3, planez, py3, px3 / 64, -py3 / 64);
-	ptr++;
-	ptr->Set(px4, planez, py4, px4 / 64, -py4 / 64);
-	ptr++;
-	GLRenderer->mVBO->RenderCurrent(ptr, GL_TRIANGLE_FAN);
+	FQuadDrawer qd;
+	qd.Set(0, px1, planez, py1, px1 / 64, -py1 / 64);
+	qd.Set(1, px2, planez, py2, px2 / 64, -py2 / 64);
+	qd.Set(2, px3, planez, py3, px3 / 64, -py3 / 64);
+	qd.Set(3, px4, planez, py4, px4 / 64, -py4 / 64);
+	qd.Render(GL_TRIANGLE_FAN);
 
 	gl_RenderState.EnableTextureMatrix(false);
 }

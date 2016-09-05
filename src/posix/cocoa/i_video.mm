@@ -149,11 +149,6 @@ CUSTOM_CVAR(Int, vid_renderer, 1, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVAR_NOINIT
 	}
 }
 
-CUSTOM_CVAR(Int, gl_vid_multisample, 0, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVAR_NOINITCALL)
-{
-	Printf("This won't take effect until " GAMENAME " is restarted.\n");
-}
-
 EXTERN_CVAR(Bool, gl_smooth_rendered)
 
 
@@ -238,7 +233,7 @@ namespace
 class CocoaVideo : public IVideo
 {
 public:
-	explicit CocoaVideo(int multisample);
+	CocoaVideo();
 
 	virtual EDisplayType GetDisplayType() { return DISPLAY_Both; }
 	virtual void SetWindowedScale(float scale);
@@ -464,23 +459,14 @@ CocoaWindow* CreateCocoaWindow(const NSUInteger styleMask)
 	return window;
 }
 
-} // unnamed namespace
-
-
-// ---------------------------------------------------------------------------
-
-
-CocoaVideo::CocoaVideo(const int multisample)
-: m_window(CreateCocoaWindow(STYLE_MASK_WINDOWED))
-, m_width(-1)
-, m_height(-1)
-, m_fullscreen(false)
-, m_hiDPI(false)
+enum OpenGLProfile
 {
-	memset(&m_modeIterator, 0, sizeof m_modeIterator);
+	Core,
+	Legacy
+};
 
-	// Set attributes for OpenGL context
-
+NSOpenGLPixelFormat* CreatePixelFormat(const OpenGLProfile profile)
+{
 	NSOpenGLPixelFormatAttribute attributes[16];
 	size_t i = 0;
 
@@ -497,20 +483,59 @@ CocoaVideo::CocoaVideo(const int multisample)
 		attributes[i++] = NSOpenGLPFAAllowOfflineRenderers;
 	}
 
-	if (multisample)
+	if (NSAppKitVersionNumber >= AppKit10_7 && OpenGLProfile::Core == profile)
 	{
-		attributes[i++] = NSOpenGLPFAMultisample;
-		attributes[i++] = NSOpenGLPFASampleBuffers;
-		attributes[i++] = NSOpenGLPixelFormatAttribute(1);
-		attributes[i++] = NSOpenGLPFASamples;
-		attributes[i++] = NSOpenGLPixelFormatAttribute(multisample);
+		NSOpenGLPixelFormatAttribute profile = NSOpenGLProfileVersion3_2Core;
+		const char* const glversion = Args->CheckValue("-glversion");
+
+		if (nullptr != glversion)
+		{
+			const double version = strtod(glversion, nullptr) + 0.01;
+			if (version < 3.2)
+			{
+				profile = NSOpenGLProfileVersionLegacy;
+			}
+		}
+
+		attributes[i++] = NSOpenGLPFAOpenGLProfile;
+		attributes[i++] = profile;
 	}
 
 	attributes[i] = NSOpenGLPixelFormatAttribute(0);
 
-	// Create OpenGL context and view
+	return [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
+}
 
-	NSOpenGLPixelFormat *pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
+} // unnamed namespace
+
+
+// ---------------------------------------------------------------------------
+
+
+CocoaVideo::CocoaVideo()
+: m_window(CreateCocoaWindow(STYLE_MASK_WINDOWED))
+, m_width(-1)
+, m_height(-1)
+, m_fullscreen(false)
+, m_hiDPI(false)
+{
+	memset(&m_modeIterator, 0, sizeof m_modeIterator);
+
+	// Create OpenGL pixel format
+
+	NSOpenGLPixelFormat* pixelFormat = CreatePixelFormat(OpenGLProfile::Core);
+
+	if (nil == pixelFormat)
+	{
+		pixelFormat = CreatePixelFormat(OpenGLProfile::Legacy);
+
+		if (nil == pixelFormat)
+		{
+			I_FatalError("Cannot OpenGL create pixel format, graphics hardware is not supported");
+		}
+	}
+
+	// Create OpenGL context and view
 
 	const NSRect contentRect = [m_window contentRectForFrameRect:[m_window frame]];
 	NSOpenGLView* glView = [[CocoaView alloc] initWithFrame:contentRect
@@ -1259,7 +1284,7 @@ void I_InitGraphics()
 	val.Bool = !!Args->CheckParm("-devparm");
 	ticker.SetGenericRepDefault(val, CVAR_Bool);
 
-	Video = new CocoaVideo(gl_vid_multisample);
+	Video = new CocoaVideo;
 	atterm(I_ShutdownGraphics);
 }
 

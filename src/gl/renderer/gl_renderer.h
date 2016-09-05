@@ -23,9 +23,11 @@ class FBloomExtractShader;
 class FBloomCombineShader;
 class FBlurShader;
 class FTonemapShader;
+class FColormapShader;
 class FLensShader;
 class FPresentShader;
 class F2DDrawer;
+class FHardwareTexture;
 
 inline float DEG2RAD(float deg)
 {
@@ -92,6 +94,8 @@ public:
 	FBloomCombineShader *mBloomCombineShader;
 	FBlurShader *mBlurShader;
 	FTonemapShader *mTonemapShader;
+	FColormapShader *mColormapShader;
+	FHardwareTexture *mTonemapPalette;
 	FLensShader *mLensShader;
 	FPresentShader *mPresentShader;
 
@@ -115,6 +119,8 @@ public:
 	GL_IRECT mOutputLetterbox;
 	bool mDrawingScene2D = false;
 	float mCameraExposure = 1.0f;
+
+	float mSceneClearColor[3];
 
 	FGLRenderer(OpenGLFrameBuffer *fb);
 	~FGLRenderer() ;
@@ -162,6 +168,9 @@ public:
 	void EndDrawScene(sector_t * viewsector);
 	void BloomScene();
 	void TonemapScene();
+	void ColormapScene();
+	void BindTonemapPalette(int texunit);
+	void ClearTonemapPalette();
 	void LensDistortScene();
 	void CopyToBackbuffer(const GL_IRECT *bounds, bool applyGamma);
 	void Flush() { CopyToBackbuffer(nullptr, true); }

@@ -8,8 +8,11 @@ class FTonemapShader
 public:
 	void Bind();
 
-	FBufferedUniform1i SceneTexture;
+	FBufferedUniformSampler SceneTexture;
 	FBufferedUniform1f Exposure;
+	FBufferedUniformSampler PaletteLUT;
+
+	static bool IsPaletteMode();
 
 private:
 	enum TonemapMode
@@ -19,6 +22,7 @@ private:
 		HejlDawson,
 		Reinhard,
 		Linear,
+		Palette,
 		NumTonemapModes
 	};
 

@@ -12,7 +12,8 @@ enum
 	VATTR_VERTEX = 0,
 	VATTR_TEXCOORD = 1,
 	VATTR_COLOR = 2,
-	VATTR_VERTEX2 = 3
+	VATTR_VERTEX2 = 3,
+	VATTR_NORMAL = 4
 };
 
 
@@ -201,6 +202,28 @@ public:
 	}
 };
 
+class FBufferedUniformSampler
+{
+	int mBuffer;
+	int mIndex;
+
+public:
+	void Init(GLuint hShader, const GLchar *name)
+	{
+		mIndex = glGetUniformLocation(hShader, name);
+		mBuffer = -1;
+	}
+
+	void Set(int newvalue)
+	{
+		if (newvalue != mBuffer)
+		{
+			mBuffer = newvalue;
+			glUniform1i(mIndex, newvalue);
+		}
+	}
+};
+
 
 class FShader
 {
@@ -244,6 +267,9 @@ class FShader
 	int modelmatrix_index;
 	int texturematrix_index;
 public:
+	int vertexmatrix_index;
+	int texcoordmatrix_index;
+	int quadmode_index;
 	int fakevb_index;
 private:
 	int currentglowstate = 0;

@@ -10,6 +10,15 @@ struct secplane_t;
 struct subsector_t;
 struct sector_t;
 
+enum
+{
+	VATTR_VERTEX_BIT,
+	VATTR_TEXCOORD_BIT,
+	VATTR_COLOR_BIT,
+	VATTR_VERTEX2_BIT,
+	VATTR_NORMAL_BIT
+};
+
 
 class FVertexBuffer
 {
@@ -20,6 +29,7 @@ public:
 	FVertexBuffer(bool wantbuffer = true);
 	virtual ~FVertexBuffer();
 	virtual void BindVBO() = 0;
+	void EnableBufferArrays(int enable, int disable);
 };
 
 struct FFlatVertex
@@ -83,6 +93,17 @@ class FFlatVertexBuffer : public FVertexBuffer
 	static const unsigned int BUFFER_SIZE_TO_USE = 1999500;
 
 public:
+	enum
+	{
+		QUAD_INDEX = 0,
+		FULLSCREEN_INDEX = 4,
+		PRESENT_INDEX = 8,
+		STENCILTOP_INDEX = 12,
+		STENCILBOTTOM_INDEX = 16,
+
+		NUM_RESERVED = 20
+	};
+
 	TArray<FFlatVertex> vbo_shadowdata;	// this is kept around for updating the actual (non-readable) buffer and as stand-in for pre GL 4.x
 
 	FFlatVertexBuffer(int width, int height);
@@ -97,9 +118,17 @@ public:
 	{
 		return &map[mCurIndex];
 	}
+	FFlatVertex *Alloc(int num, int *poffset)
+	{
+		FFlatVertex *p = GetBuffer();
+		*poffset = mCurIndex;
+		mCurIndex += num;
+		if (mCurIndex >= BUFFER_SIZE_TO_USE) mCurIndex = mIndex;
+		return p;
+	}
+
 	unsigned int GetCount(FFlatVertex *newptr, unsigned int *poffset)
 	{
-
 		unsigned int newofs = (unsigned int)(newptr - map);
 		unsigned int diff = newofs - mCurIndex;
 		*poffset = mCurIndex;
@@ -129,6 +158,9 @@ public:
 	{
 		mCurIndex = mIndex;
 	}
+
+	void Map();
+	void Unmap();
 
 private:
 	int CreateSubsectorVertices(subsector_t *sub, const secplane_t &plane, int floor);
