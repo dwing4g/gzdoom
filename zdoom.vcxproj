@@ -367,6 +367,7 @@
     <ClCompile Include="src\gl\renderer\gl_lightdata.cpp" />
     <ClCompile Include="src\gl\renderer\gl_postprocess.cpp" />
     <ClCompile Include="src\gl\renderer\gl_postprocessstate.cpp" />
+    <ClCompile Include="src\gl\renderer\gl_quaddrawer.cpp" />
     <ClCompile Include="src\gl\renderer\gl_renderbuffers.cpp" />
     <ClCompile Include="src\gl\renderer\gl_renderer.cpp" />
     <ClCompile Include="src\gl\renderer\gl_renderstate.cpp" />
@@ -389,6 +390,7 @@
     <ClCompile Include="src\gl\scene\gl_weapon.cpp" />
     <ClCompile Include="src\gl\shaders\gl_bloomshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_blurshader.cpp" />
+    <ClCompile Include="src\gl\shaders\gl_colormapshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_lensshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_presentshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_shader.cpp" />
@@ -420,6 +422,8 @@
     <ClCompile Include="src\gl\utility\gl_clock.cpp" />
     <ClCompile Include="src\gl\utility\gl_cycler.cpp" />
     <ClCompile Include="src\gl\utility\gl_geometric.cpp" />
+    <ClCompile Include="src\gl\xbr\xbrz.cpp" />
+    <ClCompile Include="src\gl\xbr\xbrz_old.cpp" />
     <ClCompile Include="src\math\asin.c">
       <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
     </ClCompile>
@@ -470,6 +474,7 @@
     </ClCompile>
     <ClCompile Include="src\p_pusher.cpp" />
     <ClCompile Include="src\p_scroll.cpp" />
+    <ClCompile Include="src\win32\i_specialpaths.cpp" />
     <ClCompile Include="src\win32\win32gliface.cpp" />
     <ClCompile Include="src\__autostart.cpp" />
     <ClCompile Include="src\actorptrselect.cpp" />
@@ -532,7 +537,6 @@
     <ClCompile Include="src\m_misc.cpp" />
     <ClCompile Include="src\m_png.cpp" />
     <ClCompile Include="src\m_random.cpp" />
-    <ClCompile Include="src\m_specialpaths.cpp" />
     <ClCompile Include="src\md5.cpp" />
     <ClCompile Include="src\memarena.cpp" />
     <ClCompile Include="src\name.cpp" />

@@ -328,9 +328,6 @@
     <ClCompile Include="src\m_random.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\m_specialpaths.cpp">
-      <Filter>!Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\md5.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
@@ -1733,6 +1730,21 @@
       <Filter>gl</Filter>
     </ClCompile>
     <ClCompile Include="src\gl\system\gl_debug.cpp">
+      <Filter>gl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gl\renderer\gl_quaddrawer.cpp">
+      <Filter>gl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gl\shaders\gl_colormapshader.cpp">
+      <Filter>gl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\win32\i_specialpaths.cpp">
+      <Filter>!Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gl\xbr\xbrz.cpp">
+      <Filter>gl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gl\xbr\xbrz_old.cpp">
       <Filter>gl</Filter>
     </ClCompile>
   </ItemGroup>
