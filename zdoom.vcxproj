@@ -399,6 +399,7 @@
     <ClCompile Include="src\gl\shaders\gl_tonemapshader.cpp" />
     <ClCompile Include="src\gl\stereo3d\gl_anaglyph.cpp" />
     <ClCompile Include="src\gl\stereo3d\gl_quadstereo.cpp" />
+    <ClCompile Include="src\gl\stereo3d\gl_sidebyside3d.cpp" />
     <ClCompile Include="src\gl\stereo3d\gl_stereo3d.cpp" />
     <ClCompile Include="src\gl\stereo3d\gl_stereo_cvars.cpp" />
     <ClCompile Include="src\gl\stereo3d\gl_stereo_leftright.cpp" />

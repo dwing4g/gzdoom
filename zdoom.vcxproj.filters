@@ -1747,6 +1747,9 @@
     <ClCompile Include="src\gl\xbr\xbrz_old.cpp">
       <Filter>gl</Filter>
     </ClCompile>
+    <ClCompile Include="src\gl\stereo3d\gl_sidebyside3d.cpp">
+      <Filter>gl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\sc_man_scanner.h">
