@@ -1,40 +1,27 @@
+// 
+//---------------------------------------------------------------------------
+//
+// Copyright(C) 2004-2016 Christoph Oelckers
+// All rights reserved.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/
+//
+//--------------------------------------------------------------------------
+//
 /*
 ** gl_scene.cpp
 ** manages the rendering of the player's view
-**
-**---------------------------------------------------------------------------
-** Copyright 2004-2005 Christoph Oelckers
-** All rights reserved.
-**
-** Redistribution and use in source and binary forms, with or without
-** modification, are permitted provided that the following conditions
-** are met:
-**
-** 1. Redistributions of source code must retain the above copyright
-**    notice, this list of conditions and the following disclaimer.
-** 2. Redistributions in binary form must reproduce the above copyright
-**    notice, this list of conditions and the following disclaimer in the
-**    documentation and/or other materials provided with the distribution.
-** 3. The name of the author may not be used to endorse or promote products
-**    derived from this software without specific prior written permission.
-** 4. When not used as part of GZDoom or a GZDoom derivative, this code will be
-**    covered by the terms of the GNU Lesser General Public License as published
-**    by the Free Software Foundation; either version 2.1 of the License, or (at
-**    your option) any later version.
-** 5. Full disclosure of the entire project's source code, except for third
-**    party libraries is mandatory. (NOTE: This clause is non-negotiable!)
-**
-** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
-** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-**---------------------------------------------------------------------------
 **
 */
 
@@ -120,7 +107,7 @@ angle_t FGLRenderer::FrustumAngle()
 
 	// ok, this is a gross hack that barely works...
 	// but at least it doesn't overestimate too much...
-	double floatangle=2.0+(45.0+((tilt/1.9)))*mCurrentFoV*48.0/BaseRatioSizes[WidescreenRatio][3]/90.0;
+	double floatangle=2.0+(45.0+((tilt/1.9)))*mCurrentFoV*48.0/AspectMultiplier(WidescreenRatio)/90.0;
 	angle_t a1 = DAngle(floatangle).BAMs();
 	if (a1>=ANGLE_180) return 0xffffffff;
 	return a1;
@@ -673,6 +660,7 @@ void FGLRenderer::EndDrawScene(sector_t * viewsector)
 	framebuffer->Begin2D(false);
 
 	Reset3DViewport();
+
 	// [BB] Only draw the sprites if we didn't render a HUD model before.
 	if ( renderHUDModel == false )
 	{
@@ -803,20 +791,6 @@ sector_t * FGLRenderer::RenderViewpoint (AActor * camera, GL_IRECT * bounds, flo
 		mViewActor=camera;
 	}
 
-	if (toscreen)
-	{
-		if (gl_exposure == 0.0f)
-		{
-			float light = viewsector->lightlevel / 255.0f;
-			float exposure = MAX(1.0f + (1.0f - light * light) * 0.9f, 0.5f);
-			mCameraExposure = mCameraExposure * 0.995f + exposure * 0.005f;
-		}
-		else
-		{
-			mCameraExposure = gl_exposure;
-		}
-	}
-
 	// 'viewsector' will not survive the rendering so it cannot be used anymore below.
 	lviewsector = viewsector;
 
@@ -828,7 +802,6 @@ sector_t * FGLRenderer::RenderViewpoint (AActor * camera, GL_IRECT * bounds, flo
 	{
 		const s3d::EyePose * eye = stereo3dMode.getEyePose(eye_ix);
 		eye->SetUp();
-		// TODO: stereo specific viewport - needed when implementing side-by-side modes etc.
 		SetOutputViewport(bounds);
 		Set3DViewport(mainview);
 		mDrawingScene2D = true;
@@ -848,10 +821,11 @@ sector_t * FGLRenderer::RenderViewpoint (AActor * camera, GL_IRECT * bounds, flo
 		clipper.SafeAddClipRangeRealAngles(ViewAngle.BAMs() + a1, ViewAngle.BAMs() - a1);
 
 		ProcessScene(toscreen);
-		if (mainview && toscreen) EndDrawScene(lviewsector);	// do not call this for camera textures.
+		if (mainview && toscreen) EndDrawScene(lviewsector); // do not call this for camera textures.
 		if (mainview && FGLRenderBuffers::IsEnabled())
 		{
 			mBuffers->BlitSceneToTexture();
+			UpdateCameraExposure();
 			BloomScene();
 			TonemapScene();
 			ColormapScene();
@@ -917,14 +891,10 @@ void FGLRenderer::RenderView (player_t* player)
 	NoInterpolateView = saved_niv;
 
 
-	// I stopped using BaseRatioSizes here because the information there wasn't well presented.
-	//							4:3				16:9		16:10		17:10		5:4
-	static float ratios[]={1.333333f, 1.777777f, 1.6f, 1.7f, 1.25f, 1.7f, 2.333333f};
-
 	// now render the main view
 	float fovratio;
-	float ratio = ratios[WidescreenRatio];
-	if (! Is54Aspect(WidescreenRatio))
+	float ratio = WidescreenRatio;
+	if (WidescreenRatio >= 1.3f)
 	{
 		fovratio = 1.333333f;
 	}
@@ -996,25 +966,25 @@ void FGLRenderer::WriteSavePic (player_t *player, FILE *file, int width, int hei
 
 struct FGLInterface : public FRenderer
 {
-	bool UsesColormap() const;
+	bool UsesColormap() const override;
 	void PrecacheTexture(FTexture *tex, int cache);
 	void PrecacheSprite(FTexture *tex, SpriteHits &hits);
-	void Precache(BYTE *texhitlist, TMap<PClassActor*, bool> &actorhitlist);
-	void RenderView(player_t *player);
-	void WriteSavePic (player_t *player, FILE *file, int width, int height);
-	void StateChanged(AActor *actor);
-	void StartSerialize(FArchive &arc);
-	void EndSerialize(FArchive &arc);
-	void RenderTextureView (FCanvasTexture *self, AActor *viewpoint, int fov);
-	sector_t *FakeFlat(sector_t *sec, sector_t *tempsec, int *floorlightlevel, int *ceilinglightlevel, bool back);
-	void SetFogParams(int _fogdensity, PalEntry _outsidefogcolor, int _outsidefogdensity, int _skyfog);
-	void PreprocessLevel();
-	void CleanLevelData();
-	bool RequireGLNodes();
+	void Precache(BYTE *texhitlist, TMap<PClassActor*, bool> &actorhitlist) override;
+	void RenderView(player_t *player) override;
+	void WriteSavePic (player_t *player, FILE *file, int width, int height) override;
+	void StateChanged(AActor *actor) override;
+	void StartSerialize(FArchive &arc) override;
+	void EndSerialize(FArchive &arc) override;
+	void RenderTextureView (FCanvasTexture *self, AActor *viewpoint, int fov) override;
+	sector_t *FakeFlat(sector_t *sec, sector_t *tempsec, int *floorlightlevel, int *ceilinglightlevel, bool back) override;
+	void SetFogParams(int _fogdensity, PalEntry _outsidefogcolor, int _outsidefogdensity, int _skyfog) override;
+	void PreprocessLevel() override;
+	void CleanLevelData() override;
+	bool RequireGLNodes() override;
 
-	int GetMaxViewPitch(bool down);
-	void ClearBuffer(int color);
-	void Init();
+	int GetMaxViewPitch(bool down) override;
+	void ClearBuffer(int color) override;
+	void Init() override;
 };
 
 //===========================================================================

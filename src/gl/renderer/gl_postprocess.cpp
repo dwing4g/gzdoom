@@ -1,40 +1,27 @@
+// 
+//---------------------------------------------------------------------------
+//
+// Copyright(C) 2016 Magnus Norddahl
+// All rights reserved.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/
+//
+//--------------------------------------------------------------------------
+//
 /*
 ** gl_postprocess.cpp
 ** Post processing effects in the render pipeline
-**
-**---------------------------------------------------------------------------
-** Copyright 2016 Magnus Norddahl
-** All rights reserved.
-**
-** Redistribution and use in source and binary forms, with or without
-** modification, are permitted provided that the following conditions
-** are met:
-**
-** 1. Redistributions of source code must retain the above copyright
-**    notice, this list of conditions and the following disclaimer.
-** 2. Redistributions in binary form must reproduce the above copyright
-**    notice, this list of conditions and the following disclaimer in the
-**    documentation and/or other materials provided with the distribution.
-** 3. The name of the author may not be used to endorse or promote products
-**    derived from this software without specific prior written permission.
-** 4. When not used as part of GZDoom or a GZDoom derivative, this code will be
-**    covered by the terms of the GNU Lesser General Public License as published
-**    by the Free Software Foundation; either version 2.1 of the License, or (at
-**    your option) any later version.
-** 5. Full disclosure of the entire project's source code, except for third
-**    party libraries is mandatory. (NOTE: This clause is non-negotiable!)
-**
-** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
-** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-**---------------------------------------------------------------------------
 **
 */
 
@@ -88,7 +75,10 @@ CUSTOM_CVAR(Float, gl_bloom_amount, 1.4f, 0)
 	if (self < 0.1f) self = 0.1f;
 }
 
-CVAR(Float, gl_exposure, 0.0f, 0)
+CVAR(Float, gl_exposure_scale, 1.3f, 0)
+CVAR(Float, gl_exposure_min, 0.35f, 0)
+CVAR(Float, gl_exposure_base, 0.35f, 0)
+CVAR(Float, gl_exposure_speed, 0.05f, 0)
 
 CUSTOM_CVAR(Int, gl_tonemap, 0, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
 {
@@ -121,6 +111,78 @@ void FGLRenderer::RenderScreenQuad()
 
 //-----------------------------------------------------------------------------
 //
+// Extracts light average from the scene and updates the camera exposure texture
+//
+//-----------------------------------------------------------------------------
+
+void FGLRenderer::UpdateCameraExposure()
+{
+	if (!gl_bloom && gl_tonemap == 0)
+		return;
+
+	FGLDebug::PushGroup("UpdateCameraExposure");
+
+	FGLPostProcessState savedState;
+	savedState.SaveTextureBinding1();
+
+	// Extract light level from scene texture:
+	const auto &level0 = mBuffers->ExposureLevels[0];
+	glBindFramebuffer(GL_FRAMEBUFFER, level0.Framebuffer);
+	glViewport(0, 0, level0.Width, level0.Height);
+	mBuffers->BindCurrentTexture(0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	mExposureExtractShader->Bind();
+	mExposureExtractShader->SceneTexture.Set(0);
+	mExposureExtractShader->Scale.Set(mSceneViewport.width / (float)mScreenViewport.width, mSceneViewport.height / (float)mScreenViewport.height);
+	mExposureExtractShader->Offset.Set(mSceneViewport.left / (float)mScreenViewport.width, mSceneViewport.top / (float)mScreenViewport.height);
+	RenderScreenQuad();
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	// Find the average value:
+	for (int i = 0; i + 1 < mBuffers->ExposureLevels.Size(); i++)
+	{
+		const auto &level = mBuffers->ExposureLevels[i];
+		const auto &next = mBuffers->ExposureLevels[i + 1];
+
+		glBindFramebuffer(GL_FRAMEBUFFER, next.Framebuffer);
+		glViewport(0, 0, next.Width, next.Height);
+		glBindTexture(GL_TEXTURE_2D, level.Texture);
+		mExposureAverageShader->Bind();
+		mExposureAverageShader->ExposureTexture.Set(0);
+		RenderScreenQuad();
+	}
+
+	// Combine average value with current camera exposure:
+	glBindFramebuffer(GL_FRAMEBUFFER, mBuffers->ExposureFB);
+	glViewport(0, 0, 1, 1);
+	if (!mBuffers->FirstExposureFrame)
+	{
+		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_ADD);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+	else
+	{
+		mBuffers->FirstExposureFrame = false;
+	}
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mBuffers->ExposureLevels.Last().Texture);
+	mExposureCombineShader->Bind();
+	mExposureCombineShader->ExposureTexture.Set(0);
+	mExposureCombineShader->ExposureBase.Set(gl_exposure_base);
+	mExposureCombineShader->ExposureMin.Set(gl_exposure_min);
+	mExposureCombineShader->ExposureScale.Set(gl_exposure_scale);
+	mExposureCombineShader->ExposureSpeed.Set(gl_exposure_speed);
+	RenderScreenQuad();
+	glViewport(mScreenViewport.left, mScreenViewport.top, mScreenViewport.width, mScreenViewport.height);
+
+	FGLDebug::PopGroup();
+}
+
+//-----------------------------------------------------------------------------
+//
 // Adds bloom contribution to scene texture
 //
 //-----------------------------------------------------------------------------
@@ -134,6 +196,7 @@ void FGLRenderer::BloomScene()
 	FGLDebug::PushGroup("BloomScene");
 
 	FGLPostProcessState savedState;
+	savedState.SaveTextureBinding1();
 
 	const float blurAmount = gl_bloom_amount;
 	int sampleCount = gl_bloom_kernel_size;
@@ -146,9 +209,12 @@ void FGLRenderer::BloomScene()
 	mBuffers->BindCurrentTexture(0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, mBuffers->ExposureTexture);
+	glActiveTexture(GL_TEXTURE0);
 	mBloomExtractShader->Bind();
 	mBloomExtractShader->SceneTexture.Set(0);
-	mBloomExtractShader->Exposure.Set(mCameraExposure);
+	mBloomExtractShader->ExposureTexture.Set(1);
 	mBloomExtractShader->Scale.Set(mSceneViewport.width / (float)mScreenViewport.width, mSceneViewport.height / (float)mScreenViewport.height);
 	mBloomExtractShader->Offset.Set(mSceneViewport.left / (float)mScreenViewport.width, mSceneViewport.top / (float)mScreenViewport.height);
 	RenderScreenQuad();
@@ -233,7 +299,12 @@ void FGLRenderer::TonemapScene()
 	}
 	else
 	{
-		mTonemapShader->Exposure.Set(mCameraExposure);
+		savedState.SaveTextureBinding1();
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, mBuffers->ExposureTexture);
+		glActiveTexture(GL_TEXTURE0);
+
+		mTonemapShader->ExposureTexture.Set(1);
 	}
 
 	RenderScreenQuad();

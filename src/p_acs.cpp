@@ -2822,7 +2822,8 @@ void FBehavior::StaticStartTypedScripts (WORD type, AActor *activator, bool alwa
 		"Lightning",
 		"Unloading",
 		"Disconnect",
-		"Return"
+		"Return",
+		"Reopen"
 	};
 	DPrintf(DMSG_NOTIFY, "Starting all scripts of type %d (%s)\n", type,
 		type < countof(TypeNames) ? TypeNames[type] : TypeNames[SCRIPT_Lightning - 1]);
@@ -3791,7 +3792,7 @@ void DLevelScript::DoSetActorProperty (AActor *actor, int property, int value)
 		break;
 
 	case APROP_Damage:
-		actor->Damage = CreateDamageFunction(value);
+		actor->SetDamage(value);
 		break;
 
 	case APROP_Alpha:
