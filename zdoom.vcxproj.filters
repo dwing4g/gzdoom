@@ -256,9 +256,6 @@
     <ClCompile Include="src\f_wipe.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\farchive.cpp">
-      <Filter>!Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\files.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
@@ -950,9 +947,6 @@
       <Filter>SFMT</Filter>
     </ClCompile>
     <ClCompile Include="src\fragglescript\t_cmd.cpp">
-      <Filter>FraggleScript</Filter>
-    </ClCompile>
-    <ClCompile Include="src\fragglescript\t_fspic.cpp">
       <Filter>FraggleScript</Filter>
     </ClCompile>
     <ClCompile Include="src\fragglescript\t_func.cpp">
@@ -1749,6 +1743,9 @@
     </ClCompile>
     <ClCompile Include="src\gl\stereo3d\gl_sidebyside3d.cpp">
       <Filter>gl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\serializer.cpp">
+      <Filter>!Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -475,6 +475,7 @@
     </ClCompile>
     <ClCompile Include="src\p_pusher.cpp" />
     <ClCompile Include="src\p_scroll.cpp" />
+    <ClCompile Include="src\serializer.cpp" />
     <ClCompile Include="src\win32\i_specialpaths.cpp" />
     <ClCompile Include="src\win32\win32gliface.cpp" />
     <ClCompile Include="src\__autostart.cpp" />
@@ -514,7 +515,6 @@
     <ClCompile Include="src\dthinker.cpp" />
     <ClCompile Include="src\edata.cpp" />
     <ClCompile Include="src\f_wipe.cpp" />
-    <ClCompile Include="src\farchive.cpp" />
     <ClCompile Include="src\files.cpp" />
     <ClCompile Include="src\g_game.cpp" />
     <ClCompile Include="src\g_hub.cpp" />
@@ -845,7 +845,6 @@
     </ClCompile>
     <ClCompile Include="src\sfmt\SFMT.cpp" />
     <ClCompile Include="src\fragglescript\t_cmd.cpp" />
-    <ClCompile Include="src\fragglescript\t_fspic.cpp" />
     <ClCompile Include="src\fragglescript\t_func.cpp" />
     <ClCompile Include="src\fragglescript\t_load.cpp" />
     <ClCompile Include="src\fragglescript\t_oper.cpp" />

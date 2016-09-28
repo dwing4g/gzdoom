@@ -36,7 +36,6 @@
 #include "vectors.h"
 #include "v_palette.h"
 #include "templates.h"
-#include "farchive.h"
 
 #include "gl/system/gl_interface.h"
 #include "gl/system/gl_framebuffer.h"
@@ -191,7 +190,9 @@ void OpenGLFrameBuffer::Update()
 		int clientHeight = GetClientHeight();
 		if (clientWidth > 0 && clientHeight > 0 && (Width != clientWidth || Height != clientHeight))
 		{
-			Resize(clientWidth, clientHeight);
+			// Do not call Resize here because it's only for software canvases
+			Pitch = Width = clientWidth;
+			Height = clientHeight;
 			V_OutputResized(Width, Height);
 			GLRenderer->mVBO->OutputResized(Width, Height);
 		}
@@ -216,7 +217,7 @@ void OpenGLFrameBuffer::Swap()
 	Finish.Clock();
 	DWORD t0 = timeGetTime();
 	int dt = vid_sleep - (t0 - s_t);
-	if(dt > 0)
+	if(dt > 0 && s_t)
 	{
 //		s_dt = ((uint32)(GetLastFPS() - 1) < 58 ? s_dt - 1 : 0);
 //		if((dt += s_dt) > 0)
