@@ -391,13 +391,16 @@
     <ClCompile Include="src\gl\shaders\gl_bloomshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_blurshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_colormapshader.cpp" />
+    <ClCompile Include="src\gl\shaders\gl_fxaashader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_lensshader.cpp" />
+    <ClCompile Include="src\gl\shaders\gl_present3dRowshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_presentshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_shader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_shaderprogram.cpp" />
     <ClCompile Include="src\gl\shaders\gl_texshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_tonemapshader.cpp" />
     <ClCompile Include="src\gl\stereo3d\gl_anaglyph.cpp" />
+    <ClCompile Include="src\gl\stereo3d\gl_interleaved3d.cpp" />
     <ClCompile Include="src\gl\stereo3d\gl_quadstereo.cpp" />
     <ClCompile Include="src\gl\stereo3d\gl_sidebyside3d.cpp" />
     <ClCompile Include="src\gl\stereo3d\gl_stereo3d.cpp" />

@@ -1747,6 +1747,15 @@
     <ClCompile Include="src\serializer.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\gl\shaders\gl_fxaashader.cpp">
+      <Filter>gl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gl\stereo3d\gl_interleaved3d.cpp">
+      <Filter>gl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gl\shaders\gl_present3dRowshader.cpp">
+      <Filter>!Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\sc_man_scanner.h">
