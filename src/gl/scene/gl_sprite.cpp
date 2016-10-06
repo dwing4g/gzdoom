@@ -138,10 +138,10 @@ void GLSprite::CalculateVertices(FVector3 *v)
 			mat.Rotate(0, 1, 0, - actor->Angles.Roll.Degrees);
 			mat.Translate(-x, -z, -y);
 		}
-		v[0] = mat * FVector3(x1, z, y2);
-		v[1] = mat * FVector3(x2, z, y2);
-		v[2] = mat * FVector3(x1, z, y1);
-		v[3] = mat * FVector3(x2, z, y1);
+		v[0] = mat * FVector3(x2, z, y2);
+		v[1] = mat * FVector3(x1, z, y2);
+		v[2] = mat * FVector3(x2, z, y1);
+		v[3] = mat * FVector3(x1, z, y1);
 		return;
 	}
 	
@@ -406,6 +406,7 @@ void GLSprite::Draw(int pass)
 			gl_RenderState.Apply();
 
 			FVector3 v[4];
+			gl_RenderState.SetNormal(0, 0, 0);
 			CalculateVertices(v);
 			
 			FQuadDrawer qd;
