@@ -476,6 +476,7 @@
     <ClCompile Include="src\math\tanh.c">
       <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
     </ClCompile>
+    <ClCompile Include="src\p_actionfunctions.cpp" />
     <ClCompile Include="src\p_pusher.cpp" />
     <ClCompile Include="src\p_scroll.cpp" />
     <ClCompile Include="src\serializer.cpp" />
@@ -895,7 +896,6 @@
     <ClCompile Include="src\menu\videomenu.cpp" />
     <ClCompile Include="src\thingdef\olddecorations.cpp" />
     <ClCompile Include="src\thingdef\thingdef.cpp" />
-    <ClCompile Include="src\thingdef\thingdef_codeptr.cpp" />
     <ClCompile Include="src\thingdef\thingdef_data.cpp" />
     <ClCompile Include="src\thingdef\thingdef_exp.cpp" />
     <ClCompile Include="src\thingdef\thingdef_expression.cpp" />

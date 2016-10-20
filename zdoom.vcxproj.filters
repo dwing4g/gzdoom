@@ -1075,9 +1075,6 @@
     <ClCompile Include="src\thingdef\thingdef.cpp">
       <Filter>Decorate++</Filter>
     </ClCompile>
-    <ClCompile Include="src\thingdef\thingdef_codeptr.cpp">
-      <Filter>Decorate++</Filter>
-    </ClCompile>
     <ClCompile Include="src\thingdef\thingdef_data.cpp">
       <Filter>Decorate++</Filter>
     </ClCompile>
@@ -1754,6 +1751,9 @@
       <Filter>gl</Filter>
     </ClCompile>
     <ClCompile Include="src\gl\shaders\gl_present3dRowshader.cpp">
+      <Filter>!Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\p_actionfunctions.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
   </ItemGroup>
