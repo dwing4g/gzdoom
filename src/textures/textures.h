@@ -232,6 +232,7 @@ public:
 	int GetScaledTopOffset () { int foo = int((TopOffset * 2) / Scale.Y); return (foo >> 1) + (foo & 1); }
 	double GetScaledLeftOffsetDouble() { return LeftOffset / Scale.X; }
 	double GetScaledTopOffsetDouble() { return TopOffset / Scale.Y; }
+	virtual void ResolvePatches() {}
 
 	virtual void SetFrontSkyLayer();
 
@@ -262,6 +263,7 @@ public:
 	}
 
 	void SetScaledSize(int fitwidth, int fitheight);
+	PalEntry GetSkyCapColor(bool bottom);
 
 	virtual void HackHack (int newheight);	// called by FMultipatchTexture to discover corrupt patches.
 
@@ -285,6 +287,11 @@ protected:
 		gl_info.areas = NULL;
 	}
 
+private:
+	bool bSWSkyColorDone = false;
+	PalEntry FloorSkyColor;
+	PalEntry CeilingSkyColor;
+
 public:
 	static void FlipSquareBlock (BYTE *block, int x, int y);
 	static void FlipSquareBlockRemap (BYTE *block, int x, int y, const BYTE *remap);
@@ -301,8 +308,6 @@ public:
 		FGLTexture *SystemTexture[2];
 		FTexture *Brightmap;
 		PalEntry GlowColor;
-		PalEntry FloorSkyColor;
-		PalEntry CeilingSkyColor;
 		int GlowHeight;
 		FloatRect *areas;
 		int areacount;
@@ -312,7 +317,6 @@ public:
 		bool bGlowing:1;						// Texture glows
 		bool bFullbright:1;						// always draw fullbright
 		bool bSkybox:1;							// This is a skybox
-		bool bSkyColorDone:1;					// Fill color for sky
 		char bBrightmapChecked:1;				// Set to 1 if brightmap has been checked
 		bool bDisableFullbright:1;				// This texture will not be displayed as fullbright sprite
 		bool bNoFilter:1;
@@ -325,7 +329,6 @@ public:
 	MiscGLInfo gl_info;
 
 	void GetGlowColor(float *data);
-	PalEntry GetSkyCapColor(bool bottom);
 	bool isGlowing() { return gl_info.bGlowing; }
 	bool isFullbright() { return gl_info.bFullbright; }
 	void CreateDefaultBrightmap();

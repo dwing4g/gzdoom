@@ -640,6 +640,12 @@ static void ReadOnePlayer(FSerializer &arc, bool skipload)
 					playerTemp.Serialize(arc);
 					if (!skipload)
 					{
+						// This temp player has undefined pitch limits, so set them to something
+						// that should leave the pitch stored in the savegame intact when
+						// rendering. The real pitch limits will be set by P_SerializePlayers()
+						// via a net command, but that won't be processed in time for a screen
+						// wipe, so we need something here.
+						playerTemp.MaxPitch = playerTemp.MinPitch = playerTemp.mo->Angles.Pitch;
 						CopyPlayer(&players[i], &playerTemp, name);
 					}
 					else
@@ -890,10 +896,10 @@ void G_SerializeLevel(FSerializer &arc, bool hubload)
 		// deep down in the deserializer or just a crash if the few insufficient safeguards were not triggered.
 		BYTE chk[16] = { 0 };
 		arc.Array("checksum", chk, 16);
-		if (arc.GetSize("linedefs") != numlines ||
-			arc.GetSize("sidedefs") != numsides ||
-			arc.GetSize("sectors") != numsectors ||
-			arc.GetSize("polyobjs") != po_NumPolyobjs ||
+		if (arc.GetSize("linedefs") != (unsigned)numlines ||
+			arc.GetSize("sidedefs") != (unsigned)numsides ||
+			arc.GetSize("sectors") != (unsigned)numsectors ||
+			arc.GetSize("polyobjs") != (unsigned)po_NumPolyobjs ||
 			memcmp(chk, level.md5, 16))
 		{
 			I_Error("Savegame is from a different level");

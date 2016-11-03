@@ -1616,7 +1616,7 @@ void FBehavior::StaticSerializeModuleStates (FSerializer &arc)
 	{
 		if (arc.isReading())
 		{
-			int modnum = arc.ArraySize();
+			auto modnum = arc.ArraySize();
 			if (modnum != StaticModules.Size())
 			{
 				I_Error("Level was saved with a different number of ACS modules. (Have %d, save has %d)", StaticModules.Size(), modnum);
@@ -2907,7 +2907,8 @@ FSerializer &Serialize(FSerializer &arc, const char *key, SavingRunningscript &r
 void DACSThinker::Serialize(FSerializer &arc)
 {
 	Super::Serialize(arc);
-	arc("scripts", Scripts);
+	arc("scripts", Scripts)
+		("lastscript", LastScript);
 
 	if (arc.isWriting())
 	{
@@ -2933,7 +2934,7 @@ void DACSThinker::Serialize(FSerializer &arc)
 		if (arc.BeginArray("runningscripts"))
 		{
 			auto cnt = arc.ArraySize();
-			for (int i = 0; i < cnt; i++)
+			for (unsigned i = 0; i < cnt; i++)
 			{
 				SavingRunningscript srs;
 				arc(nullptr, srs);
