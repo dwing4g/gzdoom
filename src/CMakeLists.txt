@@ -291,6 +291,19 @@ if( NOT NO_FMOD )
 		
 		if( EXISTS "${FMOD_INCLUDE_DIR}/fmod_common.h" )
 			set( FMOD_STUDIO YES )
+			set( FMOD_VERSION_FILE "fmod_common.h" )
+		else()
+			set( FMOD_STUDIO NO )
+			set( FMOD_VERSION_FILE "fmod.h" )
+		endif()
+
+		file( STRINGS "${FMOD_INCLUDE_DIR}/${FMOD_VERSION_FILE}" FMOD_VERSION_LINE REGEX "^#define[ \t]+FMOD_VERSION[ \t]+0x[0-9]+$" )
+		string( REGEX REPLACE "^#define[ \t]+FMOD_VERSION[ \t]+0x([0-9][0-9][0-9][0-9])([0-9][0-9])([0-9][0-9])$" "\\1.\\2.\\3" FMOD_VERSION "${FMOD_VERSION_LINE}" )
+		message( STATUS "FMOD version: ${FMOD_VERSION}" )
+
+		# FMOD Ex didn't hide xiph symbols in the past (not applicable to Win32 since symbols are hidden by default there).
+		if( NOT WIN32 AND NOT FMOD_STUDIO AND NOT NO_OPENAL AND "${FMOD_VERSION}" VERSION_LESS "4.36.00")
+			message( SEND_ERROR "Use of FMOD Ex ${FMOD_VERSION} with OpenAL will result in crashes. Either update FMOD to 4.36 or later or set NO_OPENAL." )
 		endif()
 	else()
 		message( STATUS "Could not find FMOD include files" )
@@ -1563,6 +1576,15 @@ if( APPLE )
 			COMMENT "Relinking FMOD Ex" )
 	endif()
 endif()
+
+if( WIN32 )
+	set( INSTALL_PATH . CACHE STRING "Directory where the zdoom executable will be placed during install." )
+else()
+	set( INSTALL_PATH bin CACHE STRING "Directory where the zdoom executable will be placed during install." )
+endif()
+install(TARGETS zdoom
+		DESTINATION ${INSTALL_PATH}
+		COMPONENT "Game executable")
 
 source_group("Assembly Files\\ia32" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/asm_ia32/.+")
 source_group("Assembly Files\\x86_64" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/asm_x86_64/.+")
