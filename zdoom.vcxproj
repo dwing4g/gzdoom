@@ -428,6 +428,7 @@
     <ClCompile Include="src\gl\utility\gl_geometric.cpp" />
     <ClCompile Include="src\gl\xbr\xbrz.cpp" />
     <ClCompile Include="src\gl\xbr\xbrz_old.cpp" />
+    <ClCompile Include="src\i_module.cpp" />
     <ClCompile Include="src\math\asin.c">
       <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
     </ClCompile>
