@@ -53,7 +53,7 @@
 #include "gl/renderer/gl_2ddrawer.h"
 #include "gl_debug.h"
 
-IMPLEMENT_CLASS(OpenGLFrameBuffer)
+IMPLEMENT_CLASS(OpenGLFrameBuffer, false, false)
 EXTERN_CVAR (Float, vid_brightness)
 EXTERN_CVAR (Float, vid_contrast)
 EXTERN_CVAR (Bool, vid_vsync)
@@ -208,13 +208,17 @@ void OpenGLFrameBuffer::Update()
 //
 //==========================================================================
 
+CVAR(Bool, gl_finishbeforeswap, false, 0);
+
 void OpenGLFrameBuffer::Swap()
 {
 //	static FILE* fp = fopen("fps.log", "wb");
 	static DWORD s_t = 0;
 //	static int s_dt = 0;
+
 	Finish.Reset();
 	Finish.Clock();
+
 	DWORD t0 = timeGetTime();
 	int dt = vid_sleep - (t0 - s_t);
 	if(dt > 0 && s_t)
@@ -227,19 +231,26 @@ void OpenGLFrameBuffer::Swap()
 			t0 = timeGetTime();
 		}
 	}
-	glFinish();
+
+	if (gl_finishbeforeswap) glFinish();
+
 	DWORD t1 = timeGetTime();
-	if (needsetgamma) 
+
+	if (needsetgamma)
 	{
 		//DoSetGamma();
 		needsetgamma = false;
 	}
 	SwapBuffers();
+
 	DWORD t2 = timeGetTime();
+
+	if (!gl_finishbeforeswap) glFinish();
 	Finish.Unclock();
 	swapped = true;
 	FHardwareTexture::UnbindAll();
 	mDebug->Update();
+
 //	if(fp) fprintf(fp, "%3d %3d %3d\n", t0 - s_t, t1 - t0, t2 - t1);
 	s_t = t2 - (t1 - t0);
 }
