@@ -63,7 +63,7 @@ struct FBackdropTexture : public FTexture
 		ANGLESHIFT = 24
 	};
 
-	static /*constexpr*/ uint32_t DEGREES(double v)
+	static constexpr uint32_t DEGREES(double v)
 	{
 		return uint32_t((v)*(0x40000000 / 90.0));
 	}

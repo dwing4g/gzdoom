@@ -1433,9 +1433,6 @@
     <ClCompile Include="src\scripting\vm\vmframe.cpp">
       <Filter>scripting\vm</Filter>
     </ClCompile>
-    <ClCompile Include="src\scripting\zscript\zcc-parse.c">
-      <Filter>scripting\zscript</Filter>
-    </ClCompile>
     <ClCompile Include="src\scripting\zscript\ast.cpp">
       <Filter>scripting\zscript</Filter>
     </ClCompile>

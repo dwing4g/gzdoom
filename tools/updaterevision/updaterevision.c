@@ -32,7 +32,7 @@ void stripnl(char *str)
 	}
 }
 
-int __cdecl main(int argc, char **argv)
+int main(int argc, char **argv)
 {
 	char vertag[128], lastlog[128], lasthash[128], *hash = NULL;
 	FILE *stream = NULL;

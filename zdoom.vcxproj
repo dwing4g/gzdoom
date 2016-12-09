@@ -438,56 +438,24 @@
     <ClCompile Include="src\g_inventory\a_weaponpiece.cpp" />
     <ClCompile Include="src\g_inventory\a_weapons.cpp" />
     <ClCompile Include="src\i_module.cpp" />
-    <ClCompile Include="src\math\asin.c">
-      <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
-    </ClCompile>
-    <ClCompile Include="src\math\atan.c">
-      <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
-    </ClCompile>
-    <ClCompile Include="src\math\const.c">
-      <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
-    </ClCompile>
-    <ClCompile Include="src\math\cosh.c">
-      <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
-    </ClCompile>
-    <ClCompile Include="src\math\exp.c">
-      <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
-    </ClCompile>
-    <ClCompile Include="src\math\fastsin.cpp">
-      <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
-    </ClCompile>
-    <ClCompile Include="src\math\isnan.c">
-      <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
-    </ClCompile>
-    <ClCompile Include="src\math\log.c">
-      <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
-    </ClCompile>
-    <ClCompile Include="src\math\log10.c">
-      <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
-    </ClCompile>
-    <ClCompile Include="src\math\mtherr.c">
-      <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
-    </ClCompile>
-    <ClCompile Include="src\math\polevl.c">
-      <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
-    </ClCompile>
+    <ClCompile Include="src\math\asin.c" />
+    <ClCompile Include="src\math\atan.c" />
+    <ClCompile Include="src\math\const.c" />
+    <ClCompile Include="src\math\cosh.c" />
+    <ClCompile Include="src\math\exp.c" />
+    <ClCompile Include="src\math\fastsin.cpp" />
+    <ClCompile Include="src\math\isnan.c" />
+    <ClCompile Include="src\math\log.c" />
+    <ClCompile Include="src\math\log10.c" />
+    <ClCompile Include="src\math\mtherr.c" />
+    <ClCompile Include="src\math\polevl.c" />
     <ClCompile Include="src\math\pow.c" />
     <ClCompile Include="src\math\powi.c" />
-    <ClCompile Include="src\math\sin.c">
-      <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
-    </ClCompile>
-    <ClCompile Include="src\math\sinh.c">
-      <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
-    </ClCompile>
-    <ClCompile Include="src\math\sqrt.c">
-      <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
-    </ClCompile>
-    <ClCompile Include="src\math\tan.c">
-      <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
-    </ClCompile>
-    <ClCompile Include="src\math\tanh.c">
-      <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Cdecl</CallingConvention>
-    </ClCompile>
+    <ClCompile Include="src\math\sin.c" />
+    <ClCompile Include="src\math\sinh.c" />
+    <ClCompile Include="src\math\sqrt.c" />
+    <ClCompile Include="src\math\tan.c" />
+    <ClCompile Include="src\math\tanh.c" />
     <ClCompile Include="src\p_actionfunctions.cpp" />
     <ClCompile Include="src\p_pusher.cpp" />
     <ClCompile Include="src\p_scroll.cpp" />
@@ -507,9 +475,6 @@
     <ClCompile Include="src\scripting\vm\vmexec.cpp" />
     <ClCompile Include="src\scripting\vm\vmframe.cpp" />
     <ClCompile Include="src\scripting\zscript\ast.cpp" />
-    <ClCompile Include="src\scripting\zscript\zcc-parse.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="src\scripting\zscript\zcc_compile.cpp" />
     <ClCompile Include="src\scripting\zscript\zcc_expr.cpp" />
     <ClCompile Include="src\scripting\zscript\zcc_parser.cpp" />
@@ -742,12 +707,7 @@
     <ClCompile Include="src\sound\music_win_mididevice.cpp" />
     <ClCompile Include="src\sound\music_xmi_midiout.cpp" />
     <ClCompile Include="src\sound\oalsound.cpp" />
-    <ClCompile Include="src\oplsynth\fmopl.cpp">
-      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </AssemblerOutput>
-      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </AssemblerOutput>
-    </ClCompile>
+    <ClCompile Include="src\oplsynth\fmopl.cpp" />
     <ClCompile Include="src\oplsynth\mlopl.cpp" />
     <ClCompile Include="src\oplsynth\mlopl_io.cpp" />
     <ClCompile Include="src\oplsynth\nukedopl3.cpp" />
@@ -1093,6 +1053,8 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">tools\lemon\lemon.exe "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)\zcc-parse.c;%(RootDir)%(Directory)\zcc-parse.h;%(Outputs)</Outputs>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </ExcludedFromBuild>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

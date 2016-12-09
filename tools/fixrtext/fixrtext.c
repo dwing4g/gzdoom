@@ -25,7 +25,7 @@ int fopen_s (FILE **pFile, const char *filename, const char *mode)
 }
 #endif
 
-int __cdecl main (int argc, char **argv)
+int main (int argc, char **argv)
 {
 	FILE *f;
 	IMAGE_FILE_HEADER filehead;
