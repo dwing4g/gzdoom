@@ -208,51 +208,47 @@ void OpenGLFrameBuffer::Update()
 //
 //==========================================================================
 
-CVAR(Bool, gl_finishbeforeswap, false, 0);
+CVAR(Bool, gl_finishbeforeswap, false, CVAR_ARCHIVE|CVAR_GLOBALCONFIG);
+CVAR(Bool, vid_frametimelog, false, CVAR_ARCHIVE|CVAR_GLOBALCONFIG);
 
 void OpenGLFrameBuffer::Swap()
 {
-//	static FILE* fp = fopen("fps.log", "wb");
-	static DWORD s_t = 0;
-//	static int s_dt = 0;
-
 	Finish.Reset();
 	Finish.Clock();
 
-	DWORD t0 = timeGetTime();
-	int dt = vid_sleep - (t0 - s_t);
-	if(dt > 0 && s_t)
+	DWORD t0 = timeGetTime(), t1;
+	static DWORD s_t = 0;
+	int dt = (s_t ? vid_sleep - (t0 - s_t) : 0);
+	if(dt > 0)
 	{
-//		s_dt = ((uint32)(GetLastFPS() - 1) < 58 ? s_dt - 1 : 0);
-//		if((dt += s_dt) > 0)
-		{
-			glFlush();
-			Sleep(dt);
-			t0 = timeGetTime();
-		}
+		glFlush();
+		Sleep(dt);
+		t1 = timeGetTime();
 	}
+	else
+		t1 = t0;
 
 	if (gl_finishbeforeswap) glFinish();
-
-	DWORD t1 = timeGetTime();
-
 	if (needsetgamma)
 	{
 		//DoSetGamma();
 		needsetgamma = false;
 	}
 	SwapBuffers();
+	if (!gl_finishbeforeswap) glFinish();
 
 	DWORD t2 = timeGetTime();
+	if(vid_frametimelog)
+	{
+		static FILE* fp = fopen("frametime.log", "wb");
+		if(fp) fprintf(fp, "%3d %3d %3d\n", t0 - s_t, dt, t2 - t1);
+	}
+	s_t = t2;
 
-	if (!gl_finishbeforeswap) glFinish();
 	Finish.Unclock();
 	swapped = true;
 	FHardwareTexture::UnbindAll();
 	mDebug->Update();
-
-//	if(fp) fprintf(fp, "%3d %3d %3d\n", t0 - s_t, t1 - t0, t2 - t1);
-	s_t = t2 - (t1 - t0);
 }
 
 //===========================================================================
