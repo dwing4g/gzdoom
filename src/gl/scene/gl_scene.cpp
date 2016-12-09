@@ -103,7 +103,7 @@ angle_t FGLRenderer::FrustumAngle()
 {
 	float tilt= fabs(mAngles.Pitch.Degrees);
 
-	// If the pitch is larger than this you can look all around at a FOV of 90 degrees
+	// If the pitch is larger than this you can look all around at a FOV of 90°
 	if (tilt>46.0f) return 0xffffffff;
 
 	// ok, this is a gross hack that barely works...
