@@ -208,6 +208,7 @@ void OpenGLFrameBuffer::Update()
 //
 //==========================================================================
 
+CVAR(Bool, gl_finish, false, CVAR_ARCHIVE|CVAR_GLOBALCONFIG);
 CVAR(Bool, gl_finishbeforeswap, false, CVAR_ARCHIVE|CVAR_GLOBALCONFIG);
 CVAR(Bool, vid_frametimelog, false, CVAR_ARCHIVE|CVAR_GLOBALCONFIG);
 
@@ -228,14 +229,14 @@ void OpenGLFrameBuffer::Swap()
 	else
 		t1 = t0;
 
-	if (gl_finishbeforeswap) glFinish();
+	if (gl_finish && gl_finishbeforeswap) glFinish();
 	if (needsetgamma)
 	{
 		//DoSetGamma();
 		needsetgamma = false;
 	}
 	SwapBuffers();
-	if (!gl_finishbeforeswap) glFinish();
+	if (gl_finish && !gl_finishbeforeswap) glFinish();
 
 	DWORD t2 = timeGetTime();
 	if(vid_frametimelog)
