@@ -462,6 +462,7 @@
     <ClCompile Include="src\r_drawt_pal.cpp" />
     <ClCompile Include="src\r_draw_pal.cpp" />
     <ClCompile Include="src\r_thread.cpp" />
+    <ClCompile Include="src\r_walldraw.cpp" />
     <ClCompile Include="src\scripting\codegeneration\codegen.cpp" />
     <ClCompile Include="src\scripting\decorate\olddecorations.cpp" />
     <ClCompile Include="src\scripting\decorate\thingdef_exp.cpp" />
