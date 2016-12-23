@@ -388,6 +388,7 @@
     <ClCompile Include="src\gl\scene\gl_walls.cpp" />
     <ClCompile Include="src\gl\scene\gl_walls_draw.cpp" />
     <ClCompile Include="src\gl\scene\gl_weapon.cpp" />
+    <ClCompile Include="src\gl\shaders\gl_ambientshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_bloomshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_blurshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_colormapshader.cpp" />
