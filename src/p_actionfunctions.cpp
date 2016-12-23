@@ -2093,7 +2093,7 @@ DEFINE_ACTION_FUNCTION(AStateProvider, A_CustomPunch)
 		damage *= pr_cwpunch() % 8 + 1;
 
 	angle = self->Angles.Yaw + pr_cwpunch.Random2() * (5.625 / 256);
-	if (range == 0) range = MELEERANGE;
+	if (range == 0) range = DEFMELEERANGE;
 	pitch = P_AimLineAttack (self, angle, range, &t);
 
 	// only use ammo when actually hitting something!
@@ -6845,4 +6845,34 @@ DEFINE_ACTION_FUNCTION(AActor, A_CheckTerrain)
 		}
 	}
 	return 0;
+}
+
+DEFINE_ACTION_FUNCTION(AActor, A_SetSize)
+{
+	PARAM_SELF_PROLOGUE(AActor);
+	PARAM_FLOAT(newradius);
+	PARAM_FLOAT_DEF(newheight);
+	PARAM_BOOL_DEF(testpos);
+
+	if (newradius < 0.)		newradius = self->radius;
+	if (newheight < 0.)		newheight = self->Height;
+
+	double oldradius = self->radius;
+	double oldheight = self->Height;
+
+	self->UnlinkFromWorld();
+	self->radius = newradius;
+	self->Height = newheight;
+	self->LinkToWorld();
+
+	if (testpos && !P_TestMobjLocation(self))
+	{
+		self->UnlinkFromWorld();
+		self->radius = oldradius;
+		self->Height = oldheight;
+		self->LinkToWorld();
+		ACTION_RETURN_BOOL(false);
+	}
+
+	ACTION_RETURN_BOOL(true);
 }
