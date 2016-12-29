@@ -211,9 +211,11 @@ void OpenGLFrameBuffer::Update()
 CVAR(Bool, gl_finish, false, CVAR_ARCHIVE|CVAR_GLOBALCONFIG);
 CVAR(Bool, gl_finishbeforeswap, false, CVAR_ARCHIVE|CVAR_GLOBALCONFIG);
 CVAR(Bool, vid_frametimelog, false, CVAR_ARCHIVE|CVAR_GLOBALCONFIG);
+extern int camtexcount;
 
 void OpenGLFrameBuffer::Swap()
 {
+	bool swapbefore = gl_finishbeforeswap && camtexcount == 0;
 	Finish.Reset();
 	Finish.Clock();
 
@@ -229,14 +231,14 @@ void OpenGLFrameBuffer::Swap()
 	else
 		t1 = t0;
 
-	if (gl_finish && gl_finishbeforeswap) glFinish();
+	if (gl_finish && swapbefore) glFinish();
 	if (needsetgamma)
 	{
 		//DoSetGamma();
 		needsetgamma = false;
 	}
 	SwapBuffers();
-	if (gl_finish && !gl_finishbeforeswap) glFinish();
+	if (gl_finish && !swapbefore) glFinish();
 
 	DWORD t2 = timeGetTime();
 	if(vid_frametimelog)
@@ -248,6 +250,7 @@ void OpenGLFrameBuffer::Swap()
 
 	Finish.Unclock();
 	swapped = true;
+	camtexcount = 0;
 	FHardwareTexture::UnbindAll();
 	mDebug->Update();
 }

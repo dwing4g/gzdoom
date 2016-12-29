@@ -714,7 +714,7 @@ void R_DrawVisVoxel(vissprite_t *spr, int minslabz, int maxslabz, short *cliptop
 // R_ProjectSprite
 // Generates a vissprite for a thing if it might be visible.
 //
-void R_ProjectSprite (AActor *thing, int fakeside, F3DFloor *fakefloor, F3DFloor *fakeceiling)
+void R_ProjectSprite (AActor *thing, int fakeside, F3DFloor *fakefloor, F3DFloor *fakeceiling, sector_t *current_sector)
 {
 	double 			tr_x;
 	double 			tr_y;
@@ -1086,6 +1086,10 @@ void R_ProjectSprite (AActor *thing, int fakeside, F3DFloor *fakefloor, F3DFloor
 	}
 
 	FDynamicColormap *mybasecolormap = basecolormap;
+	if (current_sector->sectornum != thing->Sector->sectornum)	// compare sectornums to account for R_FakeFlat copies.
+	{
+		// Todo: The actor is from a different sector so we have to retrieve the proper basecolormap for that sector.
+	}
 
 	// Sprites that are added to the scene must fade to black.
 	if (vis->Style.RenderStyle == LegacyRenderStyles[STYLE_Add] && mybasecolormap->Fade != 0)
@@ -1217,7 +1221,6 @@ static void R_ProjectWallSprite(AActor *thing, const DVector3 &pos, FTextureID p
 // [RH] Save which side of heightsec sprite is on here.
 void R_AddSprites (sector_t *sec, int lightlevel, int fakeside)
 {
-	AActor *thing;
 	F3DFloor *fakeceiling = NULL;
 	F3DFloor *fakefloor = NULL;
 
@@ -1225,7 +1228,7 @@ void R_AddSprites (sector_t *sec, int lightlevel, int fakeside)
 	// A sector might have been split into several
 	//	subsectors during BSP building.
 	// Thus we check whether it was already added.
-	if (sec->thinglist == NULL || sec->validcount == validcount)
+	if (sec->touching_renderthings == nullptr || sec->validcount == validcount)
 		return;
 
 	// Well, now it will be done.
@@ -1234,8 +1237,12 @@ void R_AddSprites (sector_t *sec, int lightlevel, int fakeside)
 	spriteshade = LIGHT2SHADE(lightlevel + r_actualextralight);
 
 	// Handle all things in sector.
-	for (thing = sec->thinglist; thing; thing = thing->snext)
+	for(auto p = sec->touching_renderthings; p != nullptr; p = p->m_snext)
 	{
+		auto thing = p->m_thing;
+		if (thing->validcount == validcount) continue;
+		thing->validcount = validcount;
+		
 		FIntCVar *cvar = thing->GetClass()->distancecheck;
 		if (cvar != NULL && *cvar >= 0)
 		{
@@ -1248,7 +1255,7 @@ void R_AddSprites (sector_t *sec, int lightlevel, int fakeside)
 		}
 
 		// find fake level
-		for(auto rover : frontsector->e->XFloor.ffloors) 
+		for(auto rover : thing->Sector->e->XFloor.ffloors) 
 		{
 			if(!(rover->flags & FF_EXISTS) || !(rover->flags & FF_RENDERPLANES)) continue;
 			if(!(rover->flags & FF_SOLID) || rover->alpha != 255) continue;
@@ -1264,7 +1271,7 @@ void R_AddSprites (sector_t *sec, int lightlevel, int fakeside)
 				if(rover->bottom.plane->ZatPoint(0., 0.) >= thing->Top()) fakeceiling = rover;
 			}
 		}	
-		R_ProjectSprite (thing, fakeside, fakefloor, fakeceiling);
+		R_ProjectSprite (thing, fakeside, fakefloor, fakeceiling, sec);
 		fakeceiling = NULL;
 		fakefloor = NULL;
 	}
