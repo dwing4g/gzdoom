@@ -126,7 +126,7 @@
       <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>None</DebugInformationFormat>
       <CallingConvention>Cdecl</CallingConvention>
       <CompileAs>Default</CompileAs>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -144,10 +144,10 @@
       <OutputFile>gzdoom.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DelayLoadDLLs>fmodex.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
       <ProgramDatabaseFile>gzdoom.pdb</ProgramDatabaseFile>
       <StripPrivateSymbols />
-      <GenerateMapFile>true</GenerateMapFile>
+      <GenerateMapFile>false</GenerateMapFile>
       <MapFileName>.\Release/gzdoom.map</MapFileName>
       <MapExports>true</MapExports>
       <SubSystem>Windows</SubSystem>
@@ -340,6 +340,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\c_functions.cpp" />
     <ClCompile Include="src\gl\compatibility\gl_20.cpp" />
     <ClCompile Include="src\gl\data\gl_data.cpp" />
     <ClCompile Include="src\gl\data\gl_matrix.cpp" />
