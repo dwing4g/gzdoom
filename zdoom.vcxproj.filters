@@ -1466,6 +1466,9 @@
     <ClCompile Include="src\c_functions.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\p_secnodes.cpp">
+      <Filter>!Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\sc_man_scanner.h">

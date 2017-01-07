@@ -149,7 +149,7 @@
       <StripPrivateSymbols />
       <GenerateMapFile>false</GenerateMapFile>
       <MapFileName>.\Release/gzdoom.map</MapFileName>
-      <MapExports>true</MapExports>
+      <MapExports>false</MapExports>
       <SubSystem>Windows</SubSystem>
       <StackReserveSize>0</StackReserveSize>
       <LargeAddressAware>true</LargeAddressAware>
@@ -461,6 +461,7 @@
     <ClCompile Include="src\p_actionfunctions.cpp" />
     <ClCompile Include="src\p_pusher.cpp" />
     <ClCompile Include="src\p_scroll.cpp" />
+    <ClCompile Include="src\p_secnodes.cpp" />
     <ClCompile Include="src\r_drawt_pal.cpp" />
     <ClCompile Include="src\r_draw_pal.cpp" />
     <ClCompile Include="src\r_thread.cpp" />
