@@ -1,8 +1,12 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zdoom", "zdoom.vcxproj", "{8049475B-5C87-46F9-9358-635218A4EF18}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DFD69F81-7E6D-498F-BCDD-D3F6580D36B2} = {DFD69F81-7E6D-498F-BCDD-D3F6580D36B2}
+		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF0} = {CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF0}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib\zlib.vcxproj", "{F9D9E7D4-E1A2-4866-9E85-B1B14137EE63}"
 EndProject
@@ -29,6 +33,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bzip2", "bzip2\bzip2.vcxproj", "{A7DE5C73-D623-4118-A48A-BDFD1FAE97D4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game-music-emu", "game-music-emu\game-music-emu.vcxproj", "{9B465A9E-E5C7-4577-B559-3CA2F7AE7D96}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wadsrc_bm", "wadsrc_bm\wadsrc_bm.vcxproj", "{DFD69F81-7E6D-498F-BCDD-D3F6580D36B2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wadsrc_lights", "wadsrc_lights\wadsrc_lights.vcxproj", "{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -150,6 +158,22 @@ Global
 		{9B465A9E-E5C7-4577-B559-3CA2F7AE7D96}.Release|Win32.Build.0 = Release|Win32
 		{9B465A9E-E5C7-4577-B559-3CA2F7AE7D96}.Release|x64.ActiveCfg = Release|x64
 		{9B465A9E-E5C7-4577-B559-3CA2F7AE7D96}.Release|x64.Build.0 = Release|x64
+		{DFD69F81-7E6D-498F-BCDD-D3F6580D36B2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DFD69F81-7E6D-498F-BCDD-D3F6580D36B2}.Debug|Win32.Build.0 = Debug|Win32
+		{DFD69F81-7E6D-498F-BCDD-D3F6580D36B2}.Debug|x64.ActiveCfg = Debug|x64
+		{DFD69F81-7E6D-498F-BCDD-D3F6580D36B2}.Debug|x64.Build.0 = Debug|x64
+		{DFD69F81-7E6D-498F-BCDD-D3F6580D36B2}.Release|Win32.ActiveCfg = Release|Win32
+		{DFD69F81-7E6D-498F-BCDD-D3F6580D36B2}.Release|Win32.Build.0 = Release|Win32
+		{DFD69F81-7E6D-498F-BCDD-D3F6580D36B2}.Release|x64.ActiveCfg = Release|x64
+		{DFD69F81-7E6D-498F-BCDD-D3F6580D36B2}.Release|x64.Build.0 = Release|x64
+		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF0}.Debug|Win32.Build.0 = Debug|Win32
+		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF0}.Debug|x64.ActiveCfg = Debug|x64
+		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF0}.Debug|x64.Build.0 = Debug|x64
+		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF0}.Release|Win32.ActiveCfg = Release|Win32
+		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF0}.Release|Win32.Build.0 = Release|Win32
+		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF0}.Release|x64.ActiveCfg = Release|x64
+		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF0}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
