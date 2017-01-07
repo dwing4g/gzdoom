@@ -5,7 +5,7 @@
 #include "v_palette.h"
 #include "r_data/colormaps.h"
 
-extern DWORD gl_fixedcolormap;
+extern int gl_fixedcolormap;
 
 struct lightlist_t;
 
@@ -56,6 +56,7 @@ struct FColormap
 		LightColor = from->Color;
 		desaturation = from->Desaturate;
 		FadeColor = from->Fade;
+		FadeColor.a = 0;
 		blendfactor = from->Color.a;
 		fogdensity = from->Fade.a*2;
 		return * this;

@@ -296,11 +296,10 @@ void GLSprite::Draw(int pass)
 			if (!gl_isBlack(Colormap.FadeColor))
 			{
 				float dist=Dist2(ViewPos.X, ViewPos.Y, x,y);
-
-				if (!Colormap.FadeColor.a) Colormap.FadeColor.a=clamp<int>(255-lightlevel,60,255);
+				int fogd = gl_GetFogDensity(lightlevel, Colormap.FadeColor, Colormap.fogdensity);
 
 				// this value was determined by trial and error and is scale dependent!
-				float factor=0.05f+exp(-Colormap.FadeColor.a*dist/62500.f);
+				float factor = 0.05f + exp(-fogd*dist / 62500.f);
 				fuzzalpha*=factor;
 				minalpha*=factor;
 			}
@@ -387,6 +386,7 @@ void GLSprite::Draw(int pass)
 
 			FColormap thiscm;
 			thiscm.FadeColor = Colormap.FadeColor;
+			thiscm.fogdensity = Colormap.fogdensity;
 			thiscm.CopyFrom3DLight(&(*lightlist)[i]);
 			if (glset.nocoloredspritelighting)
 			{
@@ -1189,7 +1189,7 @@ void gl_RenderActorsInPortal(FGLLinePortal *glport)
 			if (port2 != nullptr && port->mDestination == port2->mOrigin && port->mOrigin == port2->mDestination)
 			{
 
-				for (portnode_t *node = port->render_thinglist; node != nullptr; node = node->m_snext)
+				for (portnode_t *node = port->lineportal_thinglist; node != nullptr; node = node->m_snext)
 				{
 					AActor *th = node->m_thing;
 
