@@ -446,9 +446,6 @@
     <ClCompile Include="src\p_user.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\p_writemap.cpp">
-      <Filter>!Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\p_xlat.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
@@ -1307,70 +1304,7 @@
     <ClCompile Include="src\r_drawt_pal.cpp">
       <Filter>Render Core\Render Sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\g_shared\a_action.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\a_bridge.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\a_decals.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\a_fastprojectile.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\a_flashfader.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\a_fountain.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\a_lightning.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\a_morph.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\a_movingcamera.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\a_quake.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\a_randomspawner.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\a_sectoraction.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\a_skies.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\a_soundenvironment.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\a_soundsequence.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\a_specialspot.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\hudmessages.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\sbar_mugshot.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\sbarinfo.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
     <ClCompile Include="src\g_shared\sbarinfo_commands.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\shared_hud.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\shared_sbar.cpp">
       <Filter>Game\g_shared</Filter>
     </ClCompile>
     <ClCompile Include="src\g_inventory\a_ammo.cpp">
@@ -1468,6 +1402,51 @@
     </ClCompile>
     <ClCompile Include="src\p_secnodes.cpp">
       <Filter>!Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scripting\codegeneration\dynarrays.cpp">
+      <Filter>scripting\codegeneration</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_shared\a_action.cpp">
+      <Filter>Game\g_shared</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_shared\a_decals.cpp">
+      <Filter>Game\g_shared</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_shared\a_flashfader.cpp">
+      <Filter>Game\g_shared</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_shared\a_lightning.cpp">
+      <Filter>Game\g_shared</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_shared\a_morph.cpp">
+      <Filter>Game\g_shared</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_shared\a_quake.cpp">
+      <Filter>Game\g_shared</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_shared\a_skies.cpp">
+      <Filter>Game\g_shared</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_shared\a_soundsequence.cpp">
+      <Filter>Game\g_shared</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_shared\a_specialspot.cpp">
+      <Filter>Game\g_shared</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_shared\hudmessages.cpp">
+      <Filter>Game\g_shared</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_shared\sbar_mugshot.cpp">
+      <Filter>Game\g_shared</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_shared\sbarinfo.cpp">
+      <Filter>Game\g_shared</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_shared\shared_hud.cpp">
+      <Filter>Game\g_shared</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_shared\shared_sbar.cpp">
+      <Filter>Game\g_shared</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

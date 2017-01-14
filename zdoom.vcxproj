@@ -439,6 +439,20 @@
     <ClCompile Include="src\g_inventory\a_puzzleitems.cpp" />
     <ClCompile Include="src\g_inventory\a_weaponpiece.cpp" />
     <ClCompile Include="src\g_inventory\a_weapons.cpp" />
+    <ClCompile Include="src\g_shared\a_action.cpp" />
+    <ClCompile Include="src\g_shared\a_decals.cpp" />
+    <ClCompile Include="src\g_shared\a_flashfader.cpp" />
+    <ClCompile Include="src\g_shared\a_lightning.cpp" />
+    <ClCompile Include="src\g_shared\a_morph.cpp" />
+    <ClCompile Include="src\g_shared\a_quake.cpp" />
+    <ClCompile Include="src\g_shared\a_skies.cpp" />
+    <ClCompile Include="src\g_shared\a_soundsequence.cpp" />
+    <ClCompile Include="src\g_shared\a_specialspot.cpp" />
+    <ClCompile Include="src\g_shared\hudmessages.cpp" />
+    <ClCompile Include="src\g_shared\sbarinfo.cpp" />
+    <ClCompile Include="src\g_shared\sbar_mugshot.cpp" />
+    <ClCompile Include="src\g_shared\shared_hud.cpp" />
+    <ClCompile Include="src\g_shared\shared_sbar.cpp" />
     <ClCompile Include="src\i_module.cpp" />
     <ClCompile Include="src\math\asin.c" />
     <ClCompile Include="src\math\atan.c" />
@@ -467,6 +481,7 @@
     <ClCompile Include="src\r_thread.cpp" />
     <ClCompile Include="src\r_walldraw.cpp" />
     <ClCompile Include="src\scripting\codegeneration\codegen.cpp" />
+    <ClCompile Include="src\scripting\codegeneration\dynarrays.cpp" />
     <ClCompile Include="src\scripting\decorate\olddecorations.cpp" />
     <ClCompile Include="src\scripting\decorate\thingdef_exp.cpp" />
     <ClCompile Include="src\scripting\decorate\thingdef_parse.cpp" />
@@ -596,7 +611,6 @@
     <ClCompile Include="src\p_udmf.cpp" />
     <ClCompile Include="src\p_usdf.cpp" />
     <ClCompile Include="src\p_user.cpp" />
-    <ClCompile Include="src\p_writemap.cpp" />
     <ClCompile Include="src\p_xlat.cpp" />
     <ClCompile Include="src\parsecontext.cpp" />
     <ClCompile Include="src\pathexpander.cpp" />
@@ -650,33 +664,12 @@
     <ClCompile Include="src\win32\i_xinput.cpp" />
     <ClCompile Include="src\win32\st_start.cpp" />
     <ClCompile Include="src\win32\win32video.cpp" />
-    <ClCompile Include="src\g_shared\a_action.cpp" />
-    <ClCompile Include="src\g_shared\a_bridge.cpp" />
-    <ClCompile Include="src\g_shared\a_decals.cpp" />
-    <ClCompile Include="src\g_shared\a_fastprojectile.cpp" />
-    <ClCompile Include="src\g_shared\a_flashfader.cpp" />
-    <ClCompile Include="src\g_shared\a_fountain.cpp" />
-    <ClCompile Include="src\g_shared\a_lightning.cpp" />
-    <ClCompile Include="src\g_shared\a_morph.cpp" />
-    <ClCompile Include="src\g_shared\a_movingcamera.cpp" />
-    <ClCompile Include="src\g_shared\a_quake.cpp" />
-    <ClCompile Include="src\g_shared\a_randomspawner.cpp" />
-    <ClCompile Include="src\g_shared\a_sectoraction.cpp" />
-    <ClCompile Include="src\g_shared\a_skies.cpp" />
-    <ClCompile Include="src\g_shared\a_soundenvironment.cpp" />
-    <ClCompile Include="src\g_shared\a_soundsequence.cpp" />
-    <ClCompile Include="src\g_shared\a_specialspot.cpp" />
-    <ClCompile Include="src\g_shared\hudmessages.cpp" />
-    <ClCompile Include="src\g_shared\sbar_mugshot.cpp" />
-    <ClCompile Include="src\g_shared\sbarinfo.cpp" />
     <ClCompile Include="src\g_shared\sbarinfo_commands.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="src\g_shared\shared_hud.cpp" />
-    <ClCompile Include="src\g_shared\shared_sbar.cpp" />
     <ClCompile Include="src\intermission\intermission.cpp" />
     <ClCompile Include="src\intermission\intermission_parse.cpp" />
     <ClCompile Include="src\r_3dfloors.cpp" />
