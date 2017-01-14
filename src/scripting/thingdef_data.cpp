@@ -49,6 +49,10 @@
 #include "gstrings.h"
 #include "zstring.h"
 #include "d_event.h"
+#include "g_levellocals.h"
+#include "vm.h"
+#include "p_checkposition.h"
+#include "r_sky.h"
 
 static TArray<FPropertyInfo*> properties;
 static TArray<AFuncDesc> AFTable;
@@ -407,6 +411,7 @@ static FFlagDef InventoryFlagDefs[] =
 	DEFINE_FLAG(IF, ALWAYSRESPAWN, AInventory, ItemFlags),
 	DEFINE_FLAG(IF, TRANSFER, AInventory, ItemFlags),
 	DEFINE_FLAG(IF, NOTELEPORTFREEZE, AInventory, ItemFlags),
+	DEFINE_FLAG(IF, NOSCREENBLINK, AInventory, ItemFlags),
 
 	DEFINE_DUMMY_FLAG(FORCERESPAWNINSURVIVAL, false),
 
@@ -711,6 +716,38 @@ static int fieldcmp(const void * a, const void * b)
 void InitThingdef()
 {
 	// Create all global variables here because this cannot be done on the script side and really isn't worth adding support for.
+	// Also create all special fields here that cannot be declared by script syntax.
+
+	auto secplanestruct = NewNativeStruct("Secplane", nullptr);
+	secplanestruct->Size = sizeof(secplane_t);
+	secplanestruct->Align = alignof(secplane_t);
+
+	auto sectorstruct = NewNativeStruct("Sector", nullptr);
+	sectorstruct->Size = sizeof(sector_t);
+	sectorstruct->Align = alignof(sector_t);
+
+	auto linestruct = NewNativeStruct("Line", nullptr);
+	linestruct->Size = sizeof(line_t);
+	linestruct->Align = alignof(line_t);
+
+	auto sidestruct = NewNativeStruct("Side", nullptr);
+	sidestruct->Size = sizeof(side_t);
+	sidestruct->Align = alignof(side_t);
+
+	auto vertstruct = NewNativeStruct("Vertex", nullptr);
+	vertstruct->Size = sizeof(vertex_t);
+	vertstruct->Align = alignof(vertex_t);
+
+
+	// set up the lines array in the sector struct. This is a bit messy because the type system is not prepared to handle a pointer to an array of pointers to a native struct even remotely well...
+	// As a result, the size has to be set to something large and arbritrary because it can change between maps. This will need some serious improvement when things get cleaned up.
+	sectorstruct->AddNativeField("lines", NewPointer(NewResizableArray(NewPointer(linestruct, false)), false), myoffsetof(sector_t, Lines), VARF_Native);
+
+	sectorstruct->AddNativeField("ceilingplane", secplanestruct, myoffsetof(sector_t, ceilingplane), VARF_Native);
+	sectorstruct->AddNativeField("floorplane", secplanestruct, myoffsetof(sector_t, floorplane), VARF_Native);
+
+
+
 
 	// expose the global validcount variable.
 	PField *vcf = new PField("validcount", TypeSInt32, VARF_Native | VARF_Static, (intptr_t)&validcount);
@@ -725,10 +762,15 @@ void InitThingdef()
 	PField *levelf = new PField("level", lstruct, VARF_Native | VARF_Static, (intptr_t)&level);
 	GlobalSymbols.AddSymbol(levelf);
 
+	// Add the sector array to LevelLocals.
+	lstruct->AddNativeField("sectors", NewPointer(NewResizableArray(sectorstruct), false), myoffsetof(FLevelLocals, sectors), VARF_Native);
+	lstruct->AddNativeField("lines", NewPointer(NewResizableArray(linestruct), false), myoffsetof(FLevelLocals, lines), VARF_Native);
+	lstruct->AddNativeField("sides", NewPointer(NewResizableArray(sidestruct), false), myoffsetof(FLevelLocals, sides), VARF_Native);
+	lstruct->AddNativeField("vertexes", NewPointer(NewResizableArray(vertstruct), false), myoffsetof(FLevelLocals, vertexes), VARF_Native|VARF_ReadOnly);
+
 	// set up a variable for the DEH data
 	PStruct *dstruct = NewNativeStruct("DehInfo", nullptr);
 	PField *dehf = new PField("deh", dstruct, VARF_Native | VARF_Static, (intptr_t)&deh);
-
 	GlobalSymbols.AddSymbol(dehf);
 
 	// set up a variable for the global players array.
@@ -739,16 +781,17 @@ void InitThingdef()
 	PField *playerf = new PField("players", parray, VARF_Native | VARF_Static, (intptr_t)&players);
 	GlobalSymbols.AddSymbol(playerf);
 
-	// set up the lines array in the sector struct. This is a bit messy because the type system is not prepared to handle a pointer to an array of pointers to a native struct even remotely well...
-	// As a result, the size has to be set to something large and arbritrary because it can change between maps. This will need some serious improvement when things get cleaned up.
-	pstruct = NewNativeStruct("Sector", nullptr);
-	pstruct->AddNativeField("lines", NewPointer(NewResizableArray(NewPointer(NewNativeStruct("line", nullptr), false)), false), myoffsetof(sector_t, Lines), VARF_Native);
-
 	parray = NewArray(TypeBool, MAXPLAYERS);
 	playerf = new PField("playeringame", parray, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&playeringame);
 	GlobalSymbols.AddSymbol(playerf);
 
 	playerf = new PField("gameaction", TypeUInt8, VARF_Native | VARF_Static, (intptr_t)&gameaction);
+	GlobalSymbols.AddSymbol(playerf);
+
+	playerf = new PField("skyflatnum", TypeTextureID, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&skyflatnum);
+	GlobalSymbols.AddSymbol(playerf);
+
+	playerf = new PField("globalfreeze", TypeUInt8, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&bglobal.freeze);
 	GlobalSymbols.AddSymbol(playerf);
 
 	playerf = new PField("consoleplayer", TypeSInt32, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&consoleplayer);
@@ -760,9 +803,6 @@ void InitThingdef()
 	static AWeapon *wpnochg = WP_NOCHANGE;
 	playerf = new PField("WP_NOCHANGE", NewPointer(RUNTIME_CLASS(AWeapon), false), VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&wpnochg);
 	GlobalSymbols.AddSymbol(playerf);
-
-	// this needs to be done manually until it can be given a proper type.
-	RUNTIME_CLASS(AActor)->AddNativeField("DecalGenerator", NewPointer(TypeVoid), myoffsetof(AActor, DecalGenerator));
 
 	// synthesize a symbol for each flag from the flag name tables to avoid redundant declaration of them.
 	for (auto &fl : FlagLists)
@@ -823,6 +863,14 @@ void InitThingdef()
 		AFTable.ShrinkToFit();
 		qsort(&AFTable[0], AFTable.Size(), sizeof(AFTable[0]), funccmp);
 	}
+
+	// Add the constructor and destructor to FCheckPosition.
+	auto fcp = NewStruct("FCheckPosition", nullptr);
+	fcp->mConstructor = *FindFunction(fcp, "_Constructor")->VMPointer;
+	fcp->mDestructor = *FindFunction(fcp, "_Destructor")->VMPointer;
+	fcp->Size = sizeof(FCheckPosition);
+	fcp->Align = alignof(FCheckPosition);
+
 
 	FieldTable.Clear();
 	if (FieldTable.Size() == 0)

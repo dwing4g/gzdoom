@@ -51,6 +51,7 @@
 #include "p_conversation.h"
 #include "menu/menu.h"
 #include "d_net.h"
+#include "g_levellocals.h"
 
 FIntermissionDescriptorList IntermissionDescriptors;
 
@@ -203,7 +204,7 @@ void DIntermissionScreen::Drawer ()
 	if (!mFlatfill) screen->FillBorder (NULL);
 }
 
-void DIntermissionScreen::Destroy()
+void DIntermissionScreen::OnDestroy()
 {
 	if (mPaletteChanged)
 	{
@@ -221,7 +222,7 @@ void DIntermissionScreen::Destroy()
 		M_EnableMenu(true);
 	}
 	S_StopSound(CHAN_VOICE);
-	Super::Destroy();
+	Super::OnDestroy();
 }
 
 //==========================================================================
@@ -873,9 +874,9 @@ void DIntermissionController::Drawer ()
 	}
 }
 
-void DIntermissionController::Destroy ()
+void DIntermissionController::OnDestroy ()
 {
-	Super::Destroy();
+	Super::OnDestroy();
 	if (mScreen != NULL) mScreen->Destroy();
 	if (mDeleteDesc) delete mDesc;
 	mDesc = NULL;

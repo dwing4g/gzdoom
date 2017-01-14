@@ -86,6 +86,7 @@
 #include "a_armor.h"
 #include "a_ammo.h"
 #include "r_data/colormaps.h"
+#include "g_levellocals.h"
 
 extern FILE *Logfile;
 
@@ -1423,7 +1424,7 @@ DPlaneWatcher::DPlaneWatcher (AActor *it, line_t *line, int lineSide, bool ceili
 	{
 		secplane_t plane;
 
-		Sector = &sectors[secnum];
+		Sector = &level.sectors[secnum];
 		if (bCeiling)
 		{
 			plane = Sector->ceilingplane;
@@ -3263,7 +3264,7 @@ void DLevelScript::ChangeFlat (int tag, int name, bool floorOrCeiling)
 	while ((secnum = it.Next()) >= 0)
 	{
 		int pos = floorOrCeiling? sector_t::ceiling : sector_t::floor;
-		sectors[secnum].SetTexture(pos, flat);
+		level.sectors[secnum].SetTexture(pos, flat);
 	}
 }
 
@@ -3284,7 +3285,7 @@ void DLevelScript::SetLineTexture (int lineid, int side, int position, int name)
 	int linenum = -1;
 	const char *texname = FBehavior::StaticLookupString (name);
 
-	if (texname == NULL)
+	if (texname == nullptr)
 		return;
 
 	side = !!side;
@@ -3296,8 +3297,8 @@ void DLevelScript::SetLineTexture (int lineid, int side, int position, int name)
 	{
 		side_t *sidedef;
 
-		sidedef = lines[linenum].sidedef[side];
-		if (sidedef == NULL)
+		sidedef = level.lines[linenum].sidedef[side];
+		if (sidedef == nullptr)
 			continue;
 
 		switch (position)
@@ -3332,16 +3333,14 @@ void DLevelScript::ReplaceTextures (int fromnamei, int tonamei, int flags)
 		picnum1 = TexMan.GetTexture (fromname, FTexture::TEX_Wall, FTextureManager::TEXMAN_Overridable);
 		picnum2 = TexMan.GetTexture (toname, FTexture::TEX_Wall, FTextureManager::TEXMAN_Overridable);
 
-		for (int i = 0; i < numsides; ++i)
+		for (auto &side : level.sides)
 		{
-			side_t *wal = &sides[i];
-
 			for(int j=0;j<3;j++)
 			{
 				static BYTE bits[]={NOT_TOP, NOT_MIDDLE, NOT_BOTTOM};
-				if (!(flags & bits[j]) && wal->GetTexture(j) == picnum1)
+				if (!(flags & bits[j]) && side.GetTexture(j) == picnum1)
 				{
-					wal->SetTexture(j, picnum2);
+					side.SetTexture(j, picnum2);
 				}
 			}
 		}
@@ -3351,14 +3350,12 @@ void DLevelScript::ReplaceTextures (int fromnamei, int tonamei, int flags)
 		picnum1 = TexMan.GetTexture (fromname, FTexture::TEX_Flat, FTextureManager::TEXMAN_Overridable);
 		picnum2 = TexMan.GetTexture (toname, FTexture::TEX_Flat, FTextureManager::TEXMAN_Overridable);
 
-		for (int i = 0; i < numsectors; ++i)
+		for (auto &sec : level.sectors)
 		{
-			sector_t *sec = &sectors[i];
-
-			if (!(flags & NOT_FLOOR) && sec->GetTexture(sector_t::floor) == picnum1) 
-				sec->SetTexture(sector_t::floor, picnum2);
-			if (!(flags & NOT_CEILING) && sec->GetTexture(sector_t::ceiling) == picnum1)	
-				sec->SetTexture(sector_t::ceiling, picnum2);
+			if (!(flags & NOT_FLOOR) && sec.GetTexture(sector_t::floor) == picnum1) 
+				sec.SetTexture(sector_t::floor, picnum2);
+			if (!(flags & NOT_CEILING) && sec.GetTexture(sector_t::ceiling) == picnum1)	
+				sec.SetTexture(sector_t::ceiling, picnum2);
 		}
 	}
 }
@@ -4411,6 +4408,8 @@ enum EACSFunctions
 	ACSF_DamageActor, // [arookas]
 	ACSF_SetActorFlag,
 	ACSF_SetTranslation,
+	ACSF_GetActorFloorTexture,
+	ACSF_GetActorFloorTerrain,
 
 
 	// OpenGL stuff
@@ -4430,14 +4429,14 @@ int DLevelScript::SideFromID(int id, int side)
 	{
 		if (activationline == NULL) return -1;
 		if (activationline->sidedef[side] == NULL) return -1;
-		return activationline->sidedef[side]->Index;
+		return activationline->sidedef[side]->UDMFIndex;
 	}
 	else
 	{
 		int line = P_FindFirstLineFromID(id);
 		if (line == -1) return -1;
-		if (lines[line].sidedef[side] == NULL) return -1;
-		return lines[line].sidedef[side]->Index;
+		if (level.lines[line].sidedef[side] == NULL) return -1;
+		return level.lines[line].sidedef[side]->UDMFIndex;
 	}
 }
 
@@ -4446,7 +4445,7 @@ int DLevelScript::LineFromID(int id)
 	if (id == 0)
 	{
 		if (activationline == NULL) return -1;
-		return int(activationline - lines);
+		return activationline->Index();
 	}
 	else
 	{
@@ -5150,7 +5149,7 @@ int DLevelScript::CallFunction(int argCount, int funcIndex, SDWORD *args)
 					int s;
 					while ((s = it.Next()) >= 0)
 					{
-						SN_StartSequence(&sectors[s], args[2], seqname, 0);
+						SN_StartSequence(&level.sectors[s], args[2], seqname, 0);
 					}
 				}
 			}
@@ -5697,7 +5696,7 @@ doplaysound:			if (funcIndex == ACSF_PlayActorSound)
 				FLineIdIterator itr(args[0]);
 				while ((line = itr.Next()) >= 0)
 				{
-					lines[line].activation = args[1];
+					level.lines[line].activation = args[1];
 				}
 			}
 			break;
@@ -5706,7 +5705,7 @@ doplaysound:			if (funcIndex == ACSF_PlayActorSound)
 			if (argCount > 0)
 			{
 				int line = P_FindFirstLineFromID(args[0]);
-				return line >= 0 ? lines[line].activation : 0;
+				return line >= 0 ? level.lines[line].activation : 0;
 			}
 			break;
 
@@ -5922,7 +5921,7 @@ doplaysound:			if (funcIndex == ACSF_PlayActorSound)
 				int s;
 				while ((s = it.Next()) >= 0)
 				{
-					sector_t *sec = &sectors[s];
+					sector_t *sec = &level.sectors[s];
 
 					sec->damageamount = args[1];
 					sec->damagetype = argCount >= 3 ? FName(FBehavior::StaticLookupString(args[2])) : FName(NAME_None);
@@ -5942,7 +5941,7 @@ doplaysound:			if (funcIndex == ACSF_PlayActorSound)
 					int s;
 					while ((s = it.Next()) >= 0)
 					{
-						sectors[s].terrainnum[args[1]] = terrain;
+						level.sectors[s].terrainnum[args[1]] = terrain;
 					}
 				}
 			}
@@ -6083,8 +6082,8 @@ doplaysound:			if (funcIndex == ACSF_PlayActorSound)
 			int s;
 			while ((s = it.Next()) >= 0)
 			{
-				sectors[s].planes[which].GlowColor = color;
-				sectors[s].planes[which].GlowHeight = height;
+				level.sectors[s].planes[which].GlowColor = color;
+				level.sectors[s].planes[which].GlowHeight = height;
 			}
 			break;
 		}
@@ -6096,11 +6095,41 @@ doplaysound:			if (funcIndex == ACSF_PlayActorSound)
 			int d = clamp(args[1]/2, 0, 255);
 			while ((s = it.Next()) >= 0)
 			{
-				auto f = sectors[s].ColorMap->Fade;
-				sectors[s].ColorMap = GetSpecialLights(sectors[s].ColorMap->Color, PalEntry(d, f.r, f.g, f.b), sectors[s].ColorMap->Desaturate);
+				auto &sec = level.sectors[s];
+				auto f = sec.ColorMap->Fade;
+				sec.ColorMap = GetSpecialLights(sec.ColorMap->Color, PalEntry(d, f.r, f.g, f.b), sec.ColorMap->Desaturate);
 			}
 			break;
 		}
+
+		case ACSF_GetActorFloorTexture:
+		{
+			auto a = SingleActorFromTID(args[0], activator);
+			if (a != nullptr)
+			{
+				return GlobalACSStrings.AddString(TexMan[a->floorpic]->Name);
+			}
+			else
+			{
+				return GlobalACSStrings.AddString("");
+			}
+			break;
+		}
+
+		case ACSF_GetActorFloorTerrain:
+		{
+			auto a = SingleActorFromTID(args[0], activator);
+			if (a != nullptr)
+			{
+				return GlobalACSStrings.AddString(Terrains[a->floorterrain].Name);
+			}
+			else
+			{
+				return GlobalACSStrings.AddString("");
+			}
+			break;
+		}
+
 
 
 		default:
@@ -6116,6 +6145,8 @@ enum
 	PRINTNAME_LEVELNAME		= -1,
 	PRINTNAME_LEVEL			= -2,
 	PRINTNAME_SKILL			= -3,
+	PRINTNAME_NEXTLEVEL		= -4,
+	PRINTNAME_NEXTSECRET	= -5,
 };
 
 
@@ -6227,7 +6258,7 @@ int DLevelScript::RunScript ()
 		FSectorTagIterator it(statedata);
 		while ((secnum = it.Next()) >= 0)
 		{
-			if (sectors[secnum].floordata || sectors[secnum].ceilingdata)
+			if (level.sectors[secnum].floordata || level.sectors[secnum].ceilingdata)
 				return resultValue;
 		}
 
@@ -7743,7 +7774,7 @@ scriptwait:
 			if (activationline != NULL)
 			{
 				activationline->special = 0;
-				DPrintf(DMSG_SPAMMY, "Cleared line special on line %d\n", (int)(activationline - lines));
+				DPrintf(DMSG_SPAMMY, "Cleared line special on line %d\n", activationline->Index());
 			}
 			break;
 
@@ -7857,6 +7888,22 @@ scriptwait:
 						uppername.ToUpper();
 						work += uppername;
 						break; 
+					}
+
+					case PRINTNAME_NEXTLEVEL:
+					{
+						FString uppername = level.NextMap;
+						uppername.ToUpper();
+						work += uppername;
+						break;
+					}
+
+					case PRINTNAME_NEXTSECRET:
+					{
+						FString uppername = level.NextSecretMap;
+						uppername.ToUpper();
+						work += uppername;
+						break;
 					}
 
 					case PRINTNAME_SKILL:
@@ -8308,32 +8355,33 @@ scriptwait:
 
 		case PCD_SETLINEBLOCKING:
 			{
-				int line;
+				int lineno;
 
 				FLineIdIterator itr(STACK(2));
-				while ((line = itr.Next()) >= 0)
+				while ((lineno = itr.Next()) >= 0)
 				{
+					auto &line = level.lines[lineno];
 					switch (STACK(1))
 					{
 					case BLOCK_NOTHING:
-						lines[line].flags &= ~(ML_BLOCKING|ML_BLOCKEVERYTHING|ML_RAILING|ML_BLOCK_PLAYERS);
+						line.flags &= ~(ML_BLOCKING|ML_BLOCKEVERYTHING|ML_RAILING|ML_BLOCK_PLAYERS);
 						break;
 					case BLOCK_CREATURES:
 					default:
-						lines[line].flags &= ~(ML_BLOCKEVERYTHING|ML_RAILING|ML_BLOCK_PLAYERS);
-						lines[line].flags |= ML_BLOCKING;
+						line.flags &= ~(ML_BLOCKEVERYTHING|ML_RAILING|ML_BLOCK_PLAYERS);
+						line.flags |= ML_BLOCKING;
 						break;
 					case BLOCK_EVERYTHING:
-						lines[line].flags &= ~(ML_RAILING|ML_BLOCK_PLAYERS);
-						lines[line].flags |= ML_BLOCKING|ML_BLOCKEVERYTHING;
+						line.flags &= ~(ML_RAILING|ML_BLOCK_PLAYERS);
+						line.flags |= ML_BLOCKING|ML_BLOCKEVERYTHING;
 						break;
 					case BLOCK_RAILING:
-						lines[line].flags &= ~(ML_BLOCKEVERYTHING|ML_BLOCK_PLAYERS);
-						lines[line].flags |= ML_RAILING|ML_BLOCKING;
+						line.flags &= ~(ML_BLOCKEVERYTHING|ML_BLOCK_PLAYERS);
+						line.flags |= ML_RAILING|ML_BLOCKING;
 						break;
 					case BLOCK_PLAYERS:
-						lines[line].flags &= ~(ML_BLOCKEVERYTHING|ML_BLOCKING|ML_RAILING);
-						lines[line].flags |= ML_BLOCK_PLAYERS;
+						line.flags &= ~(ML_BLOCKEVERYTHING|ML_BLOCKING|ML_RAILING);
+						line.flags |= ML_BLOCK_PLAYERS;
 						break;
 					}
 				}
@@ -8350,9 +8398,9 @@ scriptwait:
 				while ((line = itr.Next()) >= 0)
 				{
 					if (STACK(1))
-						lines[line].flags |= ML_BLOCKMONSTERS;
+						level.lines[line].flags |= ML_BLOCKMONSTERS;
 					else
-						lines[line].flags &= ~ML_BLOCKMONSTERS;
+						level.lines[line].flags &= ~ML_BLOCKMONSTERS;
 				}
 
 				sp -= 2;
@@ -8375,7 +8423,7 @@ scriptwait:
 				FLineIdIterator itr(STACK(7));
 				while ((linenum = itr.Next()) >= 0)
 				{
-					line_t *line = &lines[linenum];
+					line_t *line = &level.lines[linenum];
 					line->special = specnum;
 					line->args[0] = arg0;
 					line->args[1] = STACK(4);
@@ -8672,19 +8720,19 @@ scriptwait:
 		case PCD_SETAMMOCAPACITY:
 			if (activator != NULL)
 			{
-				PClass *type = PClass::FindClass (FBehavior::StaticLookupString (STACK(2)));
+				PClassActor *type = PClass::FindActor (FBehavior::StaticLookupString (STACK(2)));
 				AInventory *item;
 
 				if (type != NULL && type->ParentClass == RUNTIME_CLASS(AAmmo))
 				{
-					item = activator->FindInventory (static_cast<PClassActor *>(type));
+					item = activator->FindInventory (type);
 					if (item != NULL)
 					{
 						item->MaxAmount = STACK(1);
 					}
 					else
 					{
-						item = activator->GiveInventoryType (static_cast<PClassAmmo *>(type));
+						item = activator->GiveInventoryType (type);
 						if (item != NULL)
 						{
 							item->MaxAmount = STACK(1);
@@ -8838,17 +8886,17 @@ scriptwait:
 				if (tag != 0)
 					secnum = P_FindFirstSectorFromTag (tag);
 				else
-					secnum = int(P_PointInSector (x, y) - sectors);
+					secnum = P_PointInSector (x, y)->sectornum;
 
 				if (secnum >= 0)
 				{
 					if (pcd == PCD_GETSECTORFLOORZ)
 					{
-						z = sectors[secnum].floorplane.ZatPoint (x, y);
+						z = level.sectors[secnum].floorplane.ZatPoint (x, y);
 					}
 					else
 					{
-						z = sectors[secnum].ceilingplane.ZatPoint (x, y);
+						z = level.sectors[secnum].ceilingplane.ZatPoint (x, y);
 					}
 				}
 				sp -= 2;
@@ -8863,7 +8911,7 @@ scriptwait:
 
 				if (secnum >= 0)
 				{
-					z = sectors[secnum].lightlevel;
+					z = level.sectors[secnum].lightlevel;
 				}
 				STACK(1) = z;
 			}

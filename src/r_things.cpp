@@ -64,6 +64,7 @@
 #include "r_data/voxels.h"
 #include "p_local.h"
 #include "p_maputl.h"
+#include "g_levellocals.h"
 #include "r_thread.h"
 
 EXTERN_CVAR(Bool, st_scale)
@@ -2593,7 +2594,7 @@ void R_ProjectParticle (particle_t *particle, const sector_t *sector, int shade,
 	vis->startfrac = 255 & (particle->color >>24);
 	vis->pic = NULL;
 	vis->bIsVoxel = false;
-	vis->renderflags = particle->trans;
+	vis->renderflags = short(particle->alpha * 255);
 	vis->FakeFlatStat = fakeside;
 	vis->floorclip = 0;
 	vis->ColormapNum = 0;

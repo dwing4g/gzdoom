@@ -71,6 +71,7 @@
 #include "r_utility.h"
 #include "a_ammo.h"
 #include "math/cmath.h"
+#include "g_levellocals.h"
 
 static FRandom pr_script("FScript");
 
@@ -321,7 +322,7 @@ public:
 		if (tag < 0)
 		{
 			searchtag = INT_MIN;
-			start = tag == -32768? 0 : -tag < numsectors? -tag : -1;
+			start = tag == -32768? 0 : -tag < (int)level.sectors.Size()? -tag : -1;
 		}
 	}
 };
@@ -340,7 +341,7 @@ inline int T_FindFirstSectorFromTag(int tagnum)
 // Doom index is only supported for the 4 original ammo types
 //
 //==========================================================================
-static PClassAmmo * T_GetAmmo(const svalue_t &t)
+static PClassInventory * T_GetAmmo(const svalue_t &t)
 {
 	const char * p;
 
@@ -361,7 +362,7 @@ static PClassAmmo * T_GetAmmo(const svalue_t &t)
 		}
 		p=DefAmmo[ammonum];
 	}
-	PClassAmmo * am=dyn_cast<PClassAmmo>(PClass::FindActor(p));
+	PClassInventory * am=dyn_cast<PClassInventory>(PClass::FindActor(p));
 	if (am == NULL)
 	{
 		script_error("unknown ammo type : %s", p);
@@ -1531,7 +1532,7 @@ void FParser::SF_StartSectorSound(void)
 		FSSectorTagIterator itr(tagnum);
 		while ((i = itr.Next()) >= 0)
 		{
-			sector = &sectors[i];
+			sector = &level.sectors[i];
 			S_Sound(sector, CHAN_BODY, T_FindSound(stringvalue(t_argv[1])), 1.0f, ATTN_NORM);
 		}
 	}
@@ -1568,13 +1569,14 @@ void FParser::SF_FloorHeight(void)
 			FSSectorTagIterator itr(tagnum);
 			while ((i = itr.Next()) >= 0)
 			{
-				if (sectors[i].floordata) continue;	// don't move floors that are active!
+				auto &sec = level.sectors[i];
+				if (sec.floordata) continue;	// don't move floors that are active!
 
-				if (sectors[i].MoveFloor(
-					fabs(dest - sectors[i].CenterFloor()), 
-					sectors[i].floorplane.PointToDist (sectors[i].centerspot, dest),
+				if (sec.MoveFloor(
+					fabs(dest - sec.CenterFloor()),
+					sec.floorplane.PointToDist (sec.centerspot, dest),
 					crush? 10:-1, 
-					(dest > sectors[i].CenterFloor()) ? 1 : -1,
+					(dest > sec.CenterFloor()) ? 1 : -1,
 					false) == EMoveResult::crushed)
 				{
 					returnval = 0;
@@ -1589,7 +1591,7 @@ void FParser::SF_FloorHeight(void)
 				script_error("sector not found with tagnum %i\n", tagnum); 
 				return;
 			}
-			returnval = sectors[secnum].CenterFloor();
+			returnval = level.sectors[secnum].CenterFloor();
 		}
 		
 		// return floor height
@@ -1622,7 +1624,7 @@ void FParser::SF_MoveFloor(void)
 		FSSectorTagIterator itr(tagnum);
 		while ((secnum = itr.Next()) >= 0)
 		{
-			P_CreateFloor(&sectors[secnum], DFloor::floorMoveToValue, NULL, platspeed, destheight, crush, 0, false, false);
+			P_CreateFloor(&level.sectors[secnum], DFloor::floorMoveToValue, NULL, platspeed, destheight, crush, 0, false, false);
 		}
 	}
 }
@@ -1657,13 +1659,14 @@ void FParser::SF_CeilingHeight(void)
 			FSSectorTagIterator itr(tagnum);
 			while ((i = itr.Next()) >= 0)
 			{
-				if (sectors[i].ceilingdata) continue;	// don't move ceilings that are active!
+				auto &sec = level.sectors[i];
+				if (sec.ceilingdata) continue;	// don't move ceilings that are active!
 
-				if (sectors[i].MoveCeiling(
-					fabs(dest - sectors[i].CenterCeiling()), 
-					sectors[i].ceilingplane.PointToDist (sectors[i].centerspot, dest), 
+				if (sec.MoveCeiling(
+					fabs(dest - sec.CenterCeiling()), 
+					sec.ceilingplane.PointToDist (sec.centerspot, dest), 
 					crush? 10:-1,
-					(dest > sectors[i].CenterCeiling()) ? 1 : -1,
+					(dest > sec.CenterCeiling()) ? 1 : -1,
 					false) == EMoveResult::crushed)
 				{
 					returnval = 0;
@@ -1678,7 +1681,7 @@ void FParser::SF_CeilingHeight(void)
 				script_error("sector not found with tagnum %i\n", tagnum); 
 				return;
 			}
-			returnval = sectors[secnum].CenterCeiling();
+			returnval = level.sectors[secnum].CenterCeiling();
 		}
 		
 		// return ceiling height
@@ -1713,7 +1716,7 @@ void FParser::SF_MoveCeiling(void)
 		FSSectorTagIterator itr(tagnum);
 		while ((secnum = itr.Next()) >= 0)
 		{
-			P_CreateCeiling(&sectors[secnum], DCeiling::ceilMoveToValue, NULL, tagnum, platspeed, platspeed, destheight, crush, silent | 4, 0, DCeiling::ECrushMode::crushDoom);
+			P_CreateCeiling(&level.sectors[secnum], DCeiling::ceilMoveToValue, NULL, tagnum, platspeed, platspeed, destheight, crush, silent | 4, 0, DCeiling::ECrushMode::crushDoom);
 		}
 	}
 }
@@ -1742,7 +1745,7 @@ void FParser::SF_LightLevel(void)
 			return;
 		}
 		
-		sector = &sectors[secnum];
+		sector = &level.sectors[secnum];
 		
 		if(t_argc > 1)          // > 1: set light level
 		{
@@ -1752,7 +1755,7 @@ void FParser::SF_LightLevel(void)
 			FSSectorTagIterator itr(tagnum);
 			while ((i = itr.Next()) >= 0)
 			{
-				sectors[i].SetLightLevel(intvalue(t_argv[1]));
+				level.sectors[i].SetLightLevel(intvalue(t_argv[1]));
 			}
 		}
 		
@@ -1783,7 +1786,7 @@ public:
 	DLightLevel(sector_t * s,int destlevel,int speed);
 	void	Serialize(FSerializer &arc);
 	void		Tick ();
-	void		Destroy() { Super::Destroy(); m_Sector->lightingdata=NULL; }
+	void		OnDestroy() { Super::OnDestroy(); m_Sector->lightingdata = nullptr; }
 };
 
 IMPLEMENT_CLASS(DLightLevel, false, false)
@@ -1870,7 +1873,7 @@ void FParser::SF_FadeLight(void)
 		FSectorTagIterator it(sectag);
 		while ((i = it.Next()) >= 0)
 		{
-			if (!sectors[i].lightingdata) new DLightLevel(&sectors[i],destlevel,speed);
+			if (!level.sectors[i].lightingdata) new DLightLevel(&level.sectors[i],destlevel,speed);
 		}
 	}
 }
@@ -1895,7 +1898,7 @@ void FParser::SF_FloorTexture(void)
 		if(secnum < 0)
 		{ script_error("sector not found with tagnum %i\n", tagnum); return;}
 		
-		sector = &sectors[secnum];
+		sector = &level.sectors[secnum];
 		
 		if(t_argc > 1)
 		{
@@ -1906,7 +1909,7 @@ void FParser::SF_FloorTexture(void)
 			FSSectorTagIterator itr(tagnum);
 			while ((i = itr.Next()) >= 0)
 			{
-				sectors[i].SetTexture(sector_t::floor, picnum);
+				level.sectors[i].SetTexture(sector_t::floor, picnum);
 			}
 		}
 		
@@ -1947,7 +1950,7 @@ void FParser::SF_SectorColormap(void)
 	if(secnum < 0)
 	{ script_error("sector not found with tagnum %i\n", tagnum); return;}
 	
-	sector = &sectors[secnum];
+	sector = &level.sectors[secnum];
 
 	if (t_argv[1].type==svt_string)
 	{
@@ -1957,7 +1960,7 @@ void FParser::SF_SectorColormap(void)
 		while ((i = itr.Next()) >= 0)
 		{
 			sectors[i].midmap=cm;
-			sectors[i].heightsec=&sectors[i];
+			sectors[i].heightsec=&level.sectors[i];
 		}
 	}
 	*/	
@@ -1985,7 +1988,7 @@ void FParser::SF_CeilingTexture(void)
 		if(secnum < 0)
 		{ script_error("sector not found with tagnum %i\n", tagnum); return;}
 		
-		sector = &sectors[secnum];
+		sector = &level.sectors[secnum];
 		
 		if(t_argc > 1)
 		{
@@ -1996,7 +1999,7 @@ void FParser::SF_CeilingTexture(void)
 			FSSectorTagIterator itr(tagnum);
 			while ((i = itr.Next()) >= 0)
 			{
-				sectors[i].SetTexture(sector_t::ceiling, picnum);
+				level.sectors[i].SetTexture(sector_t::ceiling, picnum);
 			}
 		}
 		
@@ -2169,7 +2172,7 @@ void FParser::SF_SetLineBlocking(void)
 			int i;
 			while ((i = itr.Next()) >= 0)
 			{
-				lines[i].flags = (lines[i].flags & ~(ML_BLOCKING | ML_BLOCKEVERYTHING)) | blocking;
+				level.lines[i].flags = (level.lines[i].flags & ~(ML_BLOCKING | ML_BLOCKEVERYTHING)) | blocking;
 			}
 		}
 	}
@@ -2192,7 +2195,7 @@ void FParser::SF_SetLineMonsterBlocking(void)
 		int i;
 		while ((i = itr.Next()) >= 0)
 		{
-			lines[i].flags = (lines[i].flags & ~ML_BLOCKMONSTERS) | blocking;
+			level.lines[i].flags = (level.lines[i].flags & ~ML_BLOCKMONSTERS) | blocking;
 		}
 	}
 }
@@ -2249,11 +2252,11 @@ void FParser::SF_SetLineTexture(void)
 			while ((i = itr.Next()) >= 0)
 			{
 				// bad sidedef, Hexen just SEGV'd here!
-				if (lines[i].sidedef[side] != NULL)
+				if (level.lines[i].sidedef[side] != NULL)
 				{
 					if (position >= 0 && position <= 2)
 					{
-						lines[i].sidedef[side]->SetTexture(position, texturenum);
+						level.lines[i].sidedef[side]->SetTexture(position, texturenum);
 					}
 				}
 			}
@@ -2268,7 +2271,7 @@ void FParser::SF_SetLineTexture(void)
 			FLineIdIterator itr(tag);
 			while ((i = itr.Next()) >= 0)
 			{ 
-				side_t *sided = lines[i].sidedef[side];
+				side_t *sided = level.lines[i].sidedef[side];
 				if(sided != NULL)
 				{ 
 					if(sections & 1) sided->SetTexture(side_t::top, picnum);
@@ -2569,7 +2572,7 @@ void FParser::SF_PlayerKeys(void)
 void FParser::SF_PlayerAmmo(void)
 {
 	int playernum, amount;
-	PClassAmmo * ammotype;
+	PClassInventory * ammotype;
 	
 	if (CheckArgs(2))
 	{
@@ -2605,7 +2608,7 @@ void FParser::SF_PlayerAmmo(void)
 void FParser::SF_MaxPlayerAmmo()
 {
 	int playernum, amount;
-	PClassAmmo * ammotype;
+	PClassInventory * ammotype;
 
 	if (CheckArgs(2))
 	{
@@ -3361,19 +3364,19 @@ void FParser::SF_ObjState()
 void FParser::SF_LineFlag()
 {
 	line_t*  line;
-	int      linenum;
+	unsigned linenum;
 	int      flagnum;
 	
 	if (CheckArgs(2))
 	{
 		linenum = intvalue(t_argv[0]);
-		if(linenum < 0 || linenum > numlines)
+		if(linenum >= level.lines.Size())
 		{
 			script_error("LineFlag: Invalid line number.\n");
 			return;
 		}
 		
-		line = lines + linenum;
+		line = &level.lines[linenum];
 		
 		flagnum = intvalue(t_argv[1]);
 		if(flagnum < 0 || (flagnum > 8 && flagnum!=15))
@@ -3888,7 +3891,7 @@ void FParser::SF_SetColor(void)
 		FSSectorTagIterator itr(tagnum);
 		while ((i = itr.Next()) >= 0)
 		{
-			sectors[i].ColorMap = GetSpecialLights (color, sectors[i].ColorMap->Fade, 0);
+			level.sectors[i].ColorMap = GetSpecialLights (color, level.sectors[i].ColorMap->Fade, 0);
 		}
 	}
 }
@@ -3985,9 +3988,9 @@ void FParser::SF_SetLineTrigger()
 			mld.special = spec;
 			mld.tag = tag;
 			mld.flags = 0;
-			int f = lines[i].flags;
-			P_TranslateLineDef(&lines[i], &mld);
-			lines[i].flags = (lines[i].flags & (ML_MONSTERSCANACTIVATE | ML_REPEAT_SPECIAL | ML_SPAC_MASK | ML_FIRSTSIDEONLY)) |
+			int f = level.lines[i].flags;
+			P_TranslateLineDef(&level.lines[i], &mld);
+			level.lines[i].flags = (level.lines[i].flags & (ML_MONSTERSCANACTIVATE | ML_REPEAT_SPECIAL | ML_SPAC_MASK | ML_FIRSTSIDEONLY)) |
 				(f & ~(ML_MONSTERSCANACTIVATE | ML_REPEAT_SPECIAL | ML_SPAC_MASK | ML_FIRSTSIDEONLY));
 
 		}

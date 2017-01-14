@@ -63,6 +63,7 @@
 #include "r_data/r_translate.h"
 #include "g_level.h"
 #include "r_sky.h"
+#include "g_levellocals.h"
 
 CVAR(Bool, cl_bloodsplats, true, CVAR_ARCHIVE)
 CVAR(Int, sv_smartaim, 0, CVAR_ARCHIVE | CVAR_SERVERINFO)
@@ -82,6 +83,49 @@ static FRandom pr_crunch("DoCrunch");
 TArray<spechit_t> spechit;
 TArray<spechit_t> portalhit;
 
+
+// FCheckPosition requires explicit contstruction and destruction when used in the VM
+DEFINE_ACTION_FUNCTION(_FCheckPosition, _Constructor)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FCheckPosition);
+	new(self) FCheckPosition;
+	return 0;
+}
+
+DEFINE_ACTION_FUNCTION(_FCheckPosition, _Destructor)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FCheckPosition);
+	self->~FCheckPosition();
+	return 0;
+}
+
+DEFINE_ACTION_FUNCTION(_FCheckPosition, ClearLastRipped)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FCheckPosition);
+	self->LastRipped.Clear();
+	return 0;
+}
+
+DEFINE_FIELD_X(FCheckPosition, FCheckPosition, thing);
+DEFINE_FIELD_X(FCheckPosition, FCheckPosition, pos);
+DEFINE_FIELD_NAMED_X(FCheckPosition, FCheckPosition, sector, cursector);
+DEFINE_FIELD_X(FCheckPosition, FCheckPosition, floorz);
+DEFINE_FIELD_X(FCheckPosition, FCheckPosition, ceilingz);
+DEFINE_FIELD_X(FCheckPosition, FCheckPosition, dropoffz);
+DEFINE_FIELD_X(FCheckPosition, FCheckPosition, floorpic);
+DEFINE_FIELD_X(FCheckPosition, FCheckPosition, floorterrain);
+DEFINE_FIELD_X(FCheckPosition, FCheckPosition, floorsector);
+DEFINE_FIELD_X(FCheckPosition, FCheckPosition, ceilingpic);
+DEFINE_FIELD_X(FCheckPosition, FCheckPosition, ceilingsector);
+DEFINE_FIELD_X(FCheckPosition, FCheckPosition, touchmidtex);
+DEFINE_FIELD_X(FCheckPosition, FCheckPosition, abovemidtex);
+DEFINE_FIELD_X(FCheckPosition, FCheckPosition, floatok);
+DEFINE_FIELD_X(FCheckPosition, FCheckPosition, FromPMove);
+DEFINE_FIELD_X(FCheckPosition, FCheckPosition, ceilingline);
+DEFINE_FIELD_X(FCheckPosition, FCheckPosition, stepthing);
+DEFINE_FIELD_X(FCheckPosition, FCheckPosition, DoRipping);
+DEFINE_FIELD_X(FCheckPosition, FCheckPosition, portalstep);
+DEFINE_FIELD_X(FCheckPosition, FCheckPosition, PushTime);
 
 //==========================================================================
 //
@@ -183,7 +227,7 @@ static bool PIT_FindFloorCeiling(FMultiBlockLinesIterator &mit, FMultiBlockLines
 	if (ffcf_verbose)
 	{
 		Printf("Hit line %d at position %f,%f, group %d\n",
-			int(ld - lines), cres.Position.X, cres.Position.Y, ld->frontsector->PortalGroup);
+			ld->Index(), cres.Position.X, cres.Position.Y, ld->frontsector->PortalGroup);
 	}
 
 	if (!ld->backsector)
@@ -1844,8 +1888,17 @@ DEFINE_ACTION_FUNCTION(AActor, CheckPosition)
 	PARAM_FLOAT(x);
 	PARAM_FLOAT(y);
 	PARAM_BOOL_DEF(actorsonly);
-	ACTION_RETURN_BOOL(P_CheckPosition(self, DVector2(x, y), actorsonly));
+	PARAM_POINTER_DEF(tm, FCheckPosition);
+	if (tm)
+	{
+		ACTION_RETURN_BOOL(P_CheckPosition(self, DVector2(x, y), *tm, actorsonly));
+	}
+	else
+	{
+		ACTION_RETURN_BOOL(P_CheckPosition(self, DVector2(x, y), actorsonly));
+	}
 }
+
 
 //----------------------------------------------------------------------------
 //
@@ -2563,11 +2616,11 @@ bool P_TryMove(AActor *thing, const DVector2 &pos,
 
 		if (!oldAboveFakeFloor && eyez > fakez)
 		{ // View went above fake floor
-			newsec->SecActTarget->TriggerAction(thing, SECSPAC_EyesSurface);
+			newsec->TriggerSectorActions(thing, SECSPAC_EyesSurface);
 		}
 		else if (oldAboveFakeFloor && eyez <= fakez)
 		{ // View went below fake floor
-			newsec->SecActTarget->TriggerAction(thing, SECSPAC_EyesDive);
+			newsec->TriggerSectorActions(thing, SECSPAC_EyesDive);
 		}
 
 		if (!(hs->MoreFlags & SECF_FAKEFLOORONLY))
@@ -2575,11 +2628,11 @@ bool P_TryMove(AActor *thing, const DVector2 &pos,
 			fakez = hs->ceilingplane.ZatPoint(pos);
 			if (!oldAboveFakeCeiling && eyez > fakez)
 			{ // View went above fake ceiling
-				newsec->SecActTarget->TriggerAction(thing, SECSPAC_EyesAboveC);
+				newsec->TriggerSectorActions(thing, SECSPAC_EyesAboveC);
 			}
 			else if (oldAboveFakeCeiling && eyez <= fakez)
 			{ // View went below fake ceiling
-				newsec->SecActTarget->TriggerAction(thing, SECSPAC_EyesBelowC);
+				newsec->TriggerSectorActions(thing, SECSPAC_EyesBelowC);
 			}
 		}
 	}
@@ -2636,10 +2689,10 @@ pushline:
 
 bool P_TryMove(AActor *thing, const DVector2 &pos,
 	int dropoff, // killough 3/15/98: allow dropoff as option
-	const secplane_t *onfloor) // [RH] Let P_TryMove keep the thing on the floor
+	const secplane_t *onfloor, bool missilecheck) // [RH] Let P_TryMove keep the thing on the floor
 {
 	FCheckPosition tm;
-	return P_TryMove(thing, pos, dropoff, onfloor, tm);
+	return P_TryMove(thing, pos, dropoff, onfloor, tm, missilecheck);
 }
 
 DEFINE_ACTION_FUNCTION(AActor, TryMove)
@@ -2648,7 +2701,16 @@ DEFINE_ACTION_FUNCTION(AActor, TryMove)
 	PARAM_FLOAT(x);
 	PARAM_FLOAT(y);
 	PARAM_INT(dropoff);
-	ACTION_RETURN_BOOL(P_TryMove(self, DVector2(x, y), dropoff));
+	PARAM_BOOL_DEF(missilecheck);
+	PARAM_POINTER_DEF(tm, FCheckPosition);
+	if (tm == nullptr)
+	{
+		ACTION_RETURN_BOOL(P_TryMove(self, DVector2(x, y), dropoff, nullptr, missilecheck));
+	}
+	else
+	{
+		ACTION_RETURN_BOOL(P_TryMove(self, DVector2(x, y), dropoff, nullptr, *tm, missilecheck));
+	}
 }
 
 
@@ -3296,7 +3358,6 @@ bool FSlide::BounceTraverse(const DVector2 &start, const DVector2 &end)
 		}
 
 		li = in->d.line;
-		assert(((size_t)li - (size_t)lines) % sizeof(line_t) == 0);
 		if (li->flags & ML_BLOCKEVERYTHING)
 		{
 			goto bounceblocking;
@@ -3907,7 +3968,7 @@ struct aim_t
 				int frontflag = P_PointOnLineSidePrecise(startpos, li);
 
 				if (aimdebug)
-					Printf("Found line %d: ___toppitch = %f, ___bottompitch = %f\n", int(li - lines), toppitch.Degrees, bottompitch.Degrees);
+					Printf("Found line %d: toppitch = %f, bottompitch = %f\n", li->Index(), toppitch.Degrees, bottompitch.Degrees);
 
 				if (li->isLinePortal() && frontflag == 0)
 				{
@@ -3951,7 +4012,7 @@ struct aim_t
 					return;
 
 				if (aimdebug)
-					Printf("After line %d: toppitch = %f, bottompitch = %f, planestocheck = %d\n", int(li - lines), toppitch.Degrees, bottompitch.Degrees, planestocheck);
+					Printf("After line %d: toppitch = %f, bottompitch = %f, planestocheck = %d\n", li->Index(), toppitch.Degrees, bottompitch.Degrees, planestocheck);
 
 				sector_t *entersec = frontflag ? li->frontsector : li->backsector;
 				sector_t *exitsec = frontflag ? li->backsector : li->frontsector;
@@ -5243,7 +5304,7 @@ bool P_UseTraverse(AActor *usething, const DVector2 &start, const DVector2 &end,
 
 				sec = usething->Sector;
 
-				if (sec->SecActTarget && sec->SecActTarget->TriggerAction(usething, SECSPAC_Use))
+				if (sec->SecActTarget && sec->TriggerSectorActions(usething, SECSPAC_Use))
 				{
 					return true;
 				}
@@ -5252,7 +5313,7 @@ bool P_UseTraverse(AActor *usething, const DVector2 &start, const DVector2 &end,
 					in->d.line->frontsector : in->d.line->backsector;
 
 				if (sec != NULL && sec->SecActTarget &&
-					sec->SecActTarget->TriggerAction(usething, SECSPAC_UseWall))
+					sec->TriggerSectorActions(usething, SECSPAC_UseWall))
 				{
 					return true;
 				}
@@ -5373,7 +5434,7 @@ void P_UseLines(player_t *player)
 		sector_t *sec = player->mo->Sector;
 		int spac = SECSPAC_Use;
 		if (foundline) spac |= SECSPAC_UseWall;
-		if ((!sec->SecActTarget || !sec->SecActTarget->TriggerAction(player->mo, spac)) &&
+		if ((!sec->SecActTarget || !sec->TriggerSectorActions(player->mo, spac)) &&
 			P_NoWayTraverse(player->mo, start, end))
 		{
 			S_Sound(player->mo, CHAN_VOICE, "*usefail", 1, ATTN_IDLE);

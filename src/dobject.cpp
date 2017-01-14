@@ -49,6 +49,7 @@
 #include "dsectoreffect.h"
 #include "serializer.h"
 #include "virtual.h"
+#include "g_levellocals.h"
 
 //==========================================================================
 //
@@ -350,8 +351,18 @@ DObject::~DObject ()
 //
 //==========================================================================
 
-void DObject::Destroy ()
+void DObject:: Destroy ()
 {
+	// We cannot call the VM during shutdown because all the needed data has been or is in the process of being deleted.
+	if (PClass::bVMOperational)
+	{
+		IFVIRTUAL(DObject, OnDestroy)
+		{
+			VMValue params[1] = { (DObject*)this };
+			GlobalVMStack.Call(func, params, 1, nullptr, 0);
+		}
+	}
+	OnDestroy();
 	ObjectFlags = (ObjectFlags & ~OF_Fixed) | OF_EuthanizeMe;
 }
 
@@ -479,19 +490,16 @@ size_t DObject::StaticPointerSubstitution (DObject *old, DObject *notOld, bool s
 	}
 
 	// Go through sectors.
-	if (sectors != NULL)
+	for (auto &sec : level.sectors)
 	{
-		for (i = 0; i < numsectors; ++i)
-		{
 #define SECTOR_CHECK(f,t) \
-	if (sectors[i].f.p == static_cast<t *>(old)) { sectors[i].f = static_cast<t *>(notOld); changed++; }
-			SECTOR_CHECK( SoundTarget, AActor );
-			SECTOR_CHECK( SecActTarget, ASectorAction );
-			SECTOR_CHECK( floordata, DSectorEffect );
-			SECTOR_CHECK( ceilingdata, DSectorEffect );
-			SECTOR_CHECK( lightingdata, DSectorEffect );
+if (sec.f.p == static_cast<t *>(old)) { sec.f = static_cast<t *>(notOld); changed++; }
+		SECTOR_CHECK( SoundTarget, AActor );
+		SECTOR_CHECK( SecActTarget, AActor );
+		SECTOR_CHECK( floordata, DSectorEffect );
+		SECTOR_CHECK( ceilingdata, DSectorEffect );
+		SECTOR_CHECK( lightingdata, DSectorEffect );
 #undef SECTOR_CHECK
-		}
 	}
 
 	// Go through bot stuff.

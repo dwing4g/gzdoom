@@ -708,11 +708,15 @@ protected:
 class PStruct : public PNamedType
 {
 	DECLARE_CLASS(PStruct, PNamedType);
+
 public:
 	PStruct(FName name, PTypeBase *outer);
 
 	TArray<PField *> Fields;
 	bool HasNativeFields;
+	// Some internal structs require explicit construction and destruction of fields the VM cannot handle directly so use thes two functions for it.
+	VMFunction *mConstructor = nullptr;
+	VMFunction *mDestructor = nullptr;
 
 	virtual PField *AddField(FName name, PType *type, DWORD flags=0);
 	virtual PField *AddNativeField(FName name, PType *type, size_t address, DWORD flags = 0, int bitvalue = 0);
@@ -879,6 +883,7 @@ public:
 	static TArray<PClass *> AllClasses;
 
 	static bool bShutdown;
+	static bool bVMOperational;
 };
 
 class PClassType : public PClass
@@ -965,6 +970,7 @@ extern PStruct *TypeStringStruct;
 extern PStatePointer *TypeState;
 extern PStateLabel *TypeStateLabel;
 extern PPointer *TypeNullPtr;
+extern PPointer *TypeVoidPtr;
 
 // A constant value ---------------------------------------------------------
 
@@ -1009,8 +1015,6 @@ public:
 	PSymbolConstString(FName name, FString &str) : PSymbolConst(name, TypeString), Str(str) {}
 	PSymbolConstString() {}
 };
-
-void ReleaseGlobalSymbols();
 
 // Enumerations for serializing types in an archive -------------------------
 

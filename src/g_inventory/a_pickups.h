@@ -46,6 +46,7 @@ enum
 	IF_ALWAYSRESPAWN	= 1<<23,	// Always respawn, regardless of dmflag
 	IF_TRANSFER			= 1<<24,	// All inventory items that the inventory item contains is also transfered to the pickuper
 	IF_NOTELEPORTFREEZE	= 1<<25,	// does not 'freeze' the player right after teleporting.
+	IF_NOSCREENBLINK	= 1<<26,	// Does not blink the screen overlay when expiring.
 };
 
 
@@ -75,7 +76,7 @@ public:
 	virtual void Serialize(FSerializer &arc) override;
 	virtual void MarkPrecacheSounds() const override;
 	virtual void BeginPlay () override;
-	virtual void Destroy () override;
+	virtual void OnDestroy() override;
 	virtual void Tick() override;
 	virtual bool Grind(bool items) override;
 
@@ -181,7 +182,7 @@ private:
 
 class AStateProvider : public AInventory
 {
-	DECLARE_CLASS(AStateProvider, AInventory)
+	DECLARE_CLASS (AStateProvider, AInventory)
 };
 
 // CustomInventory: Supports the Use, Pickup, and Drop states from 96x

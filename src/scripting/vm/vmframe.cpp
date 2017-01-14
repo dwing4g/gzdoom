@@ -272,6 +272,7 @@ VMFrameStack::~VMFrameStack()
 			next = block->NextBlock;
 			delete[] (VM_UBYTE *)block;
 		}
+		Blocks = NULL;
 	}
 	if (UnusedBlocks != NULL)
 	{
@@ -281,9 +282,8 @@ VMFrameStack::~VMFrameStack()
 			next = block->NextBlock;
 			delete[] (VM_UBYTE *)block;
 		}
+		UnusedBlocks = NULL;
 	}
-	Blocks = NULL;
-	UnusedBlocks = NULL;
 }
 
 //===========================================================================
@@ -547,6 +547,10 @@ CVMAbortException::CVMAbortException(EVMAbortException reason, const char *morei
 
 	case X_BAD_SELF:
 		AppendMessage("invalid self pointer.");
+		break;
+
+	case X_FORMAT_ERROR:
+		AppendMessage("string format failed.");
 		break;
 
 	default:

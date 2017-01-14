@@ -1123,7 +1123,6 @@ set (PCH_SOURCES
 	p_udmf.cpp
 	p_usdf.cpp
 	p_user.cpp
-	p_writemap.cpp
 	p_xlat.cpp
 	parsecontext.cpp
 	po_man.cpp
@@ -1159,19 +1158,12 @@ set (PCH_SOURCES
 	g_inventory/a_weapons.cpp
 	g_strife/strife_sbar.cpp
 	g_shared/a_action.cpp
-	g_shared/a_bridge.cpp
 	g_shared/a_decals.cpp
-	g_shared/a_fastprojectile.cpp
 	g_shared/a_flashfader.cpp
-	g_shared/a_fountain.cpp
 	g_shared/a_lightning.cpp
 	g_shared/a_morph.cpp
-	g_shared/a_movingcamera.cpp
 	g_shared/a_quake.cpp
-	g_shared/a_randomspawner.cpp
-	g_shared/a_sectoraction.cpp
 	g_shared/a_skies.cpp
-	g_shared/a_soundenvironment.cpp
 	g_shared/a_soundsequence.cpp
 	g_shared/a_specialspot.cpp
 	g_shared/hudmessages.cpp
@@ -1227,6 +1219,7 @@ set (PCH_SOURCES
 	scripting/thingdef_data.cpp
 	scripting/thingdef_properties.cpp
 	scripting/codegeneration/codegen.cpp
+	scripting/codegeneration/dynarrays.cpp
 	scripting/decorate/olddecorations.cpp
 	scripting/decorate/thingdef_exp.cpp
 	scripting/decorate/thingdef_parse.cpp

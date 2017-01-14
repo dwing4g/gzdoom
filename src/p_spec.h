@@ -243,7 +243,7 @@ public:
 
 	void Serialize(FSerializer &arc);
 	void Tick ();
-	void Destroy() override;
+	void OnDestroy() override;
 
 protected:
 	EPillar		m_Type;
@@ -503,7 +503,8 @@ public:
 	enum EStairType
 	{
 		stairUseSpecials = 1,
-		stairSync = 2
+		stairSync = 2,
+		stairCrush = 4,
 	};
 
 	DFloor (sector_t *sec);
@@ -573,7 +574,7 @@ public:
 
 	DElevator (sector_t *sec);
 
-	void Destroy() override;
+	void OnDestroy() override;
 	void Serialize(FSerializer &arc);
 	void Tick ();
 

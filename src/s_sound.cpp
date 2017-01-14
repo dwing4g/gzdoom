@@ -53,6 +53,7 @@
 #include "serializer.h"
 #include "d_player.h"
 #include "r_state.h"
+#include "g_levellocals.h"
 
 // MACROS ------------------------------------------------------------------
 
@@ -479,6 +480,10 @@ void S_PrecacheLevel ()
 		while ( (actor = iterator.Next()) != NULL )
 		{
 			actor->MarkPrecacheSounds();
+		}
+		for (auto i : gameinfo.PrecachedSounds)
+		{
+			level.info->PrecacheSounds[i].MarkUsed();
 		}
 		// Precache all extra sounds requested by this map.
 		for (i = 0; i < level.info->PrecacheSounds.Size(); ++i)

@@ -277,6 +277,7 @@ xx(Massacre)	// For death by a cheater!
 xx(InstantDeath)	// Strife "instant death"
 xx(PoisonCloud)	// makes monsters howl.
 xx(Hitscan)		// for normal guns and the like
+xx(Quake)
 
 // Special death name for getting killed excessively. Could be used as
 // a damage type if you wanted to force an extreme death.
@@ -348,6 +349,7 @@ xx(VisibleStartAngle)
 xx(VisibleStartPitch)
 xx(VisibleEndAngle)
 xx(VisibleEndPitch)
+xx(Format)
 
 // Various actor names which are used internally
 xx(MapSpot)
@@ -698,6 +700,7 @@ xx(BuiltinFindSingleNameState)
 xx(BuiltinHandleRuntimeState)
 xx(BuiltinGetDefault)
 xx(BuiltinClassCast)
+xx(BuiltinFormat)
 xx(Damage)
 
 // basic type names
@@ -757,6 +760,7 @@ xx(DamageFunction)
 xx(Length)
 xx(Unit)
 xx(Size)
+xx(Voidptr)
 xx(StateLabel)
 xx(SpriteID)
 xx(TextureID)

@@ -55,6 +55,7 @@
 #include "d_player.h"
 #include "r_utility.h"
 #include "cmdlib.h"
+#include "g_levellocals.h"
 
 #include <time.h>
 
@@ -516,14 +517,14 @@ static int DrawKeys(player_t * CPlayer, int x, int y)
 // Drawing Ammo
 //
 //---------------------------------------------------------------------------
-static TArray<PClassAmmo *> orderedammos;
+static TArray<PClassInventory *> orderedammos;
 
 static void AddAmmoToList(AWeapon * weapdef)
 {
 
 	for(int i=0; i<2;i++)
 	{
-		PClassAmmo * ti = i==0? weapdef->AmmoType1 : weapdef->AmmoType2;
+		PClassInventory * ti = i==0? weapdef->AmmoType1 : weapdef->AmmoType2;
 		if (ti)
 		{
 			AAmmo * ammodef=(AAmmo*)GetDefaultByType(ti);
@@ -646,7 +647,7 @@ static int DrawAmmo(player_t *CPlayer, int x, int y)
 	for(i=orderedammos.Size()-1;i>=0;i--)
 	{
 
-		PClassAmmo * type = orderedammos[i];
+		PClassInventory * type = orderedammos[i];
 		AAmmo * ammoitem = (AAmmo*)CPlayer->mo->FindInventory(type);
 
 		AAmmo * inv = ammoitem? ammoitem : (AAmmo*)GetDefaultByType(orderedammos[i]);

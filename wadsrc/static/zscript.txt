@@ -1,4 +1,5 @@
 #include "zscript/base.txt"
+#include "zscript/dynarrays.txt"
 #include "zscript/constants.txt"
 #include "zscript/actor.txt"
 #include "zscript/actor_checks.txt"
@@ -36,6 +37,7 @@
 #include "zscript/shared/ice.txt"
 #include "zscript/shared/dog.txt"
 #include "zscript/shared/fastprojectile.txt"
+#include "zscript/shared/randomspawner.txt"
 #include "zscript/shared/dynlights.txt"
 
 #include "zscript/compatibility.txt"

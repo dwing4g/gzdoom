@@ -60,6 +60,7 @@
 #include "r_utility.h"
 #include "p_local.h"
 #include "menu/menu.h"
+#include "g_levellocals.h"
 
 // The conversations as they exist inside a SCRIPTxx lump.
 struct Response
@@ -828,12 +829,12 @@ public:
 	//
 	//=============================================================================
 
-	void Destroy()
+	void OnDestroy() override
 	{
 		V_FreeBrokenLines(mDialogueLines);
 		mDialogueLines = NULL;
 		I_SetMusicVolume (1.f);
-		Super::Destroy();
+		Super::OnDestroy();
 	}
 
 	bool DimAllowed()

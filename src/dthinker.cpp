@@ -253,7 +253,7 @@ DThinker::~DThinker ()
 	assert(NextThinker == NULL && PrevThinker == NULL);
 }
 
-void DThinker::Destroy ()
+void DThinker::OnDestroy ()
 {
 	assert((NextThinker != NULL && PrevThinker != NULL) ||
 		   (NextThinker == NULL && PrevThinker == NULL));
@@ -261,7 +261,7 @@ void DThinker::Destroy ()
 	{
 		Remove();
 	}
-	Super::Destroy();
+	Super::OnDestroy();
 }
 
 //==========================================================================
@@ -675,6 +675,9 @@ DThinker *FThinkerIterator::Next (bool exact)
 					{
 						return thinker;
 					}
+					// This can actually happen when a Destroy call on 'thinker' happens to destroy 'm_CurrThinker'.
+					// In that case there is no chance to recover, we have to terminate the iteration of this list.
+					if (m_CurrThinker == nullptr) break;
 				}
 			}
 			if ((m_SearchingFresh = !m_SearchingFresh))

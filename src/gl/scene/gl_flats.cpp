@@ -35,6 +35,7 @@
 #include "d_player.h"
 #include "portal.h"
 #include "templates.h"
+#include "g_levellocals.h"
 
 #include "gl/system/gl_interface.h"
 #include "gl/system/gl_cvars.h"
@@ -582,7 +583,7 @@ void GLFlat::ProcessSector(sector_t * frontsector)
 #endif
 
 	// Get the real sector for this one.
-	sector = &sectors[frontsector->sectornum];
+	sector = &level.sectors[frontsector->sectornum];
 	extsector_t::xfloor &x = sector->e->XFloor;
 	dynlightindex = -1;
 

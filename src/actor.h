@@ -44,7 +44,6 @@
 #include "portal.h"
 
 struct subsector_t;
-class PClassAmmo;
 struct FBlockNode;
 struct FPortalGroupArray;
 
@@ -418,6 +417,7 @@ enum ActorRenderFlag
 	RF_FLATSPRITE		= 0x2000,	// Flat sprite
 	RF_VOXELSPRITE		= 0x3000,	// Voxel object
 	RF_INVISIBLE		= 0x8000,	// Don't bother drawing this actor
+	RF_MAYBEINVISIBLE	= 0x10000,
 	RF_ROLLSPRITE		= 0x40000,	//[marrub]roll the sprite billboard
 	RF_DONTFLIP			= 0x80000,	// Don't flip it when viewed from behind.
 	RF_ROLLCENTER		= 0x00100000, // Rotate from the center of sprite instead of offsets
@@ -595,7 +595,7 @@ public:
 	AActor &operator= (const AActor &other);
 	~AActor ();
 
-	virtual void Destroy() override;
+	virtual void OnDestroy() override;
 	virtual void Serialize(FSerializer &arc) override;
 	virtual void PostSerialize() override;
 	virtual void PostBeginPlay() override;		// Called immediately before the actor's first tick
@@ -626,7 +626,7 @@ public:
 	void CallBeginPlay();
 
 	void LevelSpawned();				// Called after BeginPlay if this actor was spawned by the world
-	virtual void HandleSpawnFlags();	// Translates SpawnFlags into in-game flags.
+	void HandleSpawnFlags();	// Translates SpawnFlags into in-game flags.
 
 	virtual void MarkPrecacheSounds() const;	// Marks sounds used by this actor for precaching.
 
@@ -732,7 +732,7 @@ public:
 	AInventory *FirstInv ();
 
 	// Tries to give the actor some ammo.
-	bool GiveAmmo (PClassAmmo *type, int amount);
+	bool GiveAmmo (PClassInventory *type, int amount);
 
 	// Destroys all the inventory the actor is holding.
 	void DestroyAllInventory ();
@@ -778,14 +778,7 @@ public:
 	// set translation
 	void SetTranslation(FName trname);
 
-	double GetBobOffset(double ticfrac = 0) const
-	{
-		if (!(flags2 & MF2_FLOATBOB))
-		{
-			return 0;
-		}
-		return BobSin(FloatBobPhase + level.maptime + ticfrac);
-	}
+	double GetBobOffset(double ticfrac = 0) const;
 
 	// Enter the crash state
 	void Crash();
@@ -1021,12 +1014,13 @@ public:
 	double			FloatSpeed;
 
 	int				sprite;				// used to find patch_t and flip value
-	BYTE			frame;				// sprite frame to draw
+	uint8_t			frame;				// sprite frame to draw
+	uint8_t			effects;			// [RH] see p_effect.h
+	uint8_t			fountaincolor;		// Split out of 'effect' to have easier access.
 	DVector2		Scale;				// Scaling values; 1 is normal size
 	FRenderStyle	RenderStyle;		// Style to draw this actor with
 	ActorRenderFlags	renderflags;		// Different rendering flags
 	FTextureID		picnum;				// Draw this instead of sprite if valid
-	DWORD			effects;			// [RH] see p_effect.h
 	double			Alpha;				// Since P_CheckSight makes an alpha check this can't be a float. It has to be a double.
 	DWORD			fillcolor;			// Color to draw when STYLE_Shaded
 

@@ -80,6 +80,7 @@
 #include "math/cmath.h"
 #include "a_armor.h"
 #include "a_health.h"
+#include "g_levellocals.h"
 
 AActor *SingleActorFromTID(int tid, AActor *defactor);
 
@@ -2269,6 +2270,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_CustomRailgun)
 	PARAM_FLOAT_DEF	(spawnofs_z)		
 	PARAM_INT_DEF	(SpiralOffset)		
 	PARAM_INT_DEF	(limit)				
+	PARAM_FLOAT_DEF	(veleffect)
 
 	if (range == 0) range = 8192.;
 	if (sparsity == 0) sparsity = 1;
@@ -2307,7 +2309,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_CustomRailgun)
 	// Let the aim trail behind the player
 	if (aim)
 	{
-		saved_angle = self->Angles.Yaw = self->AngleTo(self->target, -self->target->Vel.X * 3, -self->target->Vel.Y * 3);
+		saved_angle = self->Angles.Yaw = self->AngleTo(self->target, -self->target->Vel.X * veleffect, -self->target->Vel.Y * veleffect);
 
 		if (aim == CRF_AIMDIRECT)
 		{
@@ -2317,7 +2319,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_CustomRailgun)
 				spawnofs_xy * self->Angles.Yaw.Cos(),
 				spawnofs_xy * self->Angles.Yaw.Sin()));
 			spawnofs_xy = 0;
-			self->Angles.Yaw = self->AngleTo(self->target,- self->target->Vel.X * 3, -self->target->Vel.Y * 3);
+			self->Angles.Yaw = self->AngleTo(self->target,- self->target->Vel.X * veleffect, -self->target->Vel.Y * veleffect);
 		}
 
 		if (self->target->flags & MF_SHADOW)
@@ -2498,6 +2500,12 @@ DEFINE_ACTION_FUNCTION(AActor, A_SetInventory)
 	if (mobj == nullptr)
 	{
 		ACTION_RETURN_BOOL(false);
+	}
+
+	// Do not run this function on voodoo dolls because the way they transfer the inventory to the player will not work with the code below.
+	if (mobj->player != nullptr)
+	{
+		mobj = mobj->player->mo;
 	}
 
 	AInventory *item = mobj->FindInventory(itemtype);
@@ -3202,6 +3210,9 @@ DEFINE_ACTION_FUNCTION(AActor, A_Log)
 {
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_STRING(text);
+	PARAM_BOOL_DEF(local);
+
+	if (local && !self->CheckLocalView(consoleplayer)) return 0;
 
 	if (text[0] == '$') text = GStrings(&text[1]);
 	FString formatted = strbin1(text);
@@ -3219,6 +3230,9 @@ DEFINE_ACTION_FUNCTION(AActor, A_LogInt)
 {
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_INT(num);
+	PARAM_BOOL_DEF(local);
+
+	if (local && !self->CheckLocalView(consoleplayer)) return 0;
 	Printf("%d\n", num);
 	return 0;
 }
@@ -3233,6 +3247,9 @@ DEFINE_ACTION_FUNCTION(AActor, A_LogFloat)
 {
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_FLOAT(num);
+	PARAM_BOOL_DEF(local);
+
+	if (local && !self->CheckLocalView(consoleplayer)) return 0;
 	IGNORE_FORMAT_PRE
 	Printf("%H\n", num);
 	IGNORE_FORMAT_POST

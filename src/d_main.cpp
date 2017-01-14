@@ -109,6 +109,7 @@
 #include "p_local.h"
 #include "autosegs.h"
 #include "fragglescript/t_fs.h"
+#include "g_levellocals.h"
 
 EXTERN_CVAR(Bool, hud_althud)
 void DrawHUD();
@@ -2714,7 +2715,6 @@ void D_DoomMain (void)
 			*(afunc->VMPointer) = NULL;
 		}
 
-		ReleaseGlobalSymbols();
 		PClass::StaticShutdown();
 
 		GC::FullGC();					// perform one final garbage collection after shutdown
@@ -2726,6 +2726,7 @@ void D_DoomMain (void)
 
 		restart++;
 		PClass::bShutdown = false;
+		PClass::bVMOperational = false;
 	}
 	while (1);
 }

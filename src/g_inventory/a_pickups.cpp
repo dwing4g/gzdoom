@@ -22,6 +22,7 @@
 #include "virtual.h"
 #include "a_ammo.h"
 #include "c_functions.h"
+#include "g_levellocals.h"
 
 EXTERN_CVAR(Bool, sv_unlimited_pickup)
 
@@ -644,6 +645,8 @@ void AInventory::BecomeItem ()
 	RemoveFromHash ();
 	flags &= ~MF_SPECIAL;
 	ChangeStatNum(STAT_INVENTORY);
+	// stop all sounds this item is playing.
+	for(int i = 1;i<=7;i++) S_StopSound(this, i);
 	SetState (FindState("Held"));
 }
 
@@ -1134,14 +1137,14 @@ bool AInventory::CallShouldStay()
 //
 //===========================================================================
 
-void AInventory::Destroy ()
+void AInventory::OnDestroy ()
 {
 	if (Owner != NULL)
 	{
 		Owner->RemoveInventory (this);
 	}
 	Inventory = NULL;
-	Super::Destroy ();
+	Super::OnDestroy();
 
 	// Although contrived it can theoretically happen that these variables still got a pointer to this item
 	if (SendItemUse == this) SendItemUse = NULL;

@@ -58,6 +58,7 @@
 #include "r_3dfloors.h"
 #include "v_palette.h"
 #include "r_data/colormaps.h"
+#include "g_levellocals.h"
 
 #ifdef _MSC_VER
 #pragma warning(disable:4244)
@@ -841,7 +842,7 @@ static void R_DrawCapSky(visplane_t *pl)
 
 static void R_DrawSky (visplane_t *pl)
 {
-	if (r_skymode == 2)
+	if (r_skymode == 2 && !(level.flags & LEVEL_FORCETILEDSKY))
 	{
 		R_DrawCapSky(pl);
 		return;
@@ -1347,7 +1348,7 @@ void R_DrawSkyPlane (visplane_t *pl)
 		else
 		{	// MBF's linedef-controlled skies
 			// Sky Linedef
-			const line_t *l = &lines[(pl->sky & ~PL_SKYFLAT)-1];
+			const line_t *l = &level.lines[(pl->sky & ~PL_SKYFLAT)-1];
 
 			// Sky transferred from first sidedef
 			const side_t *s = l->sidedef[0];

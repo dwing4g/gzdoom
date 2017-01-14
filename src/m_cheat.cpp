@@ -49,6 +49,7 @@
 #include "a_morph.h"
 #include "a_armor.h"
 #include "a_ammo.h"
+#include "g_levellocals.h"
 
 // [RH] Actually handle the cheat. The cheat code in st_stuff.c now just
 // writes some bytes to the network data stream, and the network code
@@ -645,7 +646,7 @@ void cht_Give (player_t *player, const char *name, int amount)
 
 			if (type->ParentClass == RUNTIME_CLASS(AAmmo))
 			{
-				PClassAmmo *atype = static_cast<PClassAmmo *>(type);
+				PClassInventory *atype = static_cast<PClassInventory *>(type);
 				AInventory *ammo = player->mo->FindInventory(atype);
 				if (ammo == NULL)
 				{

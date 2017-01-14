@@ -72,6 +72,7 @@
 #include "r_utility.h"
 #include "r_data/r_interpolate.h"
 #include "c_functions.h"
+#include "g_levellocals.h"
 
 extern FILE *Logfile;
 extern bool insave;
@@ -1189,12 +1190,12 @@ static void PrintSecretString(const char *string, bool thislevel)
 		{
 			if (string[1] == 'S' || string[1] == 's')
 			{
-				long secnum = strtol(string+2, (char**)&string, 10);
+				auto secnum = strtoul(string+2, (char**)&string, 10);
 				if (*string == ';') string++;
-				if (thislevel && secnum >= 0 && secnum < numsectors)
+				if (thislevel && secnum < level.sectors.Size())
 				{
-					if (sectors[secnum].isSecret()) colstr = TEXTCOLOR_RED;
-					else if (sectors[secnum].wasSecret()) colstr = TEXTCOLOR_GREEN;
+					if (level.sectors[secnum].isSecret()) colstr = TEXTCOLOR_RED;
+					else if (level.sectors[secnum].wasSecret()) colstr = TEXTCOLOR_GREEN;
 					else colstr = TEXTCOLOR_ORANGE;
 				}
 			}

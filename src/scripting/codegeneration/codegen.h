@@ -255,6 +255,7 @@ enum EFxType
 	EFX_MemberFunctionCall,
 	EFX_ActionSpecialCall,
 	EFX_FlopFunctionCall,
+	EFX_Format,
 	EFX_VMFunctionCall,
 	EFX_Sequence,
 	EFX_CompoundStatement,
@@ -610,10 +611,11 @@ public:
 class FxNameCast : public FxExpression
 {
 	FxExpression *basex;
+	bool mExplicit;
 
 public:
 
-	FxNameCast(FxExpression *x);
+	FxNameCast(FxExpression *x, bool explicitly = false);
 	~FxNameCast();
 	FxExpression *Resolve(FCompileContext&);
 
@@ -1532,7 +1534,27 @@ public:
 
 //==========================================================================
 //
-//	FxFlopFunctionCall
+//	FxFormat
+//
+//==========================================================================
+
+class FxFormat : public FxExpression
+{
+	FArgumentList ArgList;
+	bool EmitTail;
+
+public:
+
+	FxFormat(FArgumentList &args, const FScriptPosition &pos);
+	~FxFormat();
+	FxExpression *Resolve(FCompileContext&);
+	PPrototype *ReturnProto();
+	ExpEmit Emit(VMFunctionBuilder *build);
+};
+
+//==========================================================================
+//
+//	FxVectorBuiltin
 //
 //==========================================================================
 
@@ -1551,7 +1573,7 @@ public:
 
 //==========================================================================
 //
-//	FxFlopFunctionCall
+//	FxGetClass
 //
 //==========================================================================
 
@@ -1569,7 +1591,7 @@ public:
 
 //==========================================================================
 //
-//	FxFlopFunctionCall
+//	FxGetDefaultByType
 //
 //==========================================================================
 
@@ -1993,6 +2015,7 @@ class FxLocalVariableDeclaration : public FxExpression
 public:
 	int StackOffset = -1;
 	int RegNum = -1;
+	bool constructed = false;
 
 	FxLocalVariableDeclaration(PType *type, FName name, FxExpression *initval, int varflags, const FScriptPosition &p);
 	~FxLocalVariableDeclaration();
