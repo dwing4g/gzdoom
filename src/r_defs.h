@@ -278,22 +278,6 @@ enum
 	SECSPAC_HitFakeFloor= 1024,	// Trigger when player hits fake floor
 };
 
-class ASectorAction : public AActor
-{
-	DECLARE_CLASS (ASectorAction, AActor)
-public:
-	void OnDestroy() override;
-	void BeginPlay ();
-	void Activate (AActor *source);
-	void Deactivate (AActor *source);
-	bool CanTrigger (AActor *triggerer) const;
-	virtual bool DoTriggerAction(AActor *triggerer, int activationType);
-protected:
-	bool CheckTrigger(AActor *triggerer) const;
-};
-
-class ASkyViewpoint;
-
 struct secplane_t
 {
 	// the plane is defined as a*x + b*y + c*z + d = 0
@@ -925,32 +909,13 @@ public:
 		portals[plane] = nullptr;
 	}
 
-	FSectorPortal *GetPortal(int plane)
-	{
-		return &sectorPortals[Portals[plane]];
-	}
+	FSectorPortal *GetPortal(int plane);
+	double GetPortalPlaneZ(int plane);
+	DVector2 GetPortalDisplacement(int plane);
+	int GetPortalType(int plane);
+	int GetOppositePortalGroup(int plane);
 
-	double GetPortalPlaneZ(int plane)
-	{
-		return sectorPortals[Portals[plane]].mPlaneZ;
-	}
-
-	DVector2 GetPortalDisplacement(int plane)
-	{
-		return sectorPortals[Portals[plane]].mDisplacement;
-	}
-
-	int GetPortalType(int plane)
-	{
-		return sectorPortals[Portals[plane]].mType;
-	}
-
-	int GetOppositePortalGroup(int plane)
-	{
-		return sectorPortals[Portals[plane]].mDestination->PortalGroup;
-	}
-
-	void SetVerticesDirty()	
+	void SetVerticesDirty()
 	{
 		for (unsigned i = 0; i < e->vertices.Size(); i++) e->vertices[i]->dirty = true;
 	}
@@ -1312,10 +1277,7 @@ struct line_t
 		alpha = a;
 	}
 
-	FSectorPortal *GetTransferredPortal()
-	{
-		return portaltransferred >= sectorPortals.Size() ? (FSectorPortal*)NULL : &sectorPortals[portaltransferred];
-	}
+	FSectorPortal *GetTransferredPortal();
 
 	FLinePortal *getPortal() const
 	{
@@ -1513,9 +1475,9 @@ typedef BYTE lighttable_t;	// This could be wider for >8 bit display.
 // This encapsulates the fields of vissprite_t that can be altered by AlterWeaponSprite
 struct visstyle_t
 {
-	lighttable_t	*colormap;
+	bool			Invert;
 	float			Alpha;
-	FRenderStyle	RenderStyle;
+	ERenderStyle	RenderStyle;
 };
 
 

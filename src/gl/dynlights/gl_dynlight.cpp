@@ -77,7 +77,7 @@ void gl_ParseVavoomSkybox();
 inline PClassActor * GetRealType(PClassActor * ti)
 {
 	PClassActor *rep = ti->GetReplacement(false);
-	if (rep != ti && rep != NULL && rep->IsDescendantOf(RUNTIME_CLASS(ADehackedPickup)))
+	if (rep != ti && rep != NULL && rep->IsDescendantOf(PClass::FindActor(NAME_DehackedPickup)))
 	{
 		return rep;
 	}
@@ -137,7 +137,7 @@ public:
    void SetHalo(bool halo) { m_halo = halo; }
 protected:
    FName m_Name;
-   unsigned char m_Args[5];
+   int m_Args[5];
    double m_Param;
    DVector3 m_Pos;
    ELightType m_type;
@@ -159,7 +159,7 @@ FLightDefaults::FLightDefaults(FName name, ELightType type)
 	m_type = type;
 
 	m_Pos.Zero();
-	memset(m_Args, 0, 5);
+	memset(m_Args, 0, sizeof(m_Args));
 	m_Param = 0;
 
 	m_subtractive = false;
@@ -178,8 +178,8 @@ void FLightDefaults::ApplyProperties(ADynamicLight * light) const
 	light->SetOffset(m_Pos);
 	light->halo = m_halo;
 	for (int a = 0; a < 3; a++) light->args[a] = clamp<int>((int)(m_Args[a]), 0, 255);
-	light->m_Radius[0] = int(m_Args[LIGHT_INTENSITY]);
-	light->m_Radius[1] = int(m_Args[LIGHT_SECONDARY_INTENSITY]);
+	light->args[LIGHT_INTENSITY] = int(m_Args[LIGHT_INTENSITY]);
+	light->args[LIGHT_SECONDARY_INTENSITY] = int(m_Args[LIGHT_SECONDARY_INTENSITY]);
 	light->flags4 &= ~(MF4_ADDITIVE | MF4_SUBTRACTIVE | MF4_DONTLIGHTSELF);
 	if (m_subtractive) light->flags4 |= MF4_SUBTRACTIVE;
 	if (m_additive) light->flags4 |= MF4_ADDITIVE;
@@ -190,7 +190,7 @@ void FLightDefaults::ApplyProperties(ADynamicLight * light) const
 		float pulseTime = float(m_Param / TICRATE);
 
 		light->m_lastUpdate = level.maptime;
-		light->m_cycler.SetParams(float(light->m_Radius[1]), float(light->m_Radius[0]), pulseTime, oldtype == PulseLight);
+		light->m_cycler.SetParams(float(light->args[LIGHT_SECONDARY_INTENSITY]), float(light->args[LIGHT_INTENSITY]), pulseTime, oldtype == PulseLight);
 		light->m_cycler.ShouldCycle(true);
 		light->m_cycler.SetCycleType(CYCLE_Sin);
 		light->m_currentRadius = light->m_cycler.GetVal();
@@ -1195,8 +1195,8 @@ void gl_SetActorLights(AActor *actor)
 
 	for(;count<actor->dynamiclights.Size();count++)
 	{
-		actor->dynamiclights[count]->flags2|=MF2_DORMANT;
-		memset(actor->dynamiclights[count]->args, 0, sizeof(actor->args));
+		actor->dynamiclights[count]->flags2 |= MF2_DORMANT;
+		memset(actor->dynamiclights[count]->args, 0, 3*sizeof(actor->args[0]));
 	}
 	All.Unclock();
 }

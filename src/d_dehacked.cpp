@@ -74,9 +74,6 @@
 #include "info.h"
 #include "v_text.h"
 #include "vmbuilder.h"
-#include "a_armor.h"
-#include "a_ammo.h"
-#include "a_health.h"
 
 // [SO] Just the way Randy said to do it :)
 // [RH] Made this CVAR_SERVERINFO
@@ -220,19 +217,14 @@ DEFINE_FIELD_X(DehInfo, DehInfo, ExplosionStyle)
 DEFINE_FIELD_X(DehInfo, DehInfo, ExplosionAlpha)
 DEFINE_FIELD_X(DehInfo, DehInfo, NoAutofreeze)
 DEFINE_FIELD_X(DehInfo, DehInfo, BFGCells)
+DEFINE_FIELD_X(DehInfo, DehInfo, BlueAC)
 
 // Doom identified pickup items by their sprites. ZDoom prefers to use their
 // class type to identify them instead. To support the traditional Doom
 // behavior, for every thing touched by dehacked that has the MF_PICKUP flag,
-// a new subclass of ADehackedPickup will be created with properties copied
+// a new subclass of DehackedPickup will be created with properties copied
 // from the original actor's defaults. The original actor is then changed to
 // spawn the new class.
-
-IMPLEMENT_CLASS(ADehackedPickup, false, true)
-
-IMPLEMENT_POINTERS_START(ADehackedPickup)
-	IMPLEMENT_POINTER(RealPickup)
-IMPLEMENT_POINTERS_END
 
 TArray<PClassActor *> TouchedActors;
 
@@ -240,7 +232,7 @@ char *UnchangedSpriteNames;
 int NumUnchangedSprites;
 bool changedStates;
 
-// Sprite<->Class map for ADehackedPickup::DetermineType
+// Sprite<->Class map for DehackedPickup::DetermineType
 static struct DehSpriteMap
 {
 	char Sprite[5];
@@ -1536,7 +1528,7 @@ static int PatchSprite (int sprNum)
 static int PatchAmmo (int ammoNum)
 {
 	PClassActor *ammoType = NULL;
-	AAmmo *defaultAmmo = NULL;
+	AInventory *defaultAmmo = NULL;
 	int result;
 	int oldclip;
 	int dummy;
@@ -1549,7 +1541,7 @@ static int PatchAmmo (int ammoNum)
 		ammoType = AmmoNames[ammoNum];
 		if (ammoType != NULL)
 		{
-			defaultAmmo = (AAmmo *)GetDefaultByType (ammoType);
+			defaultAmmo = (AInventory*)GetDefaultByType (ammoType);
 			if (defaultAmmo != NULL)
 			{
 				max = &defaultAmmo->MaxAmount;
@@ -1575,8 +1567,8 @@ static int PatchAmmo (int ammoNum)
 	// Calculate the new backpack-given amounts for this ammo.
 	if (ammoType != NULL)
 	{
-		defaultAmmo->BackpackMaxAmount = defaultAmmo->MaxAmount * 2;
-		defaultAmmo->BackpackAmount = defaultAmmo->Amount;
+		defaultAmmo->IntVar("BackpackMaxAmount") = defaultAmmo->MaxAmount * 2;
+		defaultAmmo->IntVar("BackpackAmount") = defaultAmmo->Amount;
 	}
 
 	// Fix per-ammo/max-ammo amounts for descendants of the base ammo class
@@ -1591,7 +1583,7 @@ static int PatchAmmo (int ammoNum)
 
 			if (type->IsDescendantOf (ammoType))
 			{
-				defaultAmmo = (AAmmo *)GetDefaultByType (type);
+				defaultAmmo = (AInventory *)GetDefaultByType (type);
 				defaultAmmo->MaxAmount = *max;
 				defaultAmmo->Amount = Scale (defaultAmmo->Amount, *per, oldclip);
 			}
@@ -1673,7 +1665,7 @@ static int PatchWeapon (int weapNum)
 				info->AmmoType1 = (PClassInventory*)AmmoNames[val];
 				if (info->AmmoType1 != NULL)
 				{
-					info->AmmoGive1 = ((AAmmo*)GetDefaultByType (info->AmmoType1))->Amount * 2;
+					info->AmmoGive1 = ((AInventory*)GetDefaultByType (info->AmmoType1))->Amount * 2;
 					if (info->AmmoUse1 == 0)
 					{
 						info->AmmoUse1 = 1;
@@ -1928,7 +1920,7 @@ static int PatchMisc (int dummy)
 					}
 					else if (a > 0)
 					{
-						static_cast<APowerup *>(GetDefaultByName (types[i]))->BlendColor = PalEntry(
+						GetDefaultByName (types[i])->ColorVar(NAME_BlendColor) = PalEntry(
 							BYTE(clamp(a,0.f,1.f)*255.f),
 							clamp(r,0,255),
 							clamp(g,0,255),
@@ -1936,7 +1928,7 @@ static int PatchMisc (int dummy)
 					}
 					else
 					{
-						static_cast<APowerup *>(GetDefaultByName (types[i]))->BlendColor = 0;
+						GetDefaultByName (types[i])->ColorVar(NAME_BlendColor) = 0;
 					}
 				}
 			}
@@ -1949,43 +1941,41 @@ static int PatchMisc (int dummy)
 
 	// Update default item properties by patching the affected items
 	// Note: This won't have any effect on DECORATE derivates of these items!
-	ABasicArmorPickup *armor;
 
-	armor = static_cast<ABasicArmorPickup *> (GetDefaultByName ("GreenArmor"));
+	auto armor = GetDefaultByName ("GreenArmor");
 	if (armor!=NULL)
 	{
-		armor->SaveAmount = 100 * deh.GreenAC;
-		armor->SavePercent = deh.GreenAC == 1 ? 0.33335 : 0.5;
+		armor->IntVar(NAME_SaveAmount) = 100 * deh.GreenAC;
+		armor->FloatVar(NAME_SavePercent) = deh.GreenAC == 1 ? 0.33335 : 0.5;
 	}
-	armor = static_cast<ABasicArmorPickup *> (GetDefaultByName ("BlueArmor"));
+	armor = GetDefaultByName ("BlueArmor");
 	if (armor!=NULL)
 	{
-		armor->SaveAmount = 100 * deh.BlueAC;
-		armor->SavePercent = deh.BlueAC == 1 ? 0.33335 : 0.5;
+		armor->IntVar(NAME_SaveAmount) = 100 * deh.BlueAC;
+		armor->FloatVar(NAME_SavePercent) = deh.BlueAC == 1 ? 0.33335 : 0.5;
 	}
 
-	ABasicArmorBonus *barmor;
-	barmor = static_cast<ABasicArmorBonus *> (GetDefaultByName ("ArmorBonus"));
+	auto barmor = GetDefaultByName ("ArmorBonus");
 	if (barmor!=NULL)
 	{
-		barmor->MaxSaveAmount = deh.MaxArmor;
+		barmor->IntVar("MaxSaveAmount") = deh.MaxArmor;
 	}
 
-	AHealth *health;
-	health = static_cast<AHealth *> (GetDefaultByName ("HealthBonus"));
+	AInventory *health;
+	health = static_cast<AInventory *> (GetDefaultByName ("HealthBonus"));
 	if (health!=NULL) 
 	{
 		health->MaxAmount = 2 * deh.MaxHealth;
 	}
 
-	health = static_cast<AHealth *> (GetDefaultByName ("Soulsphere"));
+	health = static_cast<AInventory *> (GetDefaultByName ("Soulsphere"));
 	if (health!=NULL)
 	{
 		health->Amount = deh.SoulsphereHealth;
 		health->MaxAmount = deh.MaxSoulsphere;
 	}
 
-	health = static_cast<AHealth *> (GetDefaultByName ("MegasphereHealth"));
+	health = static_cast<AInventory *> (GetDefaultByName ("MegasphereHealth"));
 	if (health!=NULL)
 	{
 		health->Amount = health->MaxAmount = deh.MegasphereHealth;
@@ -2930,7 +2920,7 @@ static bool LoadDehSupp ()
 					else
 					{
 						auto cls = PClass::FindActor(sc.String);
-						if (cls == NULL || !cls->IsDescendantOf(RUNTIME_CLASS(AAmmo)))
+						if (cls == NULL || !cls->IsDescendantOf(PClass::FindActor(NAME_Ammo)))
 						{
 							sc.ScriptError("Unknown ammo type '%s'", sc.String);
 						}
@@ -3013,12 +3003,12 @@ void FinishDehPatch ()
 		// Create a new class that will serve as the actual pickup
 		char typeNameBuilder[32];
 		// 
+		auto dehtype = PClass::FindActor(NAME_DehackedPickup);
 		do
 		{
 			// Retry until we find a free name. This is unlikely to happen but not impossible.
 			mysnprintf(typeNameBuilder, countof(typeNameBuilder), "DehackedPickup%d", nameindex++);
-			subclass = static_cast<PClassActor *>(RUNTIME_CLASS(ADehackedPickup)->
-				CreateDerivedClass(typeNameBuilder, sizeof(ADehackedPickup)));
+			subclass = static_cast<PClassActor *>(dehtype->CreateDerivedClass(typeNameBuilder, dehtype->Size));
 		} 
 		while (subclass == nullptr);
 		
@@ -3124,93 +3114,10 @@ void FinishDehPatch ()
 	WeaponNames.ShrinkToFit();
 }
 
-void ModifyDropAmount(AInventory *inv, int dropamount);
-
-bool ADehackedPickup::TryPickup (AActor *&toucher)
+DEFINE_ACTION_FUNCTION(ADehackedPickup, DetermineType)
 {
-	PClassActor *type = DetermineType ();
-	if (type == NULL)
-	{
-		return false;
-	}
-	RealPickup = static_cast<AInventory *>(Spawn (type, Pos(), NO_REPLACE));
-	if (RealPickup != NULL)
-	{
-		// The internally spawned item should never count towards statistics.
-		RealPickup->ClearCounters();
-		if (!(flags & MF_DROPPED))
-		{
-			RealPickup->flags &= ~MF_DROPPED;
-		}
-		// If this item has been dropped by a monster the
-		// amount of ammo this gives must be adjusted.
-		if (droppedbymonster)
-		{
-			ModifyDropAmount(RealPickup, 0);
-		}
-		if (!RealPickup->CallTryPickup (toucher))
-		{
-			RealPickup->Destroy ();
-			RealPickup = NULL;
-			return false;
-		}
-		GoAwayAndDie ();
-		return true;
-	}
-	return false;
-}
+	PARAM_SELF_PROLOGUE(AInventory);
 
-FString ADehackedPickup::PickupMessage ()
-{
-	if (RealPickup != nullptr)
-		return RealPickup->PickupMessage ();
-	else return "";
-}
-
-bool ADehackedPickup::ShouldStay ()
-{
-	if (RealPickup != nullptr)
-		return RealPickup->CallShouldStay ();
-	else return true;
-}
-
-bool ADehackedPickup::ShouldRespawn ()
-{
-	if (RealPickup != nullptr)
-		return RealPickup->ShouldRespawn ();
-	else return false;
-}
-
-void ADehackedPickup::PlayPickupSound (AActor *toucher)
-{
-	if (RealPickup != nullptr)
-		RealPickup->PlayPickupSound (toucher);
-}
-
-void ADehackedPickup::DoPickupSpecial (AActor *toucher)
-{
-	Super::DoPickupSpecial (toucher);
-	// If the real pickup hasn't joined the toucher's inventory, make sure it
-	// doesn't stick around.
-	if (RealPickup != nullptr && RealPickup->Owner != toucher)
-	{
-		RealPickup->Destroy ();
-	}
-	RealPickup = nullptr;
-}
-
-void ADehackedPickup::OnDestroy ()
-{
-	if (RealPickup != nullptr)
-	{
-		RealPickup->Destroy ();
-		RealPickup = nullptr;
-	}
-	Super::OnDestroy();
-}
-
-PClassActor *ADehackedPickup::DetermineType ()
-{
 	// Look at the actor's current sprite to determine what kind of
 	// item to pretend to me.
 	int min = 0;
@@ -3219,10 +3126,10 @@ PClassActor *ADehackedPickup::DetermineType ()
 	while (min <= max)
 	{
 		int mid = (min + max) / 2;
-		int lex = memcmp (DehSpriteMappings[mid].Sprite, sprites[sprite].name, 4);
+		int lex = memcmp (DehSpriteMappings[mid].Sprite, sprites[self->sprite].name, 4);
 		if (lex == 0)
 		{
-			return PClass::FindActor(DehSpriteMappings[mid].ClassName);
+			ACTION_RETURN_OBJECT(PClass::FindActor(DehSpriteMappings[mid].ClassName));
 		}
 		else if (lex < 0)
 		{
@@ -3233,11 +3140,6 @@ PClassActor *ADehackedPickup::DetermineType ()
 			max = mid - 1;
 		}
 	}
-	return NULL;
+	ACTION_RETURN_OBJECT(nullptr);
 }
 
-void ADehackedPickup::Serialize(FSerializer &arc)
-{
-	Super::Serialize(arc);
-	arc("droppedbymonster", droppedbymonster);
-}

@@ -71,7 +71,6 @@
 #include "m_png.h"
 #include "gi.h"
 #include "a_keys.h"
-#include "a_artifacts.h"
 #include "r_data/r_translate.h"
 #include "cmdlib.h"
 #include "d_net.h"
@@ -448,7 +447,7 @@ CCMD (use)
 {
 	if (argv.argc() > 1 && who != NULL)
 	{
-		SendItemUse = who->FindInventory(PClass::FindActor(argv[1]));
+		SendItemUse = who->FindInventory(argv[1]);
 	}
 }
 
@@ -469,7 +468,7 @@ CCMD (drop)
 {
 	if (argv.argc() > 1 && who != NULL)
 	{
-		SendItemDrop = who->FindInventory(PClass::FindActor(argv[1]));
+		SendItemDrop = who->FindInventory(argv[1]);
 	}
 }
 
@@ -514,7 +513,7 @@ CCMD (select)
 {
 	if (argv.argc() > 1)
 	{
-		AInventory *item = who->FindInventory(PClass::FindActor(argv[1]));
+		AInventory *item = who->FindInventory(argv[1]);
 		if (item != NULL)
 		{
 			who->InvSel = item;
@@ -1263,10 +1262,11 @@ void G_PlayerFinishLevel (int player, EFinishLevelType mode, int flags)
 
 	// Strip all current powers, unless moving in a hub and the power is okay to keep.
 	item = p->mo->Inventory;
+	auto ptype = PClass::FindActor(NAME_Powerup);
 	while (item != NULL)
 	{
 		next = item->Inventory;
-		if (item->IsKindOf (RUNTIME_CLASS(APowerup)))
+		if (item->IsKindOf (ptype))
 		{
 			if (deathmatch || ((mode != FINISH_SameHub || !(item->ItemFlags & IF_HUBPOWER))
 				&& !(item->ItemFlags & IF_PERSISTENTPOWER))) // Keep persistent powers in non-deathmatch games

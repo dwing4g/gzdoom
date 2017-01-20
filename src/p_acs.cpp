@@ -83,10 +83,9 @@
 #include "serializer.h"
 #include "thingdef.h"
 #include "a_pickups.h"
-#include "a_armor.h"
-#include "a_ammo.h"
 #include "r_data/colormaps.h"
 #include "g_levellocals.h"
+#include "stats.h"
 
 extern FILE *Logfile;
 
@@ -2974,8 +2973,12 @@ void DACSThinker::Serialize(FSerializer &arc)
 	}
 }
 
+cycle_t ACSTime;
+
 void DACSThinker::Tick ()
 {
+	ACSTime.Reset();
+	ACSTime.Clock();
 	DLevelScript *script = Scripts;
 
 	while (script)
@@ -2993,6 +2996,7 @@ void DACSThinker::Tick ()
 		ACS_StringBuilderStack.Clear();
 		I_Error("Error: %d garbage entries on ACS string builder stack.", size);
 	}
+	ACSTime.Unclock();
 }
 
 void DACSThinker::StopScriptsFor (AActor *actor)
@@ -4950,8 +4954,8 @@ int DLevelScript::CallFunction(int argCount, int funcIndex, SDWORD *args)
 			else
 			{
 				FName p(FBehavior::StaticLookupString(args[0]));
-				ABasicArmor * armor = (ABasicArmor *) players[args[1]].mo->FindInventory(NAME_BasicArmor);
-				if (armor && armor->ArmorType == p) return armor->Amount;
+				auto armor = players[args[1]].mo->FindInventory(NAME_BasicArmor);
+				if (armor && armor->NameVar(NAME_ArmorType) == p) return armor->Amount;
 			}
 			return 0;
 		}
@@ -4960,29 +4964,29 @@ int DLevelScript::CallFunction(int argCount, int funcIndex, SDWORD *args)
 		{
 			if (activator == NULL || activator->player == NULL) return 0;
 
-			ABasicArmor * equippedarmor = (ABasicArmor *) activator->FindInventory(NAME_BasicArmor);
+			auto equippedarmor = activator->FindInventory(NAME_BasicArmor);
 
 			if (equippedarmor && equippedarmor->Amount != 0)
 			{
 				switch(args[0])
 				{
 					case ARMORINFO_CLASSNAME:
-						return GlobalACSStrings.AddString(equippedarmor->ArmorType.GetChars());
+						return GlobalACSStrings.AddString(equippedarmor->NameVar(NAME_ArmorType).GetChars());
 
 					case ARMORINFO_SAVEAMOUNT:
-						return equippedarmor->MaxAmount;
+						return equippedarmor->IntVar(NAME_MaxAmount);
 
 					case ARMORINFO_SAVEPERCENT:
-						return DoubleToACS(equippedarmor->SavePercent);
+						return DoubleToACS(equippedarmor->FloatVar(NAME_SavePercent));
 
 					case ARMORINFO_MAXABSORB:
-						return equippedarmor->MaxAbsorb;
+						return equippedarmor->IntVar(NAME_MaxAbsorb);
 
 					case ARMORINFO_MAXFULLABSORB:
-						return equippedarmor->MaxFullAbsorb;
+						return equippedarmor->IntVar(NAME_MaxFullAbsorb);
 
 					case ARMORINFO_ACTUALSAVEAMOUNT:
-						return equippedarmor->ActualSaveAmount;
+						return equippedarmor->IntVar(NAME_ActualSaveAmount);
 
 					default:
 						return 0;
@@ -5713,7 +5717,7 @@ doplaysound:			if (funcIndex == ACSF_PlayActorSound)
 			if (argCount >= 2)
 			{
 				PClassActor *powerupclass = PClass::FindActor(FBehavior::StaticLookupString(args[1]));
-				if (powerupclass == NULL || !RUNTIME_CLASS(APowerup)->IsAncestorOf(powerupclass))
+				if (powerupclass == NULL || !powerupclass->IsDescendantOf(PClass::FindActor(NAME_Powerup)))
 				{
 					Printf("'%s' is not a type of Powerup.\n", FBehavior::StaticLookupString(args[1]));
 					return 0;
@@ -5722,9 +5726,9 @@ doplaysound:			if (funcIndex == ACSF_PlayActorSound)
 				AActor *actor = SingleActorFromTID(args[0], activator);
 				if (actor != NULL)
 				{
-					APowerup* powerup = (APowerup*)actor->FindInventory(powerupclass);
+					auto powerup = actor->FindInventory(powerupclass);
 					if (powerup != NULL)
-						return powerup->EffectTics;
+						return powerup->IntVar(NAME_EffectTics);
 				}
 				return 0;
 			}
@@ -8230,7 +8234,7 @@ scriptwait:
 		case PCD_PLAYERARMORPOINTS:
 			if (activator)
 			{
-				ABasicArmor *armor = activator->FindInventory<ABasicArmor>();
+				auto armor = activator->FindInventory(NAME_BasicArmor);
 				PushToStack (armor ? armor->Amount : 0);
 			}
 			else
@@ -8677,7 +8681,7 @@ scriptwait:
 			{
 				AInventory *sigil;
 
-				if (activator == NULL || (sigil = activator->FindInventory(PClass::FindActor(NAME_Sigil))) == NULL)
+				if (activator == NULL || (sigil = activator->FindInventory(NAME_Sigil)) == NULL)
 				{
 					PushToStack (0);
 				}
@@ -8694,7 +8698,7 @@ scriptwait:
 				PClass *type = PClass::FindClass (FBehavior::StaticLookupString (STACK(1)));
 				AInventory *item;
 
-				if (type != NULL && type->ParentClass == RUNTIME_CLASS(AAmmo))
+				if (type != NULL && type->ParentClass == PClass::FindActor(NAME_Ammo))
 				{
 					item = activator->FindInventory (static_cast<PClassActor *>(type));
 					if (item != NULL)
@@ -8723,7 +8727,7 @@ scriptwait:
 				PClassActor *type = PClass::FindActor (FBehavior::StaticLookupString (STACK(2)));
 				AInventory *item;
 
-				if (type != NULL && type->ParentClass == RUNTIME_CLASS(AAmmo))
+				if (type != NULL && type->ParentClass == PClass::FindActor(NAME_Ammo))
 				{
 					item = activator->FindInventory (type);
 					if (item != NULL)
@@ -10268,4 +10272,9 @@ CCMD(acsprofile)
 
 	ShowProfileData(ScriptProfiles, limit, sorter, false);
 	ShowProfileData(FuncProfiles, limit, sorter, true);
+}
+
+ADD_STAT(ACS)
+{
+	return FStringf("ACS time: %f ms", ACSTime.TimeMS());
 }

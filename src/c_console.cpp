@@ -1326,6 +1326,12 @@ void C_HideConsole ()
 	}
 }
 
+DEFINE_ACTION_FUNCTION(_Console, HideConsole)
+{
+	C_HideConsole();
+	return 0;
+}
+
 static bool C_HandleKey (event_t *ev, FCommandBuffer &buffer)
 {
 	int data1 = ev->data1;
@@ -1743,7 +1749,7 @@ void C_MidPrintBold (FFont *font, const char *msg)
 	}
 }
 
-DEFINE_ACTION_FUNCTION(DObject, C_MidPrint)
+DEFINE_ACTION_FUNCTION(_Console, MidPrint)
 {
 	PARAM_PROLOGUE;
 	PARAM_STRING(font);

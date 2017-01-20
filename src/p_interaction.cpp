@@ -59,7 +59,6 @@
 #include "d_netinf.h"
 #include "a_morph.h"
 #include "virtual.h"
-#include "a_health.h"
 #include "g_levellocals.h"
 
 static FRandom pr_obituary ("Obituary");
@@ -358,15 +357,19 @@ void AActor::Die (AActor *source, AActor *inflictor, int dmgflags)
 		static int dieticks[MAXPLAYERS]; // [ZzZombo] not used? Except if for peeking in debugger...
 		int pnum = int(this->player-players);
 		dieticks[pnum] = gametic;
-		fprintf (debugfile, "died (%d) on tic %d (%s)\n", pnum, gametic,
-		this->player->cheats&CF_PREDICTING?"predicting":"real");
+		fprintf(debugfile, "died (%d) on tic %d (%s)\n", pnum, gametic,
+			this->player->cheats&CF_PREDICTING ? "predicting" : "real");
 	}
 
 	// [RH] Notify this actor's items.
 	for (AInventory *item = Inventory; item != NULL; )
 	{
 		AInventory *next = item->Inventory;
-		item->OwnerDied();
+		IFVIRTUALPTR(item, AInventory, OwnerDied)
+		{
+			VMValue params[1] = { item };
+			GlobalVMStack.Call(func, params, 1, nullptr, 0);
+		}
 		item = next;
 	}
 
@@ -477,7 +480,7 @@ void AActor::Die (AActor *source, AActor *inflictor, int dmgflags)
 
 				if (source->player->morphTics)
 				{ // Make a super chicken
-					source->GiveInventoryType (RUNTIME_CLASS(APowerWeaponLevel2));
+					source->GiveInventoryType (PClass::FindActor(NAME_PowerWeaponLevel2));
 				}
 
 				if (deathmatch && cl_showsprees)
@@ -840,11 +843,12 @@ void P_AutoUseHealth(player_t *player, int saveHealth)
 	TArray<AInventory *> NormalHealthItems;
 	TArray<AInventory *> LargeHealthItems;
 
+	auto hptype = PClass::FindActor(NAME_HealthPickup);
 	for(AInventory *inv = player->mo->Inventory; inv != NULL; inv = inv->Inventory)
 	{
-		if (inv->Amount > 0 && inv->IsKindOf(RUNTIME_CLASS(AHealthPickup)))
+		if (inv->Amount > 0 && inv->IsKindOf(hptype))
 		{
-			int mode = static_cast<AHealthPickup*>(inv)->autousemode;
+			int mode = inv->IntVar(NAME_autousemode);
 
 			if (mode == 1) NormalHealthItems.Push(inv);
 			else if (mode == 2) LargeHealthItems.Push(inv);
@@ -884,12 +888,12 @@ void P_AutoUseStrifeHealth (player_t *player)
 {
 	TArray<AInventory *> Items;
 
+	auto hptype = PClass::FindActor(NAME_HealthPickup);
 	for(AInventory *inv = player->mo->Inventory; inv != NULL; inv = inv->Inventory)
 	{
-		if (inv->Amount > 0 && inv->IsKindOf(RUNTIME_CLASS(AHealthPickup)))
+		if (inv->Amount > 0 && inv->IsKindOf(hptype))
 		{
-			int mode = static_cast<AHealthPickup*>(inv)->autousemode;
-
+			int mode = inv->IntVar(NAME_autousemode);
 			if (mode == 3) Items.Push(inv);
 		}
 	}
@@ -1305,7 +1309,7 @@ static int DamageMobj (AActor *target, AActor *inflictor, AActor *source, int da
 				int newdam = damage;
 				if (damage > 0)
 				{
-					player->mo->Inventory->AbsorbDamage(damage, mod, newdam);
+					newdam = player->mo->AbsorbDamage(damage, mod);
 				}
 				if (!telefragDamage || (player->mo->flags7 & MF7_LAXTELEFRAGDMG)) //rawdamage is never modified.
 				{
@@ -1385,7 +1389,7 @@ static int DamageMobj (AActor *target, AActor *inflictor, AActor *source, int da
 		if (!(flags & (DMG_NO_ARMOR|DMG_FORCED)) && target->Inventory != NULL && damage > 0)
 		{
 			int newdam = damage;
-			target->Inventory->AbsorbDamage (damage, mod, newdam);
+			newdam = target->AbsorbDamage(damage, mod);
 			damage = newdam;
 			if (damage <= 0)
 			{

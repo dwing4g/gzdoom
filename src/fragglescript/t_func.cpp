@@ -69,7 +69,6 @@
 #include "p_setup.h"
 #include "p_spec.h"
 #include "r_utility.h"
-#include "a_ammo.h"
 #include "math/cmath.h"
 #include "g_levellocals.h"
 
@@ -2478,14 +2477,7 @@ static void FS_TakeInventory (AActor *actor, const char * type, int amount)
 			// If it's not ammo, destroy it. Ammo needs to stick around, even
 			// when it's zero for the benefit of the weapons that use it and 
 			// to maintain the maximum ammo amounts a backpack might have given.
-			if (item->GetClass()->ParentClass != RUNTIME_CLASS(AAmmo))
-			{
-				item->Destroy ();
-			}
-			else
-			{
-				item->Amount = 0;
-			}
+			item->DepleteOrDestroy();
 		}
 	}
 }
@@ -2623,34 +2615,34 @@ void FParser::SF_MaxPlayerAmmo()
 		}
 		else if(t_argc >= 3)
 		{
-			AAmmo * iammo = (AAmmo*)players[playernum].mo->FindInventory(ammotype);
+			auto iammo = players[playernum].mo->FindInventory(ammotype);
 			amount = intvalue(t_argv[2]);
 			if(amount < 0) amount = 0;
 			if (!iammo) 
 			{
-				iammo = static_cast<AAmmo *>(Spawn (ammotype));
+				players[playernum].mo->GiveAmmo(ammotype, 1);
+				iammo = players[playernum].mo->FindInventory(ammotype);
 				iammo->Amount = 0;
-				iammo->AttachToOwner (players[playernum].mo);
 			}
 			iammo->MaxAmount = amount;
 
 
 			for (AInventory *item = players[playernum].mo->Inventory; item != NULL; item = item->Inventory)
 			{
-				if (item->IsKindOf(RUNTIME_CLASS(ABackpackItem)))
+				if (item->IsKindOf(PClass::FindClass(NAME_BackpackItem)))
 				{
 					if (t_argc>=4) amount = intvalue(t_argv[3]);
 					else amount*=2;
 					break;
 				}
 			}
-			iammo->BackpackMaxAmount=amount;
+			iammo->IntVar("BackpackMaxAmount") = amount;
 		}
 
 		t_return.type = svt_int;
 		AInventory * iammo = players[playernum].mo->FindInventory(ammotype);
 		if (iammo) t_return.value.i = iammo->MaxAmount;
-		else t_return.value.i = ((AAmmo*)GetDefaultByType(ammotype))->MaxAmount;
+		else t_return.value.i = ((AInventory*)GetDefaultByType(ammotype))->MaxAmount;
 	}
 }
 

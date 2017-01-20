@@ -56,6 +56,7 @@
 #include "r_utility.h"
 #include "cmdlib.h"
 #include "g_levellocals.h"
+#include "virtual.h"
 
 #include "../version.h"
 
@@ -1529,13 +1530,22 @@ void DBaseStatusBar::DrawPowerups ()
 		+ (ST_IsLatencyVisible() ? yshift : 0);
 	for (item = CPlayer->mo->Inventory; item != NULL; item = item->Inventory)
 	{
-		if (item->DrawPowerup (x, y))
+		IFVIRTUALPTR(item, AInventory, DrawPowerup)
 		{
-			x -= POWERUPICONSIZE;
-			if (x < -POWERUPICONSIZE*5)
+			VMValue params[3] = { item, x, y };
+			VMReturn ret;
+			int retv;
+
+			ret.IntAt(&retv);
+			GlobalVMStack.Call(func, params, 3, &ret, 1);
+			if (retv)
 			{
-				x = -20;
-				y += POWERUPICONSIZE*2;
+				x -= POWERUPICONSIZE;
+				if (x < -POWERUPICONSIZE * 5)
+				{
+					x = -20;
+					y += POWERUPICONSIZE * 2;
+				}
 			}
 		}
 	}
@@ -1663,6 +1673,15 @@ void DBaseStatusBar::ReceivedWeapon (AWeapon *weapon)
 {
 }
 
+DEFINE_ACTION_FUNCTION(_StatusBar, ReceivedWeapon)
+{
+	PARAM_PROLOGUE;
+	PARAM_POINTER(w, AWeapon);
+	StatusBar->ReceivedWeapon(w);
+	return 0;
+}
+
+
 void DBaseStatusBar::SerializeMessages(FSerializer &arc)
 {
 	arc.Array("hudmessages", Messages, 3, true);
@@ -1784,7 +1803,7 @@ AInventory *DBaseStatusBar::ValidateInvFirst (int numVisible) const
 //
 //============================================================================
 
-void DBaseStatusBar::GetCurrentAmmo (AAmmo *&ammo1, AAmmo *&ammo2, int &ammocount1, int &ammocount2) const
+void DBaseStatusBar::GetCurrentAmmo (AInventory *&ammo1, AInventory *&ammo2, int &ammocount1, int &ammocount2) const
 {
 	if (CPlayer->ReadyWeapon != NULL)
 	{

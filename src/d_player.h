@@ -29,7 +29,6 @@
 #include "d_ticcmd.h"
 #include "doomstat.h"
 
-#include "a_artifacts.h"
 #include "a_weapons.h"
 
 // The player data structure depends on a number
@@ -176,11 +175,6 @@ public:
 	// [SP] ViewBob Multiplier
 	double		ViewBob;
 
-};
-
-class APlayerChunk : public APlayerPawn
-{
-	DECLARE_CLASS (APlayerChunk, APlayerPawn)
 };
 
 //

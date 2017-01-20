@@ -45,13 +45,10 @@
 #include "autosegs.h"
 #include "v_text.h"
 #include "a_pickups.h"
-#include "a_artifacts.h"
-#include "a_weaponpiece.h"
 #include "d_player.h"
 #include "doomerrors.h"
 #include "fragglescript/t_fs.h"
 #include "a_keys.h"
-#include "a_health.h"
 
 // MACROS ------------------------------------------------------------------
 
@@ -1785,6 +1782,18 @@ PClassPointer::PClassPointer(PClass *restrict)
 
 //==========================================================================
 //
+// PClassPointer - isCompatible
+//
+//==========================================================================
+
+bool PClassPointer::isCompatible(PType *type)
+{
+	auto other = dyn_cast<PClassPointer>(type);
+	return (other != nullptr && other->ClassRestriction->IsDescendantOf(ClassRestriction));
+}
+
+//==========================================================================
+//
 // PClassPointer :: IsMatch
 //
 //==========================================================================
@@ -2609,6 +2618,27 @@ PField::PField(FName name, PType *type, DWORD flags, size_t offset, int bitvalue
 	else BitValue = -1;
 }
 
+/* PProperty *****************************************************************/
+
+IMPLEMENT_CLASS(PProperty, false, false)
+
+//==========================================================================
+//
+// PField - Default Constructor
+//
+//==========================================================================
+
+PProperty::PProperty()
+	: PSymbol(NAME_None)
+{
+}
+
+PProperty::PProperty(FName name, TArray<PField *> &fields)
+	: PSymbol(name)
+{
+	Variables = std::move(fields);
+}
+
 /* PPrototype *************************************************************/
 
 IMPLEMENT_CLASS(PPrototype, false, false)
@@ -3094,8 +3124,6 @@ PClass *ClassReg::RegisterClass()
 		&PClass::RegistrationInfo,
 		&PClassActor::RegistrationInfo,
 		&PClassInventory::RegistrationInfo,
-		&PClassHealth::RegistrationInfo,
-		&PClassPuzzleItem::RegistrationInfo,
 		&PClassWeapon::RegistrationInfo,
 		&PClassPlayerPawn::RegistrationInfo,
 		&PClassType::RegistrationInfo,
@@ -3234,7 +3262,7 @@ DObject *PClass::CreateNew() const
 
 	ConstructNative (mem);
 	((DObject *)mem)->SetClass (const_cast<PClass *>(this));
-	InitializeSpecials(mem);
+	InitializeSpecials(mem, Defaults);
 	return (DObject *)mem;
 }
 
@@ -3246,7 +3274,7 @@ DObject *PClass::CreateNew() const
 //
 //==========================================================================
 
-void PClass::InitializeSpecials(void *addr) const
+void PClass::InitializeSpecials(void *addr, void *defaults) const
 {
 	// Once we reach a native class, we can stop going up the family tree,
 	// since native classes handle initialization natively.
@@ -3255,10 +3283,10 @@ void PClass::InitializeSpecials(void *addr) const
 		return;
 	}
 	assert(ParentClass != NULL);
-	ParentClass->InitializeSpecials(addr);
+	ParentClass->InitializeSpecials(addr, defaults);
 	for (auto tao : SpecialInits)
 	{
-		tao.first->InitializeValue((BYTE*)addr + tao.second, Defaults == nullptr? nullptr : Defaults + tao.second);
+		tao.first->InitializeValue((char*)addr + tao.second, defaults == nullptr? nullptr : ((char*)defaults) + tao.second);
 	}
 }
 
@@ -3315,9 +3343,24 @@ void PClass::InitializeDefaults()
 {
 	assert(Defaults == NULL);
 	Defaults = (BYTE *)M_Malloc(Size);
+
+	// run the constructor on the defaults to set the vtbl pointer which is needed to run class-aware functions on them.
+	// Temporarily setting bSerialOverride prevents linking into the thinker chains.
+	auto s = DThinker::bSerialOverride;
+	DThinker::bSerialOverride = true;
+	ConstructNative(Defaults);
+	DThinker::bSerialOverride = s;
+	// We must unlink the defaults from the class list because it's just a static block of data to the engine.
+	DObject *optr = (DObject*)Defaults;
+	GC::Root = optr->ObjNext;
+	optr->ObjNext = nullptr;
+	optr->SetClass(this);
+
+
+	// Copy the defaults from the parent but leave the DObject part alone because it contains important data.
 	if (ParentClass->Defaults != NULL)
 	{
-		memcpy(Defaults, ParentClass->Defaults, ParentClass->Size);
+		memcpy(Defaults + sizeof(DObject), ParentClass->Defaults + sizeof(DObject), ParentClass->Size - sizeof(DObject));
 		if (Size > ParentClass->Size)
 		{
 			memset(Defaults + ParentClass->Size, 0, Size - ParentClass->Size);
@@ -3325,14 +3368,14 @@ void PClass::InitializeDefaults()
 	}
 	else
 	{
-		memset(Defaults, 0, Size);
+		memset(Defaults + sizeof(DObject), 0, Size - sizeof(DObject));
 	}
 
 	if (bRuntimeClass)
 	{
 		// Copy parent values from the parent defaults.
 		assert(ParentClass != NULL);
-		ParentClass->InitializeSpecials(Defaults);
+		ParentClass->InitializeSpecials(Defaults, ParentClass->Defaults);
 
 		for (const PField *field : Fields)
 		{
@@ -3921,6 +3964,13 @@ PSymbol *PSymbolTable::AddSymbol (PSymbol *sym)
 	}
 	Symbols.Insert(sym->SymbolName, sym);
 	return sym;
+}
+
+void PSymbolTable::RemoveSymbol(PSymbol *sym)
+{
+	auto mysym = Symbols.CheckKey(sym->SymbolName);
+	if (mysym == nullptr || *mysym != sym) return;
+	Symbols.Remove(sym->SymbolName);
 }
 
 PSymbol *PSymbolTable::ReplaceSymbol(PSymbol *newsym)

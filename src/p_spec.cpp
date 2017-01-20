@@ -394,9 +394,10 @@ void P_PlayerInSpecialSector (player_t *player, sector_t * sector)
 		// Allow subclasses. Better would be to implement it as armor and let that reduce
 		// the damage as part of the normal damage procedure. Unfortunately, I don't have
 		// different damage types yet, so that's not happening for now.
+		auto pitype = PClass::FindActor(NAME_PowerIronFeet);
 		for (ironfeet = player->mo->Inventory; ironfeet != NULL; ironfeet = ironfeet->Inventory)
 		{
-			if (ironfeet->IsKindOf (RUNTIME_CLASS(APowerIronFeet)))
+			if (ironfeet->IsKindOf(pitype))
 				break;
 		}
 
@@ -578,9 +579,10 @@ void P_PlayerOnSpecialFlat (player_t *player, int floorType)
 
 		if (Terrains[floorType].AllowProtection)
 		{
+			auto pitype = PClass::FindActor(NAME_PowerIronFeet);
 			for (ironfeet = player->mo->Inventory; ironfeet != NULL; ironfeet = ironfeet->Inventory)
 			{
-				if (ironfeet->IsKindOf (RUNTIME_CLASS(APowerIronFeet)))
+				if (ironfeet->IsKindOf (pitype))
 					break;
 			}
 		}
@@ -845,12 +847,12 @@ void DWallLightTransfer::DoTransfer (short lightlevel, int target, BYTE flags)
 //---------------------------------------------------------------------------
 // Upper stacks go in the top sector. Lower stacks go in the bottom sector.
 
-static void SetupFloorPortal (AStackPoint *point)
+static void SetupFloorPortal (AActor *point)
 {
 	NActorIterator it (NAME_LowerStackLookOnly, point->tid);
 	sector_t *Sector = point->Sector;
-	ASkyViewpoint *skyv = static_cast<ASkyViewpoint*>(it.Next());
-	if (skyv != NULL)
+	auto skyv = it.Next();
+	if (skyv != nullptr)
 	{
 		skyv->target = point;
 		if (Sector->GetAlpha(sector_t::floor) == 1.)
@@ -860,12 +862,12 @@ static void SetupFloorPortal (AStackPoint *point)
 	}
 }
 
-static void SetupCeilingPortal (AStackPoint *point)
+static void SetupCeilingPortal (AActor *point)
 {
 	NActorIterator it (NAME_UpperStackLookOnly, point->tid);
 	sector_t *Sector = point->Sector;
-	ASkyViewpoint *skyv = static_cast<ASkyViewpoint*>(it.Next());
-	if (skyv != NULL)
+	auto skyv = it.Next();
+	if (skyv != nullptr)
 	{
 		skyv->target = point;
 		if (Sector->GetAlpha(sector_t::ceiling) == 1.)
@@ -877,9 +879,9 @@ static void SetupCeilingPortal (AStackPoint *point)
 
 void P_SetupPortals()
 {
-	TThinkerIterator<AStackPoint> it;
-	AStackPoint *pt;
-	TArray<AStackPoint *> points;
+	TThinkerIterator<AActor> it("StackPoint");
+	AActor *pt;
+	TArray<AActor *> points;
 
 	while ((pt = it.Next()))
 	{
@@ -897,21 +899,21 @@ void P_SetupPortals()
 	}
 	// the semantics here are incredibly lax so the final setup can only be done once all portals have been created,
 	// because later stackpoints will happily overwrite info in older ones, if there are multiple links.
-	for (auto &s : sectorPortals)
+	for (auto &s : level.sectorPortals)
 	{
 		if (s.mType == PORTS_STACKEDSECTORTHING && s.mSkybox)
 		{
-			for (auto &ss : sectorPortals)
+			for (auto &ss : level.sectorPortals)
 			{
 				if (ss.mType == PORTS_STACKEDSECTORTHING && ss.mSkybox == s.mSkybox->target)
 				{
-					s.mPartner = unsigned((&ss) - &sectorPortals[0]);
+					s.mPartner = unsigned((&ss) - &level.sectorPortals[0]);
 				}
 			}
 		}
 	}
 	// Now we can finally set the displacement and delete the stackpoint reference.
-	for (auto &s : sectorPortals)
+	for (auto &s : level.sectorPortals)
 	{
 		if (s.mType == PORTS_STACKEDSECTORTHING && s.mSkybox)
 		{
@@ -932,7 +934,7 @@ static void SetPortal(sector_t *sector, int plane, unsigned pnum, double alpha)
 			if (sector->GetAlpha(sector_t::ceiling) == 1.)
 				sector->SetAlpha(sector_t::ceiling, alpha);
 
-			if (sectorPortals[pnum].mFlags & PORTSF_SKYFLATONLY)
+			if (level.sectorPortals[pnum].mFlags & PORTSF_SKYFLATONLY)
 				sector->SetTexture(sector_t::ceiling, skyflatnum);
 		}
 	}
@@ -945,7 +947,7 @@ static void SetPortal(sector_t *sector, int plane, unsigned pnum, double alpha)
 		if (sector->GetAlpha(sector_t::floor) == 1.)
 			sector->SetAlpha(sector_t::floor, alpha);
 
-		if (sectorPortals[pnum].mFlags & PORTSF_SKYFLATONLY)
+		if (level.sectorPortals[pnum].mFlags & PORTSF_SKYFLATONLY)
 			sector->SetTexture(sector_t::floor, skyflatnum);
 	}
 }
@@ -1027,7 +1029,7 @@ void P_SpawnPortal(line_t *line, int sectortag, int plane, int bytealpha, int li
 
 // This searches the viewpoint's sector
 // for a skybox line special, gets its tag and transfers the skybox to all tagged sectors.
-void P_SpawnSkybox(ASkyViewpoint *origin)
+void P_SpawnSkybox(AActor *origin)
 {
 	sector_t *Sector = origin->Sector;
 	if (Sector == NULL)
@@ -1260,8 +1262,8 @@ void P_SpawnSpecials (void)
 	P_SpawnFriction();	// phares 3/12/98: New friction model using linedefs
 	P_SpawnPushers();	// phares 3/20/98: New pusher model using linedefs
 
-	TThinkerIterator<ASkyCamCompat> it2;
-	ASkyCamCompat *pt2;
+	TThinkerIterator<AActor> it2("SkyCamCompat");
+	AActor *pt2;
 	while ((pt2 = it2.Next()))
 	{
 		P_SpawnSkybox(pt2);

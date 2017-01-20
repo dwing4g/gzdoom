@@ -84,6 +84,7 @@
 #include "r_utility.h"
 #include "p_spec.h"
 #include "serializer.h"
+#include "virtual.h"
 
 #include "gi.h"
 
@@ -1096,8 +1097,8 @@ void G_WorldDone (void)
 		// Strife needs a special case here to choose between good and sad ending. Bad is handled elsewhere.
 		if (endsequence == NAME_Inter_Strife)
 		{
-			if (players[0].mo->FindInventory (QuestItemClasses[24]) ||
-				players[0].mo->FindInventory (QuestItemClasses[27]))
+			if (players[0].mo->FindInventory (NAME_QuestItem25) ||
+				players[0].mo->FindInventory (NAME_QuestItem28))
 			{
 				endsequence = NAME_Inter_Strife_Good;
 			}
@@ -1313,7 +1314,13 @@ void G_FinishTravel ()
 		{
 			inv->ChangeStatNum (STAT_INVENTORY);
 			inv->LinkToWorld (nullptr);
-			inv->Travelled ();
+
+			IFVIRTUALPTR(inv, AInventory, Travelled)
+			{
+				VMValue params[1] = { inv };
+				VMFrameStack stack;
+				GlobalVMStack.Call(func, params, 1, nullptr, 0, nullptr);
+			}
 		}
 		if (ib_compatflags & BCOMPATF_RESETPLAYERSPEED)
 		{
@@ -1890,6 +1897,7 @@ DEFINE_FIELD_BIT(FLevelLocals, flags2, checkswitchrange, LEVEL2_CHECKSWITCHRANGE
 DEFINE_FIELD_BIT(FLevelLocals, flags2, polygrind, LEVEL2_POLYGRIND)
 DEFINE_FIELD_BIT(FLevelLocals, flags2, nomonsters, LEVEL2_NOMONSTERS)
 DEFINE_FIELD_BIT(FLevelLocals, flags2, frozen, LEVEL2_FROZEN)
+DEFINE_FIELD_BIT(FLevelLocals, flags2, infinite_flight, LEVEL2_INFINITE_FLIGHT)
 
 //==========================================================================
 //

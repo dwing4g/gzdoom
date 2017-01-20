@@ -69,10 +69,8 @@
 #include "thingdef.h"
 #include "d_player.h"
 #include "virtual.h"
-#include "a_armor.h"
-#include "a_ammo.h"
-#include "a_health.h"
 #include "g_levellocals.h"
+#include "a_morph.h"
 
 // MACROS ------------------------------------------------------------------
 
@@ -791,13 +789,9 @@ bool AActor::GiveInventory(PClassInventory *type, int amount, bool givecheat)
 	item->ClearCounters();
 	if (!givecheat || amount > 0)
 	{
-		if (type->IsDescendantOf (RUNTIME_CLASS(ABasicArmorPickup)))
+		if (type->IsDescendantOf (PClass::FindActor(NAME_BasicArmorPickup)) || type->IsDescendantOf(PClass::FindActor(NAME_BasicArmorBonus)))
 		{
-			static_cast<ABasicArmorPickup*>(item)->SaveAmount *= amount;
-		}
-		else if (type->IsDescendantOf (RUNTIME_CLASS(ABasicArmorBonus)))
-		{
-			static_cast<ABasicArmorBonus*>(item)->SaveAmount *= amount;
+			item->IntVar(NAME_SaveAmount) *= amount;
 		}
 		else
 		{
@@ -822,11 +816,13 @@ bool AActor::GiveInventory(PClassInventory *type, int amount, bool givecheat)
 	return result;
 }
 
-DEFINE_ACTION_FUNCTION(AActor, Inventory)
+DEFINE_ACTION_FUNCTION(AActor, GiveInventory)
 {
 	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_OBJECT_NOT_NULL(item, AInventory);
-	ACTION_RETURN_BOOL(self->UseInventory(item));
+	PARAM_CLASS(type, AInventory);
+	PARAM_INT(amount);
+	PARAM_BOOL_DEF(givecheat);
+	ACTION_RETURN_BOOL(self->GiveInventory(type, amount, givecheat));
 }
 
 
@@ -848,7 +844,13 @@ void AActor::RemoveInventory(AInventory *item)
 			if (inv == item)
 			{
 				*invp = item->Inventory;
-				item->DetachFromOwner();
+
+				IFVIRTUALPTR(item, AInventory, DetachFromOwner)
+				{
+					VMValue params[1] = { item };
+					GlobalVMStack.Call(func, params, 1, nullptr, 0, nullptr);
+				}
+
 				item->Owner = NULL;
 				item->Inventory = NULL;
 				break;
@@ -897,14 +899,11 @@ bool AActor::TakeInventory(PClassActor *itemclass, int amount, bool fromdecorate
 		result = true;
 	}
 
-	if (item->IsKindOf(RUNTIME_CLASS(AHexenArmor)))
-		return false;
-
 	// Do not take ammo if the "no take infinite/take as ammo depletion" flag is set
 	// and infinite ammo is on
 	if (notakeinfinite &&
 	((dmflags & DF_INFINITE_AMMO) || (player && player->cheats & CF_INFINITEAMMO)) &&
-		item->IsKindOf(RUNTIME_CLASS(AAmmo)))
+		item->IsKindOf(PClass::FindActor(NAME_Ammo)))
 	{
 		// Nothing to do here, except maybe res = false;? Would it make sense?
 		result = false;
@@ -918,6 +917,16 @@ bool AActor::TakeInventory(PClassActor *itemclass, int amount, bool fromdecorate
 	return result;
 }
 
+DEFINE_ACTION_FUNCTION(AActor, TakeInventory)
+{
+	PARAM_SELF_PROLOGUE(AActor);
+	PARAM_OBJECT_NOT_NULL(item, AInventory);
+	PARAM_INT(amount);
+	PARAM_BOOL_DEF(fromdecorate);
+	PARAM_BOOL_DEF(notakeinfinite);
+	self->RemoveInventory(item);
+	return 0;
+}
 
 //============================================================================
 //
@@ -1029,12 +1038,14 @@ DEFINE_ACTION_FUNCTION(AActor, UseInventory)
 
 AInventory *AActor::DropInventory (AInventory *item)
 {
-	AInventory *drop = item->CallCreateTossable ();
-
-	if (drop == NULL)
+	AInventory *drop = nullptr;
+	IFVIRTUALPTR(item, AInventory, CreateTossable)
 	{
-		return NULL;
+		VMValue params[1] = { (DObject*)this };
+		VMReturn ret((void**)&drop);
+		GlobalVMStack.Call(func, params, 1, &ret, 1, nullptr);
 	}
+	if (drop == nullptr) return NULL;
 	drop->SetOrigin(PosPlusZ(10.), false);
 	drop->Angles.Yaw = Angles.Yaw;
 	drop->VelFromAngle(5.);
@@ -1086,9 +1097,9 @@ AInventory *AActor::FindInventory (PClassActor *type, bool subclass)
 	return item;
 }
 
-AInventory *AActor::FindInventory (FName type)
+AInventory *AActor::FindInventory (FName type, bool subclass)
 {
-	return FindInventory(PClass::FindActor(type));
+	return FindInventory(PClass::FindActor(type), subclass);
 }
 
 DEFINE_ACTION_FUNCTION(AActor, FindInventory)
@@ -1159,7 +1170,7 @@ bool AActor::GiveAmmo (PClassInventory *type, int amount)
 DEFINE_ACTION_FUNCTION(AActor, GiveAmmo)
 {
 	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_CLASS(type, AAmmo);
+	PARAM_CLASS(type, AInventory);
 	PARAM_INT(amount);
 	ACTION_RETURN_BOOL(self->GiveAmmo(type, amount));
 }
@@ -1199,24 +1210,8 @@ void AActor::ClearInventory()
 		AInventory *inv = *invp;
 		if (!(inv->ItemFlags & IF_UNDROPPABLE))
 		{
-			// For the sake of undroppable weapons, never remove ammo once
-			// it has been acquired; just set its amount to 0.
-			if (inv->IsKindOf(RUNTIME_CLASS(AAmmo)))
-			{
-				AAmmo *ammo = static_cast<AAmmo*>(inv);
-				ammo->Amount = 0;
-				invp = &inv->Inventory;
-			}
-			else
-			{
-				inv->Destroy ();
-			}
-		}
-		else if (inv->GetClass() == RUNTIME_CLASS(AHexenArmor))
-		{
-			AHexenArmor *harmor = static_cast<AHexenArmor *> (inv);
-			harmor->Slots[3] = harmor->Slots[2] = harmor->Slots[1] = harmor->Slots[0] = 0;
-			invp = &inv->Inventory;
+			inv->DepleteOrDestroy();
+			if (!(inv->ObjectFlags & OF_EuthanizeMe)) invp = &inv->Inventory;	// was only depleted so advance the pointer manually.
 		}
 		else
 		{
@@ -1309,6 +1304,122 @@ void AActor::ObtainInventory (AActor *other)
 		item->Owner = this;
 		item = item->Inventory;
 	}
+}
+
+DEFINE_ACTION_FUNCTION(AActor, ObtainInventory)
+{
+	PARAM_SELF_PROLOGUE(AActor);
+	PARAM_OBJECT(other, AActor);
+	self->ObtainInventory(other);
+	return 0;
+}
+
+//---------------------------------------------------------------------------
+//
+// FUNC P_GiveBody
+//
+// Returns false if the body isn't needed at all.
+//
+//---------------------------------------------------------------------------
+
+bool P_GiveBody(AActor *actor, int num, int max)
+{
+	if (actor->health <= 0 || (actor->player != NULL && actor->player->playerstate == PST_DEAD))
+	{ // Do not heal dead things.
+		return false;
+	}
+
+	player_t *player = actor->player;
+
+	num = clamp(num, -65536, 65536);	// prevent overflows for bad values
+	if (player != NULL)
+	{
+		// Max is 0 by default, preserving default behavior for P_GiveBody()
+		// calls while supporting health pickups.
+		if (max <= 0)
+		{
+			max = static_cast<APlayerPawn*>(actor)->GetMaxHealth() + player->mo->stamina;
+			// [MH] First step in predictable generic morph effects
+			if (player->morphTics)
+			{
+				if (player->MorphStyle & MORPH_FULLHEALTH)
+				{
+					if (!(player->MorphStyle & MORPH_ADDSTAMINA))
+					{
+						max -= player->mo->stamina;
+					}
+				}
+				else // old health behaviour
+				{
+					max = MAXMORPHHEALTH;
+					if (player->MorphStyle & MORPH_ADDSTAMINA)
+					{
+						max += player->mo->stamina;
+					}
+				}
+			}
+		}
+		// [RH] For Strife: A negative body sets you up with a percentage
+		// of your full health.
+		if (num < 0)
+		{
+			num = max * -num / 100;
+			if (player->health < num)
+			{
+				player->health = num;
+				actor->health = num;
+				return true;
+			}
+		}
+		else if (num > 0)
+		{
+			if (player->health < max)
+			{
+				num = int(num * G_SkillProperty(SKILLP_HealthFactor));
+				if (num < 1) num = 1;
+				player->health += num;
+				if (player->health > max)
+				{
+					player->health = max;
+				}
+				actor->health = player->health;
+				return true;
+			}
+		}
+	}
+	else
+	{
+		// Parameter value for max is ignored on monsters, preserving original
+		// behaviour of health as well as on existing calls to P_GiveBody().
+		max = actor->SpawnHealth();
+		if (num < 0)
+		{
+			num = max * -num / 100;
+			if (actor->health < num)
+			{
+				actor->health = num;
+				return true;
+			}
+		}
+		else if (actor->health < max)
+		{
+			actor->health += num;
+			if (actor->health > max)
+			{
+				actor->health = max;
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
+DEFINE_ACTION_FUNCTION(AActor, GiveBody)
+{
+	PARAM_SELF_PROLOGUE(AActor);
+	PARAM_INT(num);
+	PARAM_INT_DEF(max);
+	ACTION_RETURN_BOOL(P_GiveBody(self, num, max));
 }
 
 //============================================================================
@@ -3510,6 +3621,38 @@ bool AActor::AdjustReflectionAngle (AActor *thing, DAngle &angle)
 	return false;
 }
 
+int AActor::AbsorbDamage(int damage, FName dmgtype)
+{
+	for (AInventory *item = Inventory; item != nullptr; item = item->Inventory)
+	{
+		IFVIRTUALPTR(item, AInventory, AbsorbDamage)
+		{
+			VMValue params[4] = { item, damage, dmgtype.GetIndex(), &damage };
+			GlobalVMStack.Call(func, params, 4, nullptr, 0, nullptr);
+		}
+	}
+	return damage;
+}
+
+void AActor::AlterWeaponSprite(visstyle_t *vis)
+{
+	int changed = 0;
+	TArray<AInventory *> items;
+	// This needs to go backwards through the items but the list has no backlinks.
+	for (AInventory *item = Inventory; item != nullptr; item = item->Inventory)
+	{
+		items.Push(item);
+	}
+	for(int i=items.Size()-1;i>=0;i--)
+	{
+		IFVIRTUALPTR(items[i], AInventory, AlterWeaponSprite)
+		{
+			VMValue params[3] = { items[i], vis, &changed };
+			GlobalVMStack.Call(func, params, 3, nullptr, 0, nullptr);
+		}
+	}
+}
+
 void AActor::PlayActiveSound ()
 {
 	if (ActiveSound && !S_IsActorPlayingSomething (this, CHAN_VOICE, -1))
@@ -3804,7 +3947,11 @@ void AActor::Tick ()
 		// by the order in the inventory, not the order in the thinker table
 		while (item != NULL && item->Owner == this)
 		{
-			item->CallDoEffect();
+			IFVIRTUALPTR(item, AInventory, DoEffect)
+			{
+				VMValue params[1] = { item };
+				GlobalVMStack.Call(func, params, 1, nullptr, 0, nullptr);
+			}
 			item = item->Inventory;
 		}
 
@@ -4832,6 +4979,13 @@ void AActor::MarkPrecacheSounds() const
 	CrushPainSound.MarkUsed();
 }
 
+DEFINE_ACTION_FUNCTION(AActor, MarkPrecacheSounds)
+{
+	PARAM_SELF_PROLOGUE(AActor);
+	self->MarkPrecacheSounds();
+	return 0;
+}
+
 bool AActor::isFast()
 {
 	if (flags5&MF5_ALWAYSFAST) return true;
@@ -5224,15 +5378,13 @@ APlayerPawn *P_SpawnPlayer (FPlayerStart *mthing, int playernum, int flags)
 		oldactor->DestroyAllInventory();
 	}
 	// [BC] Handle temporary invulnerability when respawned
-	if ((state == PST_REBORN || state == PST_ENTER) &&
-		(dmflags2 & DF2_YES_RESPAWN_INVUL) &&
-		(multiplayer || alwaysapplydmflags))
+	if (state == PST_REBORN || state == PST_ENTER)
 	{
-		APowerup *invul = static_cast<APowerup*>(p->mo->GiveInventoryType (RUNTIME_CLASS(APowerInvulnerable)));
-		invul->EffectTics = 3*TICRATE;
-		invul->BlendColor = 0;			// don't mess with the view
-		invul->ItemFlags |= IF_UNDROPPABLE;	// Don't drop this
-		p->mo->effects |= FX_RESPAWNINVUL;	// [RH] special effect
+		IFVIRTUALPTR(p->mo, APlayerPawn, OnRespawn)
+		{
+			VMValue param = p->mo;
+			GlobalVMStack.Call(func, &param, 1, nullptr, 0);
+		}
 	}
 
 	if (StatusBar != NULL && (playernum == consoleplayer || StatusBar->GetPlayer() == playernum))
@@ -5539,9 +5691,10 @@ AActor *P_SpawnMapThing (FMapThing *mthing, int position)
 	// [RH] Other things that shouldn't be spawned depending on dmflags
 	if (deathmatch || alwaysapplydmflags)
 	{
+		// Fixme: This needs to be done differently, it's quite broken.
 		if (dmflags & DF_NO_HEALTH)
 		{
-			if (i->IsDescendantOf (RUNTIME_CLASS(AHealth)))
+			if (i->IsDescendantOf (PClass::FindActor(NAME_Health)))
 				return NULL;
 			if (i->TypeName == NAME_Berserk)
 				return NULL;
@@ -5555,7 +5708,7 @@ AActor *P_SpawnMapThing (FMapThing *mthing, int position)
 		}
 		if (dmflags & DF_NO_ARMOR)
 		{
-			if (i->IsDescendantOf (RUNTIME_CLASS(AArmor)))
+			if (i->IsDescendantOf (PClass::FindActor(NAME_Armor)))
 				return NULL;
 			if (i->TypeName == NAME_Megasphere)
 				return NULL;
@@ -7445,10 +7598,13 @@ int AActor::GetModifiedDamage(FName damagetype, int damage, bool passive)
 	auto inv = Inventory;
 	while (inv != nullptr)
 	{
-		inv->ModifyDamage(damage, damagetype, damage, passive);
+		IFVIRTUALPTR(inv, AInventory, ModifyDamage)
+		{
+			VMValue params[5] = { (DObject*)inv, damage, int(damagetype), &damage, passive };
+			GlobalVMStack.Call(func, params, 5, nullptr, 0, nullptr);
+		}
 		inv = inv->Inventory;
 	}
-
 	return damage;
 }
 

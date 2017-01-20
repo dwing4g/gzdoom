@@ -376,7 +376,9 @@ static bool LoadGLSegs(FileReader * lump)
 			{							// check for gl-vertices
 				segs[i].v1 = &level.vertexes[checkGLVertex3(LittleLong(ml->v1))];
 				segs[i].v2 = &level.vertexes[checkGLVertex3(LittleLong(ml->v2))];
-				segs[i].PartnerSeg = LittleLong(ml->partner) == 0xffffffffu? nullptr : &segs[LittleLong(ml->partner)];
+
+				const DWORD partner = LittleLong(ml->partner);
+				segs[i].PartnerSeg = DWORD_MAX == partner ? nullptr : &segs[partner];
 	
 				if(ml->linedef != 0xffff) // skip minisegs 
 				{
@@ -1454,13 +1456,12 @@ void P_SetRenderSector()
 				segs[i].PartnerSeg = segs[i].PartnerSeg->PartnerSeg = nullptr;
 			}
 		}
-
-		for (i = 0; i < numsegs; i++)
+	}
+	for (i = 0; i < numsegs; i++)
+	{
+		if (segs[i].PartnerSeg != nullptr && segs[i].PartnerSeg->PartnerSeg != &segs[i])
 		{
-			if (segs[i].PartnerSeg != nullptr && segs[i].PartnerSeg->PartnerSeg != &segs[i])
-			{
-				segs[i].PartnerSeg = nullptr;
-			}
+			segs[i].PartnerSeg = nullptr;
 		}
 	}
 

@@ -120,6 +120,10 @@ void ZCCCompiler::ProcessClass(ZCC_Class *cnode, PSymbolTreeNode *treenode)
 			}
 			break;
 
+		case AST_Property:
+			cls->Properties.Push(static_cast<ZCC_Property *>(node));
+			break;
+
 		case AST_VarDeclarator: 
 			cls->Fields.Push(static_cast<ZCC_VarDeclarator *>(node)); 
 			break;
@@ -396,6 +400,7 @@ int ZCCCompiler::Compile()
 	CreateStructTypes();
 	CompileAllConstants();
 	CompileAllFields();
+	CompileAllProperties();
 	InitDefaults();
 	InitFunctions();
 	CompileStates();
@@ -1269,6 +1274,7 @@ bool ZCCCompiler::CompileFields(PStruct *type, TArray<ZCC_VarDeclarator *> &Fiel
 		if (field->Flags & ZCC_Protected) varflags |= VARF_Protected;
 		if (field->Flags & ZCC_Deprecated) varflags |= VARF_Deprecated;
 		if (field->Flags & ZCC_ReadOnly) varflags |= VARF_ReadOnly;
+		if (field->Flags & ZCC_Transient) varflags |= VARF_Transient;
 
 		if (field->Flags & ZCC_Native)
 		{
@@ -1277,7 +1283,7 @@ bool ZCCCompiler::CompileFields(PStruct *type, TArray<ZCC_VarDeclarator *> &Fiel
 
 		if (field->Flags & ZCC_Meta)
 		{
-			varflags |= VARF_Static|VARF_ReadOnly;	// metadata implies readonly
+			varflags |= VARF_Meta | VARF_Static | VARF_ReadOnly;	// metadata implies readonly
 			if (!(field->Flags & ZCC_Native))
 			{
 				// Non-native meta data is not implemented yet and requires some groundwork in the class copy code.
@@ -1303,7 +1309,7 @@ bool ZCCCompiler::CompileFields(PStruct *type, TArray<ZCC_VarDeclarator *> &Fiel
 				
 				if (varflags & VARF_Native)
 				{
-					auto querytype = (varflags & VARF_Static) ? type->GetClass() : type;
+					auto querytype = (varflags & VARF_Meta) ? type->GetClass() : type;
 					fd = FindField(querytype, FName(name->Name).GetChars());
 					if (fd == nullptr)
 					{
@@ -1335,6 +1341,76 @@ bool ZCCCompiler::CompileFields(PStruct *type, TArray<ZCC_VarDeclarator *> &Fiel
 		Fields.Delete(0);
 	}
 	return Fields.Size() == 0;
+}
+
+//==========================================================================
+//
+// ZCCCompiler :: CompileAllProperties
+//
+// builds the property lists of all actor classes
+//
+//==========================================================================
+
+void ZCCCompiler::CompileAllProperties()
+{
+	for (auto c : Classes)
+	{
+		if (c->Properties.Size() > 0)
+			CompileProperties(c->Type(), c->Properties, c->Type()->TypeName);
+	}
+}
+
+//==========================================================================
+//
+// ZCCCompiler :: CompileProperties
+//
+// builds the internal structure of a single class or struct
+//
+//==========================================================================
+
+bool ZCCCompiler::CompileProperties(PClass *type, TArray<ZCC_Property *> &Properties, FName prefix)
+{
+	if (!type->IsKindOf(RUNTIME_CLASS(PClassActor)))
+	{
+		Error(Properties[0], "Properties can only be defined for actors");
+		return false;
+	}
+	for(auto p : Properties)
+	{
+		TArray<PField *> fields;
+		ZCC_Identifier *id = (ZCC_Identifier *)p->Body;
+
+		if (FName(p->NodeName) == FName("prefix") && Wads.GetLumpFile(Lump) == 0)
+		{
+			// only for internal definitions: Allow setting a prefix. This is only for compatiblity with the old DECORATE property parser, but not for general use.
+			prefix = id->Id;
+		}
+		else
+		{
+			do
+			{
+				auto f = dyn_cast<PField>(type->Symbols.FindSymbol(id->Id, true));
+				if (f == nullptr)
+				{
+					Error(id, "Variable %s not found in %s", FName(id->Id).GetChars(), type->TypeName.GetChars());
+				}
+				fields.Push(f);
+				id = (ZCC_Identifier*)id->SiblingNext;
+			} while (id != p->Body);
+		}
+
+		FString qualifiedname;
+		// Store the full qualified name and prepend some 'garbage' to the name so that no conflicts with other symbol types can happen.
+		// All these will be removed from the symbol table after the compiler finishes to free up the allocated space.
+		if (prefix == NAME_None) qualifiedname.Format("@property@%s", FName(p->NodeName).GetChars());
+		else qualifiedname.Format("@property@%s.%s", prefix.GetChars(), FName(p->NodeName).GetChars());
+		fields.ShrinkToFit();
+		if (!type->Symbols.AddSymbol(new PProperty(qualifiedname, fields)))
+		{
+			Error(id, "Unable to add property %s to class %s", FName(p->NodeName).GetChars(), type->TypeName.GetChars());
+		}
+	}
+	return true;
 }
 
 //==========================================================================
@@ -1841,6 +1917,92 @@ void ZCCCompiler::DispatchProperty(FPropertyInfo *prop, ZCC_PropertyStmt *proper
 	}
 }
 
+
+//==========================================================================
+//
+// Parses an actor property's parameters and calls the handler
+//
+//==========================================================================
+
+void ZCCCompiler::DispatchScriptProperty(PProperty *prop, ZCC_PropertyStmt *property, AActor *defaults, Baggage &bag)
+{
+	ZCC_ExprConstant one;
+	unsigned parmcount = 1;
+	ZCC_TreeNode *x = property->Values;
+	while (x->SiblingNext != property->Values)
+	{
+		x = x->SiblingNext;
+		parmcount++;
+	}
+	if (parmcount == 0 && prop->Variables.Size() == 1 && prop->Variables[0]->Type == TypeBool)
+	{
+		// allow boolean properties to have the parameter omitted
+		one.Operation = PEX_ConstValue;
+		one.NodeType = AST_ExprConstant;
+		one.Type = TypeBool;
+		one.IntVal = 1;
+		property->Values = &one;
+	}
+	else if (parmcount != prop->Variables.Size())
+	{
+		Error(x, "Argument count mismatch: Got %u, expected %u", parmcount, prop->Variables.Size());
+		return;
+	}
+
+	auto values = Simplify(property->Values, &bag.Info->Symbols, true);	// need to do this before the loop so that we can find the head node again.
+	auto exp = values;
+	for (auto f : prop->Variables)
+	{
+		void *addr;
+
+		if (f->Flags & VARF_Meta)
+		{
+			addr = ((char*)bag.Info) + f->Offset;
+		}
+		else
+		{
+			addr = ((char*)defaults) + f->Offset;
+		}
+
+		if (f->Type == TypeBool)
+		{
+			static_cast<PBool*>(f->Type)->SetValue(addr, !!GetInt(exp));
+		}
+		if (f->Type->IsKindOf(RUNTIME_CLASS(PInt)))
+		{
+			static_cast<PInt*>(f->Type)->SetValue(addr, GetInt(exp));
+		}
+		else if (f->Type->IsKindOf(RUNTIME_CLASS(PFloat)))
+		{
+			static_cast<PFloat*>(f->Type)->SetValue(addr, GetDouble(exp));
+		}
+		else if (f->Type->IsKindOf(RUNTIME_CLASS(PString)))
+		{
+			*(FString*)addr = GetString(exp);
+		}
+		else if (f->Type->IsKindOf(RUNTIME_CLASS(PClassPointer)))
+		{
+			auto clsname = GetString(exp);
+			auto cls = PClass::FindClass(clsname);
+			if (cls == nullptr)
+			{
+				cls = static_cast<PClassPointer*>(f->Type)->ClassRestriction->FindClassTentative(clsname);
+			}
+			else if (!cls->IsDescendantOf(static_cast<PClassPointer*>(f->Type)->ClassRestriction))
+			{
+				Error(property, "class %s is not compatible with property type %s", clsname, static_cast<PClassPointer*>(f->Type)->ClassRestriction->TypeName.GetChars());
+			}
+			*(PClass**)addr = cls;
+		}
+		else
+		{
+			Error(property, "unhandled property type %s", f->Type->DescriptiveName());
+		}
+		exp->ToErrorNode();	// invalidate after processing.
+		exp = static_cast<ZCC_Expression *>(exp->SiblingNext);
+	}
+}
+
 //==========================================================================
 //
 // Parses an actor property
@@ -1882,17 +2044,29 @@ void ZCCCompiler::ProcessDefaultProperty(PClassActor *cls, ZCC_PropertyStmt *pro
 
 	if (property != nullptr && property->category != CAT_INFO)
 	{
-		if (cls->IsDescendantOf(*property->cls))
+		auto pcls = PClass::FindActor(property->clsname);
+		if (cls->IsDescendantOf(pcls))
 		{
 			DispatchProperty(property, prop, (AActor *)bag.Info->Defaults, bag);
 		}
 		else
 		{
-			Error(prop, "'%s' requires an actor of type '%s'\n", propname.GetChars(), (*property->cls)->TypeName.GetChars());
+			Error(prop, "'%s' requires an actor of type '%s'\n", propname.GetChars(), pcls->TypeName.GetChars());
 		}
 	}
 	else
 	{
+		propname.Insert(0, "@property@");
+		FName name(propname, true);
+		if (name != NAME_None)
+		{
+			auto propp = dyn_cast<PProperty>(cls->Symbols.FindSymbol(name, true));
+			if (propp != nullptr)
+			{
+				DispatchScriptProperty(propp, prop, (AActor *)bag.Info->Defaults, bag);
+				return;
+			}
+		}
 		Error(prop, "'%s' is an unknown actor property\n", propname.GetChars());
 	}
 }
@@ -2304,20 +2478,12 @@ void ZCCCompiler::CompileFunction(ZCC_StructWork *c, ZCC_FuncDeclarator *f, bool
 		PFunction *virtsym = nullptr;
 		if (cls != nullptr && cls->ParentClass != nullptr) virtsym = dyn_cast<PFunction>(cls->ParentClass->Symbols.FindSymbol(FName(f->Name), true));
 		unsigned vindex = ~0u;
-		if (virtsym != nullptr) vindex = virtsym->Variants[0].Implementation->VirtualIndex;
-
-		if (vindex != ~0u || (varflags & VARF_Virtual))
+		if (virtsym != nullptr)
 		{
-			// Todo: Check if the declaration is legal. 
-
-			// First step: compare prototypes - if they do not match the virtual base method does not apply.
-
-			// Second step: Check flags. Possible cases:
-			// 1. Base method is final: Error.
-			// 2. This method is override: Base virtual method must exist
-			// 3. This method is virtual but not override: Base may not have a virtual method with the same prototype.
+			auto imp = virtsym->Variants[0].Implementation;
+			if (imp != nullptr) vindex = imp->VirtualIndex;
+			else Error(f, "Virtual base function %s not found in %s", FName(f->Name).GetChars(), cls->ParentClass->TypeName.GetChars());
 		}
-
 
 		if (!(f->Flags & ZCC_Native))
 		{
@@ -3175,16 +3341,9 @@ FxExpression *ZCCCompiler::ConvertNode(ZCC_TreeNode *ast)
 		{
 			return new FxReturnStatement(nullptr, *ast);
 		}
-		else if (args.Size() == 1)
-		{
-			auto arg = args[0];
-			args[0] = nullptr;
-			return new FxReturnStatement(arg, *ast);
-		}
 		else
 		{
-			Error(ast, "Return with multiple values not implemented yet.");
-			return new FxReturnStatement(nullptr, *ast);
+			return new FxReturnStatement(args, *ast);
 		}
 	}
 

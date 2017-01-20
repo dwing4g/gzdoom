@@ -1,6 +1,5 @@
 #include "info.h"
 #include "a_pickups.h"
-#include "a_artifacts.h"
 #include "gstrings.h"
 #include "p_local.h"
 #include "gi.h"
@@ -14,9 +13,9 @@
 #include "serializer.h"
 #include "p_enemy.h"
 #include "d_player.h"
-#include "a_armor.h"
 #include "r_data/sprites.h"
 #include "g_levellocals.h"
+#include "virtual.h"
 
 static FRandom pr_morphmonst ("MorphMonster");
 
@@ -58,9 +57,9 @@ bool P_MorphPlayer (player_t *activator, player_t *p, PClassPlayerPawn *spawntyp
 		if ((p->mo->GetClass() == spawntype)
 			&& (p->mo->PlayerFlags & PPF_CANSUPERMORPH)
 			&& (p->morphTics < (((duration) ? duration : MORPHTICS) - TICRATE))
-			&& (p->mo->FindInventory (RUNTIME_CLASS(APowerWeaponLevel2), true) == nullptr))
+			&& (p->mo->FindInventory (PClass::FindActor(NAME_PowerWeaponLevel2), true) == nullptr))
 		{ // Make a super chicken
-			p->mo->GiveInventoryType (RUNTIME_CLASS(APowerWeaponLevel2));
+			p->mo->GiveInventoryType (PClass::FindActor(NAME_PowerWeaponLevel2));
 		}
 		return false;
 	}
@@ -137,7 +136,7 @@ bool P_MorphPlayer (player_t *activator, player_t *p, PClassPlayerPawn *spawntyp
 	for (item = morphed->Inventory; item != nullptr; )
 	{
 		AInventory *next = item->Inventory;
-		if (item->IsKindOf (RUNTIME_CLASS(AArmor)))
+		if (item->IsKindOf (PClass::FindActor(NAME_Armor)))
 		{
 			item->DepleteOrDestroy();
 		}
@@ -158,13 +157,13 @@ bool P_MorphPlayer (player_t *activator, player_t *p, PClassPlayerPawn *spawntyp
 DEFINE_ACTION_FUNCTION(_PlayerInfo, MorphPlayer)
 {
 	PARAM_SELF_STRUCT_PROLOGUE(player_t);
-	PARAM_POINTER(victim, player_t);
+	PARAM_POINTER(activator, player_t);
 	PARAM_CLASS(spawntype, APlayerPawn);
 	PARAM_INT(duration);
 	PARAM_INT(style);
 	PARAM_CLASS_DEF(enter_flash, AActor);
 	PARAM_CLASS_DEF(exit_flash, AActor);
-	ACTION_RETURN_BOOL(P_MorphPlayer(self, victim, spawntype, duration, style, enter_flash, exit_flash));
+	ACTION_RETURN_BOOL(P_MorphPlayer(activator, self, spawntype, duration, style, enter_flash, exit_flash));
 }
 
 //----------------------------------------------------------------------------
@@ -263,7 +262,7 @@ bool P_UndoPlayerMorph (player_t *activator, player_t *player, int unmorphflag, 
 	player->MorphStyle = 0;
 	player->MorphExitFlash = nullptr;
 	player->viewheight = mo->ViewHeight;
-	AInventory *level2 = mo->FindInventory (RUNTIME_CLASS(APowerWeaponLevel2), true);
+	AInventory *level2 = mo->FindInventory (PClass::FindActor(NAME_PowerWeaponLevel2), true);
 	if (level2 != nullptr)
 	{
 		level2->Destroy ();
@@ -364,10 +363,11 @@ bool P_UndoPlayerMorph (player_t *activator, player_t *player, int unmorphflag, 
 	}
 	pmo->Destroy ();
 	// Restore playerclass armor to its normal amount.
-	AHexenArmor *hxarmor = mo->FindInventory<AHexenArmor>();
+	auto hxarmor = mo->FindInventory(NAME_HexenArmor);
 	if (hxarmor != nullptr)
 	{
-		hxarmor->Slots[4] = mo->GetClass()->HexenArmor[0];
+		double *Slots = (double*)hxarmor->ScriptVar(NAME_Slots, nullptr);
+		Slots[4] = mo->GetClass()->HexenArmor[0];
 	}
 	return true;
 }
@@ -396,7 +396,7 @@ bool P_MorphMonster (AActor *actor, PClassActor *spawntype, int duration, int st
 	if (actor == NULL || actor->player || spawntype == NULL ||
 		actor->flags3 & MF3_DONTMORPH ||
 		!(actor->flags3 & MF3_ISMONSTER) ||
-		!spawntype->IsDescendantOf (RUNTIME_CLASS(AMorphedMonster)))
+		!spawntype->IsDescendantOf (PClass::FindActor(NAME_MorphedMonster)))
 	{
 		return false;
 	}
@@ -438,6 +438,17 @@ bool P_MorphMonster (AActor *actor, PClassActor *spawntype, int duration, int st
 	if (eflash)
 		eflash->target = morphed;
 	return true;
+}
+
+DEFINE_ACTION_FUNCTION(AActor, MorphMonster)
+{
+	PARAM_SELF_PROLOGUE(AActor);
+	PARAM_CLASS(spawntype, APlayerPawn);
+	PARAM_INT(duration);
+	PARAM_INT(style);
+	PARAM_CLASS_DEF(enter_flash, AActor);
+	PARAM_CLASS_DEF(exit_flash, AActor);
+	ACTION_RETURN_BOOL(P_MorphMonster(self, spawntype, duration, style, enter_flash, exit_flash));
 }
 
 //----------------------------------------------------------------------------
@@ -593,11 +604,17 @@ bool P_MorphedDeath(AActor *actor, AActor **morphed, int *morphedstyle, int *mor
 
 void EndAllPowerupEffects(AInventory *item)
 {
+	auto ptype = PClass::FindActor(NAME_Powerup);
 	while (item != NULL)
 	{
-		if (item->IsKindOf(RUNTIME_CLASS(APowerup)))
+		if (item->IsKindOf(ptype))
 		{
-			static_cast<APowerup *>(item)->CallEndEffect();
+			IFVIRTUALPTRNAME(item, NAME_Powerup, EndEffect)
+			{
+				VMValue params[1] = { item };
+				VMFrameStack stack;
+				GlobalVMStack.Call(func, params, 1, nullptr, 0, nullptr);
+			}
 		}
 		item = item->Inventory;
 	}
@@ -613,59 +630,21 @@ void EndAllPowerupEffects(AInventory *item)
 
 void InitAllPowerupEffects(AInventory *item)
 {
+	auto ptype = PClass::FindActor(NAME_Powerup);
 	while (item != NULL)
 	{
-		if (item->IsKindOf(RUNTIME_CLASS(APowerup)))
+		if (item->IsKindOf(ptype))
 		{
-			static_cast<APowerup *>(item)->CallInitEffect();
+			IFVIRTUALPTRNAME(item, NAME_Powerup, EndEffect)
+			{
+				VMValue params[1] = { item };
+				VMFrameStack stack;
+				GlobalVMStack.Call(func, params, 1, nullptr, 0, nullptr);
+			}
 		}
 		item = item->Inventory;
 	}
 }
-
-// Base class for morphing projectiles --------------------------------------
-
-IMPLEMENT_CLASS(AMorphProjectile, false, true)
-
-IMPLEMENT_POINTERS_START(AMorphProjectile)
-	IMPLEMENT_POINTER(PlayerClass)
-	IMPLEMENT_POINTER(MonsterClass)
-	IMPLEMENT_POINTER(MorphFlash)
-	IMPLEMENT_POINTER(UnMorphFlash)
-IMPLEMENT_POINTERS_END
-
-DEFINE_FIELD(AMorphProjectile, PlayerClass)
-DEFINE_FIELD(AMorphProjectile, MonsterClass)
-DEFINE_FIELD(AMorphProjectile, MorphFlash)
-DEFINE_FIELD(AMorphProjectile, UnMorphFlash)
-DEFINE_FIELD(AMorphProjectile, Duration)
-DEFINE_FIELD(AMorphProjectile, MorphStyle)
-
-int AMorphProjectile::DoSpecialDamage (AActor *target, int damage, FName damagetype)
-{
-	if (target->player)
-	{
-		P_MorphPlayer (NULL, target->player, PlayerClass, Duration, MorphStyle, MorphFlash, UnMorphFlash);
-	}
-	else
-	{
-		P_MorphMonster (target, MonsterClass, Duration, MorphStyle, MorphFlash, UnMorphFlash);
-	}
-	return -1;
-}
-
-void AMorphProjectile::Serialize(FSerializer &arc)
-{
-	Super::Serialize (arc);
-	auto def = (AMorphProjectile*)GetDefault();
-	arc("playerclass", PlayerClass, def->PlayerClass)
-		("monsterclass", MonsterClass, def->MonsterClass)
-		("duration", Duration, def->Duration)
-		("morphstyle", MorphStyle, def->MorphStyle)
-		("morphflash", MorphFlash, def->MorphFlash)
-		("unmorphflash", UnMorphFlash, def->UnMorphFlash);
-}
-
 
 // Morphed Monster (you must subclass this to do something useful) ---------
 

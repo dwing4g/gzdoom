@@ -275,6 +275,7 @@ DObject::DObject ()
 {
 	ObjectFlags = GC::CurrentWhite & OF_WhiteBits;
 	ObjNext = GC::Root;
+	GCNext = nullptr;
 	GC::Root = this;
 }
 
@@ -283,6 +284,7 @@ DObject::DObject (PClass *inClass)
 {
 	ObjectFlags = GC::CurrentWhite & OF_WhiteBits;
 	ObjNext = GC::Root;
+	GCNext = nullptr;
 	GC::Root = this;
 }
 
@@ -456,9 +458,7 @@ size_t DObject::StaticPointerSubstitution (DObject *old, DObject *notOld, bool s
 			auto def = GetDefaultByType(p);
 			if (def != nullptr)
 			{
-				def->Class = p;
 				def->DObject::PointerSubstitution(old, notOld);
-				def->Class = nullptr;	// reset pointer. Defaults should not have a valid class pointer.
 			}
 		}
 	}
@@ -480,11 +480,11 @@ size_t DObject::StaticPointerSubstitution (DObject *old, DObject *notOld, bool s
 			changed += players[i].FixPointers (old, notOld);
 	}
 
-	for (auto &s : sectorPortals)
+	for (auto &s : level.sectorPortals)
 	{
 		if (s.mSkybox == old)
 		{
-			s.mSkybox = static_cast<ASkyViewpoint*>(notOld);
+			s.mSkybox = static_cast<AActor*>(notOld);
 			changed++;
 		}
 	}
@@ -565,4 +565,17 @@ DEFINE_ACTION_FUNCTION(DObject, GetClassName)
 {
 	PARAM_SELF_PROLOGUE(DObject);
 	ACTION_RETURN_INT(self->GetClass()->TypeName);
+}
+
+
+void *DObject::ScriptVar(FName field, PType *type)
+{
+	auto sym = dyn_cast<PField>(GetClass()->Symbols.FindSymbol(field, true));
+	if (sym && (sym->Type == type || type == nullptr))
+	{
+		return (((char*)this) + sym->Offset);
+	}
+	// This is only for internal use so I_Error is fine.
+	I_Error("Variable %s not found in %s\n", field.GetChars(), GetClass()->TypeName.GetChars());
+	return nullptr;
 }

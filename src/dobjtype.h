@@ -29,11 +29,12 @@ enum
 	VARF_In				= (1<<10),
 	VARF_Out			= (1<<11),
 	VARF_Implicit		= (1<<12),	// implicitly created parameters (i.e. do not compare types when checking function signatures)
-	VARF_Static			= (1<<13),	// static class data (by necessity read only.)
+	VARF_Static			= (1<<13),
 	VARF_InternalAccess	= (1<<14),	// overrides VARF_ReadOnly for internal script code.
 	VARF_Override		= (1<<15),	// overrides a virtual function from the parent class.
 	VARF_Ref			= (1<<16),	// argument is passed by reference.
-	VARF_Transient		= (1<<17)  // don't auto serialize field.
+	VARF_Transient		= (1<<17),  // don't auto serialize field.
+	VARF_Meta			= (1<<18),	// static class data (by necessity read only.)
 };
 
 // Symbol information -------------------------------------------------------
@@ -136,6 +137,8 @@ struct PSymbolTable
 	// Similar to AddSymbol but always succeeds. Returns the symbol that used
 	// to be in the table with this name, if any.
 	PSymbol *ReplaceSymbol(PSymbol *sym);
+
+	void RemoveSymbol(PSymbol *sym);
 
 	// Frees all symbols from this table.
 	void ReleaseSymbols();
@@ -596,6 +599,7 @@ public:
 
 	// this is only here to block PPointer's implementation
 	void SetPointer(void *base, unsigned offset, TArray<size_t> *special = NULL) const override {}
+	bool isCompatible(PType *type);
 
 	virtual bool IsMatch(intptr_t id1, intptr_t id2) const;
 	virtual void GetTypeIDs(intptr_t &id1, intptr_t &id2) const;
@@ -619,6 +623,34 @@ public:
 	int BitValue;
 protected:
 	PField();
+};
+
+// Struct/class fields ------------------------------------------------------
+
+// A PField describes a symbol that takes up physical space in the struct.
+class PProperty : public PSymbol
+{
+	DECLARE_CLASS(PProperty, PSymbol);
+public:
+	PProperty(FName name, TArray<PField *> &variables);
+
+	TArray<PField *> Variables;
+
+protected:
+	PProperty();
+};
+
+class PPropFlag : public PSymbol
+{
+	DECLARE_CLASS(PPropFlag, PSymbol);
+public:
+	PPropFlag(FName name, PField *offset, int bitval);
+
+	PField *Offset;
+	int bitval;
+
+protected:
+	PPropFlag();
 };
 
 // Compound types -----------------------------------------------------------
@@ -807,7 +839,7 @@ protected:
 	enum { MetaClassNum = CLASSREG_PClassClass };
 	TArray<FTypeAndOffset> SpecialInits;
 	void Derive(PClass *newclass, FName name);
-	void InitializeSpecials(void *addr) const;
+	void InitializeSpecials(void *addr, void *defaults) const;
 	void SetSuper();
 public:
 	typedef PClassClass MetaClass;
@@ -1041,4 +1073,34 @@ enum ETypeVal : BYTE
 	VAL_Class,
 };
 
+inline bool &DObject::BoolVar(FName field)
+{
+	return *(bool*)ScriptVar(field, TypeBool);
+}
+
+inline int &DObject::IntVar(FName field)
+{
+	return *(int*)ScriptVar(field, TypeSInt32);
+}
+
+inline PalEntry &DObject::ColorVar(FName field)
+{
+	return *(PalEntry*)ScriptVar(field, TypeColor);
+}
+
+inline FName &DObject::NameVar(FName field)
+{
+	return *(FName*)ScriptVar(field, TypeName);
+}
+
+inline double &DObject::FloatVar(FName field)
+{
+	return *(double*)ScriptVar(field, TypeFloat64);
+}
+
+template<class T>
+inline T *&DObject::PointerVar(FName field)
+{
+	return *(T**)ScriptVar(field, nullptr);	// pointer check is more tricky and for the handful of uses in the DECORATE parser not worth the hassle.
+}
 #endif
