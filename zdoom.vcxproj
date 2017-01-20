@@ -430,14 +430,8 @@
     <ClCompile Include="src\gl\utility\gl_geometric.cpp" />
     <ClCompile Include="src\gl\xbr\xbrz.cpp" />
     <ClCompile Include="src\gl\xbr\xbrz_old.cpp" />
-    <ClCompile Include="src\g_inventory\a_ammo.cpp" />
-    <ClCompile Include="src\g_inventory\a_armor.cpp" />
-    <ClCompile Include="src\g_inventory\a_artifacts.cpp" />
-    <ClCompile Include="src\g_inventory\a_health.cpp" />
     <ClCompile Include="src\g_inventory\a_keys.cpp" />
     <ClCompile Include="src\g_inventory\a_pickups.cpp" />
-    <ClCompile Include="src\g_inventory\a_puzzleitems.cpp" />
-    <ClCompile Include="src\g_inventory\a_weaponpiece.cpp" />
     <ClCompile Include="src\g_inventory\a_weapons.cpp" />
     <ClCompile Include="src\g_shared\a_action.cpp" />
     <ClCompile Include="src\g_shared\a_decals.cpp" />
@@ -445,8 +439,6 @@
     <ClCompile Include="src\g_shared\a_lightning.cpp" />
     <ClCompile Include="src\g_shared\a_morph.cpp" />
     <ClCompile Include="src\g_shared\a_quake.cpp" />
-    <ClCompile Include="src\g_shared\a_skies.cpp" />
-    <ClCompile Include="src\g_shared\a_soundsequence.cpp" />
     <ClCompile Include="src\g_shared\a_specialspot.cpp" />
     <ClCompile Include="src\g_shared\hudmessages.cpp" />
     <ClCompile Include="src\g_shared\sbarinfo.cpp" />

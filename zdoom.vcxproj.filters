@@ -1307,28 +1307,10 @@
     <ClCompile Include="src\g_shared\sbarinfo_commands.cpp">
       <Filter>Game\g_shared</Filter>
     </ClCompile>
-    <ClCompile Include="src\g_inventory\a_ammo.cpp">
-      <Filter>Game\g_inventory</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_inventory\a_armor.cpp">
-      <Filter>Game\g_inventory</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_inventory\a_artifacts.cpp">
-      <Filter>Game\g_inventory</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_inventory\a_health.cpp">
-      <Filter>Game\g_inventory</Filter>
-    </ClCompile>
     <ClCompile Include="src\g_inventory\a_keys.cpp">
       <Filter>Game\g_inventory</Filter>
     </ClCompile>
     <ClCompile Include="src\g_inventory\a_pickups.cpp">
-      <Filter>Game\g_inventory</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_inventory\a_puzzleitems.cpp">
-      <Filter>Game\g_inventory</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_inventory\a_weaponpiece.cpp">
       <Filter>Game\g_inventory</Filter>
     </ClCompile>
     <ClCompile Include="src\g_inventory\a_weapons.cpp">
@@ -1422,12 +1404,6 @@
       <Filter>Game\g_shared</Filter>
     </ClCompile>
     <ClCompile Include="src\g_shared\a_quake.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\a_skies.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\a_soundsequence.cpp">
       <Filter>Game\g_shared</Filter>
     </ClCompile>
     <ClCompile Include="src\g_shared\a_specialspot.cpp">
