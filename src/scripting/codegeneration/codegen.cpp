@@ -4078,7 +4078,7 @@ ExpEmit FxConcat::Emit(VMFunctionBuilder *build)
 	}
 	else
 	{
-		int cast;
+		int cast = 0;
 		strng2 = ExpEmit(build, REGT_STRING);
 		if (op2.Konst)
 		{
@@ -5653,6 +5653,12 @@ FxExpression *FxIdentifier::Resolve(FCompileContext& ctx)
 
 	if (Identifier == NAME_Default)
 	{
+		if (ctx.Function == nullptr)
+		{
+			ScriptPosition.Message(MSG_ERROR, "Unable to access class defaults from constant declaration");
+			delete this;
+			return nullptr;
+		}
 		if (ctx.Function->Variants[0].SelfClass == nullptr)
 		{
 			ScriptPosition.Message(MSG_ERROR, "Unable to access class defaults from static function");
@@ -5680,6 +5686,13 @@ FxExpression *FxIdentifier::Resolve(FCompileContext& ctx)
 	{
 		if (sym->IsKindOf(RUNTIME_CLASS(PField)))
 		{
+			if (ctx.Function == nullptr)
+			{
+				ScriptPosition.Message(MSG_ERROR, "Unable to access class member %s from constant declaration", sym->SymbolName.GetChars());
+				delete this;
+				return nullptr;
+			}
+
 			FxExpression *self = new FxSelf(ScriptPosition);
 			self = self->Resolve(ctx);
 			newex = ResolveMember(ctx, ctx.Function->Variants[0].SelfClass, self, ctx.Function->Variants[0].SelfClass);
@@ -5696,6 +5709,12 @@ FxExpression *FxIdentifier::Resolve(FCompileContext& ctx)
 			ScriptPosition.Message(MSG_DEBUGLOG, "Resolving name '%s' as class constant\n", Identifier.GetChars());
 			newex = FxConstant::MakeConstant(sym, ScriptPosition);
 			goto foundit;
+		}
+		else if (ctx.Function == nullptr)
+		{
+			ScriptPosition.Message(MSG_ERROR, "Unable to access class member %s from constant declaration", sym->SymbolName.GetChars());
+			delete this;
+			return nullptr;
 		}
 		// Do this check for ZScript as well, so that a clearer error message can be printed. MSG_OPTERROR will default to MSG_ERROR there.
 		else if (ctx.Function->Variants[0].SelfClass != ctx.Class && sym->IsKindOf(RUNTIME_CLASS(PField)))
@@ -5810,7 +5829,7 @@ FxExpression *FxIdentifier::ResolveMember(FCompileContext &ctx, PStruct *classct
 		return x->Resolve(ctx);
 	}
 
-	if ((sym = objtype->Symbols.FindSymbolInTable(Identifier, symtbl)) != nullptr)
+	if (objtype != nullptr && (sym = objtype->Symbols.FindSymbolInTable(Identifier, symtbl)) != nullptr)
 	{
 		if (sym->IsKindOf(RUNTIME_CLASS(PSymbolConst)))
 		{
@@ -7149,7 +7168,6 @@ static bool CheckArgSize(FName fname, FArgumentList &args, int min, int max, FSc
 
 FxExpression *FxFunctionCall::Resolve(FCompileContext& ctx)
 {
-	ABORT(ctx.Class);
 	bool error = false;
 
 	for (auto a : ArgList)
@@ -7162,20 +7180,30 @@ FxExpression *FxFunctionCall::Resolve(FCompileContext& ctx)
 		}
 	}
 
-	PFunction *afd = FindClassMemberFunction(ctx.Class, ctx.Class, MethodName, ScriptPosition, &error);
-
-	if (afd != nullptr)
+	if (ctx.Class != nullptr)
 	{
-		if (!CheckFunctionCompatiblity(ScriptPosition, ctx.Function, afd))
-		{
-			delete this;
-			return nullptr;
-		}
+		PFunction *afd = FindClassMemberFunction(ctx.Class, ctx.Class, MethodName, ScriptPosition, &error);
 
-		auto self = (afd->Variants[0].Flags & VARF_Method)? new FxSelf(ScriptPosition) : nullptr;
-		auto x = new FxVMFunctionCall(self, afd, ArgList, ScriptPosition, false);
-		delete this;
-		return x->Resolve(ctx);
+		if (afd != nullptr)
+		{
+			if (ctx.Function == nullptr)
+			{
+				ScriptPosition.Message(MSG_ERROR, "Unable to call function %s from constant declaration", MethodName.GetChars());
+				delete this;
+				return nullptr;
+			}
+
+			if (!CheckFunctionCompatiblity(ScriptPosition, ctx.Function, afd))
+			{
+				delete this;
+				return nullptr;
+			}
+
+			auto self = (afd->Variants[0].Flags & VARF_Method) ? new FxSelf(ScriptPosition) : nullptr;
+			auto x = new FxVMFunctionCall(self, afd, ArgList, ScriptPosition, false);
+			delete this;
+			return x->Resolve(ctx);
+		}
 	}
 
 	for (size_t i = 0; i < countof(FxFlops); ++i)
@@ -7186,14 +7214,6 @@ FxExpression *FxFunctionCall::Resolve(FCompileContext& ctx)
 			delete this;
 			return x->Resolve(ctx);
 		}
-	}
-
-	// [ZZ] string formatting function
-	if (MethodName == NAME_Format)
-	{
-		FxExpression *x = new FxFormat(ArgList, ScriptPosition);
-		delete this;
-		return x->Resolve(ctx);
 	}
 
 	int min, max, special;
@@ -7210,7 +7230,13 @@ FxExpression *FxFunctionCall::Resolve(FCompileContext& ctx)
 	if (special != 0 && min >= 0)
 	{
 		int paramcount = ArgList.Size();
-		if (paramcount < min)
+		if (ctx.Function == nullptr || ctx.Class == nullptr)
+		{
+			ScriptPosition.Message(MSG_ERROR, "Unable to call action special %s from constant declaration", MethodName.GetChars());
+			delete this;
+			return nullptr;
+		}
+		else if (paramcount < min)
 		{
 			ScriptPosition.Message(MSG_ERROR, "Not enough parameters for '%s' (expected %d, got %d)", 
 				MethodName.GetChars(), min, paramcount);
@@ -7435,12 +7461,19 @@ FxMemberFunctionCall::~FxMemberFunctionCall()
 
 FxExpression *FxMemberFunctionCall::Resolve(FCompileContext& ctx)
 {
-	ABORT(ctx.Class);
 	PStruct *cls;
 	bool staticonly = false;
 	bool novirtual = false;
 
 	PStruct *ccls = nullptr;
+
+	if (ctx.Class == nullptr)
+	{
+		// There's no way that a member function call can resolve to a constant so abort right away.
+		ScriptPosition.Message(MSG_ERROR, "Expression is not constant.");
+		delete this;
+		return nullptr;
+	}
 
 	for (auto a : ArgList)
 	{
@@ -7466,12 +7499,21 @@ FxExpression *FxMemberFunctionCall::Resolve(FCompileContext& ctx)
 	{
 		if (ccls != nullptr)
 		{
+			// [ZZ] substitute ccls for String internal type.
+			if (ccls->TypeName == NAME_String)
+				ccls = TypeStringStruct;
 			if (!ccls->IsKindOf(RUNTIME_CLASS(PClass)) || static_cast<PClass *>(ccls)->bExported)
 			{
 				cls = ccls;
 				staticonly = true;
 				if (ccls->IsKindOf(RUNTIME_CLASS(PClass)))
 				{
+					if (ctx.Function == nullptr)
+					{
+						ScriptPosition.Message(MSG_ERROR, "Unable to call %s from constant declaration", MethodName.GetChars());
+						delete this;
+						return nullptr;
+					}
 					auto clstype = dyn_cast<PClass>(ctx.Function->Variants[0].SelfClass);
 					if (clstype != nullptr)
 					{
@@ -7498,6 +7540,12 @@ FxExpression *FxMemberFunctionCall::Resolve(FCompileContext& ctx)
 
 	if (Self->ExprType == EFX_Super)
 	{
+		if (ctx.Function == nullptr)
+		{
+			ScriptPosition.Message(MSG_ERROR, "Unable to call %s from constant declaration", MethodName.GetChars());
+			delete this;
+			return nullptr;
+		}
 		auto clstype = dyn_cast<PClass>(ctx.Function->Variants[0].SelfClass);
 		if (clstype != nullptr)
 		{
@@ -7748,6 +7796,12 @@ isresolved:
 
 	if (afd->Variants[0].Flags & VARF_Method)
 	{
+		if (ctx.Function == nullptr)
+		{
+			ScriptPosition.Message(MSG_ERROR, "Unable to call %s from constant declaration", MethodName.GetChars());
+			delete this;
+			return nullptr;
+		}
 		if (Self->ExprType == EFX_Self)
 		{
 			if (!CheckFunctionCompatiblity(ScriptPosition, ctx.Function, afd))
@@ -8056,6 +8110,7 @@ FxExpression *FxVMFunctionCall::Resolve(FCompileContext& ctx)
 		for (unsigned i = 0; i < ArgList.Size(); i++)
 		{
 			// Varargs must all have the same type as the last typed argument. A_Jump is the only function using it.
+			// [ZZ] Varargs MAY have arbitrary types if the method is marked vararg.
 			if (!foundvarargs)
 			{
 				if (argtypes[i + implicit] == nullptr) foundvarargs = true;
@@ -8128,8 +8183,21 @@ FxExpression *FxVMFunctionCall::Resolve(FCompileContext& ctx)
 				flag = argflags[i + implicit];
 			}
 
-			FxExpression *x;
-			if (!(flag & (VARF_Ref|VARF_Out)))
+			FxExpression *x = nullptr;
+			if (foundvarargs && (Function->Variants[0].Flags & VARF_VarArg))
+			{
+				// only cast implicit-string types for vararg, leave everything else as-is
+				// this was outright copypasted from FxFormat
+				ArgList[i] = ArgList[i]->Resolve(ctx);
+				if (ArgList[i]->ValueType == TypeName ||
+					ArgList[i]->ValueType == TypeSound)
+				{
+					x = new FxStringCast(ArgList[i]);
+					x = x->Resolve(ctx);
+				}
+				else x = ArgList[i];
+			}
+			else if (!(flag & (VARF_Ref|VARF_Out)))
 			{
 				x = new FxTypeCast(ArgList[i], type, false);
 				x = x->Resolve(ctx);
@@ -8474,280 +8542,6 @@ ExpEmit FxFlopFunctionCall::Emit(VMFunctionBuilder *build)
 	ArgList.ShrinkToFit();
 	return to;
 }
-
-
-//==========================================================================
-//
-//
-//
-//==========================================================================
-
-FxFormat::FxFormat(FArgumentList &args, const FScriptPosition &pos)
-	: FxExpression(EFX_Format, pos)
-{
-	EmitTail = false;
-	ArgList = std::move(args);
-}
-
-//==========================================================================
-//
-//
-//
-//==========================================================================
-
-FxFormat::~FxFormat()
-{
-}
-
-//==========================================================================
-//
-//
-//
-//==========================================================================
-
-PPrototype *FxFormat::ReturnProto()
-{
-	EmitTail = true;
-	return FxExpression::ReturnProto();
-}
-
-//==========================================================================
-//
-//
-//
-//==========================================================================
-
-FxExpression *FxFormat::Resolve(FCompileContext& ctx)
-{
-	CHECKRESOLVED();
-
-	for (unsigned i = 0; i < ArgList.Size(); i++)
-	{
-		ArgList[i] = ArgList[i]->Resolve(ctx);
-		if (ArgList[i] == nullptr)
-		{
-			delete this;
-			return nullptr;
-		}
-
-		// first argument should be a string
-		if (!i && ArgList[i]->ValueType != TypeString)
-		{
-			ScriptPosition.Message(MSG_ERROR, "String was expected for format");
-			delete this;
-			return nullptr;
-		}
-
-		if (ArgList[i]->ValueType == TypeName ||
-			ArgList[i]->ValueType == TypeSound)
-		{
-			FxExpression* x = new FxStringCast(ArgList[i]);
-			x = x->Resolve(ctx);
-			if (x == nullptr)
-			{
-				delete this;
-				return nullptr;
-			}
-			ArgList[i] = x;
-		}
-	}
-
-	ValueType = TypeString;
-	return this;
-}
-
-//==========================================================================
-//
-//
-//==========================================================================
-
-static int BuiltinFormat(VMValue *args, TArray<VMValue> &defaultparam, int numparam, VMReturn *ret, int numret)
-{
-	assert(args[0].Type == REGT_STRING);
-	FString fmtstring = args[0].s().GetChars();
-
-	// note: we don't need a real printf format parser.
-	//       enough to simply find the subtitution tokens and feed them to the real printf after checking types.
-	//       https://en.wikipedia.org/wiki/Printf_format_string#Format_placeholder_specification
-	FString output;
-	bool in_fmt = false;
-	FString fmt_current;
-	int argnum = 1;
-	int argauto = 1;
-	// % = starts
-	//  [0-9], -, +, \s, 0, #, . continue
-	//  %, s, d, i, u, fF, eE, gG, xX, o, c, p, aA terminate
-	// various type flags are not supported. not like stuff like 'hh' modifier is to be used in the VM.
-	// the only combination that is parsed locally is %n$...
-	bool haveargnums = false;
-	for (size_t i = 0; i < fmtstring.Len(); i++)
-	{
-		char c = fmtstring[i];
-		if (in_fmt)
-		{
-			if ((c >= '0' && c <= '9') ||
-				c == '-' || c == '+' || (c == ' ' && fmt_current[fmt_current.Len() - 1] != ' ') || c == '#' || c == '.')
-			{
-				fmt_current += c;
-			}
-			else if (c == '$') // %number$format
-			{
-				if (!haveargnums && argauto > 1)
-					ThrowAbortException(X_FORMAT_ERROR, "Cannot mix explicit and implicit arguments.");
-				FString argnumstr = fmt_current.Mid(1);
-				if (!argnumstr.IsInt()) ThrowAbortException(X_FORMAT_ERROR, "Expected a numeric value for argument number, got '%s'.", argnumstr.GetChars());
-				argnum = argnumstr.ToLong();
-				if (argnum < 1 || argnum >= numparam) ThrowAbortException(X_FORMAT_ERROR, "Not enough arguments for format (tried to access argument %d, %d total).", argnum, numparam);
-				fmt_current = "%";
-				haveargnums = true;
-			}
-			else
-			{
-				fmt_current += c;
-
-				switch (c)
-				{
-					// string
-				case 's':
-				{
-					if (argnum < 0 && haveargnums)
-						ThrowAbortException(X_FORMAT_ERROR, "Cannot mix explicit and implicit arguments.");
-					in_fmt = false;
-					// fail if something was found, but it's not a string
-					if (argnum >= numparam) ThrowAbortException(X_FORMAT_ERROR, "Not enough arguments for format.");
-					if (args[argnum].Type != REGT_STRING) ThrowAbortException(X_FORMAT_ERROR, "Expected a string for format %s.", fmt_current.GetChars());
-					// append
-					output.AppendFormat(fmt_current.GetChars(), args[argnum].s().GetChars());
-					if (!haveargnums) argnum = ++argauto;
-					else argnum = -1;
-					break;
-				}
-
-				// pointer
-				case 'p':
-				{
-					if (argnum < 0 && haveargnums)
-						ThrowAbortException(X_FORMAT_ERROR, "Cannot mix explicit and implicit arguments.");
-					in_fmt = false;
-					// fail if something was found, but it's not a string
-					if (argnum >= numparam) ThrowAbortException(X_FORMAT_ERROR, "Not enough arguments for format.");
-					if (args[argnum].Type != REGT_POINTER) ThrowAbortException(X_FORMAT_ERROR, "Expected a pointer for format %s.", fmt_current.GetChars());
-					// append
-					output.AppendFormat(fmt_current.GetChars(), args[argnum].a);
-					if (!haveargnums) argnum = ++argauto;
-					else argnum = -1;
-					break;
-				}
-
-				// int formats (including char)
-				case 'd':
-				case 'i':
-				case 'u':
-				case 'x':
-				case 'X':
-				case 'o':
-				case 'c':
-				{
-					if (argnum < 0 && haveargnums)
-						ThrowAbortException(X_FORMAT_ERROR, "Cannot mix explicit and implicit arguments.");
-					in_fmt = false;
-					// fail if something was found, but it's not an int
-					if (argnum >= numparam) ThrowAbortException(X_FORMAT_ERROR, "Not enough arguments for format.");
-					if (args[argnum].Type != REGT_INT &&
-						args[argnum].Type != REGT_FLOAT) ThrowAbortException(X_FORMAT_ERROR, "Expected a numeric value for format %s.", fmt_current.GetChars());
-					// append
-					output.AppendFormat(fmt_current.GetChars(), args[argnum].ToInt());
-					if (!haveargnums) argnum = ++argauto;
-					else argnum = -1;
-					break;
-				}
-
-				// double formats
-				case 'f':
-				case 'F':
-				case 'e':
-				case 'E':
-				case 'g':
-				case 'G':
-				case 'a':
-				case 'A':
-				{
-					if (argnum < 0 && haveargnums)
-						ThrowAbortException(X_FORMAT_ERROR, "Cannot mix explicit and implicit arguments.");
-					in_fmt = false;
-					// fail if something was found, but it's not a float
-					if (argnum >= numparam) ThrowAbortException(X_FORMAT_ERROR, "Not enough arguments for format.");
-					if (args[argnum].Type != REGT_INT &&
-						args[argnum].Type != REGT_FLOAT) ThrowAbortException(X_FORMAT_ERROR, "Expected a numeric value for format %s.", fmt_current.GetChars());
-					// append
-					output.AppendFormat(fmt_current.GetChars(), args[argnum].ToDouble());
-					if (!haveargnums) argnum = ++argauto;
-					else argnum = -1;
-					break;
-				}
-
-				default:
-					// invalid character
-					output += fmt_current;
-					in_fmt = false;
-					break;
-				}
-			}
-		}
-		else
-		{
-			if (c == '%')
-			{
-				if (i + 1 < fmtstring.Len() && fmtstring[i + 1] == '%')
-				{
-					output += '%';
-					i++;
-				}
-				else
-				{
-					in_fmt = true;
-					fmt_current = "%";
-				}
-			}
-			else
-			{
-				output += c;
-			}
-		}
-	}
-
-	ACTION_RETURN_STRING(output);
-}
-
-ExpEmit FxFormat::Emit(VMFunctionBuilder *build)
-{
-	// Call DecoRandom to generate a random number.
-	VMFunction *callfunc;
-	PSymbol *sym = FindBuiltinFunction(NAME_BuiltinFormat, BuiltinFormat);
-
-	assert(sym->IsKindOf(RUNTIME_CLASS(PSymbolVMFunction)));
-	assert(((PSymbolVMFunction *)sym)->Function != nullptr);
-	callfunc = ((PSymbolVMFunction *)sym)->Function;
-
-	if (build->FramePointer.Fixed) EmitTail = false;	// do not tail call if the stack is in use
-	int opcode = (EmitTail ? OP_TAIL_K : OP_CALL_K);
-
-	for (unsigned i = 0; i < ArgList.Size(); i++)
-		EmitParameter(build, ArgList[i], ScriptPosition);
-	build->Emit(opcode, build->GetConstantAddress(callfunc, ATAG_OBJECT), ArgList.Size(), 1);
-
-	if (EmitTail)
-	{
-		ExpEmit call;
-		call.Final = true;
-		return call;
-	}
-
-	ExpEmit out(build, REGT_STRING);
-	build->Emit(OP_RESULT, 0, REGT_STRING, out.RegNum);
-	return out;
-}
-
 
 //==========================================================================
 //

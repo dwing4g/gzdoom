@@ -136,6 +136,7 @@ static void InitTokenMap()
 	TOKENDEF (TK_Protected,		ZCC_PROTECTED);
 	TOKENDEF (TK_Latent,		ZCC_LATENT);
 	TOKENDEF (TK_Virtual,		ZCC_VIRTUAL);
+	TOKENDEF (TK_VarArg,        ZCC_VARARG);
 	TOKENDEF (TK_Override,		ZCC_OVERRIDE);
 	TOKENDEF (TK_Final,			ZCC_FINAL);
 	TOKENDEF (TK_Meta,			ZCC_META);
@@ -315,6 +316,8 @@ static void DoParse(int lumpnum)
 	FScanner sc;
 	void *parser;
 	ZCCToken value;
+	auto baselump = lumpnum;
+	auto fileno = Wads.GetLumpFile(lumpnum);
 
 	parser = ZCCParseAlloc(malloc);
 	ZCCParseState state;
@@ -343,6 +346,13 @@ static void DoParse(int lumpnum)
 		}
 		else
 		{
+			auto fileno2 = Wads.GetLumpFile(lumpnum);
+			if (fileno == 0 && fileno2 != 0)
+			{
+				I_FatalError("File %s is overriding core lump %s.",
+					Wads.GetWadFullName(Wads.GetLumpFile(baselump)), Includes[i].GetChars());
+			}
+
 			ParseSingleFile(nullptr, lumpnum, parser, state);
 		}
 	}
@@ -407,9 +417,6 @@ void ParseScripts()
 	{
 		InitTokenMap();
 	}
-	ZCC_InitOperators();
-	ZCC_InitConversions();
-
 	int lump, lastlump = 0;
 	FScriptPosition::ResetErrorCounter();
 

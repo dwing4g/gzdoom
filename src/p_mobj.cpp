@@ -920,12 +920,11 @@ bool AActor::TakeInventory(PClassActor *itemclass, int amount, bool fromdecorate
 DEFINE_ACTION_FUNCTION(AActor, TakeInventory)
 {
 	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_OBJECT_NOT_NULL(item, AInventory);
+	PARAM_CLASS_NOT_NULL(item, AInventory);
 	PARAM_INT(amount);
 	PARAM_BOOL_DEF(fromdecorate);
 	PARAM_BOOL_DEF(notakeinfinite);
-	self->RemoveInventory(item);
-	return 0;
+	ACTION_RETURN_BOOL(self->TakeInventory(item, amount, fromdecorate, notakeinfinite));
 }
 
 //============================================================================
@@ -1041,7 +1040,7 @@ AInventory *AActor::DropInventory (AInventory *item)
 	AInventory *drop = nullptr;
 	IFVIRTUALPTR(item, AInventory, CreateTossable)
 	{
-		VMValue params[1] = { (DObject*)this };
+		VMValue params[1] = { (DObject*)item };
 		VMReturn ret((void**)&drop);
 		GlobalVMStack.Call(func, params, 1, &ret, 1, nullptr);
 	}
