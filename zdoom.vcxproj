@@ -110,7 +110,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>src\g_inventory;src\scripting;src\scripting\zscript;src\scripting\vm;src\zscript;src\win32;src\sound;src\textures;src\thingdef;src;zlib;src\g_shared;src\g_doom;src\g_raven;src\g_heretic;src\g_hexen;src\g_strife;jpeg-6b;game-music-emu;gdtoa;bzip2;lzma\C;fmodex;dxsdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\g_inventory;src\scripting;src\scripting\zscript;src\scripting\vm;src\zscript;src\win32;src\sound;src\textures;src\thingdef;src;zlib;src\g_shared;src\g_statusbar;jpeg-6b;game-music-emu;gdtoa;bzip2;lzma\C;fmodex;dxsdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_WINDOWS;HAVE_STRUPR;HAVE_FILELENGTH;NO_VA_COPY;BACKPATCH;HAVE_FLUIDSYNTH;DYN_FLUIDSYNTH;NO_OPENAL;HAVE_MMX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -441,10 +441,14 @@
     <ClCompile Include="src\g_shared\a_quake.cpp" />
     <ClCompile Include="src\g_shared\a_specialspot.cpp" />
     <ClCompile Include="src\g_shared\hudmessages.cpp" />
-    <ClCompile Include="src\g_shared\sbarinfo.cpp" />
-    <ClCompile Include="src\g_shared\sbar_mugshot.cpp" />
     <ClCompile Include="src\g_shared\shared_hud.cpp" />
-    <ClCompile Include="src\g_shared\shared_sbar.cpp" />
+    <ClCompile Include="src\g_statusbar\sbarinfo.cpp" />
+    <ClCompile Include="src\g_statusbar\sbarinfo_commands.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\g_statusbar\sbar_mugshot.cpp" />
+    <ClCompile Include="src\g_statusbar\shared_sbar.cpp" />
+    <ClCompile Include="src\g_statusbar\strife_sbar.cpp" />
     <ClCompile Include="src\i_module.cpp" />
     <ClCompile Include="src\math\asin.c" />
     <ClCompile Include="src\math\atan.c" />
@@ -487,7 +491,6 @@
     <ClCompile Include="src\scripting\vm\vmframe.cpp" />
     <ClCompile Include="src\scripting\zscript\ast.cpp" />
     <ClCompile Include="src\scripting\zscript\zcc_compile.cpp" />
-    <ClCompile Include="src\scripting\zscript\zcc_expr.cpp" />
     <ClCompile Include="src\scripting\zscript\zcc_parser.cpp" />
     <ClCompile Include="src\serializer.cpp" />
     <ClCompile Include="src\win32\i_specialpaths.cpp" />
@@ -656,12 +659,6 @@
     <ClCompile Include="src\win32\i_xinput.cpp" />
     <ClCompile Include="src\win32\st_start.cpp" />
     <ClCompile Include="src\win32\win32video.cpp" />
-    <ClCompile Include="src\g_shared\sbarinfo_commands.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="src\intermission\intermission.cpp" />
     <ClCompile Include="src\intermission\intermission_parse.cpp" />
     <ClCompile Include="src\r_3dfloors.cpp" />
@@ -761,7 +758,6 @@
     <ClCompile Include="src\menu\playermenu.cpp" />
     <ClCompile Include="src\menu\readthis.cpp" />
     <ClCompile Include="src\menu\videomenu.cpp" />
-    <ClCompile Include="src\g_strife\strife_sbar.cpp" />
     <ClCompile Include="src\textures\anim_switches.cpp" />
     <ClCompile Include="src\textures\animations.cpp" />
     <ClCompile Include="src\textures\automaptexture.cpp" />

@@ -84,9 +84,6 @@
     <Filter Include="Game\g_shared">
       <UniqueIdentifier>{68b8acaa-0436-4ad2-9014-f1d6bf8d5830}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\g_strife">
-      <UniqueIdentifier>{f7b29da1-40ef-428e-aead-f5098707c30c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="intermission">
       <UniqueIdentifier>{58b0e3c0-9db3-4839-8a2d-c88cda08896a}</UniqueIdentifier>
     </Filter>
@@ -119,6 +116,9 @@
     </Filter>
     <Filter Include="resourcefiles">
       <UniqueIdentifier>{0b9e4335-0cf0-4d8c-bbc0-27dea15242e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\g_statusbar">
+      <UniqueIdentifier>{e4ec9817-a055-4e49-a35d-61ff9f6b3588}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -875,9 +875,6 @@
     <ClCompile Include="src\menu\videomenu.cpp">
       <Filter>menu</Filter>
     </ClCompile>
-    <ClCompile Include="src\g_strife\strife_sbar.cpp">
-      <Filter>Game\g_strife</Filter>
-    </ClCompile>
     <ClCompile Include="src\textures\anim_switches.cpp">
       <Filter>Render Data\Textures</Filter>
     </ClCompile>
@@ -1304,9 +1301,6 @@
     <ClCompile Include="src\r_drawt_pal.cpp">
       <Filter>Render Core\Render Sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\g_shared\sbarinfo_commands.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
     <ClCompile Include="src\g_inventory\a_keys.cpp">
       <Filter>Game\g_inventory</Filter>
     </ClCompile>
@@ -1353,9 +1347,6 @@
       <Filter>scripting\zscript</Filter>
     </ClCompile>
     <ClCompile Include="src\scripting\zscript\zcc_compile.cpp">
-      <Filter>scripting\zscript</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scripting\zscript\zcc_expr.cpp">
       <Filter>scripting\zscript</Filter>
     </ClCompile>
     <ClCompile Include="src\scripting\zscript\zcc_parser.cpp">
@@ -1412,17 +1403,23 @@
     <ClCompile Include="src\g_shared\hudmessages.cpp">
       <Filter>Game\g_shared</Filter>
     </ClCompile>
-    <ClCompile Include="src\g_shared\sbar_mugshot.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
-    <ClCompile Include="src\g_shared\sbarinfo.cpp">
-      <Filter>Game\g_shared</Filter>
-    </ClCompile>
     <ClCompile Include="src\g_shared\shared_hud.cpp">
       <Filter>Game\g_shared</Filter>
     </ClCompile>
-    <ClCompile Include="src\g_shared\shared_sbar.cpp">
-      <Filter>Game\g_shared</Filter>
+    <ClCompile Include="src\g_statusbar\sbar_mugshot.cpp">
+      <Filter>Game\g_statusbar</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_statusbar\sbarinfo.cpp">
+      <Filter>Game\g_statusbar</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_statusbar\sbarinfo_commands.cpp">
+      <Filter>Game\g_statusbar</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_statusbar\shared_sbar.cpp">
+      <Filter>Game\g_statusbar</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_statusbar\strife_sbar.cpp">
+      <Filter>Game\g_statusbar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
