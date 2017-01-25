@@ -76,6 +76,7 @@ class VMFrameStack;
 struct VMValue;
 struct VMReturn;
 class VMFunction;
+struct FNamespaceManager;
 
 // A VM function ------------------------------------------------------------
 
@@ -157,6 +158,7 @@ private:
 	MapType Symbols;
 
 	friend class DObject;
+	friend struct FNamespaceManager;
 };
 
 // A symbol for a compiler tree node ----------------------------------------
@@ -170,8 +172,6 @@ public:
 	PSymbolTreeNode(FName name, struct ZCC_TreeNode *node) : PSymbol(name), Node(node) {}
 	PSymbolTreeNode() : PSymbol(NAME_None) {}
 };
-
-extern PSymbolTable		 GlobalSymbols;
 
 // Basic information shared by all types ------------------------------------
 
@@ -593,15 +593,15 @@ protected:
 
 // Compound types -----------------------------------------------------------
 
-class PEnum : public PNamedType
+class PEnum : public PInt
 {
-	DECLARE_CLASS(PEnum, PNamedType);
+	DECLARE_CLASS(PEnum, PInt);
 	HAS_OBJECT_POINTERS;
 public:
 	PEnum(FName name, PTypeBase *outer);
 
-	PType *ValueType;
-	TMap<FName, int> Values;
+	PTypeBase *Outer;
+	FName EnumName;
 protected:
 	PEnum();
 };
@@ -710,7 +710,7 @@ class PNativeStruct : public PStruct
 {
 	DECLARE_CLASS(PNativeStruct, PStruct);
 public:
-	PNativeStruct(FName name = NAME_None);
+	PNativeStruct(FName name = NAME_None, PTypeBase *outer = nullptr);
 };
 
 class PPrototype : public PCompoundType
@@ -986,30 +986,39 @@ public:
 	PSymbolConstString() {}
 };
 
-// Enumerations for serializing types in an archive -------------------------
+// Namespaces --------------------------------------------------
 
-enum ETypeVal : BYTE
+class PNamespace : public PTypeBase
 {
-	VAL_Int8,
-	VAL_UInt8,
-	VAL_Int16,
-	VAL_UInt16,
-	VAL_Int32,
-	VAL_UInt32,
-	VAL_Int64,
-	VAL_UInt64,
-	VAL_Zero,
-	VAL_One,
-	VAL_Float32,
-	VAL_Float64,
-	VAL_String,
-	VAL_Name,
-	VAL_Struct,
-	VAL_Array,
-	VAL_Object,
-	VAL_State,
-	VAL_Class,
+	DECLARE_CLASS(PNamespace, PTypeBase)
+	HAS_OBJECT_POINTERS;
+
+public:
+	PSymbolTable Symbols;
+	PNamespace *Parent;
+	int FileNum;	// This is for blocking DECORATE access to later files.
+
+	PNamespace() {}
+	PNamespace(int filenum, PNamespace *parent);
+	size_t PropagateMark();
 };
+
+struct FNamespaceManager
+{
+	PNamespace *GlobalNamespace;
+	TArray<PNamespace *> AllNamespaces;
+
+	FNamespaceManager();
+	PNamespace *NewNamespace(int filenum);
+	size_t MarkSymbols();
+	void ReleaseSymbols();
+	int RemoveSymbols();
+};
+
+extern FNamespaceManager Namespaces;
+
+
+// Enumerations for serializing types in an archive -------------------------
 
 inline bool &DObject::BoolVar(FName field)
 {
@@ -1041,4 +1050,7 @@ inline T *&DObject::PointerVar(FName field)
 {
 	return *(T**)ScriptVar(field, nullptr);	// pointer check is more tricky and for the handful of uses in the DECORATE parser not worth the hassle.
 }
+
+void RemoveUnusedSymbols();
+
 #endif
