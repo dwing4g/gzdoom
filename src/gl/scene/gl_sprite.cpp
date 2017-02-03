@@ -119,11 +119,11 @@ void GLSprite::CalculateVertices(FVector3 *v)
 		// Tilt the actor up or down based on pitch (increase 'somersaults' forward).
 		// Then counteract the roll and DO A BARREL ROLL.
 
-		FAngle pitch = (float)-actor->Angles.Pitch.Degrees;
+		FAngle pitch = (float)-Angles.Pitch.Degrees;
 		pitch.Normalized180();
 
 		mat.Translate(x, z, y);
-		mat.Rotate(0, 1, 0, 270. - actor->Angles.Yaw.Degrees);
+		mat.Rotate(0, 1, 0, 270. - Angles.Yaw.Degrees);
 		mat.Rotate(1, 0, 0, pitch.Degrees);
 
 		if (actor->renderflags & RF_ROLLCENTER)
@@ -132,12 +132,12 @@ void GLSprite::CalculateVertices(FVector3 *v)
 			float cy = (y1 + y2) * 0.5;
 
 			mat.Translate(cx - x, 0, cy - y);
-			mat.Rotate(0, 1, 0, - actor->Angles.Roll.Degrees);
+			mat.Rotate(0, 1, 0, - Angles.Roll.Degrees);
 			mat.Translate(-cx, -z, -cy);
 		}
 		else
 		{
-			mat.Rotate(0, 1, 0, - actor->Angles.Roll.Degrees);
+			mat.Rotate(0, 1, 0, - Angles.Roll.Degrees);
 			mat.Translate(-x, -z, -y);
 		}
 		v[0] = mat * FVector3(x2, z, y2);
@@ -199,11 +199,11 @@ void GLSprite::CalculateVertices(FVector3 *v)
 		// [fgsfds] calculate yaw vectors
 		float yawvecX = 0, yawvecY = 0, rollDegrees = 0;
 		float angleRad = (270. - GLRenderer->mAngles.Yaw).Radians();
-		if (actor)	rollDegrees = actor->Angles.Roll.Degrees;
+		if (actor)	rollDegrees = Angles.Roll.Degrees;
 		if (isFlatSprite)
 		{
-			yawvecX = actor->Angles.Yaw.Cos();
-			yawvecY = actor->Angles.Yaw.Sin();
+			yawvecX = Angles.Yaw.Cos();
+			yawvecY = Angles.Yaw.Sin();
 		}
 
 		// [fgsfds] Rotate the sprite about the sight vector (roll) 
@@ -308,6 +308,7 @@ void GLSprite::Draw(int pass)
 			gl_RenderState.AlphaFunc(GL_GEQUAL, gl_mask_sprite_threshold);
 			gl_RenderState.SetColor(0.2f,0.2f,0.2f,fuzzalpha, Colormap.desaturation);
 			additivefog = true;
+			lightlist = nullptr;	// the fuzz effect does not use the sector's light level so splitting is not needed.
 		}
 		else if (RenderStyle.BlendOp == STYLEOP_Add && RenderStyle.DestAlpha == STYLEALPHA_One)
 		{
@@ -319,15 +320,25 @@ void GLSprite::Draw(int pass)
 		glEnable(GL_POLYGON_OFFSET_FILL);
 		glPolygonOffset(-1.0f, -128.0f);
 	}
-	if (RenderStyle.BlendOp!=STYLEOP_Shadow)
+	if (RenderStyle.BlendOp != STYLEOP_Shadow)
 	{
 		if (gl_lights && GLRenderer->mLightCount && !gl_fixedcolormap && !fullbright)
 		{
 			gl_SetDynSpriteLight(gl_light_sprites ? actor : NULL, gl_light_particles ? particle : NULL);
 		}
+		sector_t *cursec = actor ? actor->Sector : particle ? particle->subsector->sector : nullptr;
+		if (cursec != nullptr)
+		{
+			PalEntry finalcol(ThingColor.a,
+				ThingColor.r * cursec->SpecialColors[sector_t::sprites].r / 255,
+				ThingColor.g * cursec->SpecialColors[sector_t::sprites].g / 255,
+				ThingColor.b * cursec->SpecialColors[sector_t::sprites].b / 255);
+
+			gl_RenderState.SetObjectColor(finalcol);
+		}
 		gl_SetColor(lightlevel, rel, Colormap, trans);
 	}
-	gl_RenderState.SetObjectColor(ThingColor);
+
 
 	if (gl_isBlack(Colormap.FadeColor)) foglevel=lightlevel;
 
@@ -705,10 +716,6 @@ void GLSprite::Process(AActor* thing, sector_t * sector, int thruportal)
 			}
 		}
 	}
-	if (thing == camera)
-	{
-		int a = 0;
-	}
 
 	// don't draw first frame of a player missile
 	if (thing->flags&MF_MISSILE)
@@ -730,6 +737,11 @@ void GLSprite::Process(AActor* thing, sector_t * sector, int thruportal)
 		int clipres = GLRenderer->mClipPortal->ClipPoint(thingpos);
 		if (clipres == GLPortal::PClip_InFront) return;
 	}
+	// disabled because almost none of the actual game code is even remotely prepared for this. If desired, use the INTERPOLATE flag.
+	if (thing->renderflags & RF_INTERPOLATEANGLES)
+		Angles = thing->InterpolatedAngles(r_TicFracF);
+	else
+		Angles = thing->Angles;
 
 	player_t *player = &players[consoleplayer];
 	FloatRect r;
@@ -776,7 +788,7 @@ void GLSprite::Process(AActor* thing, sector_t * sector, int thruportal)
 		}
 		else if (!(thing->renderflags & RF_FLATSPRITE))
 		{
-			patch = gl_GetSpriteFrame(spritenum, thing->frame, -1, (ang - (thing->Angles.Yaw + thing->SpriteRotation)).BAMs(), &mirror);
+			patch = gl_GetSpriteFrame(spritenum, thing->frame, -1, (ang - (Angles.Yaw + thing->SpriteRotation)).BAMs(), &mirror);
 		}
 		else
 		{
@@ -847,8 +859,8 @@ void GLSprite::Process(AActor* thing, sector_t * sector, int thruportal)
 		}
 		break;
 		case RF_WALLSPRITE:
-			viewvecX = thing->Angles.Yaw.Cos();
-			viewvecY = thing->Angles.Yaw.Sin();
+			viewvecX = Angles.Yaw.Cos();
+			viewvecY = Angles.Yaw.Sin();
 
 			x1 = x + viewvecY*leftfac;
 			x2 = x + viewvecY*rightfac;

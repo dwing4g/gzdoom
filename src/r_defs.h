@@ -239,7 +239,7 @@ struct FUDMFKey
 	FUDMFKey& operator =(const FString &val)
 	{
 		Type = UDMF_String;
-		IntVal = strtol(val.GetChars(), NULL, 0);
+		IntVal = (int)strtoll(val.GetChars(), NULL, 0);
 		FloatVal = strtod(val.GetChars(), NULL);
 		StringVal = val;
 		return *this;
@@ -660,10 +660,15 @@ public:
 	FSectorPortal *ValidatePortal(int which);
 	void CheckPortalPlane(int plane);
 
+
 	enum
 	{
 		floor,
-		ceiling
+		ceiling,
+		// only used for specialcolors array
+		walltop,
+		wallbottom,
+		sprites
 	};
 
 	struct splane
@@ -961,6 +966,7 @@ public:
 
 	// [RH] give floor and ceiling even more properties
 	FDynamicColormap *ColorMap;	// [RH] Per-sector colormap
+	PalEntry	SpecialColors[5];
 
 
 	TObjPtr<AActor> SoundTarget;

@@ -1504,6 +1504,7 @@ void P_LoadSectors (MapData *map, FMissingTextureTracker &missingtex)
 		ss->SeqName = NAME_None;
 		ss->nextsec = -1;	//jff 2/26/98 add fields to support locking out
 		ss->prevsec = -1;	// stair retriggering until build completes
+		memset(ss->SpecialColors, -1, sizeof(ss->SpecialColors));
 
 		ss->SetAlpha(sector_t::floor, 1.);
 		ss->SetAlpha(sector_t::ceiling, 1.);
@@ -2092,9 +2093,7 @@ void P_LoadLineDefs (MapData * map)
 	maplinedef_t *mld;
 		
 	int numlines = lumplen / sizeof(maplinedef_t);
-	level.lines.Alloc(numlines);
 	linemap.Resize(numlines);
-	memset (&level.lines[0], 0, numlines*sizeof(line_t));
 
 	mldf = new char[lumplen];
 	map->Read(ML_LINEDEFS, mldf);
@@ -2139,6 +2138,8 @@ void P_LoadLineDefs (MapData * map)
 			i++;
 		}
 	}
+	level.lines.Alloc(numlines);
+	memset(&level.lines[0], 0, numlines * sizeof(line_t));
 
 	P_AllocateSideDefs (map, sidecount);
 
@@ -2191,9 +2192,7 @@ void P_LoadLineDefs2 (MapData * map)
 	maplinedef2_t *mld;
 		
 	int numlines = lumplen / sizeof(maplinedef2_t);
-	level.lines.Alloc(numlines);
 	linemap.Resize(numlines);
-	memset (&level.lines[0], 0, numlines*sizeof(line_t));
 
 	mldf = new char[lumplen];
 	map->Read(ML_LINEDEFS, mldf);
@@ -2232,6 +2231,8 @@ void P_LoadLineDefs2 (MapData * map)
 	{
 		ForceNodeBuild = true;
 	}
+	level.lines.Alloc(numlines);
+	memset(&level.lines[0], 0, numlines * sizeof(line_t));
 
 	P_AllocateSideDefs (map, sidecount);
 
@@ -2539,7 +2540,7 @@ void P_ProcessSideTextures(bool checktranmap, side_t *sd, sector_t *sec, intmaps
 	case Sector_Set3DFloor:
 		if (msd->toptexture[0]=='#')
 		{
-			sd->SetTexture(side_t::top, FNullTextureID() +(-strtol(&msd->toptexture[1], NULL, 10)));	// store the alpha as a negative texture index
+			sd->SetTexture(side_t::top, FNullTextureID() +(int)(-strtoll(&msd->toptexture[1], NULL, 10)));	// store the alpha as a negative texture index
 														// This will be sorted out by the 3D-floor code later.
 		}
 		else
@@ -2975,6 +2976,15 @@ static bool P_VerifyBlockMap(int count)
 				}
 				if(*tmplist == -1) // found -1
 					break;
+			}
+
+			// there's some node builder which carelessly removed the initial 0-entry.
+			// Rather than second-guessing the intent, let's just discard such blockmaps entirely
+			// to be on the safe side.
+			if (*list != 0)
+			{
+				Printf(PRINT_HIGH, "P_VerifyBlockMap: first entry is not 0.\n");
+				return false;
 			}
 
 			// scan the list for out-of-range linedef indicies in list
@@ -3422,6 +3432,17 @@ extern polyblock_t **PolyBlockMap;
 
 void P_FreeLevelData ()
 {
+	MapThingsConverted.Clear();
+	MapThingsUserDataIndex.Clear();
+	MapThingsUserData.Clear();
+	linemap.Clear();
+	FCanvasTextureInfo::EmptyList();
+	R_FreePastViewers();
+	P_ClearUDMFKeys();
+
+	// [RH] Clear all ThingID hash chains.
+	AActor::ClearTIDHashes();
+
 	P_FreeMapDataBackup();
 	interpolator.ClearInterpolations();	// [RH] Nothing to interpolate on a fresh level.
 	Renderer->CleanLevelData();
@@ -3574,14 +3595,6 @@ void P_SetupLevel (const char *lumpname, int position)
 	level.maptype = MAPTYPE_UNKNOWN;
 	wminfo.partime = 180;
 
-	MapThingsConverted.Clear();
-	MapThingsUserDataIndex.Clear();
-	MapThingsUserData.Clear();
-	linemap.Clear();
-	FCanvasTextureInfo::EmptyList ();
-	R_FreePastViewers ();
-	P_ClearUDMFKeys();
-
 	if (!savegamerestore)
 	{
 		for (i = 0; i < MAXPLAYERS; ++i)
@@ -3611,8 +3624,6 @@ void P_SetupLevel (const char *lumpname, int position)
 
 	// Make sure all sounds are stopped before Z_FreeTags.
 	S_Start ();
-	// [RH] Clear all ThingID hash chains.
-	AActor::ClearTIDHashes ();
 
 	// [RH] clear out the mid-screen message
 	C_MidPrint (NULL, NULL);

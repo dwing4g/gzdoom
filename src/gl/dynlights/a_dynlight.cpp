@@ -209,7 +209,7 @@ void ADynamicLight::Activate(AActor *activator)
 		m_cycler.SetCycleType(CYCLE_Sin);
 		m_currentRadius = m_cycler.GetVal();
 	}
-	assert(m_currentRadius > 0);
+	if (m_currentRadius <= 0) m_currentRadius = 1;
 }
 
 
@@ -334,6 +334,7 @@ void ADynamicLight::Tick()
 		m_currentRadius = float(args[LIGHT_INTENSITY]);
 		break;
 	}
+	if (m_currentRadius <= 0) m_currentRadius = 1;
 	UpdateLocation();
 }
 
@@ -390,7 +391,7 @@ void ADynamicLight::UpdateLocation()
 			intensity = m_currentRadius;
 		}
 		radius = intensity * 2.0f;
-		assert(radius >= m_currentRadius * 2);
+		if (radius < m_currentRadius * 2) radius = m_currentRadius * 2;
 
 		if (X() != oldx || Y() != oldy || radius != oldradius)
 		{

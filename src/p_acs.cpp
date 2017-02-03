@@ -1086,12 +1086,12 @@ static void ReadArrayVars (FSerializer &file, FWorldGlobalArray *vars, size_t co
 		const char *arraykey;
 		while ((arraykey = file.GetKey()))
 		{
-			int i = (int)strtol(arraykey, nullptr, 10);
+			int i = (int)strtoll(arraykey, nullptr, 10);
 			if (file.BeginObject(nullptr))
 			{
 				while ((arraykey = file.GetKey()))
 				{
-					int k = (int)strtol(arraykey, nullptr, 10);
+					int k = (int)strtoll(arraykey, nullptr, 10);
 					int val;
 					file(nullptr, val);
 					vars[i].Insert(k, val);
@@ -6203,7 +6203,7 @@ static bool CharArrayParms(int &capacity, int &offset, int &a, int *Stack, int &
 static void SetMarineWeapon(AActor *marine, int weapon)
 {
 	static VMFunction *smw = nullptr;
-	if (smw == nullptr) smw = PClass::FindFunction(NAME_ScriptedMarine, NAME_SetWeapon);
+	if (smw == nullptr) PClass::FindFunction(&smw, NAME_ScriptedMarine, NAME_SetWeapon);
 	if (smw)
 	{
 		VMValue params[2] = { marine, weapon };
@@ -6214,7 +6214,7 @@ static void SetMarineWeapon(AActor *marine, int weapon)
 static void SetMarineSprite(AActor *marine, PClassActor *source)
 {
 	static VMFunction *sms = nullptr;
-	if (sms == nullptr) sms = PClass::FindFunction(NAME_ScriptedMarine, NAME_SetSprite);
+	if (sms == nullptr) PClass::FindFunction(&sms, NAME_ScriptedMarine, NAME_SetSprite);
 	if (sms)
 	{
 		VMValue params[2] = { marine, source };
