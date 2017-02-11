@@ -369,7 +369,9 @@ static FStrifeDialogueNode *ReadRetailNode (FileReader *lump, DWORD &prevSpeaker
 	node->ItemCheck.Resize(3);
 	for (j = 0; j < 3; ++j)
 	{
-		node->ItemCheck[j].Item = dyn_cast<PClassInventory>(GetStrifeType(speech.ItemCheck[j]));
+		auto inv = GetStrifeType(speech.ItemCheck[j]);
+		if (!inv->IsDescendantOf(RUNTIME_CLASS(AInventory))) inv = nullptr;
+		node->ItemCheck[j].Item = inv;
 		node->ItemCheck[j].Amount = -1;
 	}
 	node->ItemCheckNode = speech.Link;
@@ -513,7 +515,9 @@ static void ParseReplies (FStrifeDialogueReply **replyptr, Response *responses)
 		reply->ItemCheck.Resize(3);
 		for (k = 0; k < 3; ++k)
 		{
-			reply->ItemCheck[k].Item = dyn_cast<PClassInventory>(GetStrifeType(rsp->Item[k]));
+			auto inv = GetStrifeType(rsp->Item[k]);
+			if (!inv->IsDescendantOf(RUNTIME_CLASS(AInventory))) inv = nullptr;
+			reply->ItemCheck[k].Item = inv;
 			reply->ItemCheck[k].Amount = rsp->Count[k];
 		}
 		reply->ItemCheckRequire.Clear();
@@ -1061,10 +1065,10 @@ public:
 
 				mysnprintf(goldstr, countof(goldstr), "%d", coin != NULL ? coin->Amount : 0);
 				screen->DrawText(SmallFont, CR_GRAY, 21, 191, goldstr, DTA_320x200, true,
-					DTA_FillColor, 0, DTA_AlphaF, HR_SHADOW, TAG_DONE);
+					DTA_FillColor, 0, DTA_Alpha, HR_SHADOW, TAG_DONE);
 				screen->DrawTexture(TexMan(((AInventory *)GetDefaultByType(cointype))->Icon),
 					3, 190, DTA_320x200, true,
-					DTA_FillColor, 0, DTA_AlphaF, HR_SHADOW, TAG_DONE);
+					DTA_FillColor, 0, DTA_Alpha, HR_SHADOW, TAG_DONE);
 				screen->DrawText(SmallFont, CR_GRAY, 20, 190, goldstr, DTA_320x200, true, TAG_DONE);
 				screen->DrawTexture(TexMan(((AInventory *)GetDefaultByType(cointype))->Icon),
 					2, 189, DTA_320x200, true, TAG_DONE);
@@ -1331,7 +1335,7 @@ static void HandleReply(player_t *player, bool isconsole, int nodenum, int reply
 	{
 		if (reply->GiveType->IsDescendantOf(RUNTIME_CLASS(AInventory)))
 		{
-			if (reply->GiveType->IsDescendantOf(RUNTIME_CLASS(AWeapon)))
+			if (reply->GiveType->IsDescendantOf(NAME_Weapon))
 			{
 				if (player->mo->FindInventory(reply->GiveType) != NULL)
 				{
@@ -1357,7 +1361,7 @@ static void HandleReply(player_t *player, bool isconsole, int nodenum, int reply
 				}
 			}
 		
-			if (reply->GiveType->IsDescendantOf(PClass::FindActor("SlideshowStarter")))
+			if (reply->GiveType->IsDescendantOf("SlideshowStarter"))
 				gameaction = ga_slideshow;
 		}
 		else

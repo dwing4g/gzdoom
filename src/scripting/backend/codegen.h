@@ -242,6 +242,7 @@ enum EFxType
 	EFX_Conditional,
 	EFX_Abs,
 	EFX_ATan2,
+	EFX_New,
 	EFX_MinMax,
 	EFX_Random,
 	EFX_RandomPick,
@@ -293,6 +294,7 @@ enum EFxType
 	EFX_StrLen,
 	EFX_ColorLiteral,
 	EFX_GetDefaultByType,
+	EFX_FontCast,
 	EFX_COUNT
 };
 
@@ -331,6 +333,7 @@ public:
 	bool IsObject() const { return ValueType->IsKindOf(RUNTIME_CLASS(PPointer)) && !ValueType->IsKindOf(RUNTIME_CLASS(PClassPointer)) && ValueType != TypeNullPtr && static_cast<PPointer*>(ValueType)->PointedType->IsKindOf(RUNTIME_CLASS(PClass)); }
 	bool IsArray() const { return ValueType->IsKindOf(RUNTIME_CLASS(PArray)) || (ValueType->IsKindOf(RUNTIME_CLASS(PPointer)) && static_cast<PPointer*>(ValueType)->PointedType->IsKindOf(RUNTIME_CLASS(PArray))); }
 	bool IsResizableArray() const { return (ValueType->IsKindOf(RUNTIME_CLASS(PPointer)) && static_cast<PPointer*>(ValueType)->PointedType->IsKindOf(RUNTIME_CLASS(PResizableArray))); } // can only exist in pointer form.
+	bool IsDynamicArray() const { return (ValueType->IsKindOf(RUNTIME_CLASS(PDynArray))); }
 
 	virtual ExpEmit Emit(VMFunctionBuilder *build);
 	void EmitStatement(VMFunctionBuilder *build);
@@ -484,6 +487,13 @@ public:
 	{
 		value.pointer = state;
 		ValueType = value.Type = TypeState;
+		isresolved = true;
+	}
+
+	FxConstant(FFont *state, const FScriptPosition &pos) : FxExpression(EFX_Constant, pos)
+	{
+		value.pointer = state;
+		ValueType = value.Type = TypeFont;
 		isresolved = true;
 	}
 
@@ -662,6 +672,18 @@ public:
 
 	ExpEmit Emit(VMFunctionBuilder *build);
 };
+
+class FxFontCast : public FxExpression
+{
+	FxExpression *basex;
+
+public:
+
+	FxFontCast(FxExpression *x);
+	~FxFontCast();
+	FxExpression *Resolve(FCompileContext&);
+};
+
 
 //==========================================================================
 //
@@ -1176,6 +1198,26 @@ public:
 private:
 	ExpEmit ToReg(VMFunctionBuilder *build, FxExpression *val);
 };
+
+//==========================================================================
+//
+//
+//
+//==========================================================================
+
+class FxNew : public FxExpression
+{
+	FxExpression *val;
+
+public:
+
+	FxNew(FxExpression *v);
+	~FxNew();
+	FxExpression *Resolve(FCompileContext&);
+
+	ExpEmit Emit(VMFunctionBuilder *build);
+};
+
 //==========================================================================
 //
 //
@@ -1274,17 +1316,28 @@ public:
 
 //==========================================================================
 //
+//	FxMemberBase
+//
+//==========================================================================
+
+class FxMemberBase : public FxExpression
+{
+public:
+	PField *membervar;
+	bool AddressRequested = false;
+	bool AddressWritable = true;
+	FxMemberBase(EFxType type, PField *f, const FScriptPosition &p);
+};
+
+//==========================================================================
+//
 //	FxGlobalVariaböe
 //
 //==========================================================================
 
-class FxGlobalVariable : public FxExpression
+class FxGlobalVariable : public FxMemberBase
 {
 public:
-	PField *membervar;
-	bool AddressRequested;
-	bool AddressWritable;
-
 	FxGlobalVariable(PField*, const FScriptPosition&);
 	FxExpression *Resolve(FCompileContext&);
 	bool RequestAddress(FCompileContext &ctx, bool *writable);
@@ -1301,19 +1354,17 @@ public:
 	ExpEmit Emit(VMFunctionBuilder *build);
 };
 
+
 //==========================================================================
 //
 //	FxClassMember
 //
 //==========================================================================
 
-class FxStructMember : public FxExpression
+class FxStructMember : public FxMemberBase
 {
 public:
 	FxExpression *classx;
-	PField *membervar;
-	bool AddressRequested;
-	bool AddressWritable;
 
 	FxStructMember(FxExpression*, PField*, const FScriptPosition&);
 	~FxStructMember();
@@ -1361,16 +1412,11 @@ public:
 //
 //==========================================================================
 
-class FxStackVariable : public FxExpression
+class FxStackVariable : public FxMemberBase
 {
 public:
-	PField *membervar;
-	bool AddressRequested;
-	bool AddressWritable;
-
 	FxStackVariable(PType *type, int offset, const FScriptPosition&);
 	~FxStackVariable();
-	void ReplaceField(PField *newfield);
 	FxExpression *Resolve(FCompileContext&);
 	bool RequestAddress(FCompileContext &ctx, bool *writable);
 	ExpEmit Emit(VMFunctionBuilder *build);

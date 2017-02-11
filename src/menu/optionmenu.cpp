@@ -66,13 +66,17 @@ void M_DrawConText (int color, int x, int y, const char *str)
 
 IMPLEMENT_CLASS(DOptionMenu, false, false)
 
+IMPLEMENT_POINTERS_START(DOptionMenu)
+IMPLEMENT_POINTER(mFocusControl)
+IMPLEMENT_POINTERS_END
+
 //=============================================================================
 //
 //
 //
 //=============================================================================
 
-DOptionMenu::DOptionMenu(DMenu *parent, FOptionMenuDescriptor *desc)
+DOptionMenu::DOptionMenu(DMenu *parent, DOptionMenuDescriptor *desc)
 : DMenu(parent)
 {
 	CanScrollUp = false;
@@ -88,7 +92,7 @@ DOptionMenu::DOptionMenu(DMenu *parent, FOptionMenuDescriptor *desc)
 //
 //=============================================================================
 
-void DOptionMenu::Init(DMenu *parent, FOptionMenuDescriptor *desc)
+void DOptionMenu::Init(DMenu *parent, DOptionMenuDescriptor *desc)
 {
 	mParentMenu = parent;
 	GC::WriteBarrier(this, parent);
@@ -124,8 +128,10 @@ int DOptionMenu::FirstSelectable()
 //
 //
 //=============================================================================
+IMPLEMENT_CLASS(DOptionMenuItem, true, false)
 
-FOptionMenuItem *DOptionMenu::GetItem(FName name)
+
+DOptionMenuItem *DOptionMenu::GetItem(FName name)
 {
 	for(unsigned i=0;i<mDesc->mItems.Size(); i++)
 	{
@@ -476,30 +482,26 @@ void DOptionMenu::Drawer ()
 //
 //=============================================================================
 
-FOptionMenuItem::~FOptionMenuItem()
-{
-}
-
-int FOptionMenuItem::Draw(FOptionMenuDescriptor *desc, int y, int indent, bool selected)
+int DOptionMenuItem::Draw(DOptionMenuDescriptor *desc, int y, int indent, bool selected)
 {
 	return indent;
 }
 
-bool FOptionMenuItem::Selectable()
+bool DOptionMenuItem::Selectable()
 {
 	return true;
 }
 
-bool FOptionMenuItem::MouseEvent(int type, int x, int y)
+bool DOptionMenuItem::MouseEvent(int type, int x, int y)
 {
 	if (Selectable() && type == DMenu::MOUSE_Release)
 	{
-		return DMenu::CurrentMenu->MenuEvent(MKEY_Enter, true);
+		return DMenu::CurrentMenu->CallMenuEvent(MKEY_Enter, true);
 	}
 	return false;
 }
 
-int  FOptionMenuItem::GetIndent()
+int  DOptionMenuItem::GetIndent()
 {
 	if (mCentered)
 	{
@@ -510,7 +512,7 @@ int  FOptionMenuItem::GetIndent()
 	return SmallFont->StringWidth(label);
 }
 
-void FOptionMenuItem::drawLabel(int indent, int y, EColorRange color, bool grayed)
+void DOptionMenuItem::drawLabel(int indent, int y, EColorRange color, bool grayed)
 {
 	const char *label = mLabel.GetChars();
 	if (*label == '$') label = GStrings(label+1);
@@ -526,7 +528,7 @@ void FOptionMenuItem::drawLabel(int indent, int y, EColorRange color, bool graye
 
 
 
-void FOptionMenuDescriptor::CalcIndent()
+void DOptionMenuDescriptor::CalcIndent()
 {
 	// calculate the menu indent
 	int widest = 0, thiswidth;
@@ -545,7 +547,7 @@ void FOptionMenuDescriptor::CalcIndent()
 //
 //=============================================================================
 
-FOptionMenuItem *FOptionMenuDescriptor::GetItem(FName name)
+DOptionMenuItem *DOptionMenuDescriptor::GetItem(FName name)
 {
 	for(unsigned i=0;i<mItems.Size(); i++)
 	{

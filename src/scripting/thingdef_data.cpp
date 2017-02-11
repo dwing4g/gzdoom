@@ -53,6 +53,9 @@
 #include "vm.h"
 #include "p_checkposition.h"
 #include "r_sky.h"
+#include "v_font.h"
+#include "v_video.h"
+#include "menu/menu.h"
 
 static TArray<FPropertyInfo*> properties;
 static TArray<AFuncDesc> AFTable;
@@ -801,34 +804,79 @@ void InitThingdef()
 	pstruct->Size = sizeof(player_t);
 	pstruct->Align = alignof(player_t);
 	PArray *parray = NewArray(pstruct, MAXPLAYERS);
-	PField *playerf = new PField("players", parray, VARF_Native | VARF_Static, (intptr_t)&players);
-	Namespaces.GlobalNamespace->Symbols.AddSymbol(playerf);
+	PField *fieldptr = new PField("players", parray, VARF_Native | VARF_Static, (intptr_t)&players);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
 
 	pstruct->AddNativeField("weapons", NewNativeStruct("WeaponSlots", nullptr), myoffsetof(player_t, weapons), VARF_Native);
 
 
 	parray = NewArray(TypeBool, MAXPLAYERS);
-	playerf = new PField("playeringame", parray, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&playeringame);
-	Namespaces.GlobalNamespace->Symbols.AddSymbol(playerf);
+	fieldptr = new PField("playeringame", parray, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&playeringame);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
 
-	playerf = new PField("gameaction", TypeUInt8, VARF_Native | VARF_Static, (intptr_t)&gameaction);
-	Namespaces.GlobalNamespace->Symbols.AddSymbol(playerf);
+	fieldptr = new PField("gameaction", TypeUInt8, VARF_Native | VARF_Static, (intptr_t)&gameaction);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
 
-	playerf = new PField("skyflatnum", TypeTextureID, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&skyflatnum);
-	Namespaces.GlobalNamespace->Symbols.AddSymbol(playerf);
+	fieldptr = new PField("skyflatnum", TypeTextureID, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&skyflatnum);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
 
-	playerf = new PField("globalfreeze", TypeUInt8, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&bglobal.freeze);
-	Namespaces.GlobalNamespace->Symbols.AddSymbol(playerf);
+	fieldptr = new PField("globalfreeze", TypeUInt8, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&bglobal.freeze);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
 
-	playerf = new PField("consoleplayer", TypeSInt32, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&consoleplayer);
-	Namespaces.GlobalNamespace->Symbols.AddSymbol(playerf);
+	fieldptr = new PField("consoleplayer", TypeSInt32, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&consoleplayer);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
 
+	auto fontptr = NewPointer(NewNativeStruct("Font", nullptr));
+
+	fieldptr = new PField("smallfont", fontptr, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&SmallFont);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
+
+	fieldptr = new PField("smallfont2", fontptr, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&SmallFont2);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
+
+	fieldptr = new PField("bigfont", fontptr, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&BigFont);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
+
+	fieldptr = new PField("confont", fontptr, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&ConFont);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
+
+	fieldptr = new PField("intermissionfont", fontptr, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&IntermissionFont);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
+
+	fieldptr = new PField("CleanXFac", TypeSInt32, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&CleanXfac);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
+
+	fieldptr = new PField("CleanYFac", TypeSInt32, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&CleanYfac);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
+
+	fieldptr = new PField("CleanWidth", TypeSInt32, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&CleanWidth);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
+
+	fieldptr = new PField("CleanHeight", TypeSInt32, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&CleanHeight);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
+
+	fieldptr = new PField("CleanXFac_1", TypeSInt32, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&CleanXfac_1);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
+
+	fieldptr = new PField("CleanYFac_1", TypeSInt32, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&CleanYfac_1);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
+
+	fieldptr = new PField("CleanWidth_1", TypeSInt32, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&CleanWidth_1);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
+
+	fieldptr = new PField("CleanHeight_1", TypeSInt32, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&CleanHeight_1);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
+
+	fieldptr = new PField("OptionMenuSettings", NewStruct("FOptionMenuSettings", nullptr), VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&OptionSettings);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
+
+	
 	// Argh. It sucks when bad hacks need to be supported. WP_NOCHANGE is just a bogus pointer but it used everywhere as a special flag.
 	// It cannot be defined as constant because constants can either be numbers or strings but nothing else, so the only 'solution'
 	// is to create a static variable from it and reference that in the script. Yuck!!!
 	static AWeapon *wpnochg = WP_NOCHANGE;
-	playerf = new PField("WP_NOCHANGE", NewPointer(RUNTIME_CLASS(AWeapon), false), VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&wpnochg);
-	Namespaces.GlobalNamespace->Symbols.AddSymbol(playerf);
+	fieldptr = new PField("WP_NOCHANGE", NewPointer(RUNTIME_CLASS(AWeapon), false), VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&wpnochg);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
 
 	// synthesize a symbol for each flag from the flag name tables to avoid redundant declaration of them.
 	for (auto &fl : FlagLists)
@@ -1118,4 +1166,40 @@ DEFINE_ACTION_FUNCTION(FStringStruct, AppendFormat)
 	FString s = FStringFormat(param+1, defaultparam, numparam-1, ret, numret);
 	(*self) += s;
 	return 0;
+}
+
+DEFINE_ACTION_FUNCTION(FStringStruct, Mid)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FString);
+	PARAM_UINT(pos);
+	PARAM_UINT(len);
+	FString s = self->Mid(pos, len);
+	ACTION_RETURN_STRING(s);
+}
+
+DEFINE_ACTION_FUNCTION(FStringStruct, Len)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FString);
+	ACTION_RETURN_INT((int)self->Len());
+}
+
+// CharAt and CharCodeAt is how JS does it, and JS is similar here in that it doesn't have char type as int.
+DEFINE_ACTION_FUNCTION(FStringStruct, CharAt)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FString);
+	PARAM_INT(pos);
+	int slen = (int)self->Len();
+	if (pos < 0 || pos >= slen)
+		ACTION_RETURN_STRING("");
+	ACTION_RETURN_STRING(FString((*self)[pos]));
+}
+
+DEFINE_ACTION_FUNCTION(FStringStruct, CharCodeAt)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FString);
+	PARAM_INT(pos);
+	int slen = (int)self->Len();
+	if (pos < 0 || pos >= slen)
+		ACTION_RETURN_INT(0);
+	ACTION_RETURN_INT((*self)[pos]);
 }

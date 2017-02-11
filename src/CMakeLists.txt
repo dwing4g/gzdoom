@@ -621,7 +621,6 @@ set( PLAT_WIN32_SOURCES
 	win32/i_rawps2.cpp
 	win32/i_xinput.cpp
 	win32/i_main.cpp
-	win32/i_movie.cpp
 	win32/i_system.cpp
 	win32/i_specialpaths.cpp
 	win32/st_start.cpp
@@ -629,7 +628,6 @@ set( PLAT_WIN32_SOURCES
 	win32/win32video.cpp )
 set( PLAT_POSIX_SOURCES
 	posix/i_cd.cpp
-	posix/i_movie.cpp
 	posix/i_steam.cpp )
 set( PLAT_SDL_SOURCES
 	posix/sdl/crashcatcher.c
@@ -780,7 +778,7 @@ file( GLOB HEADER_FILES
 	sound/*.h
 	textures/*.h
 	scripting/*.h
-	scripting/codegeneration/*.h
+	scripting/backend/*.h
 	scripting/decorate/*.h
 	scripting/zscript/*.h
 	scripting/vm/*.h
@@ -1178,6 +1176,7 @@ set (PCH_SOURCES
 	textures/pngtexture.cpp
 	textures/rawpagetexture.cpp
 	textures/emptytexture.cpp
+	textures/backdroptexture.cpp
 	textures/texture.cpp
 	textures/texturemanager.cpp
 	textures/tgatexture.cpp
@@ -1196,17 +1195,18 @@ set (PCH_SOURCES
 	r_data/voxels.cpp
 	r_data/renderstyle.cpp
 	r_data/r_interpolate.cpp
+	scripting/symbols.cpp
 	scripting/thingdef.cpp
 	scripting/thingdef_data.cpp
 	scripting/thingdef_properties.cpp
-	scripting/codegeneration/codegen.cpp
-	scripting/codegeneration/dynarrays.cpp
+	scripting/backend/codegen.cpp
+	scripting/backend/dynarrays.cpp
+	scripting/backend/vmbuilder.cpp
+	scripting/backend/vmdisasm.cpp
 	scripting/decorate/olddecorations.cpp
 	scripting/decorate/thingdef_exp.cpp
 	scripting/decorate/thingdef_parse.cpp
 	scripting/decorate/thingdef_states.cpp
-	scripting/vm/vmbuilder.cpp
-	scripting/vm/vmdisasm.cpp
 	scripting/vm/vmexec.cpp
 	scripting/vm/vmframe.cpp
 	scripting/zscript/ast.cpp
@@ -1423,9 +1423,9 @@ source_group("Platforms\\OS X Files" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE
 source_group("Platforms\\Unix Files" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/posix/unix/.+")
 source_group("Platforms\\SDL Files" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/posix/sdl/.+")
 source_group("Platforms\\Win32 Files" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/win32/.+")
-source_group("Scripting\\Decorate" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/scripting/decorate/.+")
-source_group("Scripting\\ZScript" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/scripting/zscript/.+" FILES ${CMAKE_CURRENT_BINARY_DIR}/zcc-parse.c ${CMAKE_CURRENT_BINARY_DIR}/zcc-parse.h)
-source_group("Scripting\\Code Generation" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/scripting/codegeneration/.+")
+source_group("Scripting\\Decorate frontend" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/scripting/decorate/.+")
+source_group("Scripting\\ZScript frontend" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/scripting/zscript/.+" FILES ${CMAKE_CURRENT_BINARY_DIR}/zcc-parse.c ${CMAKE_CURRENT_BINARY_DIR}/zcc-parse.h)
+source_group("Scripting\\Compiler backend" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/scripting/backend/.+")
 source_group("Scripting\\VM" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/scripting/vm/.+")
 source_group("Scripting" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/scripting/.+")
 source_group("Shared Game" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/g_shared/.+")

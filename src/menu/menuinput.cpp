@@ -138,7 +138,7 @@ bool DTextEnterMenu::Responder(event_t *ev)
 			{
 				DMenu *parent = mParentMenu;
 				Close();
-				parent->MenuEvent(MKEY_Abort, false);
+				parent->CallMenuEvent(MKEY_Abort, false);
 				return true;
 			}
 			else if (ch == '\r')
@@ -151,7 +151,7 @@ bool DTextEnterMenu::Responder(event_t *ev)
 
 					DMenu *parent = mParentMenu;
 					Close();
-					parent->MenuEvent(MKEY_Input, false);
+					parent->CallMenuEvent(MKEY_Input, false);
 					return true;
 				}
 			}
@@ -183,7 +183,7 @@ bool DTextEnterMenu::MouseEvent(int type, int x, int y)
 		InputGridY = (y - screen_y) / cell_height;
 		if (type == DMenu::MOUSE_Release)
 		{
-			if (MenuEvent(MKEY_Enter, true))
+			if (CallMenuEvent(MKEY_Enter, true))
 			{
 				S_Sound (CHAN_VOICE | CHAN_UI, "menu/choose", snd_menuvolume, ATTN_NONE);
 				if (m_use_mouse == 2) InputGridX = InputGridY = -1;
@@ -210,7 +210,7 @@ bool DTextEnterMenu::MenuEvent (int key, bool fromcontroller)
 {
 	if (key == MKEY_Back)
 	{
-		mParentMenu->MenuEvent(MKEY_Abort, false);
+		mParentMenu->CallMenuEvent(MKEY_Abort, false);
 		return Super::MenuEvent(key, fromcontroller);
 	}
 	if (fromcontroller)
@@ -262,7 +262,7 @@ bool DTextEnterMenu::MenuEvent (int key, bool fromcontroller)
 					{
 						DMenu *parent = mParentMenu;
 						Close();
-						parent->MenuEvent(MKEY_Input, false);
+						parent->CallMenuEvent(MKEY_Input, false);
 						return true;
 					}
 				}
@@ -297,7 +297,7 @@ bool DTextEnterMenu::MenuEvent (int key, bool fromcontroller)
 
 void DTextEnterMenu::Drawer ()
 {
-	mParentMenu->Drawer();
+	mParentMenu->CallDrawer();
 	if (mInputGridOkay)
 	{
 		const int cell_width = 18 * CleanXfac;
@@ -332,29 +332,25 @@ void DTextEnterMenu::Drawer ()
 				const int ch = InputGridChars[y * INPUTGRID_WIDTH + x];
 				FTexture *pic = SmallFont->GetChar(ch, &width);
 				EColorRange color;
-				FRemapTable *remap;
 
 				// The highlighted character is yellow; the rest are dark gray.
 				color = (x == InputGridX && y == InputGridY) ? CR_YELLOW : CR_DARKGRAY;
-				remap = SmallFont->GetColorTranslation(color);
 
 				if (pic != NULL)
 				{
 					// Draw a normal character.
-					screen->DrawTexture(pic, xx + cell_width/2 - width*CleanXfac/2, yy + top_padding,
-						DTA_Translation, remap,
-						DTA_CleanNoMove, true,
-						TAG_DONE);
+					screen->DrawChar(SmallFont, color, xx + cell_width/2 - width*CleanXfac/2, yy + top_padding, ch, DTA_CleanNoMove, true, TAG_DONE);
 				}
 				else if (ch == ' ')
 				{
+					FRemapTable *remap = SmallFont->GetColorTranslation(color);
 					// Draw the space as a box outline. We also draw it 50% wider than it really is.
 					const int x1 = xx + cell_width/2 - width * CleanXfac * 3 / 4;
 					const int x2 = x1 + width * 3 * CleanXfac / 2;
 					const int y1 = yy + top_padding;
 					const int y2 = y1 + SmallFont->GetHeight() * CleanYfac;
-					const int palentry = remap->Remap[remap->NumEntries*2/3];
-					const uint32 palcolor = remap->Palette[remap->NumEntries*2/3];
+					const int palentry = remap->Remap[remap->NumEntries * 2 / 3];
+					const uint32 palcolor = remap->Palette[remap->NumEntries * 2 / 3];
 					screen->Clear(x1, y1, x2, y1+CleanYfac, palentry, palcolor);	// top
 					screen->Clear(x1, y2, x2, y2+CleanYfac, palentry, palcolor);	// bottom
 					screen->Clear(x1, y1+CleanYfac, x1+CleanXfac, y2, palentry, palcolor);	// left

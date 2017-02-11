@@ -54,7 +54,6 @@
 #include "c_dispatch.h"
 #include "s_sndseq.h"
 #include "i_system.h"
-#include "i_movie.h"
 #include "sbar.h"
 #include "m_swap.h"
 #include "a_sharedglobal.h"
@@ -114,13 +113,6 @@ FRandom pr_acs ("ACS");
 #define HUDMSG_VISIBILITY_SHIFT		16
 #define HUDMSG_VISIBILITY_MASK		(0x00070000)
 // See HUDMSG visibility enumerations in sbar.h
-
-// Flags for ReplaceTextures
-#define NOT_BOTTOM			1
-#define NOT_MIDDLE			2
-#define NOT_TOP				4
-#define NOT_FLOOR			8
-#define NOT_CEILING			16
 
 // LineAttack flags
 #define FHF_NORANDOMPUFFZ	1
@@ -1194,12 +1186,12 @@ static void GiveInventory (AActor *activator, const char *type, int amount)
 		for (int i = 0; i < MAXPLAYERS; ++i)
 		{
 			if (playeringame[i])
-				players[i].mo->GiveInventory(static_cast<PClassInventory *>(info), amount);
+				players[i].mo->GiveInventory(info, amount);
 		}
 	}
 	else
 	{
-		activator->GiveInventory(static_cast<PClassInventory *>(info), amount);
+		activator->GiveInventory(info, amount);
 	}
 }
 
@@ -3320,47 +3312,6 @@ void DLevelScript::SetLineTexture (int lineid, int side, int position, int name)
 			break;
 		}
 
-	}
-}
-
-void DLevelScript::ReplaceTextures (int fromnamei, int tonamei, int flags)
-{
-	const char *fromname = FBehavior::StaticLookupString (fromnamei);
-	const char *toname = FBehavior::StaticLookupString (tonamei);
-	FTextureID picnum1, picnum2;
-
-	if (fromname == NULL)
-		return;
-
-	if ((flags ^ (NOT_BOTTOM | NOT_MIDDLE | NOT_TOP)) != 0)
-	{
-		picnum1 = TexMan.GetTexture (fromname, FTexture::TEX_Wall, FTextureManager::TEXMAN_Overridable);
-		picnum2 = TexMan.GetTexture (toname, FTexture::TEX_Wall, FTextureManager::TEXMAN_Overridable);
-
-		for (auto &side : level.sides)
-		{
-			for(int j=0;j<3;j++)
-			{
-				static BYTE bits[]={NOT_TOP, NOT_MIDDLE, NOT_BOTTOM};
-				if (!(flags & bits[j]) && side.GetTexture(j) == picnum1)
-				{
-					side.SetTexture(j, picnum2);
-				}
-			}
-		}
-	}
-	if ((flags ^ (NOT_FLOOR | NOT_CEILING)) != 0)
-	{
-		picnum1 = TexMan.GetTexture (fromname, FTexture::TEX_Flat, FTextureManager::TEXMAN_Overridable);
-		picnum2 = TexMan.GetTexture (toname, FTexture::TEX_Flat, FTextureManager::TEXMAN_Overridable);
-
-		for (auto &sec : level.sectors)
-		{
-			if (!(flags & NOT_FLOOR) && sec.GetTexture(sector_t::floor) == picnum1) 
-				sec.SetTexture(sector_t::floor, picnum2);
-			if (!(flags & NOT_CEILING) && sec.GetTexture(sector_t::ceiling) == picnum1)	
-				sec.SetTexture(sector_t::ceiling, picnum2);
-		}
 	}
 }
 
@@ -5717,7 +5668,7 @@ doplaysound:			if (funcIndex == ACSF_PlayActorSound)
 			if (argCount >= 2)
 			{
 				PClassActor *powerupclass = PClass::FindActor(FBehavior::StaticLookupString(args[1]));
-				if (powerupclass == NULL || !powerupclass->IsDescendantOf(PClass::FindActor(NAME_Powerup)))
+				if (powerupclass == NULL || !powerupclass->IsDescendantOf(NAME_Powerup))
 				{
 					Printf("'%s' is not a type of Powerup.\n", FBehavior::StaticLookupString(args[1]));
 					return 0;
@@ -8353,9 +8304,14 @@ scriptwait:
 			break;
 
 		case PCD_REPLACETEXTURES:
-			ReplaceTextures (STACK(3), STACK(2), STACK(1));
+		{
+			const char *fromname = FBehavior::StaticLookupString(STACK(3));
+			const char *toname = FBehavior::StaticLookupString(STACK(2));
+
+			P_ReplaceTextures(fromname, toname, STACK(1));
 			sp -= 3;
 			break;
+		}
 
 		case PCD_SETLINEBLOCKING:
 			{
@@ -8801,7 +8757,7 @@ scriptwait:
 			break;
 
 		case PCD_PLAYMOVIE:
-			STACK(1) = I_PlayMovie (FBehavior::StaticLookupString (STACK(1)));
+			STACK(1) = -1;
 			break;
 
 		case PCD_SETACTORPOSITION:
@@ -9043,7 +8999,7 @@ scriptwait:
 				AInventory *item = activator->FindInventory (dyn_cast<PClassActor>(
 					PClass::FindClass (FBehavior::StaticLookupString (STACK(1)))));
 
-				if (item == NULL || !item->IsKindOf (RUNTIME_CLASS(AWeapon)))
+				if (item == NULL || !item->IsKindOf(NAME_Weapon))
 				{
 					STACK(1) = 0;
 				}
@@ -9111,7 +9067,7 @@ scriptwait:
 					}
 					else
 					{
-						if (activator != nullptr && activator->IsKindOf(PClass::FindClass("ScriptedMarine")))
+						if (activator != nullptr && activator->IsKindOf("ScriptedMarine"))
 						{
 							SetMarineSprite(activator, type);
 						}
@@ -9492,7 +9448,7 @@ scriptwait:
 			{
 				int tag = STACK(7);
 				FName playerclass_name = FBehavior::StaticLookupString(STACK(6));
-				PClassPlayerPawn *playerclass = dyn_cast<PClassPlayerPawn>(PClass::FindClass (playerclass_name));
+				auto playerclass = PClass::FindActor (playerclass_name);
 				FName monsterclass_name = FBehavior::StaticLookupString(STACK(5));
 				PClassActor *monsterclass = PClass::FindActor(monsterclass_name);
 				int duration = STACK(4);

@@ -473,6 +473,7 @@ void ProcessMouseMoveInMenu(NSEvent* theEvent)
 
 	event.type    = EV_GUI_Event;
 	event.subtype = EV_GUI_MouseMove;
+	event.data3   = ModifierFlagsToGUIKeyModifiers(theEvent);
 
 	NSEventToGameMousePosition(theEvent, &event);
 
@@ -633,7 +634,8 @@ void ProcessMouseButtonEvent(NSEvent* theEvent)
 
 	if (GUICapture)
 	{
-		event.type = EV_GUI_Event;
+		event.type  = EV_GUI_Event;
+		event.data3 = ModifierFlagsToGUIKeyModifiers(theEvent);
 
 		switch (cocoaEventType)
 		{
@@ -678,7 +680,10 @@ void ProcessMouseButtonEvent(NSEvent* theEvent)
 
 void ProcessMouseWheelEvent(NSEvent* theEvent)
 {
-	const CGFloat delta    = [theEvent deltaY];
+	const SWORD modifiers = ModifierFlagsToGUIKeyModifiers(theEvent);
+	const CGFloat delta   = (modifiers & GKM_SHIFT)
+		? [theEvent deltaX]
+		: [theEvent deltaY];
 	const bool isZeroDelta = fabs(delta) < 1.0E-5;
 
 	if (isZeroDelta && GUICapture)
@@ -692,8 +697,7 @@ void ProcessMouseWheelEvent(NSEvent* theEvent)
 	{
 		event.type    = EV_GUI_Event;
 		event.subtype = delta > 0.0f ? EV_GUI_WheelUp : EV_GUI_WheelDown;
-		event.data3   = delta;
-		event.data3   = ModifierFlagsToGUIKeyModifiers(theEvent);
+		event.data3   = modifiers;
 	}
 	else
 	{
