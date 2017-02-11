@@ -93,9 +93,6 @@
     <Filter Include="scripting">
       <UniqueIdentifier>{a5edf622-48c8-4778-b21c-1933e6e56b9e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="scripting\codegeneration">
-      <UniqueIdentifier>{7c4eb2a2-0030-418d-a40b-75d1256443d2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="scripting\decorate">
       <UniqueIdentifier>{3b45cc90-e32d-4d05-bdc6-037299116c65}</UniqueIdentifier>
     </Filter>
@@ -119,6 +116,9 @@
     </Filter>
     <Filter Include="Game\g_statusbar">
       <UniqueIdentifier>{e4ec9817-a055-4e49-a35d-61ff9f6b3588}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scripting\backend">
+      <UniqueIdentifier>{cf84d21e-588d-4aa0-94d9-90780ad717de}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -585,9 +585,6 @@
       <Filter>win32</Filter>
     </ClCompile>
     <ClCompile Include="src\win32\i_mouse.cpp">
-      <Filter>win32</Filter>
-    </ClCompile>
-    <ClCompile Include="src\win32\i_movie.cpp">
       <Filter>win32</Filter>
     </ClCompile>
     <ClCompile Include="src\win32\i_rawps2.cpp">
@@ -1316,9 +1313,6 @@
     <ClCompile Include="src\math\powi.c">
       <Filter>math</Filter>
     </ClCompile>
-    <ClCompile Include="src\scripting\codegeneration\codegen.cpp">
-      <Filter>scripting\codegeneration</Filter>
-    </ClCompile>
     <ClCompile Include="src\scripting\decorate\olddecorations.cpp">
       <Filter>scripting\decorate</Filter>
     </ClCompile>
@@ -1330,12 +1324,6 @@
     </ClCompile>
     <ClCompile Include="src\scripting\decorate\thingdef_states.cpp">
       <Filter>scripting\decorate</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scripting\vm\vmbuilder.cpp">
-      <Filter>scripting\vm</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scripting\vm\vmdisasm.cpp">
-      <Filter>scripting\vm</Filter>
     </ClCompile>
     <ClCompile Include="src\scripting\vm\vmexec.cpp">
       <Filter>scripting\vm</Filter>
@@ -1375,9 +1363,6 @@
     </ClCompile>
     <ClCompile Include="src\p_secnodes.cpp">
       <Filter>!Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scripting\codegeneration\dynarrays.cpp">
-      <Filter>scripting\codegeneration</Filter>
     </ClCompile>
     <ClCompile Include="src\g_shared\a_action.cpp">
       <Filter>Game\g_shared</Filter>
@@ -1420,6 +1405,24 @@
     </ClCompile>
     <ClCompile Include="src\g_statusbar\strife_sbar.cpp">
       <Filter>Game\g_statusbar</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scripting\symbols.cpp">
+      <Filter>scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\textures\backdroptexture.cpp">
+      <Filter>Render Data\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scripting\backend\codegen.cpp">
+      <Filter>scripting\backend</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scripting\backend\dynarrays.cpp">
+      <Filter>scripting\backend</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scripting\backend\vmbuilder.cpp">
+      <Filter>scripting\backend</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scripting\backend\vmdisasm.cpp">
+      <Filter>scripting\backend</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
