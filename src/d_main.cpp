@@ -110,6 +110,7 @@
 #include "autosegs.h"
 #include "fragglescript/t_fs.h"
 #include "g_levellocals.h"
+#include "events.h"
 
 EXTERN_CVAR(Bool, hud_althud)
 void DrawHUD();
@@ -286,6 +287,9 @@ void D_ProcessEvents (void)
 			continue;				// console ate the event
 		if (M_Responder (ev))
 			continue;				// menu ate the event
+		// check events
+		if (E_Responder(ev)) // [ZZ] ZScript ate the event
+			continue;
 		G_Responder (ev);
 	}
 }
@@ -306,8 +310,7 @@ void D_PostEvent (const event_t *ev)
 		return;
 	}
 	events[eventhead] = *ev;
-	if (ev->type == EV_Mouse && !paused && menuactive == MENU_Off && ConsoleState != c_down && ConsoleState != c_falling
-		)
+	if (ev->type == EV_Mouse && !paused && menuactive == MENU_Off && ConsoleState != c_down && ConsoleState != c_falling && !E_CheckUiProcessors())
 	{
 		if (Button_Mlook.bDown || freelook)
 		{
@@ -775,6 +778,9 @@ void D_Display ()
 			screen->SetBlendingRect(viewwindowx, viewwindowy,
 				viewwindowx + viewwidth, viewwindowy + viewheight);
 
+			// [ZZ] execute event hook that we just started the frame
+			E_RenderFrame();
+			//
 			Renderer->RenderView(&players[consoleplayer]);
 
 			if ((hw2d = screen->Begin2D(viewactive)))
@@ -893,6 +899,8 @@ void D_Display ()
 	{
 		NetUpdate ();			// send out any new accumulation
 		// normal update
+		// draw ZScript UI stuff
+		E_RenderOverlay();
 		C_DrawConsole (hw2d);	// draw console
 		M_Drawer ();			// menu is drawn even on top of everything
 		FStat::PrintStat ();
@@ -2523,7 +2531,10 @@ void D_DoomMain (void)
 
 		// Create replacements for dehacked pickups
 		FinishDehPatch();
-		
+
+		if (!batchrun) Printf("M_Init: Init menus.\n");
+		M_Init();
+
 		// clean up the compiler symbols which are not needed any longer.
 		RemoveUnusedSymbols();
 
@@ -2540,9 +2551,6 @@ void D_DoomMain (void)
 		}
 		bglobal.spawn_tries = 0;
 		bglobal.wanted_botnum = bglobal.getspawned.Size();
-
-		if (!batchrun) Printf ("M_Init: Init menus.\n");
-		M_Init ();
 
 		if (!batchrun) Printf ("P_Init: Init Playloop state.\n");
 		StartScreen->LoadingStatus ("Init game engine", 0x3f);
@@ -2830,3 +2838,10 @@ void FStartupScreen::NetMessage(char const *,...) {}
 void FStartupScreen::NetDone(void) {}
 bool FStartupScreen::NetLoop(bool (*)(void *),void *) { return false; }
 
+DEFINE_FIELD_X(InputEventData, event_t, type)
+DEFINE_FIELD_X(InputEventData, event_t, subtype)
+DEFINE_FIELD_X(InputEventData, event_t, data1)
+DEFINE_FIELD_X(InputEventData, event_t, data2)
+DEFINE_FIELD_X(InputEventData, event_t, data3)
+DEFINE_FIELD_X(InputEventData, event_t, x)
+DEFINE_FIELD_X(InputEventData, event_t, y)

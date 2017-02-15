@@ -589,6 +589,7 @@ void ZCCCompiler::CreateClassTypes()
 						{
 							Error(c->cls, "Class name %s already exists", c->NodeName().GetChars());
 						}
+						else DPrintf(DMSG_SPAMMY, "Created class %s with parent %s\n", c->Type()->TypeName.GetChars(), c->Type()->ParentClass->TypeName.GetChars());
 					}
 					catch (CRecoverableError &err)
 					{
@@ -596,6 +597,10 @@ void ZCCCompiler::CreateClassTypes()
 						// create a placeholder so that the compiler can continue looking for errors.
 						c->cls->Type = nullptr;
 					}
+				}
+				if (c->cls->Flags & ZCC_Abstract)
+				{
+					c->Type()->ObjectFlags |= OF_Abstract;
 				}
 				if (c->Type() == nullptr) c->cls->Type = parent->FindClassTentative(c->NodeName());
 				c->Type()->bExported = true;	// this class is accessible to script side type casts. (The reason for this flag is that types like PInt need to be skipped.)
@@ -1715,7 +1720,19 @@ void ZCCCompiler::DispatchScriptProperty(PProperty *prop, ZCC_PropertyStmt *prop
 		{
 			static_cast<PBool*>(f->Type)->SetValue(addr, !!GetIntConst(ex, ctx));
 		}
-		if (f->Type->IsKindOf(RUNTIME_CLASS(PInt)))
+		else if (f->Type == TypeName)
+		{
+			*(FName*)addr = GetStringConst(ex, ctx);
+		}
+		else if (f->Type == TypeSound)
+		{
+			*(FSoundID*)addr = GetStringConst(ex, ctx);
+		}
+		else if (f->Type == TypeColor && ex->ValueType == TypeString)	// colors can also be specified as ints.
+		{
+			*(PalEntry*)addr = V_GetColor(nullptr, GetStringConst(ex, ctx).GetChars(), &ex->ScriptPosition);
+		}
+		else if (f->Type->IsKindOf(RUNTIME_CLASS(PInt)))
 		{
 			static_cast<PInt*>(f->Type)->SetValue(addr, GetIntConst(ex, ctx));
 		}
@@ -2593,7 +2610,7 @@ void ZCCCompiler::CompileStates()
 						statename << FName(part->Id) << '.';
 						part = static_cast<decltype(part)>(part->SiblingNext);
 					} while (part != sg->Label);
-					statename.Truncate((long)statename.Len() - 1);	// remove the last '.' in the label name
+					statename.Truncate(statename.Len() - 1);	// remove the last '.' in the label name
 					if (sg->Offset != nullptr)
 					{
 						int offset = IntConstFromNode(sg->Offset, c->Type());

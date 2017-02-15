@@ -91,6 +91,7 @@
 
 #include "g_hub.h"
 #include "g_levellocals.h"
+#include "events.h"
 
 
 static FRandom pr_dmspawn ("DMSpawn");
@@ -1791,6 +1792,8 @@ void G_DoPlayerPop(int playernum)
 
 	// [RH] Make the player disappear
 	FBehavior::StaticStopMyScripts(players[playernum].mo);
+	// [ZZ] fire player disconnect hook
+	E_PlayerDisconnected(playernum);
 	// [RH] Let the scripts know the player left
 	FBehavior::StaticStartTypedScripts(SCRIPT_Disconnect, players[playernum].mo, true, playernum, true);
 	if (players[playernum].mo != NULL)
@@ -2307,7 +2310,7 @@ void G_DoSaveGame (bool okForQuicksave, FString filename, const char *descriptio
 
 	WriteZip(filename, savegame_filenames, savegame_content);
 
-	M_NotifyNewSave (filename.GetChars(), description, okForQuicksave);
+	savegameManager.NotifyNewSave (filename.GetChars(), description, okForQuicksave);
 
 	// delete the JSON buffers we created just above. Everything else will
 	// either still be needed or taken care of automatically.

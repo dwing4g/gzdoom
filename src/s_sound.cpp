@@ -692,6 +692,7 @@ static void CalcPosVel(int type, const AActor *actor, const sector_t *sector,
 		else
 		{
 			listenpos.Zero();
+			pos->Zero();
 			pgroup = 0;
 		}
 
@@ -711,7 +712,6 @@ static void CalcPosVel(int type, const AActor *actor, const sector_t *sector,
 			{
 			case SOURCE_None:
 			default:
-				pos->Zero();
 				break;
 
 			case SOURCE_Actor:
@@ -1256,6 +1256,7 @@ DEFINE_ACTION_FUNCTION(DObject, S_Sound)
 	PARAM_INT(channel);
 	PARAM_FLOAT_DEF(volume);
 	PARAM_FLOAT_DEF(attn);
+	S_Sound(channel, id, volume, attn);
 	return 0;
 }
 

@@ -66,6 +66,7 @@
 #include "p_maputl.h"
 #include "g_levellocals.h"
 #include "r_thread.h"
+#include "events.h"
 
 EXTERN_CVAR(Bool, st_scale)
 EXTERN_CVAR(Bool, r_shadercolormaps)
@@ -2071,7 +2072,7 @@ void R_DrawSprite (vissprite_t *spr)
 	// [RH] rewrote this to be based on which part of the sector is really visible
 
 	double scale = InvZtoScale * spr->idepth;
-	double hzb = DBL_MIN, hzt = DBL_MAX;
+	double hzb = -DBL_MAX, hzt = DBL_MAX;
 
 	if (spr->bIsVoxel && spr->floorclip != 0)
 	{

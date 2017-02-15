@@ -51,6 +51,7 @@
 #include "v_palette.h"
 #include "v_video.h"
 #include "colormatcher.h"
+#include "menu/menu.h"
 
 struct FLatchedValue
 {
@@ -192,7 +193,7 @@ DEFINE_ACTION_FUNCTION(_CVar, GetFloat)
 {
 	PARAM_SELF_STRUCT_PROLOGUE(FBaseCVar);
 	auto v = self->GetGenericRep(CVAR_Float);
-	ACTION_RETURN_FLOAT(v.Int);
+	ACTION_RETURN_FLOAT(v.Float);
 }
 
 DEFINE_ACTION_FUNCTION(_CVar, GetString)
@@ -200,6 +201,42 @@ DEFINE_ACTION_FUNCTION(_CVar, GetString)
 	PARAM_SELF_STRUCT_PROLOGUE(FBaseCVar);
 	auto v = self->GetGenericRep(CVAR_String);
 	ACTION_RETURN_STRING(v.String);
+}
+
+DEFINE_ACTION_FUNCTION(_CVar, SetInt)
+{
+	// Only menus are allowed to change CVARs.
+	PARAM_SELF_STRUCT_PROLOGUE(FBaseCVar);
+	if (!(self->GetFlags() & CVAR_MOD) && DMenu::CurrentMenu == nullptr) return 0;
+	PARAM_INT(val);
+	UCVarValue v;
+	v.Int = val;
+	self->SetGenericRep(v, CVAR_Int);
+	return 0;
+}
+
+DEFINE_ACTION_FUNCTION(_CVar, SetFloat)
+{
+	// Only menus are allowed to change CVARs.
+	PARAM_SELF_STRUCT_PROLOGUE(FBaseCVar);
+	if (!(self->GetFlags() & CVAR_MOD) && DMenu::CurrentMenu == nullptr) return 0;
+	PARAM_FLOAT(val);
+	UCVarValue v;
+	v.Float = (float)val;
+	self->SetGenericRep(v, CVAR_Float);
+	return 0;
+}
+
+DEFINE_ACTION_FUNCTION(_CVar, SetString)
+{
+	// Only menus are allowed to change CVARs.
+	PARAM_SELF_STRUCT_PROLOGUE(FBaseCVar);
+	if (!(self->GetFlags() & CVAR_MOD) && DMenu::CurrentMenu == nullptr) return 0;
+	PARAM_STRING(val);
+	UCVarValue v;
+	v.String = val.GetChars();
+	self->SetGenericRep(v, CVAR_String);
+	return 0;
 }
 
 bool FBaseCVar::ToBool (UCVarValue value, ECVarType type)
@@ -643,6 +680,12 @@ void FBaseCVar::DisableCallbacks ()
 	m_UseCallback = false;
 }
 
+DEFINE_ACTION_FUNCTION(_CVar, GetRealType)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FBaseCVar);
+	ACTION_RETURN_INT(self->GetRealType());
+}
+
 //
 // Boolean cvar implementation
 //
@@ -1082,6 +1125,13 @@ void FBaseCVar::ResetToDefault ()
 	}
 }
 
+DEFINE_ACTION_FUNCTION(_CVar, ResetToDefault)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FBaseCVar);
+	self->ResetToDefault();
+	return 0;
+}
+
 //
 // Flag cvar implementation
 //
@@ -1485,6 +1535,13 @@ FBaseCVar *FindCVar (const char *var_name, FBaseCVar **prev)
 		var = var->m_Next;
 	}
 	return var;
+}
+
+DEFINE_ACTION_FUNCTION(_CVar, FindCVar)
+{
+	PARAM_PROLOGUE;
+	PARAM_NAME(name);
+	ACTION_RETURN_POINTER(FindCVar(name, nullptr));
 }
 
 FBaseCVar *FindCVarSub (const char *var_name, int namelen)

@@ -54,6 +54,7 @@
 #include "d_net.h"
 #include "d_main.h"
 #include "serializer.h"
+#include "menu/menu.h"
 
 // MACROS ------------------------------------------------------------------
 
@@ -660,6 +661,16 @@ void C_DoCommand (const char *cmd, int keynum)
 			Printf ("Unknown command \"%.*s\"\n", (int)len, beg);
 		}
 	}
+}
+
+// This is only accessible to the special menu item to run CCMDs.
+DEFINE_ACTION_FUNCTION(DOptionMenuItemCommand, DoCommand)
+{
+	if (DMenu::CurrentMenu == nullptr) return 0;
+	PARAM_PROLOGUE;
+	PARAM_STRING(cmd);
+	C_DoCommand(cmd);
+	return 0;
 }
 
 void AddCommandString (char *cmd, int keynum)
