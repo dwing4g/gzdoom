@@ -832,9 +832,12 @@ void CopyPlayer(player_t *dst, player_t *src, const char *name)
 	else
 	{
 		dst->userinfo.TransferFrom(uibackup);
+		// The player class must come from the save, so that the menu reflects the currently playing one.
+		dst->userinfo.PlayerClassChanged(src->mo->GetClass()->DisplayName); 
 	}
+
 	// Validate the skin
-	dst->userinfo.SkinNumChanged(R_FindSkin(skins[dst->userinfo.GetSkin()].name, dst->CurrentPlayerClass));
+	dst->userinfo.SkinNumChanged(R_FindSkin(Skins[dst->userinfo.GetSkin()].Name, dst->CurrentPlayerClass));
 
 	// Make sure the player pawn points to the proper player struct.
 	if (dst->mo != nullptr)

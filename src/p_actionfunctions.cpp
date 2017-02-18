@@ -1412,26 +1412,6 @@ DEFINE_ACTION_FUNCTION(AActor, A_RadiusDamageSelf)
 
 //==========================================================================
 //
-// Execute a line special / script
-//
-//==========================================================================
-DEFINE_ACTION_FUNCTION(AActor, A_CallSpecial)
-{
-	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_INT		(special);
-	PARAM_INT_DEF	(arg1);
-	PARAM_INT_DEF	(arg2);
-	PARAM_INT_DEF	(arg3);
-	PARAM_INT_DEF	(arg4);
-	PARAM_INT_DEF	(arg5);
-
-	bool res = !!P_ExecuteSpecial(special, NULL, self, false, arg1, arg2, arg3, arg4, arg5);
-
-	ACTION_RETURN_BOOL(res);
-}
-
-//==========================================================================
-//
 // The ultimate code pointer: Fully customizable missiles!
 //
 //==========================================================================
@@ -3939,7 +3919,7 @@ DEFINE_ACTION_FUNCTION(AActor, PlayerSkinCheck)
 	PARAM_SELF_PROLOGUE(AActor);
 
 	ACTION_RETURN_BOOL(self->player != NULL &&
-		skins[self->player->userinfo.GetSkin()].othergame);
+		Skins[self->player->userinfo.GetSkin()].othergame);
 }
 
 // [KS] *** Start of my modifications ***

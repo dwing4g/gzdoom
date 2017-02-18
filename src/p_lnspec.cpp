@@ -297,7 +297,13 @@ FUNC(LS_Door_Animated)
 	if (arg3 != 0 && !P_CheckKeys (it, arg3, arg0 != 0))
 		return false;
 
-	return EV_SlidingDoor (ln, it, arg0, arg1, arg2);
+	return EV_SlidingDoor (ln, it, arg0, arg1, arg2, DAnimatedDoor::adOpenClose);
+}
+
+FUNC(LS_Door_AnimatedClose)
+// Door_AnimatedClose (tag, speed)
+{
+	return EV_SlidingDoor(ln, it, arg0, arg1, -1, DAnimatedDoor::adClose);
 }
 
 FUNC(LS_Generic_Door)
@@ -2841,7 +2847,7 @@ FUNC(LS_SetPlayerProperty)
 	// Add or remove a power
 	if (arg2 >= PROP_INVULNERABILITY && arg2 <= PROP_SPEED)
 	{
-		static ENamedName powers[11] =
+		static ENamedName powers[13] =
 		{
 			NAME_PowerInvulnerable,
 			NAME_PowerStrength,
@@ -2853,7 +2859,9 @@ FUNC(LS_SetPlayerProperty)
 			NAME_PowerFlight,
 			NAME_None,
 			NAME_None,
-			NAME_PowerSpeed
+			NAME_PowerSpeed,
+			NAME_PowerInfiniteAmmo,
+			NAME_PowerDoubleFiringSpeed
 		};
 		int power = arg2 - PROP_INVULNERABILITY;
 
@@ -3592,6 +3600,7 @@ static lnSpecFunc LineSpecials[] =
 	/* 271 */ LS_Stairs_BuildUpDoomSync,
 	/* 272 */ LS_Stairs_BuildDownDoomSync,
 	/* 273 */ LS_Stairs_BuildUpDoomCrush,
+	/* 274 */ LS_Door_AnimatedClose,
 
 };
 
@@ -3715,3 +3724,27 @@ int P_ExecuteSpecial(int			num,
 	}
 	return 0;
 }
+
+//==========================================================================
+//
+// Execute a line special / script
+//
+//==========================================================================
+DEFINE_ACTION_FUNCTION(FLevelLocals, ExecuteSpecial)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FLevelLocals);
+	PARAM_INT(special);
+	PARAM_OBJECT(activator, AActor);
+	PARAM_POINTER(linedef, line_t);
+	PARAM_BOOL(lineside);
+	PARAM_INT_DEF(arg1);
+	PARAM_INT_DEF(arg2);
+	PARAM_INT_DEF(arg3);
+	PARAM_INT_DEF(arg4);
+	PARAM_INT_DEF(arg5);
+
+	bool res = !!P_ExecuteSpecial(special, linedef, activator, lineside, arg1, arg2, arg3, arg4, arg5);
+
+	ACTION_RETURN_BOOL(res);
+}
+

@@ -143,7 +143,6 @@ IMPLEMENT_POINTERS_START(AActor)
 	IMPLEMENT_POINTER(LastHeard)
 	IMPLEMENT_POINTER(master)
 	IMPLEMENT_POINTER(Poisoner)
-	IMPLEMENT_POINTER(DamageFunc)
 	IMPLEMENT_POINTER(alternative)
 IMPLEMENT_POINTERS_END
 
@@ -523,7 +522,7 @@ void AActor::PostSerialize()
 			!(flags4 & MF4_NOSKIN) &&
 			state->sprite == GetDefaultByType(player->cls)->SpawnState->sprite)
 		{ // Give player back the skin
-			sprite = skins[player->userinfo.GetSkin()].sprite;
+			sprite = Skins[player->userinfo.GetSkin()].sprite;
 		}
 		if (Speed == 0)
 		{
@@ -667,9 +666,9 @@ bool AActor::SetState (FState *newstate, bool nofunction)
 				// for Dehacked, I would move sprite changing out of the states
 				// altogether, since actors rarely change their sprites after
 				// spawning.
-					if (player != NULL && skins != NULL)
+					if (player != NULL && Skins.Size() > 0)
 					{
-						sprite = skins[player->userinfo.GetSkin()].sprite;
+						sprite = Skins[player->userinfo.GetSkin()].sprite;
 					}
 					else if (newsprite != prevsprite)
 					{
@@ -5399,7 +5398,7 @@ APlayerPawn *P_SpawnPlayer (FPlayerStart *mthing, int playernum, int flags)
 	}
 
 	// [GRB] Reset skin
-	p->userinfo.SkinNumChanged(R_FindSkin (skins[p->userinfo.GetSkin()].name, p->CurrentPlayerClass));
+	p->userinfo.SkinNumChanged(R_FindSkin (Skins[p->userinfo.GetSkin()].Name, p->CurrentPlayerClass));
 
 	if (!(mobj->flags2 & MF2_DONTTRANSLATE))
 	{
@@ -5417,7 +5416,7 @@ APlayerPawn *P_SpawnPlayer (FPlayerStart *mthing, int playernum, int flags)
 	// [RH] Set player sprite based on skin
 	if (!(mobj->flags4 & MF4_NOSKIN))
 	{
-		mobj->sprite = skins[p->userinfo.GetSkin()].sprite;
+		mobj->sprite = Skins[p->userinfo.GetSkin()].sprite;
 	}
 
 	p->DesiredFOV = p->FOV = 90.f;
@@ -5513,7 +5512,7 @@ APlayerPawn *P_SpawnPlayer (FPlayerStart *mthing, int playernum, int flags)
 		{
 			// [ZZ] fire non-hub ENTER event
 			//      level.time is a hack to make sure that we don't call it on dummy player initialization during hub return.
-			if (!level.time) E_PlayerEntered(p - players, false);
+			if (!level.time) E_PlayerEntered(int(p - players), false);
 			FBehavior::StaticStartTypedScripts (SCRIPT_Enter, p->mo, true);
 		}
 		else if (state == PST_REBORN)

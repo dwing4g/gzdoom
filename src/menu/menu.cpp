@@ -94,6 +94,8 @@ float			BackbuttonAlpha;
 static bool		MenuEnabled = true;
 
 void M_InitVideoModes();
+extern PClass *DefaultListMenuClass;
+extern PClass *DefaultOptionMenuClass;
 
 
 #define KEY_REPEAT_DELAY	(TICRATE*5/12)
@@ -270,6 +272,7 @@ bool DMenu::CallMenuEvent(int mkey, bool fromcontroller)
 
 void DMenu::Close ()
 {
+	if (DMenu::CurrentMenu == nullptr) return;	// double closing can happen in the save menu.
 	assert(DMenu::CurrentMenu == this);
 	DMenu::CurrentMenu = mParentMenu;
 	Destroy();
@@ -622,17 +625,25 @@ void M_SetMenu(FName menu, int param)
 			}
 			else
 			{
-				const PClass *cls = ld->mClass == nullptr? RUNTIME_CLASS(DListMenu) : ld->mClass;
+				PClass *cls = ld->mClass;
+				if (cls == nullptr) cls = DefaultListMenuClass;
+				if (cls == nullptr) cls = PClass::FindClass("ListMenu");
 
 				DListMenu *newmenu = (DListMenu *)cls->CreateNew();
-				newmenu->Init(DMenu::CurrentMenu, ld);
+				IFVIRTUALPTRNAME(newmenu, "OptionMenu", Init)
+				{
+					VMValue params[3] = { newmenu, DMenu::CurrentMenu, ld };
+					GlobalVMStack.Call(func, params, 3, nullptr, 0);
+				}
 				M_ActivateMenu(newmenu);
 			}
 		}
 		else if ((*desc)->IsKindOf(RUNTIME_CLASS(DOptionMenuDescriptor)))
 		{
 			DOptionMenuDescriptor *ld = static_cast<DOptionMenuDescriptor*>(*desc);
-			const PClass *cls = ld->mClass == nullptr? PClass::FindClass("OptionMenu") : ld->mClass;
+			PClass *cls = ld->mClass;
+			if (cls == nullptr) cls = DefaultOptionMenuClass;
+			if (cls == nullptr) cls = PClass::FindClass("OptionMenu");
 
 			DMenu *newmenu = (DMenu*)cls->CreateNew();
 			IFVIRTUALPTRNAME(newmenu, "OptionMenu", Init)
@@ -1283,7 +1294,7 @@ DMenuItemBase * CreateOptionMenuItemSubmenu(const char *label, FName cmd, int ce
 
 DMenuItemBase * CreateOptionMenuItemControl(const char *label, FName cmd, FKeyBindings *bindings)
 {
-	auto c = PClass::FindClass("OptionMenuItemControl");
+	auto c = PClass::FindClass("OptionMenuItemControlBase");
 	auto p = c->CreateNew();
 	VMValue params[] = { p, FString(label), cmd.GetIndex(), bindings };
 	auto f = dyn_cast<PFunction>(c->Symbols.FindSymbol("Init", false));
