@@ -317,9 +317,6 @@
     <ClCompile Include="src\nodebuild_classify_nosse2.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\nodebuild_classify_sse2.cpp">
-      <Filter>!Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\nodebuild_events.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
@@ -836,9 +833,6 @@
     <ClCompile Include="src\menu\joystickmenu.cpp">
       <Filter>menu</Filter>
     </ClCompile>
-    <ClCompile Include="src\menu\listmenu.cpp">
-      <Filter>menu</Filter>
-    </ClCompile>
     <ClCompile Include="src\menu\loadsavemenu.cpp">
       <Filter>menu</Filter>
     </ClCompile>
@@ -848,9 +842,6 @@
     <ClCompile Include="src\menu\menudef.cpp">
       <Filter>menu</Filter>
     </ClCompile>
-    <ClCompile Include="src\menu\menuinput.cpp">
-      <Filter>menu</Filter>
-    </ClCompile>
     <ClCompile Include="src\menu\messagebox.cpp">
       <Filter>menu</Filter>
     </ClCompile>
@@ -858,9 +849,6 @@
       <Filter>menu</Filter>
     </ClCompile>
     <ClCompile Include="src\menu\playermenu.cpp">
-      <Filter>menu</Filter>
-    </ClCompile>
-    <ClCompile Include="src\menu\readthis.cpp">
       <Filter>menu</Filter>
     </ClCompile>
     <ClCompile Include="src\menu\videomenu.cpp">

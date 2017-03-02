@@ -563,10 +563,6 @@
     <ClCompile Include="src\name.cpp" />
     <ClCompile Include="src\nodebuild.cpp" />
     <ClCompile Include="src\nodebuild_classify_nosse2.cpp" />
-    <ClCompile Include="src\nodebuild_classify_sse2.cpp">
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-    </ClCompile>
     <ClCompile Include="src\nodebuild_events.cpp" />
     <ClCompile Include="src\nodebuild_extract.cpp" />
     <ClCompile Include="src\nodebuild_gl.cpp" />
@@ -748,15 +744,12 @@
     <ClCompile Include="src\resourcefiles\file_zip.cpp" />
     <ClCompile Include="src\resourcefiles\resourcefile.cpp" />
     <ClCompile Include="src\menu\joystickmenu.cpp" />
-    <ClCompile Include="src\menu\listmenu.cpp" />
     <ClCompile Include="src\menu\loadsavemenu.cpp" />
     <ClCompile Include="src\menu\menu.cpp" />
     <ClCompile Include="src\menu\menudef.cpp" />
-    <ClCompile Include="src\menu\menuinput.cpp" />
     <ClCompile Include="src\menu\messagebox.cpp" />
     <ClCompile Include="src\menu\optionmenu.cpp" />
     <ClCompile Include="src\menu\playermenu.cpp" />
-    <ClCompile Include="src\menu\readthis.cpp" />
     <ClCompile Include="src\menu\videomenu.cpp" />
     <ClCompile Include="src\textures\anim_switches.cpp" />
     <ClCompile Include="src\textures\animations.cpp" />
