@@ -1177,6 +1177,7 @@ static bool CanAttackHurt(AActor *victim, AActor *shooter)
 	if (!victim->player && !shooter->player)
 	{
 		int infight = G_SkillProperty(SKILLP_Infight);
+		if (infight < 0 && (victim->flags7 & MF7_FORCEINFIGHTING)) infight = 0;	// This must override the 'no infight' setting to take effect.
 
 		if (infight < 0)
 		{
@@ -2280,9 +2281,9 @@ bool P_TryMove(AActor *thing, const DVector2 &pos,
 			}
 #endif
 		}
-		if (!(thing->flags & MF_TELEPORT) && !(thing->flags3 & MF3_FLOORHUGGER))
+		if (!(thing->flags & MF_TELEPORT) && (!(thing->flags3 & MF3_FLOORHUGGER) || thing->flags5 & MF5_NODROPOFF))
 		{
-			if ((thing->flags & MF_MISSILE) && !(thing->flags6 & MF6_STEPMISSILE) && tm.floorz > thing->Z())
+			if ((thing->flags & MF_MISSILE) && !(thing->flags6 & MF6_STEPMISSILE) && tm.floorz > thing->Z() && !(thing->flags3 & MF3_FLOORHUGGER))
 			{ // [RH] Don't let normal missiles climb steps
 				goto pushline;
 			}
@@ -2771,13 +2772,13 @@ bool P_CheckMove(AActor *thing, const DVector2 &pos, int flags)
 			if (thing->Top() > tm.ceilingz)
 				return false;
 		}
-		if (!(thing->flags & MF_TELEPORT) && !(thing->flags3 & MF3_FLOORHUGGER))
+		if (!(thing->flags & MF_TELEPORT) && (!(thing->flags3 & MF3_FLOORHUGGER) || thing->flags5 & MF5_NODROPOFF))
 		{
 			if (tm.floorz - newz > thing->MaxStepHeight)
 			{ // too big a step up
 				return false;
 			}
-			else if ((thing->flags & MF_MISSILE) && !(thing->flags6 & MF6_STEPMISSILE) && tm.floorz > newz)
+			else if ((thing->flags & MF_MISSILE) && !(thing->flags6 & MF6_STEPMISSILE) && tm.floorz > newz && !(thing->flags3 & MF3_FLOORHUGGER))
 			{ // [RH] Don't let normal missiles climb steps
 				return false;
 			}
@@ -3535,6 +3536,11 @@ bool P_BounceActor(AActor *mo, AActor *BlockingMobj, bool ontop)
 		// Rippers should not bounce off shootable actors, since they rip through them.
 		if ((mo->flags & MF_MISSILE) && (mo->flags2 & MF2_RIP) && BlockingMobj->flags & MF_SHOOTABLE)
 			return true;
+
+		if (BlockingMobj->flags & MF_SHOOTABLE && mo->BounceFlags & BOUNCE_NotOnShootables)
+		{
+			mo->bouncecount = 1;	// let it explode now.
+		}
 
 		if (mo->bouncecount>0 && --mo->bouncecount == 0)
 		{
@@ -5276,20 +5282,22 @@ bool P_UseTraverse(AActor *usething, const DVector2 &start, const DVector2 &end,
 		// [RH] Check for things to talk with or use a puzzle item on
 		if (!in->isaline)
 		{
-			if (usething == in->d.thing)
+			AActor * const mobj = in->d.thing;
+
+			if (mobj == usething)
 				continue;
 			// Check thing
 
 			// Check for puzzle item use or USESPECIAL flag
 			// Extended to use the same activationtype mechanism as BUMPSPECIAL does
-			if (in->d.thing->flags5 & MF5_USESPECIAL || in->d.thing->special == UsePuzzleItem)
+			if (mobj->flags5 & MF5_USESPECIAL || mobj->special == UsePuzzleItem)
 			{
-				if (P_ActivateThingSpecial(in->d.thing, usething))
+				if (P_ActivateThingSpecial(mobj, usething))
 					return true;
 			}
-			IFVIRTUALPTR(usething, AActor, Used)
+			IFVIRTUALPTR(mobj, AActor, Used)
 			{
-				VMValue params[] = { usething, in->d.thing };
+				VMValue params[] = { mobj, usething };
 				int ret;
 				VMReturn vret(&ret);
 				GlobalVMStack.Call(func, params, 2, &vret, 1);
@@ -5672,10 +5680,11 @@ int P_RadiusAttack(AActor *bombspot, AActor *bombsource, int bombdamage, int bom
 			{
 				points = points * splashfactor;
 			}
-			points *= thing->GetClass()->RDFactor;
+			points *= thing->RadiusDamageFactor;
 
+			double check = int(points) * bombdamage;
 			// points and bombdamage should be the same sign (the double cast of 'points' is needed to prevent overflows and incorrect values slipping through.)
-			if ((((double)int(points) * bombdamage) > 0) && P_CheckSight(thing, bombspot, SF_IGNOREVISIBILITY | SF_IGNOREWATERBOUNDARY))
+			if ((check > 0 || (check == 0 && bombspot->flags7 & MF7_FORCEZERORADIUSDMG)) && P_CheckSight(thing, bombspot, SF_IGNOREVISIBILITY | SF_IGNOREWATERBOUNDARY))
 			{ // OK to damage; target is in direct path
 				double vz;
 				double thrust;
@@ -5750,9 +5759,9 @@ int P_RadiusAttack(AActor *bombspot, AActor *bombsource, int bombdamage, int bom
 				dist = clamp<double>(dist - fulldamagedistance, 0, dist);
 				int damage = Scale(bombdamage, bombdistance - int(dist), bombdistance);
 
-				double factor = splashfactor * thing->GetClass()->RDFactor;
+				double factor = splashfactor * thing->RadiusDamageFactor;
 				damage = int(damage * factor);
-				if (damage > 0)
+				if (damage > 0 || (bombspot->flags7 & MF7_FORCEZERORADIUSDMG))
 				{
 					//[MC] Don't count actors saved by buddha if already at 1 health.
 					int prehealth = thing->health;

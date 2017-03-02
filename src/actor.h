@@ -387,6 +387,9 @@ enum ActorFlag7
 	MF7_SPRITEANGLE		= 0x02000000,	// [MC] Utilize the SpriteAngle property and lock the rotation to the degrees specified.
 	MF7_SMASHABLE		= 0x04000000,	// dies if hitting the floor.
 	MF7_NOSHIELDREFLECT = 0x08000000,	// will not be reflected by shields.
+	MF7_FORCEZERORADIUSDMG = 0x10000000,	// passes zero radius damage on to P_DamageMobj, this is necessary in some cases where DoSpecialDamage gets overrideen.
+	MF7_NOINFIGHTSPECIES = 0x20000000,	// don't start infights with one's own species.
+	MF7_FORCEINFIGHTING	= 0x40000000,	// overrides a map setting of 'no infighting'.
 };
 
 // --- mobj.renderflags ---
@@ -427,6 +430,7 @@ enum ActorRenderFlag
 	RF_ABSMASKPITCH		= 0x00800000, // [MC] The mask rotation does not offset by the actor's pitch.
 	RF_INTERPOLATEANGLES		= 0x01000000, // [MC] Allow interpolation of the actor's angle, pitch and roll.
 	RF_MAYBEINVISIBLE	= 0x02000000,
+	RF_DONTINTERPOLATE	= 0x04000000,	// no render interpolation ever!
 };
 
 // This translucency value produces the closest match to Heretic's TINTTAB.
@@ -464,6 +468,7 @@ enum ActorBounceFlag
 	BOUNCE_MBF = 1<<12,			// This in itself is not a valid mode, but replaces MBF's MF_BOUNCE flag.
 	BOUNCE_AutoOffFloorOnly = 1<<13,		// like BOUNCE_AutoOff, but only on floors
 	BOUNCE_UseBounceState = 1<<14,	// Use Bounce[.*] states
+	BOUNCE_NotOnShootables = 1<<15,	// do not bounce off shootable actors if we are a projectile. Explode instead.
 
 	BOUNCE_TypeMask = BOUNCE_Walls | BOUNCE_Floors | BOUNCE_Ceilings | BOUNCE_Actors | BOUNCE_AutoOff | BOUNCE_HereticType | BOUNCE_MBF,
 
@@ -712,7 +717,7 @@ public:
 	virtual bool UseInventory (AInventory *item);
 
 	// Tosses an item out of the inventory.
-	AInventory *DropInventory (AInventory *item);
+	AInventory *DropInventory (AInventory *item, int amt = -1);
 
 	// Removes all items from the inventory.
 	void ClearInventory();
@@ -812,32 +817,7 @@ public:
 	void SetAngle(DAngle ang, bool interpolate);
 	void SetRoll(DAngle roll, bool interpolate);
 
-	PClassActor *GetBloodType(int type = 0) const
-	{
-		PClassActor *bloodcls;
-		if (type == 0)
-		{
-			bloodcls = PClass::FindActor(GetClass()->BloodType);
-		}
-		else if (type == 1)
-		{
-			bloodcls = PClass::FindActor(GetClass()->BloodType2);
-		}
-		else if (type == 2)
-		{
-			bloodcls = PClass::FindActor(GetClass()->BloodType3);
-		}
-		else
-		{
-			return NULL;
-		}
-
-		if (bloodcls != NULL)
-		{
-			bloodcls = bloodcls->GetReplacement();
-		}
-		return bloodcls;
-	}
+	PClassActor *GetBloodType(int type = 0) const;
 
 	double Distance2DSquared(AActor *other, bool absolute = false)
 	{
@@ -1043,7 +1023,13 @@ public:
 	double			renderradius;
 
 	double			projectilepassheight;	// height for clipping projectile movement against this actor
-	
+	double			CameraHeight;	// Height of camera when used as such
+
+	double			RadiusDamageFactor;		// Radius damage factor
+	double			SelfDamageFactor;
+	double			StealthAlpha;	// Minmum alpha for MF_STEALTH.
+	int				WoundHealth;		// Health needed to enter wound state
+
 	SDWORD			tics;				// state tic counter
 	FState			*state;
 	//VMFunction		*Damage;			// For missiles and monster railgun
@@ -1318,7 +1304,8 @@ public:
 	}
 	DVector3 InterpolatedPosition(double ticFrac) const
 	{
-		return Prev + (ticFrac * (Pos() - Prev));
+		if (renderflags & RF_DONTINTERPOLATE) return Pos();
+		else return Prev + (ticFrac * (Pos() - Prev));
 	}
 	DRotator InterpolatedAngles(double ticFrac) const
 	{

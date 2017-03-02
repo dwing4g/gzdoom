@@ -2821,6 +2821,8 @@ void FBehavior::StaticStartTypedScripts (WORD type, AActor *activator, bool alwa
 		"Unloading",
 		"Disconnect",
 		"Return",
+		"Event",
+		"Kill",
 		"Reopen"
 	};
 	DPrintf(DMSG_NOTIFY, "Starting all scripts of type %d (%s)\n", type,
@@ -4230,7 +4232,7 @@ enum
 	SOUND_Howl,
 };
 
-static FSoundID GetActorSound(const AActor *actor, int soundtype)
+static FSoundID GetActorSound(AActor *actor, int soundtype)
 {
 	switch (soundtype)
 	{
@@ -4243,7 +4245,7 @@ static FSoundID GetActorSound(const AActor *actor, int soundtype)
 	case SOUND_Bounce:		return actor->BounceSound;
 	case SOUND_WallBounce:	return actor->WallBounceSound;
 	case SOUND_CrushPain:	return actor->CrushPainSound;
-	case SOUND_Howl:		return actor->GetClass()->HowlSound;
+	case SOUND_Howl:		return actor->SoundVar(NAME_HowlSound);
 	default:				return 0;
 	}
 }
@@ -4365,6 +4367,10 @@ enum EACSFunctions
 	ACSF_SetTranslation,
 	ACSF_GetActorFloorTexture,
 	ACSF_GetActorFloorTerrain,
+	ACSF_StrArg,
+	ACSF_Floor,
+	ACSF_Round,
+	ACSF_Ceil,
 
 
 	// OpenGL stuff
@@ -6085,7 +6091,17 @@ doplaysound:			if (funcIndex == ACSF_PlayActorSound)
 			break;
 		}
 
+		case ACSF_StrArg:
+			return -FName(FBehavior::StaticLookupString(args[0]));
 
+		case ACSF_Floor:
+			return args[0] & ~0xffff;
+
+		case ACSF_Ceil:
+			return (args[0] & ~0xffff) + 0x10000;
+
+		case ACSF_Round:
+			return (args[0] + 32768) & ~0xffff;
 
 		default:
 			break;
@@ -9421,7 +9437,10 @@ scriptwait:
 		}
 
 		case PCD_SETMUGSHOTSTATE:
-			StatusBar->SetMugShotState(FBehavior::StaticLookupString(STACK(1)));
+			if (!multiplayer || (activator != nullptr && activator->CheckLocalView(consoleplayer)))
+			{
+				StatusBar->SetMugShotState(FBehavior::StaticLookupString(STACK(1)));
+			}
 			sp--;
 			break;
 

@@ -563,6 +563,13 @@ FUNC(LS_Generic_Floor)
 					   
 }
 
+FUNC(LS_Floor_Stop)
+// Floor_Stop (tag)
+{
+	return EV_StopFloor(arg0);
+}
+
+
 FUNC(LS_Stairs_BuildDown)
 // Stair_BuildDown (tag, speed, height, delay, reset)
 {
@@ -859,6 +866,13 @@ FUNC(LS_Ceiling_LowerByTexture)
 {
 	return EV_DoCeiling (DCeiling::ceilLowerByTexture, ln, arg0, SPEED(arg1), 0, 0, CRUSH(arg3), 0, CHANGE(arg4));
 }
+
+FUNC(LS_Ceiling_Stop)
+// Ceiling_Stop (tag)
+{
+	return EV_StopCeiling(arg0);
+}
+
 
 FUNC(LS_Generic_Ceiling)
 // Generic_Ceiling (tag, speed, height, target, change/model/direct/crush)
@@ -1737,14 +1751,14 @@ FUNC(LS_Thing_SpawnFacing)
 }
 
 FUNC(LS_Thing_Raise)
-// Thing_Raise(tid)
+// Thing_Raise(tid, nocheck)
 {
 	AActor * target;
 	bool ok = false;
 
 	if (arg0==0)
 	{
-		ok = P_Thing_Raise (it,NULL);
+		ok = P_Thing_Raise (it,NULL, arg1);
 	}
 	else
 	{
@@ -1752,7 +1766,7 @@ FUNC(LS_Thing_Raise)
 
 		while ( (target = iterator.Next ()) )
 		{
-			ok |= P_Thing_Raise(target,NULL);
+			ok |= P_Thing_Raise(target,NULL, arg1);
 		}
 	}
 	return ok;
@@ -3177,7 +3191,7 @@ FUNC(LS_ClearForceField)
 }
 
 FUNC(LS_GlassBreak)
-// GlassBreak (bNoJunk)
+// GlassBreak (bNoJunk, junkID)
 {
 	bool switched;
 	bool quest1, quest2;
@@ -3197,7 +3211,6 @@ FUNC(LS_GlassBreak)
 	{
 		if (!arg0)
 		{ // Break some glass
-			AActor *glass;
 
 			DVector2 linemid((ln->v1->fX() + ln->v2->fX()) / 2, (ln->v1->fY() + ln->v2->fY()) / 2);
 
@@ -3209,18 +3222,32 @@ FUNC(LS_GlassBreak)
 			y += (ln->frontsector->centerspot.y - y) / 5;
 			*/
 
+			auto type = SpawnableThings.CheckKey(arg1);
 			for (int i = 0; i < 7; ++i)
 			{
-				glass = Spawn("GlassJunk", DVector3(linemid, ONFLOORZ), ALLOW_REPLACE);
-
-				glass->AddZ(24.);
-				glass->SetState (glass->SpawnState + (pr_glass() % glass->health));
-
-				glass->Angles.Yaw = pr_glass() * (360 / 256.);
-				glass->VelFromAngle(pr_glass() & 3);
-				glass->Vel.Z = (pr_glass() & 7);
-				// [RH] Let the shards stick around longer than they did in Strife.
-				glass->tics += pr_glass();
+				AActor *glass = nullptr;
+				if (arg1 > 0)
+				{
+					if (type != nullptr)
+					{
+						glass = Spawn(*type, DVector3(linemid, ONFLOORZ), ALLOW_REPLACE);
+						glass->AddZ(24.);
+					}
+				}
+				else
+				{
+					glass = Spawn("GlassJunk", DVector3(linemid, ONFLOORZ), ALLOW_REPLACE);
+					glass->AddZ(24.);
+					glass->SetState(glass->SpawnState + (pr_glass() % glass->health));
+				}
+				if (glass != nullptr)
+				{
+					glass->Angles.Yaw = pr_glass() * (360 / 256.);
+					glass->VelFromAngle(pr_glass() & 3);
+					glass->Vel.Z = (pr_glass() & 7);
+					// [RH] Let the shards stick around longer than they did in Strife.
+					glass->tics += pr_glass();
+				}
 			}
 		}
 		if (quest1 || quest2)
@@ -3601,6 +3628,8 @@ static lnSpecFunc LineSpecials[] =
 	/* 272 */ LS_Stairs_BuildDownDoomSync,
 	/* 273 */ LS_Stairs_BuildUpDoomCrush,
 	/* 274 */ LS_Door_AnimatedClose,
+	/* 275 */ LS_Floor_Stop,
+	/* 276 */ LS_Ceiling_Stop,
 
 };
 

@@ -63,6 +63,9 @@
 static TArray<FPropertyInfo*> properties;
 static TArray<AFuncDesc> AFTable;
 static TArray<FieldDesc> FieldTable;
+extern int				BackbuttonTime;
+extern float			BackbuttonAlpha;
+static AWeapon *wpnochg;
 
 //==========================================================================
 //
@@ -313,6 +316,9 @@ static FFlagDef ActorFlagDefs[]=
 	DEFINE_FLAG(MF7, SPRITEANGLE, AActor, flags7),
 	DEFINE_FLAG(MF7, SMASHABLE, AActor, flags7),
 	DEFINE_FLAG(MF7, NOSHIELDREFLECT, AActor, flags7),
+	DEFINE_FLAG(MF7, FORCEZERORADIUSDMG, AActor, flags7),
+	DEFINE_FLAG(MF7, NOINFIGHTSPECIES, AActor, flags7),
+	DEFINE_FLAG(MF7, FORCEINFIGHTING, AActor, flags7),
 
 	// Effect flags
 	DEFINE_FLAG(FX, VISIBILITYPULSE, AActor, effects),
@@ -333,6 +339,7 @@ static FFlagDef ActorFlagDefs[]=
 	DEFINE_FLAG(RF, XFLIP, AActor, renderflags),
 	DEFINE_FLAG(RF, YFLIP, AActor, renderflags),
 	DEFINE_FLAG(RF, INTERPOLATEANGLES, AActor, renderflags),
+	DEFINE_FLAG(RF, DONTINTERPOLATE, AActor, renderflags),
 
 	// Bounce flags
 	DEFINE_FLAG2(BOUNCE_Walls, BOUNCEONWALLS, AActor, BounceFlags),
@@ -349,6 +356,7 @@ static FFlagDef ActorFlagDefs[]=
 	DEFINE_FLAG2(BOUNCE_MBF, MBFBOUNCER, AActor, BounceFlags),
 	DEFINE_FLAG2(BOUNCE_AutoOffFloorOnly, BOUNCEAUTOOFFFLOORONLY, AActor, BounceFlags),
 	DEFINE_FLAG2(BOUNCE_UseBounceState, USEBOUNCESTATE, AActor, BounceFlags),
+	DEFINE_FLAG2(BOUNCE_NotOnShootables, DONTBOUNCEONSHOOTABLES, AActor, BounceFlags),
 };
 
 // These won't be accessible through bitfield variables
@@ -422,6 +430,8 @@ static FFlagDef InventoryFlagDefs[] =
 	DEFINE_FLAG(IF, TRANSFER, AInventory, ItemFlags),
 	DEFINE_FLAG(IF, NOTELEPORTFREEZE, AInventory, ItemFlags),
 	DEFINE_FLAG(IF, NOSCREENBLINK, AInventory, ItemFlags),
+	DEFINE_FLAG(IF, ISARMOR, AInventory, ItemFlags),
+	DEFINE_FLAG(IF, ISHEALTH, AInventory, ItemFlags),
 
 	DEFINE_DUMMY_FLAG(FORCERESPAWNINSURVIVAL, false),
 
@@ -847,7 +857,10 @@ void InitThingdef()
 	fieldptr = new PField("playeringame", parray, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&playeringame);
 	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
 
-	fieldptr = new PField("gameaction", TypeUInt8, VARF_Native | VARF_Static, (intptr_t)&gameaction);
+	fieldptr = new PField("gameaction", TypeUInt32, VARF_Native | VARF_Static, (intptr_t)&gameaction);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
+
+	fieldptr = new PField("gamestate", TypeSInt32, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&gamestate);
 	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
 
 	fieldptr = new PField("skyflatnum", TypeTextureID, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&skyflatnum);
@@ -906,11 +919,23 @@ void InitThingdef()
 	fieldptr = new PField("OptionMenuSettings", NewStruct("FOptionMenuSettings", nullptr), VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&OptionSettings);
 	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
 
-	
+	fieldptr = new PField("gametic", TypeSInt32, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&gametic);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
+
+	fieldptr = new PField("demoplayback", TypeBool, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&demoplayback);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
+
+	fieldptr = new PField("BackbuttonTime", TypeSInt32, VARF_Native | VARF_Static, (intptr_t)&BackbuttonTime);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
+
+	fieldptr = new PField("BackbuttonAlpha", TypeFloat32, VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&BackbuttonAlpha);
+	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
+
+
 	// Argh. It sucks when bad hacks need to be supported. WP_NOCHANGE is just a bogus pointer but it used everywhere as a special flag.
 	// It cannot be defined as constant because constants can either be numbers or strings but nothing else, so the only 'solution'
 	// is to create a static variable from it and reference that in the script. Yuck!!!
-	static AWeapon *wpnochg = WP_NOCHANGE;
+	wpnochg = WP_NOCHANGE;
 	fieldptr = new PField("WP_NOCHANGE", NewPointer(RUNTIME_CLASS(AWeapon), false), VARF_Native | VARF_Static | VARF_ReadOnly, (intptr_t)&wpnochg);
 	Namespaces.GlobalNamespace->Symbols.AddSymbol(fieldptr);
 
@@ -1213,10 +1238,20 @@ DEFINE_ACTION_FUNCTION(FStringStruct, Mid)
 	ACTION_RETURN_STRING(s);
 }
 
-DEFINE_ACTION_FUNCTION(FStringStruct, Len)
+DEFINE_ACTION_FUNCTION(FStringStruct, Left)
 {
 	PARAM_SELF_STRUCT_PROLOGUE(FString);
-	ACTION_RETURN_INT((int)self->Len());
+	PARAM_UINT(len);
+	FString s = self->Left(len);
+	ACTION_RETURN_STRING(s);
+}
+
+DEFINE_ACTION_FUNCTION(FStringStruct, Truncate)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FString);
+	PARAM_UINT(len);
+	self->Truncate(len);
+	return 0;
 }
 
 // CharAt and CharCodeAt is how JS does it, and JS is similar here in that it doesn't have char type as int.
@@ -1239,3 +1274,10 @@ DEFINE_ACTION_FUNCTION(FStringStruct, CharCodeAt)
 		ACTION_RETURN_INT(0);
 	ACTION_RETURN_INT((*self)[pos]);
 }
+
+DEFINE_ACTION_FUNCTION(FStringStruct, Filter)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FString);
+	ACTION_RETURN_STRING(strbin1(*self));
+}
+
