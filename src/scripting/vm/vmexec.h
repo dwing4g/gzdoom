@@ -22,7 +22,7 @@ static int Exec(VMFrameStack *stack, const VMOP *pc, VMReturn *ret, int numret)
 	const FVoidObj *konsta;
 	const VM_ATAG *konstatag;
 
-	if (f->Func != NULL && !f->Func->Native)
+	if (f->Func != NULL && !(f->Func->VarFlags & VARF_Native))
 	{
 		sfunc = static_cast<VMScriptFunction *>(f->Func);
 		konstd = sfunc->KonstD;
@@ -648,6 +648,13 @@ begin:
 			reg.a[a] = p->Virtuals[C];
 		}
 		NEXTOP;
+	OP(SCOPE) :
+	{
+		ASSERTA(a); ASSERTA(C);
+		FScopeBarrier::ValidateCall(((DObject*)konsta[a].v)->GetClass(), (VMFunction*)konsta[C].v, B - 1);
+		}
+		NEXTOP;
+
 	OP(CALL_K):
 		ASSERTKA(a);
 		assert(konstatag[a] == ATAG_OBJECT);
@@ -664,13 +671,14 @@ begin:
 			VMReturn returns[MAX_RETURNS];
 			int numret;
 
+			b = B;
 			FillReturns(reg, f, returns, pc+1, C);
-			if (call->Native)
+			if (call->VarFlags & VARF_Native)
 			{
 				try
 				{
 					VMCycles[0].Unclock();
-					numret = static_cast<VMNativeFunction *>(call)->NativeCall(reg.param + f->NumParam - B, call->DefaultArgs, B, returns, C);
+					numret = static_cast<VMNativeFunction *>(call)->NativeCall(reg.param + f->NumParam - b, call->DefaultArgs, b, returns, C);
 					VMCycles[0].Clock();
 				}
 				catch (CVMAbortException &err)
@@ -686,7 +694,7 @@ begin:
 				VMCalls[0]++;
 				VMScriptFunction *script = static_cast<VMScriptFunction *>(call);
 				VMFrame *newf = stack->AllocFrame(script);
-				VMFillParams(reg.param + f->NumParam - B, newf, B);
+				VMFillParams(reg.param + f->NumParam - b, newf, b);
 				try
 				{
 					numret = Exec(stack, script->Code, returns, C);
@@ -722,7 +730,7 @@ begin:
 		{
 			VMFunction *call = (VMFunction *)ptr;
 
-			if (call->Native)
+			if (call->VarFlags & VARF_Native)
 			{
 				try
 				{
@@ -804,6 +812,9 @@ begin:
 		b = B;
 		PClass *cls = (PClass*)(pc->op == OP_NEW ? reg.a[b] : konsta[b].v);
 		if (cls->ObjectFlags & OF_Abstract) ThrowAbortException(X_OTHER, "Cannot instantiate abstract class %s", cls->TypeName.GetChars());
+		// [ZZ] validate readonly and between scope construction
+		c = C;
+		if (c) FScopeBarrier::ValidateNew(cls, c - 1);
 		reg.a[a] = cls->CreateNew();
 		reg.atag[a] = ATAG_OBJECT;
 		NEXTOP;
@@ -1948,7 +1959,7 @@ static void SetReturn(const VMRegisters &reg, VMFrame *frame, VMReturn *ret, VM_
 	const void *src;
 	VMScriptFunction *func = static_cast<VMScriptFunction *>(frame->Func);
 
-	assert(func != NULL && !func->Native);
+	assert(func != NULL && !(func->VarFlags & VARF_Native));
 	assert((regtype & ~REGT_KONST) == ret->RegType);
 
 	switch (regtype & REGT_TYPE)

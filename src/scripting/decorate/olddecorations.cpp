@@ -119,6 +119,7 @@ void ParseOldDecoration(FScanner &sc, EDefinitionType def, PNamespace *ns)
 	bag.Namespace = ns;
 	bag.Info = type;
 	bag.fromDecorate = true;
+	bag.Version = { 2, 0, 0 };
 #ifdef _DEBUG
 	bag.ClassName = type->TypeName;
 #endif
@@ -483,7 +484,7 @@ static void ParseInsideDecoration (Baggage &bag, AActor *defaults,
 		else if (sc.Compare ("Mass"))
 		{
 			sc.MustGetFloat ();
-			defaults->Mass = SDWORD(sc.Float);
+			defaults->Mass = int32_t(sc.Float);
 		}
 		else if (sc.Compare ("Translation1"))
 		{

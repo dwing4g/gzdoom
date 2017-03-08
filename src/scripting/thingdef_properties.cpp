@@ -679,7 +679,7 @@ DEFINE_PROPERTY(damage, X, Actor)
 
 	defaults->DamageVal = dmgval;
 	// Only DECORATE can get here with a valid expression.
-	CreateDamageFunction(bag.Namespace, bag.Info, defaults, id, true, bag.Lumpnum);
+	CreateDamageFunction(bag.Namespace, bag.Version, bag.Info, defaults, id, true, bag.Lumpnum);
 }
 
 //==========================================================================
@@ -1053,10 +1053,9 @@ DEFINE_PROPERTY(bloodcolor, C, Actor)
 {
 	PROP_COLOR_PARM(color, 0);
 
-	PalEntry pe = color;
-	pe.a = CreateBloodTranslation(pe);
-	assert(info->IsKindOf(RUNTIME_CLASS(PClassActor)));
-	static_cast<PClassActor *>(info)->BloodColor = pe;
+	defaults->BloodColor = color;
+	defaults->BloodColor.a = 255;	// a should not be 0.
+	defaults->BloodTranslation = TRANSLATION(TRANSLATION_Blood,  CreateBloodTranslation(color));
 }
 
 //==========================================================================

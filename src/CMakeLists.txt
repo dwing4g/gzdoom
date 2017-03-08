@@ -873,6 +873,7 @@ set( FASTMATH_SOURCES
 	sound/music_timidity_mididevice.cpp
 	sound/music_wildmidi_mididevice.cpp
 	sound/music_win_mididevice.cpp
+	sound/music_audiotoolbox_mididevice.cpp
 	sound/oalsound.cpp
 	sound/sndfile_decoder.cpp
 	sound/music_pseudo_mididevice.cpp
@@ -1168,6 +1169,7 @@ set (PCH_SOURCES
 	scripting/thingdef_data.cpp
 	scripting/thingdef_properties.cpp
 	scripting/backend/codegen.cpp
+	scripting/backend/scopebarrier.cpp
 	scripting/backend/dynarrays.cpp
 	scripting/backend/vmbuilder.cpp
 	scripting/backend/vmdisasm.cpp

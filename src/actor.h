@@ -807,11 +807,6 @@ public:
 		return (flags & MF_COUNTKILL) && !(flags & MF_FRIENDLY);
 	}
 
-	PalEntry GetBloodColor() const
-	{
-		return GetClass()->BloodColor;
-	}
-
 	// These also set CF_INTERPVIEW for players.
 	void SetPitch(DAngle p, bool interpolate, bool forceclamp = false);
 	void SetAngle(DAngle ang, bool interpolate);
@@ -983,29 +978,42 @@ public:
 // NOTE: The first member variable *must* be snext.
 	AActor			*snext, **sprev;	// links in sector (if needed)
 	DVector3		__Pos;		// double underscores so that it won't get used by accident. Access to this should be exclusively through the designated access functions.
-	DVector3		OldRenderPos;
 
 	DAngle			SpriteAngle;
 	DAngle			SpriteRotation;
-	DAngle			VisibleStartAngle;
-	DAngle			VisibleStartPitch;
-	DAngle			VisibleEndAngle;
-	DAngle			VisibleEndPitch;
 	DRotator		Angles;
-	DVector3		Vel;
-	double			Speed;
-	double			FloatSpeed;
+	DVector2		Scale;				// Scaling values; 1 is normal size
+	double			Alpha;				// Since P_CheckSight makes an alpha check this can't be a float. It has to be a double.
 
 	int				sprite;				// used to find patch_t and flip value
 	uint8_t			frame;				// sprite frame to draw
 	uint8_t			effects;			// [RH] see p_effect.h
 	uint8_t			fountaincolor;		// Split out of 'effect' to have easier access.
-	DVector2		Scale;				// Scaling values; 1 is normal size
 	FRenderStyle	RenderStyle;		// Style to draw this actor with
-	ActorRenderFlags	renderflags;		// Different rendering flags
 	FTextureID		picnum;				// Draw this instead of sprite if valid
-	double			Alpha;				// Since P_CheckSight makes an alpha check this can't be a float. It has to be a double.
 	DWORD			fillcolor;			// Color to draw when STYLE_Shaded
+	DWORD			Translation;
+
+	ActorRenderFlags	renderflags;		// Different rendering flags
+	ActorFlags		flags;
+	ActorFlags2		flags2;			// Heretic flags
+	ActorFlags3		flags3;			// [RH] Hexen/Heretic actor-dependant behavior made flaggable
+	ActorFlags4		flags4;			// [RH] Even more flags!
+	ActorFlags5		flags5;			// OMG! We need another one.
+	ActorFlags6		flags6;			// Shit! Where did all the flags go?
+	ActorFlags7		flags7;			// WHO WANTS TO BET ON 8!?
+	double			Floorclip;		// value to use for floor clipping
+	double			radius, Height;		// for movement checking
+
+	DAngle			VisibleStartAngle;
+	DAngle			VisibleStartPitch;
+	DAngle			VisibleEndAngle;
+	DAngle			VisibleEndPitch;
+
+	DVector3		OldRenderPos;
+	DVector3		Vel;
+	double			Speed;
+	double			FloatSpeed;
 
 // interaction info
 	FBlockNode		*BlockNode;			// links in blocks (if needed)
@@ -1019,7 +1027,6 @@ public:
 	int				floorterrain;
 	struct sector_t	*ceilingsector;
 	FTextureID		ceilingpic;			// contacted sec ceilingpic
-	double			radius, Height;		// for movement checking
 	double			renderradius;
 
 	double			projectilepassheight;	// height for clipping projectile movement against this actor
@@ -1030,19 +1037,12 @@ public:
 	double			StealthAlpha;	// Minmum alpha for MF_STEALTH.
 	int				WoundHealth;		// Health needed to enter wound state
 
-	SDWORD			tics;				// state tic counter
+	int32_t			tics;				// state tic counter
 	FState			*state;
 	//VMFunction		*Damage;			// For missiles and monster railgun
 	int				DamageVal;
 	VMFunction		*DamageFunc;
 	int				projectileKickback;
-	ActorFlags		flags;
-	ActorFlags2		flags2;			// Heretic flags
-	ActorFlags3		flags3;			// [RH] Hexen/Heretic actor-dependant behavior made flaggable
-	ActorFlags4		flags4;			// [RH] Even more flags!
-	ActorFlags5		flags5;			// OMG! We need another one.
-	ActorFlags6		flags6;			// Shit! Where did all the flags go?
-	ActorFlags7		flags7;			// WHO WANTS TO BET ON 8!?
 
 	// [BB] If 0, everybody can see the actor, if > 0, only members of team (VisibleToTeam-1) can see it.
 	DWORD			VisibleToTeam;
@@ -1058,17 +1058,17 @@ public:
 	SBYTE			visdir;
 	SWORD			movecount;		// when 0, select a new dir
 	SWORD			strafecount;	// for MF3_AVOIDMELEE
-	TObjPtr<AActor> target;			// thing being chased/attacked (or NULL)
+	TObjPtr<AActor*> target;			// thing being chased/attacked (or NULL)
 									// also the originator for missiles
-	TObjPtr<AActor>	lastenemy;		// Last known enemy -- killough 2/15/98
-	TObjPtr<AActor> LastHeard;		// [RH] Last actor this one heard
-	SDWORD			reactiontime;	// if non 0, don't attack yet; used by
+	TObjPtr<AActor*>	lastenemy;		// Last known enemy -- killough 2/15/98
+	TObjPtr<AActor*> LastHeard;		// [RH] Last actor this one heard
+	int32_t			reactiontime;	// if non 0, don't attack yet; used by
 									// player to freeze a bit after teleporting
-	SDWORD			threshold;		// if > 0, the target will be chased
-	SDWORD			DefThreshold;	// [MC] Default threshold which the actor will reset its threshold to after switching targets
+	int32_t			threshold;		// if > 0, the target will be chased
+	int32_t			DefThreshold;	// [MC] Default threshold which the actor will reset its threshold to after switching targets
 									// no matter what (even if shot)
 	player_t		*player;		// only valid if type of APlayerPawn
-	TObjPtr<AActor>	LastLookActor;	// Actor last looked for (if TIDtoHate != 0)
+	TObjPtr<AActor*>	LastLookActor;	// Actor last looked for (if TIDtoHate != 0)
 	DVector3		SpawnPoint; 	// For nightmare respawn
 	WORD			SpawnAngle;
 	int				StartHealth;
@@ -1077,10 +1077,9 @@ public:
 	int				skillrespawncount;
 	int				TIDtoHate;			// TID of things to hate (0 if none)
 	FNameNoInit		Species;		// For monster families
-	TObjPtr<AActor>	alternative;	// (Un)Morphed actors stored here. Those with the MF_UNMORPHED flag are the originals.
-	TObjPtr<AActor>	tracer;			// Thing being chased/attacked for tracers
-	TObjPtr<AActor>	master;			// Thing which spawned this one (prevents mutual attacks)
-	double			Floorclip;		// value to use for floor clipping
+	TObjPtr<AActor*>	alternative;	// (Un)Morphed actors stored here. Those with the MF_UNMORPHED flag are the originals.
+	TObjPtr<AActor*>	tracer;			// Thing being chased/attacked for tracers
+	TObjPtr<AActor*>	master;			// Thing which spawned this one (prevents mutual attacks)
 
 	int				tid;			// thing identifier
 	int				special;		// special
@@ -1089,7 +1088,7 @@ public:
 	int		accuracy, stamina;		// [RH] Strife stats -- [XA] moved here for DECORATE/ACS access.
 
 	AActor			*inext, **iprev;// Links to other mobjs in same bucket
-	TObjPtr<AActor> goal;			// Monster's goal if not chasing anything
+	TObjPtr<AActor*> goal;			// Monster's goal if not chasing anything
 	int				waterlevel;		// 0=none, 1=feet, 2=waist, 3=eyes
 	BYTE			boomwaterlevel;	// splash information for non-swimmable water sectors
 	BYTE			MinMissileChance;// [RH] If a random # is > than this, then missile attack.
@@ -1127,7 +1126,7 @@ public:
 	FNameNoInit PoisonDamageTypeReceived; // Damage type received by poison.
 	int PoisonDurationReceived; // Duration left for receiving poison damage.
 	int PoisonPeriodReceived; // How often poison damage is applied. (Every X tics.)
-	TObjPtr<AActor> Poisoner; // Last source of received poison damage.
+	TObjPtr<AActor*> Poisoner; // Last source of received poison damage.
 
 	// a linked list of sectors where this object appears
 	struct msecnode_t	*touching_sectorlist;				// phares 3/14/98
@@ -1137,13 +1136,14 @@ public:
 	int validcount;
 
 
-	TObjPtr<AInventory>	Inventory;		// [RH] This actor's inventory
+	TObjPtr<AInventory*>	Inventory;		// [RH] This actor's inventory
 	DWORD			InventoryID;	// A unique ID to keep track of inventory items
 
 	BYTE smokecounter;
 	BYTE FloatBobPhase;
 	BYTE FriendPlayer;				// [RH] Player # + 1 this friendly monster works for (so 0 is no player, 1 is player 0, etc)
-	DWORD Translation;
+	PalEntry BloodColor;
+	DWORD BloodTranslation;
 
 	// [RH] Stuff that used to be part of an Actor Info
 	FSoundIDNoInit SeeSound;
@@ -1159,7 +1159,7 @@ public:
 	double MaxDropOffHeight;
 	double MaxStepHeight;
 
-	SDWORD Mass;
+	int32_t Mass;
 	SWORD PainChance;
 	int PainThreshold;
 	FNameNoInit DamageType;
@@ -1434,7 +1434,7 @@ public:
 
 
 	// begin of GZDoom specific additions
-	TArray<TObjPtr<AActor> >		dynamiclights;
+	TArray<TObjPtr<AActor*> >		dynamiclights;
 	void *				lightassociations;
 	bool				hasmodel;
 	// end of GZDoom specific additions
