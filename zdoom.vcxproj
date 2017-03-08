@@ -479,6 +479,7 @@
     <ClCompile Include="src\r_walldraw.cpp" />
     <ClCompile Include="src\scripting\backend\codegen.cpp" />
     <ClCompile Include="src\scripting\backend\dynarrays.cpp" />
+    <ClCompile Include="src\scripting\backend\scopebarrier.cpp" />
     <ClCompile Include="src\scripting\backend\vmbuilder.cpp" />
     <ClCompile Include="src\scripting\backend\vmdisasm.cpp" />
     <ClCompile Include="src\scripting\decorate\olddecorations.cpp" />
@@ -495,6 +496,7 @@
     <ClCompile Include="src\scripting\zscript\zcc_compile.cpp" />
     <ClCompile Include="src\scripting\zscript\zcc_parser.cpp" />
     <ClCompile Include="src\serializer.cpp" />
+    <ClCompile Include="src\sound\music_audiotoolbox_mididevice.cpp" />
     <ClCompile Include="src\textures\backdroptexture.cpp" />
     <ClCompile Include="src\win32\i_specialpaths.cpp" />
     <ClCompile Include="src\win32\win32gliface.cpp" />

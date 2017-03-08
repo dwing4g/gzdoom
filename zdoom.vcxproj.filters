@@ -1409,6 +1409,12 @@
     <ClCompile Include="src\events.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\scripting\backend\scopebarrier.cpp">
+      <Filter>scripting\backend</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\music_audiotoolbox_mididevice.cpp">
+      <Filter>Audio Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\sc_man_scanner.h">
