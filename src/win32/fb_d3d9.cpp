@@ -68,6 +68,7 @@
 #include "f_wipe.h"
 #include "sbar.h"
 #include "win32iface.h"
+#include "win32swiface.h"
 #include "doomstat.h"
 #include "v_palette.h"
 #include "w_wad.h"
@@ -877,7 +878,7 @@ bool D3DFB::CreateVertexes ()
 	{
 		return false;
 	}
-	if (FAILED(D3DDevice->CreateIndexBuffer(sizeof(WORD)*NUM_INDEXES,
+	if (FAILED(D3DDevice->CreateIndexBuffer(sizeof(uint16_t)*NUM_INDEXES,
 		D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &IndexBuffer, NULL)))
 	{
 		return false;
@@ -1208,10 +1209,7 @@ void D3DFB::Flip()
 		}
 	}
 	// Limiting the frame rate is as simple as waiting for the timer to signal this event.
-	if (FPSLimitEvent != NULL)
-	{
-		WaitForSingleObject(FPSLimitEvent, 1000);
-	}
+	I_FPSLimit();
 	D3DDevice->Present(NULL, NULL, NULL, NULL);
 	InScene = false;
 

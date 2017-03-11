@@ -276,7 +276,7 @@ void ZCCCompiler::ProcessStruct(ZCC_Struct *cnode, PSymbolTreeNode *treenode, ZC
 //==========================================================================
 
 ZCCCompiler::ZCCCompiler(ZCC_AST &ast, DObject *_outer, PSymbolTable &_symbols, PNamespace *_outnamespc, int lumpnum, const VersionInfo &ver)
-	: Outer(_outer), GlobalTreeNodes(&_symbols), OutNamespace(_outnamespc), AST(ast), Lump(lumpnum), mVersion(ver)
+	: Outer(_outer), GlobalTreeNodes(&_symbols), OutNamespace(_outnamespc), AST(ast), mVersion(ver), Lump(lumpnum)
 {
 	FScriptPosition::ResetErrorCounter();
 	// Group top-level nodes by type
@@ -2292,7 +2292,7 @@ void ZCCCompiler::CompileFunction(ZCC_StructWork *c, ZCC_FuncDeclarator *f, bool
 			}
 			else
 			{
-				(*afd->VMPointer)->ImplicitArgs = BYTE(implicitargs);
+				(*afd->VMPointer)->ImplicitArgs = uint8_t(implicitargs);
 			}
 		}
 		SetImplicitArgs(&args, &argflags, &argnames, c->Type(), varflags, useflags);

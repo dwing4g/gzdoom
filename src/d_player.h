@@ -51,18 +51,18 @@ struct FPlayerColorSet
 {
 	struct ExtraRange
 	{
-		BYTE RangeStart, RangeEnd;	// colors to remap
-		BYTE FirstColor, LastColor;	// colors to map to
+		uint8_t RangeStart, RangeEnd;	// colors to remap
+		uint8_t FirstColor, LastColor;	// colors to map to
 	};
 
 	FName Name;			// Name of this color
 
 	int Lump;			// Lump to read the translation from, otherwise use next 2 fields
-	BYTE FirstColor, LastColor;		// Describes the range of colors to use for the translation
+	uint8_t FirstColor, LastColor;		// Describes the range of colors to use for the translation
 
-	BYTE RepresentativeColor;		// A palette entry representative of this translation,
+	uint8_t RepresentativeColor;		// A palette entry representative of this translation,
 									// for map arrows and status bar backgrounds and such
-	BYTE NumExtraRanges;
+	uint8_t NumExtraRanges;
 	ExtraRange Extra[6];
 };
 
@@ -162,8 +162,8 @@ public:
 	FNameNoInit Portrait;
 	FNameNoInit Slot[10];
 	double HexenArmor[5];
-	BYTE ColorRangeStart;	// Skin color range
-	BYTE ColorRangeEnd;
+	uint8_t ColorRangeStart;	// Skin color range
+	uint8_t ColorRangeEnd;
 
 };
 
@@ -256,7 +256,7 @@ public:
 	bool CheckSkin (int skin);
 
 	PClassActor *Type;
-	DWORD Flags;
+	uint32_t Flags;
 	TArray<int> Skins;
 };
 
@@ -383,10 +383,10 @@ public:
 	void SendPitchLimits() const;
 
 	APlayerPawn	*mo;
-	BYTE		playerstate;
+	uint8_t		playerstate;
 	ticcmd_t	cmd;
 	usercmd_t	original_cmd;
-	DWORD		original_oldbuttons;
+	uint32_t		original_oldbuttons;
 
 	userinfo_t	userinfo;				// [RH] who is this?
 	
@@ -406,24 +406,24 @@ public:
 	DVector2 Vel;
 
 	bool		centering;
-	BYTE		turnticks;
+	uint8_t		turnticks;
 
 
 	bool		attackdown;
 	bool		usedown;
-	DWORD		oldbuttons;
+	uint32_t		oldbuttons;
 	int			health;					// only used between levels, mo->health
 										// is used during levels
 
 	int			inventorytics;
-	BYTE		CurrentPlayerClass;		// class # for this player instance
+	uint8_t		CurrentPlayerClass;		// class # for this player instance
 
 	int			frags[MAXPLAYERS];		// kills of other players
 	int			fragcount;				// [RH] Cumulative frags for this player
 	int			lastkilltime;			// [RH] For multikills
-	BYTE		multicount;
-	BYTE		spreecount;				// [RH] Keep track of killing sprees
-	WORD		WeaponState;
+	uint8_t		multicount;
+	uint8_t		spreecount;				// [RH] Keep track of killing sprees
+	uint16_t		WeaponState;
 
 	AWeapon	   *ReadyWeapon;
 	AWeapon	   *PendingWeapon;			// WP_NOCHANGE if not changing
@@ -464,11 +464,11 @@ public:
 	FName		LastDamageType;			// [RH] For damage-specific pain and death sounds
 
 	TObjPtr<AActor*> MUSINFOactor;		// For MUSINFO purposes
-	SBYTE		MUSINFOtics;
+	int8_t		MUSINFOtics;
 
 	bool		settings_controller;	// Player can control game settings.
-	SBYTE		crouching;
-	SBYTE		crouchdir;
+	int8_t		crouching;
+	int8_t		crouchdir;
 
 	//Added by MC:
 	TObjPtr<DBot*> Bot;
