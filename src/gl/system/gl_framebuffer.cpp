@@ -213,6 +213,9 @@ CVAR(Bool, gl_finishbeforeswap, false, CVAR_ARCHIVE|CVAR_GLOBALCONFIG);
 CVAR(Bool, vid_frametimelog, false, CVAR_ARCHIVE|CVAR_GLOBALCONFIG);
 extern int camtexcount;
 
+extern "C" void __stdcall Sleep(DWORD dwMilliseconds);
+extern "C" DWORD __stdcall timeGetTime();
+
 void OpenGLFrameBuffer::Swap()
 {
 	bool swapbefore = gl_finishbeforeswap && camtexcount == 0;
