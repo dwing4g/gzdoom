@@ -31,6 +31,7 @@
 #define WEAPONTOP				32.
 #define WEAPON_FUDGE_Y			0.375
 class AInventory;
+struct FTranslatedLineTarget;
 
 //
 // Overlay psprites are scaled shapes
@@ -49,11 +50,15 @@ enum PSPLayers
 
 enum PSPFlags
 {
-	PSPF_ADDWEAPON	= 1 << 0,
-	PSPF_ADDBOB		= 1 << 1,
-	PSPF_POWDOUBLE	= 1 << 2,
-	PSPF_CVARFAST	= 1 << 3,
-	PSPF_FLIP		= 1 << 6,
+	PSPF_ADDWEAPON		= 1 << 0,
+	PSPF_ADDBOB			= 1 << 1,
+	PSPF_POWDOUBLE		= 1 << 2,
+	PSPF_CVARFAST		= 1 << 3,
+	PSPF_ALPHA			= 1 << 4,
+	PSPF_RENDERSTYLE	= 1 << 5,
+	PSPF_FLIP			= 1 << 6,
+	PSPF_FORCEALPHA		= 1 << 7,
+	PSPF_FORCESTYLE		= 1 << 8,
 };
 
 class DPSprite : public DObject
@@ -77,11 +82,12 @@ public:
 	void		ResetInterpolation() { oldx = x; oldy = y; }
 	void OnDestroy() override;
 
-	double x, y;
+	double x, y, alpha;
 	double oldx, oldy;
 	bool firstTic;
 	int Tics;
 	int Flags;
+	int RenderStyle;
 
 private:
 	DPSprite () {}
@@ -113,7 +119,6 @@ void P_BobWeapon (player_t *player, float *x, float *y, double ticfrac);
 DAngle P_BulletSlope (AActor *mo, FTranslatedLineTarget *pLineTarget = NULL, int aimflags = 0);
 AActor *P_AimTarget(AActor *mo);
 
-void DoReadyWeapon(AActor *self);
 void DoReadyWeaponToBob(AActor *self);
 void DoReadyWeaponToFire(AActor *self, bool primary = true, bool secondary = true);
 void DoReadyWeaponToSwitch(AActor *self, bool switchable = true);

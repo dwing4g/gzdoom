@@ -27,7 +27,6 @@
 */
 
 #include "gl/system/gl_system.h"
-#include "files.h"
 #include "m_swap.h"
 #include "v_video.h"
 #include "doomstat.h"
@@ -36,6 +35,7 @@
 #include "vectors.h"
 #include "v_palette.h"
 #include "templates.h"
+#include "textures/skyboxtexture.h"
 
 #include "gl/system/gl_interface.h"
 #include "gl/system/gl_framebuffer.h"
@@ -46,7 +46,6 @@
 #include "gl/textures/gl_hwtexture.h"
 #include "gl/textures/gl_texture.h"
 #include "gl/textures/gl_translate.h"
-#include "gl/textures/gl_skyboxtexture.h"
 #include "gl/utility/gl_clock.h"
 #include "gl/utility/gl_templates.h"
 #include "gl/gl_functions.h"
@@ -80,7 +79,7 @@ CUSTOM_CVAR(Int, vid_hwgamma, 2, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVAR_NOINITC
 //==========================================================================
 
 OpenGLFrameBuffer::OpenGLFrameBuffer(void *hMonitor, int width, int height, int bits, int refreshHz, bool fullscreen) : 
-	Super(hMonitor, width, height, bits, refreshHz, fullscreen) 
+	Super(hMonitor, width, height, bits, refreshHz, fullscreen, false) 
 {
 	// SetVSync needs to be at the very top to workaround a bug in Nvidia's OpenGL driver.
 	// If wglSwapIntervalEXT is called after glBindFramebuffer in a frame the setting is not changed!
@@ -95,7 +94,6 @@ OpenGLFrameBuffer::OpenGLFrameBuffer(void *hMonitor, int width, int height, int 
 	memcpy (SourcePalette, GPalette.BaseColors, sizeof(PalEntry)*256);
 	UpdatePalette ();
 	ScreenshotBuffer = NULL;
-	LastCamera = NULL;
 
 	InitializeState();
 	mDebug = std::make_shared<FGLDebug>();
@@ -103,8 +101,6 @@ OpenGLFrameBuffer::OpenGLFrameBuffer(void *hMonitor, int width, int height, int 
 	gl_SetupMenu();
 	gl_GenerateGlobalBrightmapFromColormap();
 	DoSetGamma();
-	needsetgamma = true;
-	swapped = false;
 	Accel2D = true;
 }
 
@@ -180,7 +176,6 @@ void OpenGLFrameBuffer::Update()
 	GLRenderer->Flush();
 
 	Swap();
-	swapped = false;
 	Unlock();
 	CheckBench();
 
@@ -235,11 +230,6 @@ void OpenGLFrameBuffer::Swap()
 		t1 = t0;
 
 	if (gl_finish && swapbefore) glFinish();
-	if (needsetgamma)
-	{
-		//DoSetGamma();
-		needsetgamma = false;
-	}
 	SwapBuffers();
 	if (gl_finish && !swapbefore) glFinish();
 
@@ -252,7 +242,6 @@ void OpenGLFrameBuffer::Swap()
 	s_t = t2;
 
 	Finish.Unclock();
-	swapped = true;
 	camtexcount = 0;
 	FHardwareTexture::UnbindAll();
 	mDebug->Update();
@@ -347,19 +336,6 @@ bool OpenGLFrameBuffer::SetContrast(float contrast)
 
 void OpenGLFrameBuffer::UpdatePalette()
 {
-	int rr=0,gg=0,bb=0;
-	for(int x=0;x<256;x++)
-	{
-		rr+=GPalette.BaseColors[x].r;
-		gg+=GPalette.BaseColors[x].g;
-		bb+=GPalette.BaseColors[x].b;
-	}
-	rr>>=8;
-	gg>>=8;
-	bb>>=8;
-
-	palette_brightness = (rr*77 + gg*143 + bb*35)/255;
-
 	if (GLRenderer)
 		GLRenderer->ClearTonemapPalette();
 }
@@ -451,7 +427,7 @@ void OpenGLFrameBuffer::DrawTextureParms(FTexture *img, DrawParms &parms)
 //
 //
 //==========================================================================
-void OpenGLFrameBuffer::DrawLine(int x1, int y1, int x2, int y2, int palcolor, uint32 color)
+void OpenGLFrameBuffer::DrawLine(int x1, int y1, int x2, int y2, int palcolor, uint32_t color)
 {
 	if (GLRenderer != nullptr && GLRenderer->m2DDrawer != nullptr) 
 		GLRenderer->m2DDrawer->AddLine(x1, y1, x2, y2, palcolor, color);
@@ -462,7 +438,7 @@ void OpenGLFrameBuffer::DrawLine(int x1, int y1, int x2, int y2, int palcolor, u
 //
 //
 //==========================================================================
-void OpenGLFrameBuffer::DrawPixel(int x1, int y1, int palcolor, uint32 color)
+void OpenGLFrameBuffer::DrawPixel(int x1, int y1, int palcolor, uint32_t color)
 {
 	if (GLRenderer != nullptr && GLRenderer->m2DDrawer != nullptr)
 		GLRenderer->m2DDrawer->AddPixel(x1, y1, palcolor, color);
@@ -503,7 +479,7 @@ void OpenGLFrameBuffer::FlatFill (int left, int top, int right, int bottom, FTex
 //
 //
 //==========================================================================
-void OpenGLFrameBuffer::Clear(int left, int top, int right, int bottom, int palcolor, uint32 color)
+void OpenGLFrameBuffer::Clear(int left, int top, int right, int bottom, int palcolor, uint32_t color)
 {
 	if (GLRenderer != nullptr && GLRenderer->m2DDrawer != nullptr)
 		GLRenderer->m2DDrawer->AddClear(left, top, right, bottom, palcolor, color);
@@ -519,7 +495,7 @@ void OpenGLFrameBuffer::Clear(int left, int top, int right, int bottom, int palc
 
 void OpenGLFrameBuffer::FillSimplePoly(FTexture *texture, FVector2 *points, int npoints,
 	double originx, double originy, double scalex, double scaley,
-	DAngle rotation, FDynamicColormap *colormap, PalEntry flatcolor, int lightlevel, int bottomclip)
+	DAngle rotation, const FColormap &colormap, PalEntry flatcolor, int lightlevel, int bottomclip)
 {
 	if (GLRenderer != nullptr && GLRenderer->m2DDrawer != nullptr && npoints >= 3)
 	{
@@ -534,7 +510,7 @@ void OpenGLFrameBuffer::FillSimplePoly(FTexture *texture, FVector2 *points, int 
 //
 //===========================================================================
 
-void OpenGLFrameBuffer::GetScreenshotBuffer(const BYTE *&buffer, int &pitch, ESSType &color_type)
+void OpenGLFrameBuffer::GetScreenshotBuffer(const uint8_t *&buffer, int &pitch, ESSType &color_type)
 {
 	const auto &viewport = GLRenderer->mOutputLetterbox;
 
@@ -551,7 +527,7 @@ void OpenGLFrameBuffer::GetScreenshotBuffer(const BYTE *&buffer, int &pitch, ESS
 	int h = SCREENHEIGHT;
 
 	ReleaseScreenshotBuffer();
-	ScreenshotBuffer = new BYTE[w * h * 3];
+	ScreenshotBuffer = new uint8_t[w * h * 3];
 
 	float rcpWidth = 1.0f / w;
 	float rcpHeight = 1.0f / h;
@@ -594,7 +570,6 @@ void OpenGLFrameBuffer::GameRestart()
 	memcpy (SourcePalette, GPalette.BaseColors, sizeof(PalEntry)*256);
 	UpdatePalette ();
 	ScreenshotBuffer = NULL;
-	LastCamera = NULL;
 	gl_GenerateGlobalBrightmapFromColormap();
 }
 

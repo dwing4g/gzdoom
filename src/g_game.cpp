@@ -45,7 +45,6 @@
 #include "m_random.h"
 #include "m_crc32.h"
 #include "i_system.h"
-#include "i_input.h"
 #include "p_saveg.h"
 #include "p_tick.h"
 #include "d_main.h"
@@ -148,6 +147,7 @@ CVAR(Int, nametagcolor, CR_GOLD, CVAR_ARCHIVE)
 
 gameaction_t	gameaction;
 gamestate_t 	gamestate = GS_STARTUP;
+FName			SelectedSlideshow;		// what to start when ga_slideshow
 
 int 			paused;
 bool			pauseext;
@@ -234,7 +234,7 @@ FString			shotfile;
 AActor* 		bodyque[BODYQUESIZE]; 
 int 			bodyqueslot; 
 
-void R_ExecuteSetViewSize (void);
+void R_ExecuteSetViewSize (FViewWindow &viewwindow);
 
 FString savename;
 FString BackupSaveName;
@@ -1120,7 +1120,7 @@ void G_Ticker ()
 			G_DoCompleted ();
 			break;
 		case ga_slideshow:
-			if (gamestate == GS_LEVEL) F_StartIntermission(level.info->slideshow, FSTATE_InLevel);
+			if (gamestate == GS_LEVEL) F_StartIntermission(SelectedSlideshow, FSTATE_InLevel);
 			break;
 		case ga_worlddone:
 			G_DoWorldDone ();
@@ -1546,12 +1546,12 @@ static FPlayerStart *SelectFarthestDeathmatchSpot (size_t selections)
 
 	for (i = 0; i < selections; i++)
 	{
-		double distance = PlayersRangeFromSpot (&deathmatchstarts[i]);
+		double distance = PlayersRangeFromSpot (&level.deathmatchstarts[i]);
 
 		if (distance > bestdistance)
 		{
 			bestdistance = distance;
-			bestspot = &deathmatchstarts[i];
+			bestspot = &level.deathmatchstarts[i];
 		}
 	}
 
@@ -1566,20 +1566,20 @@ static FPlayerStart *SelectRandomDeathmatchSpot (int playernum, unsigned int sel
 	for (j = 0; j < 20; j++)
 	{
 		i = pr_dmspawn() % selections;
-		if (G_CheckSpot (playernum, &deathmatchstarts[i]) )
+		if (G_CheckSpot (playernum, &level.deathmatchstarts[i]) )
 		{
-			return &deathmatchstarts[i];
+			return &level.deathmatchstarts[i];
 		}
 	}
 
 	// [RH] return a spot anyway, since we allow telefragging when a player spawns
-	return &deathmatchstarts[i];
+	return &level.deathmatchstarts[i];
 }
 
 DEFINE_ACTION_FUNCTION(DObject, G_PickDeathmatchStart)
 {
 	PARAM_PROLOGUE;
-	unsigned int selections = deathmatchstarts.Size();
+	unsigned int selections = level.deathmatchstarts.Size();
 	DVector3 pos;
 	int angle;
 	if (selections == 0)
@@ -1590,8 +1590,8 @@ DEFINE_ACTION_FUNCTION(DObject, G_PickDeathmatchStart)
 	else
 	{
 		unsigned int i = pr_dmspawn() % selections;
-		angle = deathmatchstarts[i].angle;
-		pos = deathmatchstarts[i].pos;
+		angle = level.deathmatchstarts[i].angle;
+		pos = level.deathmatchstarts[i].pos;
 	}
 
 	if (numret > 1)
@@ -1611,7 +1611,7 @@ void G_DeathMatchSpawnPlayer (int playernum)
 	unsigned int selections;
 	FPlayerStart *spot;
 
-	selections = deathmatchstarts.Size ();
+	selections = level.deathmatchstarts.Size ();
 	// [RH] We can get by with just 1 deathmatch start
 	if (selections < 1)
 		I_Error ("No deathmatch starts");
@@ -1635,10 +1635,10 @@ void G_DeathMatchSpawnPlayer (int playernum)
 			spot = SelectRandomDeathmatchSpot(playernum, selections);
 			if (spot == NULL)
 			{ // We have a player 1 start, right?
-				spot = &playerstarts[0];
+				spot = &level.playerstarts[0];
 				if (spot->type == 0)
 				{ // Fine, whatever.
-					spot = &deathmatchstarts[0];
+					spot = &level.deathmatchstarts[0];
 				}
 			}
 		}
@@ -1653,13 +1653,13 @@ void G_DeathMatchSpawnPlayer (int playernum)
 //
 FPlayerStart *G_PickPlayerStart(int playernum, int flags)
 {
-	if (AllPlayerStarts.Size() == 0) // No starts to pick
+	if (level.AllPlayerStarts.Size() == 0) // No starts to pick
 	{
 		return NULL;
 	}
 
 	if ((level.flags2 & LEVEL2_RANDOMPLAYERSTARTS) || (flags & PPS_FORCERANDOM) ||
-		playerstarts[playernum].type == 0)
+		level.playerstarts[playernum].type == 0)
 	{
 		if (!(flags & PPS_NOBLOCKINGCHECK))
 		{
@@ -1667,11 +1667,11 @@ FPlayerStart *G_PickPlayerStart(int playernum, int flags)
 			unsigned int i;
 
 			// Find all unblocked player starts.
-			for (i = 0; i < AllPlayerStarts.Size(); ++i)
+			for (i = 0; i < level.AllPlayerStarts.Size(); ++i)
 			{
-				if (G_CheckSpot(playernum, &AllPlayerStarts[i]))
+				if (G_CheckSpot(playernum, &level.AllPlayerStarts[i]))
 				{
-					good_starts.Push(&AllPlayerStarts[i]);
+					good_starts.Push(&level.AllPlayerStarts[i]);
 				}
 			}
 			if (good_starts.Size() > 0)
@@ -1680,9 +1680,9 @@ FPlayerStart *G_PickPlayerStart(int playernum, int flags)
 			}
 		}
 		// Pick a spot at random, whether it's open or not.
-		return &AllPlayerStarts[pr_pspawn(AllPlayerStarts.Size())];
+		return &level.AllPlayerStarts[pr_pspawn(level.AllPlayerStarts.Size())];
 	}
-	return &playerstarts[playernum];
+	return &level.playerstarts[playernum];
 }
 
 DEFINE_ACTION_FUNCTION(DObject, G_PickPlayerStart)
@@ -1782,10 +1782,10 @@ void G_DoReborn (int playernum, bool freshbot)
 		}
 
 		if (!(level.flags2 & LEVEL2_RANDOMPLAYERSTARTS) &&
-			playerstarts[playernum].type != 0 &&
-			G_CheckSpot (playernum, &playerstarts[playernum]))
+			level.playerstarts[playernum].type != 0 &&
+			G_CheckSpot (playernum, &level.playerstarts[playernum]))
 		{
-			AActor *mo = P_SpawnPlayer(&playerstarts[playernum], playernum);
+			AActor *mo = P_SpawnPlayer(&level.playerstarts[playernum], playernum);
 			if (mo != NULL) P_PlayerStartStomp(mo, true);
 		}
 		else
@@ -2983,3 +2983,32 @@ bool G_CheckDemoStatus (void)
 
 	return false; 
 }
+
+void G_StartSlideshow(FName whichone)
+{
+	gameaction = ga_slideshow;
+	SelectedSlideshow = whichone == NAME_None ? level.info->slideshow : whichone;
+}
+
+DEFINE_ACTION_FUNCTION(FLevelLocals, StartSlideshow)
+{
+	PARAM_PROLOGUE;
+	PARAM_NAME_DEF(whichone);
+	G_StartSlideshow(whichone);
+	return 0;
+}
+
+DEFINE_GLOBAL(players)
+DEFINE_GLOBAL(playeringame)
+DEFINE_GLOBAL(PlayerClasses)
+DEFINE_GLOBAL_NAMED(Skins, PlayerSkins)
+DEFINE_GLOBAL(consoleplayer)
+DEFINE_GLOBAL_NAMED(PClassActor::AllActorClasses, AllActorClasses)
+DEFINE_GLOBAL(validcount)
+DEFINE_GLOBAL(multiplayer)
+DEFINE_GLOBAL(gameaction)
+DEFINE_GLOBAL(gamestate)
+DEFINE_GLOBAL(skyflatnum)
+DEFINE_GLOBAL_NAMED(bglobal.freeze, globalfreeze)
+DEFINE_GLOBAL(gametic)
+DEFINE_GLOBAL(demoplayback)

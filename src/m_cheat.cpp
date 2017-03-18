@@ -50,6 +50,7 @@
 #include "g_levellocals.h"
 #include "virtual.h"
 #include "events.h"
+#include "p_acs.h"
 
 // [RH] Actually handle the cheat. The cheat code in st_stuff.c now just
 // writes some bytes to the network data stream, and the network code
@@ -599,6 +600,30 @@ const char *cht_Morph (player_t *player, PClassActor *morphclass, bool quickundo
 		return GStrings("TXT_STRANGE");
 	}
 	return "";
+}
+
+void cht_SetInv(player_t *player, const char *string, int amount, bool beyond)
+{
+	if (!stricmp(string, "health"))
+	{
+		if (amount <= 0)
+		{
+			cht_Suicide(player);
+			return;
+		}
+		if (!beyond) amount = MIN(amount, player->mo->GetMaxHealth(true));
+		player->health = player->mo->health = amount;
+	}
+	else
+	{
+		auto item = PClass::FindActor(string);
+		if (item != nullptr && item->IsDescendantOf(RUNTIME_CLASS(AInventory)))
+		{
+			player->mo->SetInventory(item, amount, beyond);
+			return;
+		}
+		Printf("Unknown item \"%s\"\n", string);
+	}
 }
 
 void cht_Give (player_t *player, const char *name, int amount)

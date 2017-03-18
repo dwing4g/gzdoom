@@ -197,6 +197,13 @@ void ZCCCompiler::ProcessClass(ZCC_Class *cnode, PSymbolTreeNode *treenode)
 			cls->Defaults.Push(static_cast<ZCC_Default *>(node));
 			break;
 
+		case AST_StaticArrayStatement:
+			if (AddTreeNode(static_cast<ZCC_StaticArrayStatement *>(node)->Id, node, &cls->TreeNodes))
+			{
+				cls->Arrays.Push(static_cast<ZCC_StaticArrayStatement *>(node));
+			}
+			break;
+
 		default:
 			assert(0 && "Unhandled AST node type");
 			break;
@@ -260,6 +267,13 @@ void ZCCCompiler::ProcessStruct(ZCC_Struct *cnode, PSymbolTreeNode *treenode, ZC
 			enumType = nullptr;
 			break;
 
+		case AST_StaticArrayStatement:
+			if (AddTreeNode(static_cast<ZCC_StaticArrayStatement *>(node)->Id, node, &cls->TreeNodes))
+			{
+				cls->Arrays.Push(static_cast<ZCC_StaticArrayStatement *>(node));
+			}
+			break;
+
 		default:
 			assert(0 && "Unhandled AST node type");
 			break;
@@ -276,7 +290,7 @@ void ZCCCompiler::ProcessStruct(ZCC_Struct *cnode, PSymbolTreeNode *treenode, ZC
 //==========================================================================
 
 ZCCCompiler::ZCCCompiler(ZCC_AST &ast, DObject *_outer, PSymbolTable &_symbols, PNamespace *_outnamespc, int lumpnum, const VersionInfo &ver)
-	: Outer(_outer), GlobalTreeNodes(&_symbols), OutNamespace(_outnamespc), AST(ast), mVersion(ver), Lump(lumpnum)
+	: mVersion(ver), Outer(_outer), ConvertClass(nullptr), GlobalTreeNodes(&_symbols), OutNamespace(_outnamespc), AST(ast), Lump(lumpnum)
 {
 	FScriptPosition::ResetErrorCounter();
 	// Group top-level nodes by type
@@ -487,7 +501,13 @@ void ZCCCompiler::CreateStructTypes()
 			syms = &OutNamespace->Symbols;
 		}
 
-		if (s->strct->Flags & ZCC_Native)
+		if (s->NodeName() == NAME__ && Wads.GetLumpFile(Lump) == 0)
+		{
+			// This is just a container for syntactic purposes.
+			s->strct->Type = nullptr;
+			continue;
+		}
+		else if (s->strct->Flags & ZCC_Native)
 		{
 			s->strct->Type = NewNativeStruct(s->NodeName(), outer);
 		}
@@ -658,12 +678,12 @@ void ZCCCompiler::CreateClassTypes()
 						{
 							Error(c->cls, "Can't change class scope in class %s", c->NodeName().GetChars());
 						}
-						c->Type()->ObjectFlags = (c->Type()->ObjectFlags & ~(OF_UI | OF_Play)) | (parent->ObjectFlags & (OF_UI | OF_Play));
+						c->Type()->ObjectFlags = FScopeBarrier::ChangeSideInObjectFlags(c->Type()->ObjectFlags, FScopeBarrier::SideFromObjectFlags(parent->ObjectFlags));
 					}
 				}
 				else
 				{
-					c->Type()->ObjectFlags = (c->Type()->ObjectFlags&~OF_UI) | OF_Play;
+					c->Type()->ObjectFlags = FScopeBarrier::ChangeSideInObjectFlags(c->Type()->ObjectFlags, FScopeBarrier::Side_Play);
 				}
 
 				c->Type()->bExported = true;	// this class is accessible to script side type casts. (The reason for this flag is that types like PInt need to be skipped.)
@@ -776,7 +796,8 @@ void ZCCCompiler::CompileAllConstants()
 	}
 	for (auto s : Structs)
 	{
-		CopyConstants(constantwork, s->Constants, s->Type(), &s->Type()->Symbols);
+		if (s->Type() != nullptr)
+			CopyConstants(constantwork, s->Constants, s->Type(), &s->Type()->Symbols);
 	}
 
 	// Before starting to resolve the list, let's create symbols for all already resolved ones first (i.e. all literal constants), to reduce work.
@@ -810,6 +831,16 @@ void ZCCCompiler::CompileAllConstants()
 	for (unsigned i = 0; i < constantwork.Size(); i++)
 	{
 		Error(constantwork[i].node, "%s is not a constant", FName(constantwork[i].node->NodeName).GetChars());
+	}
+
+
+	for (auto s : Structs)
+	{
+		CompileArrays(s);
+	}
+	for (auto c : Classes)
+	{
+		CompileArrays(c);
 	}
 }
 
@@ -926,6 +957,69 @@ bool ZCCCompiler::CompileConstant(ZCC_ConstantWork *work)
 	}
 }
 
+
+void ZCCCompiler::CompileArrays(ZCC_StructWork *work)
+{
+	for(auto sas : work->Arrays)
+	{
+		PType *ztype = DetermineType(work->Type(), sas, sas->Id, sas->Type, false, true);
+		PType *ctype = ztype;
+		FArgumentList values;
+
+		// Don't use narrow typea for casting.
+		if (ctype->IsA(RUNTIME_CLASS(PInt))) ctype = static_cast<PInt*>(ztype)->Unsigned ? TypeUInt32 : TypeSInt32;
+		else if (ctype == TypeFloat32) ctype = TypeFloat64;
+
+		ConvertNodeList(values, sas->Values);
+
+		bool fail = false;
+		FCompileContext ctx(OutNamespace, work->Type(), false);
+
+		char *destmem = (char *)ClassDataAllocator.Alloc(values.Size() * ztype->Align);
+		memset(destmem, 0, values.Size() * ztype->Align);
+		char *copyp = destmem;
+		for (unsigned i = 0; i < values.Size(); i++)
+		{
+			values[i] = new FxTypeCast(values[i], ctype, false);
+			values[i] = values[i]->Resolve(ctx);
+			if (values[i] == nullptr) fail = true;
+			else if (!values[i]->isConstant())
+			{
+				Error(sas, "Initializer must be constant");
+				fail = true;
+			}
+			else
+			{
+				ExpVal val = static_cast<FxConstant*>(values[i])->GetValue();
+				switch (ztype->GetRegType())
+				{
+				default:
+					// should never happen
+					Error(sas, "Non-integral type in constant array");
+					return;
+
+				case REGT_INT:
+					ztype->SetValue(copyp, val.GetInt());
+					break;
+
+				case REGT_FLOAT:
+					ztype->SetValue(copyp, val.GetFloat());
+					break;
+
+				case REGT_POINTER:
+					*(void**)copyp = val.GetPointer();
+					break;
+
+				case REGT_STRING:
+					::new(copyp) FString(val.GetString());
+					break;
+				}
+				copyp += ztype->Align;
+			}
+		}
+		work->Type()->Symbols.AddSymbol(new PField(sas->Id, NewArray(ztype, values.Size()), VARF_Static | VARF_ReadOnly, (size_t)destmem));
+	}
+}
 
 //==========================================================================
 //
@@ -1048,7 +1142,7 @@ void ZCCCompiler::CompileAllFields()
 		donesomething = false;
 		for (unsigned i = 0; i < Structs.Size(); i++)
 		{
-			if (CompileFields(Structs[i]->Type(), Structs[i]->Fields, Structs[i]->Outer, &Structs[i]->TreeNodes, true))
+			if (CompileFields(Structs[i]->Type(), Structs[i]->Fields, Structs[i]->Outer, Structs[i]->Type() == 0? GlobalTreeNodes : &Structs[i]->TreeNodes, true))
 			{
 				// Remove from the list if all fields got compiled.
 				Structs.Delete(i--);
@@ -1132,10 +1226,13 @@ bool ZCCCompiler::CompileFields(PStruct *type, TArray<ZCC_VarDeclarator *> &Fiel
 		if (field->Flags & ZCC_Transient) varflags |= VARF_Transient;
 		if (mVersion >= MakeVersion(2, 4, 0))
 		{
-			if (type->ObjectFlags & OF_UI)
-				varflags |= VARF_UI;
-			if (type->ObjectFlags & OF_Play)
-				varflags |= VARF_Play;
+			if (type != nullptr)
+			{
+				if (type->ObjectFlags & OF_UI)
+					varflags |= VARF_UI;
+				if (type->ObjectFlags & OF_Play)
+					varflags |= VARF_Play;
+			}
 			if (field->Flags & ZCC_UIFlag)
 				varflags = FScopeBarrier::ChangeSideInFlags(varflags, FScopeBarrier::Side_UI);
 			if (field->Flags & ZCC_Play)
@@ -1202,19 +1299,32 @@ bool ZCCCompiler::CompileFields(PStruct *type, TArray<ZCC_VarDeclarator *> &Fiel
 						fd = FindField(type, FName(name->Name).GetChars());
 						if (fd == nullptr)
 						{
-							Error(field, "The member variable '%s.%s' has not been exported from the executable.", type->TypeName.GetChars(), FName(name->Name).GetChars());
+							Error(field, "The member variable '%s.%s' has not been exported from the executable.", type == nullptr? "" : type->TypeName.GetChars(), FName(name->Name).GetChars());
 						}
-						else if (thisfieldtype->Size != fd->FieldSize && fd->BitValue == 0)
+						// For native structs a size check cannot be done because they normally have no size. But for a native reference they are still fine.
+						else if (thisfieldtype->Size != ~0u && fd->FieldSize != ~0u && thisfieldtype->Size != fd->FieldSize && fd->BitValue == 0 && !thisfieldtype->IsA(RUNTIME_CLASS(PNativeStruct)))
 						{
-							Error(field, "The member variable '%s.%s' has mismatching sizes in internal and external declaration. (Internal = %d, External = %d)", type->TypeName.GetChars(), FName(name->Name).GetChars(), fd->FieldSize, thisfieldtype->Size);
+							Error(field, "The member variable '%s.%s' has mismatching sizes in internal and external declaration. (Internal = %d, External = %d)", type == nullptr ? "" : type->TypeName.GetChars(), FName(name->Name).GetChars(), fd->FieldSize, thisfieldtype->Size);
 						}
 						// Q: Should we check alignment, too? A mismatch may be an indicator for bad assumptions.
-						else
+						else if (type != nullptr)
 						{
 							// for bit fields the type must point to the source variable.
 							if (fd->BitValue != 0) thisfieldtype = fd->FieldSize == 1 ? TypeUInt8 : fd->FieldSize == 2 ? TypeUInt16 : TypeUInt32;
 							auto f = type->AddNativeField(name->Name, thisfieldtype, fd->FieldOffset, varflags, fd->BitValue);
 							if (field->Flags & (ZCC_Version | ZCC_Deprecated)) f->mVersion = field->Version;
+						}
+						else
+						{
+							// This is a global variable.
+							if (fd->BitValue != 0) thisfieldtype = fd->FieldSize == 1 ? TypeUInt8 : fd->FieldSize == 2 ? TypeUInt16 : TypeUInt32;
+							PField *field = new PField(name->Name, thisfieldtype, varflags | VARF_Native | VARF_Static, fd->FieldOffset, fd->BitValue);
+
+							if (OutNamespace->Symbols.AddSymbol(field) == nullptr)
+							{ // name is already in use
+								field->Destroy();
+								return false;
+							}
 						}
 					}
 				}
@@ -1424,6 +1534,16 @@ PType *ZCCCompiler::DetermineType(PType *outertype, ZCC_TreeNode *field, FName n
 			retval = TypeAuto;
 			break;
 
+		case ZCC_NativeType:
+
+			// Creating an instance of a native struct is only allowed for internal definitions of native variables.
+			if (Wads.GetLumpFile(Lump) != 0 || !formember)
+			{
+				Error(field, "%s: @ not allowed for user scripts", name.GetChars());
+			}
+			retval = ResolveUserType(btype, outertype? &outertype->Symbols : nullptr, true);
+			break;
+
 		case ZCC_UserType:
 			// statelabel et.al. are not tokens - there really is no need to, it works just as well as an identifier. Maybe the same should be done for some other types, too?
 			switch (btype->UserType->Id)
@@ -1445,7 +1565,7 @@ PType *ZCCCompiler::DetermineType(PType *outertype, ZCC_TreeNode *field, FName n
 				break;
 
 			default:
-				retval = ResolveUserType(btype, &outertype->Symbols);
+				retval = ResolveUserType(btype, outertype ? &outertype->Symbols : nullptr, false);
 				break;
 			}
 			break;
@@ -1473,7 +1593,18 @@ PType *ZCCCompiler::DetermineType(PType *outertype, ZCC_TreeNode *field, FName n
 		auto ftype = DetermineType(outertype, field, name, atype->ElementType, false, true);
 		if (ftype->GetRegType() == REGT_NIL || ftype->GetRegCount() > 1)
 		{
-			Error(field, "%s: Base type  for dynamic array types nust be integral, but got %s", name.GetChars(), ftype->DescriptiveName());
+			if (field->NodeType == AST_VarDeclarator && (static_cast<ZCC_VarDeclarator*>(field)->Flags & ZCC_Native) && Wads.GetLumpFile(Lump) == 0)
+			{
+				// the internal definitions may declare native arrays to complex types.
+				// As long as they can be mapped to a static array type the VM can handle them, in a limited but sufficient fashion.
+				retval = NewPointer(NewStaticArray(ftype), false);
+				retval->Size = ~0u;	// don't check for a size match, it's likely to fail anyway.
+				retval->Align = ~0u;
+			}
+			else
+			{
+				Error(field, "%s: Base type  for dynamic array types nust be integral, but got %s", name.GetChars(), ftype->DescriptiveName());
+			}
 		}
 		else
 		{
@@ -1493,7 +1624,7 @@ PType *ZCCCompiler::DetermineType(PType *outertype, ZCC_TreeNode *field, FName n
 			// This doesn't check the class list directly but the current symbol table to ensure that
 			// this does not reference a type that got shadowed by a more local definition.
 			// We first look in the current class and its parents, and then in the current namespace and its parents.
-			auto sym = outertype->Symbols.FindSymbol(ctype->Restriction->Id, true);
+			auto sym = outertype ? outertype->Symbols.FindSymbol(ctype->Restriction->Id, true) : nullptr;
 			if (sym == nullptr) sym = OutNamespace->Symbols.FindSymbol(ctype->Restriction->Id, true);
 			if (sym == nullptr)
 			{
@@ -1537,11 +1668,13 @@ PType *ZCCCompiler::DetermineType(PType *outertype, ZCC_TreeNode *field, FName n
 //
 //==========================================================================
 
-PType *ZCCCompiler::ResolveUserType(ZCC_BasicType *type, PSymbolTable *symt)
+PType *ZCCCompiler::ResolveUserType(ZCC_BasicType *type, PSymbolTable *symt, bool nativetype)
 {
 	// Check the symbol table for the identifier.
-	PSymbol *sym = symt->FindSymbol(type->UserType->Id, true);
+	PSymbol *sym = nullptr;
+	
 	// We first look in the current class and its parents, and then in the current namespace and its parents.
+	if (symt != nullptr) sym = symt->FindSymbol(type->UserType->Id, true);
 	if (sym == nullptr) sym = OutNamespace->Symbols.FindSymbol(type->UserType->Id, true);
 	if (sym != nullptr && sym->IsKindOf(RUNTIME_CLASS(PSymbolType)))
 	{
@@ -1554,15 +1687,16 @@ PType *ZCCCompiler::ResolveUserType(ZCC_BasicType *type, PSymbolTable *symt)
 
 		if (ptype->IsKindOf(RUNTIME_CLASS(PEnum)))
 		{
-			return TypeSInt32;	// hack this to an integer until we can resolve the enum mess.
+			if (!nativetype) return TypeSInt32;	// hack this to an integer until we can resolve the enum mess.
 		}
 		if (ptype->IsKindOf(RUNTIME_CLASS(PNativeStruct)))	// native structs and classes cannot be instantiated, they always get used as reference.
 		{
-			return NewPointer(ptype, type->isconst);
+			if (!nativetype) return NewPointer(ptype, type->isconst);
+			if (!ptype->IsKindOf(RUNTIME_CLASS(PClass))) return ptype;	// instantiation of native structs. Only for internal use.
 		}
-		return ptype;
+		if (!nativetype) return ptype;
 	}
-	Error(type, "Unable to resolve %s as type.", FName(type->UserType->Id).GetChars());
+	Error(type, "Unable to resolve %s%s as type.", nativetype? "@" : "", FName(type->UserType->Id).GetChars());
 	return TypeError;
 }
 
@@ -1783,14 +1917,23 @@ void ZCCCompiler::DispatchScriptProperty(PProperty *prop, ZCC_PropertyStmt *prop
 	ZCC_ExprConstant one;
 	unsigned parmcount = 1;
 	ZCC_TreeNode *x = property->Values;
-	while (x->SiblingNext != property->Values)
+	if (x == nullptr)
 	{
-		x = x->SiblingNext;
-		parmcount++;
+		parmcount = 0;
+	}
+	else
+	{
+		while (x->SiblingNext != property->Values)
+		{
+			x = x->SiblingNext;
+			parmcount++;
+		}
 	}
 	if (parmcount == 0 && prop->Variables.Size() == 1 && prop->Variables[0]->Type == TypeBool)
 	{
 		// allow boolean properties to have the parameter omitted
+		memset(&one, 0, sizeof(one));
+		one.SourceName = property->SourceName;	// This may not be null!
 		one.Operation = PEX_ConstValue;
 		one.NodeType = AST_ExprConstant;
 		one.Type = TypeBool;
@@ -1799,7 +1942,7 @@ void ZCCCompiler::DispatchScriptProperty(PProperty *prop, ZCC_PropertyStmt *prop
 	}
 	else if (parmcount != prop->Variables.Size())
 	{
-		Error(x, "Argument count mismatch: Got %u, expected %u", parmcount, prop->Variables.Size());
+		Error(x == nullptr? property : x, "Argument count mismatch: Got %u, expected %u", parmcount, prop->Variables.Size());
 		return;
 	}
 

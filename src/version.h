@@ -46,22 +46,22 @@ const char *GetVersionString();
 #ifdef GIT_DESCRIPTION
 #define VERSIONSTR GIT_DESCRIPTION
 #else
-#define VERSIONSTR "2.3pre"
+#define VERSIONSTR "2.5pre"
 #endif
 
 // The version as seen in the Windows resource
-#define RC_FILEVERSION 2,3,9999,0
-#define RC_PRODUCTVERSION 2,3,9999,0
+#define RC_FILEVERSION 2,4,9999,0
+#define RC_PRODUCTVERSION 2,4,9999,0
 #define RC_PRODUCTVERSION2 VERSIONSTR
 // These are for content versioning. The current state is '2.4'.
 #define VER_MAJOR 2
-#define VER_MINOR 4
+#define VER_MINOR 5
 #define VER_REVISION 0
 
 // Version identifier for network games.
 // Bump it every time you do a release unless you're certain you
 // didn't change anything that will affect sync.
-#define NETGAMEVERSION 233
+#define NETGAMEVERSION 234
 
 // Version stored in the ini's [LastRun] section.
 // Bump it if you made some configuration change that you want to
@@ -71,7 +71,7 @@ const char *GetVersionString();
 // Protocol version used in demos.
 // Bump it if you change existing DEM_ commands or add new ones.
 // Otherwise, it should be safe to leave it alone.
-#define DEMOGAMEVERSION 0x21F
+#define DEMOGAMEVERSION 0x220
 
 // Minimum demo version we can play.
 // Bump it whenever you change or remove existing DEM_ commands.
@@ -85,11 +85,11 @@ const char *GetVersionString();
 #define SAVEGAME_EXT "zds"
 
 // MINSAVEVER is the minimum level snapshot version that can be loaded.
-#define MINSAVEVER	4550
+#define MINSAVEVER	4551
 
 // Use 4500 as the base git save version, since it's higher than the
 // SVN revision ever got.
-#define SAVEVER 4550
+#define SAVEVER 4551
 
 // This is so that derivates can use the same savegame versions without worrying about engine compatibility
 #define GAMESIG "GZDOOM"

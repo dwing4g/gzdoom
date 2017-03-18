@@ -58,6 +58,7 @@
 
 extern FRandom pr_exrandom;
 FMemArena FxAlloc(65536);
+int utf8_decode(const char *src, int *size);
 
 struct FLOP
 {
@@ -304,6 +305,36 @@ static bool AreCompatiblePointerTypes(PType *dest, PType *source, bool forcompar
 	return false;
 }
 
+
+//==========================================================================
+//
+//
+//
+//==========================================================================
+
+static FxExpression *StringConstToChar(FxExpression *basex)
+{
+	if (!basex->isConstant()) return nullptr;
+	// Allow single character string literals be convertible to integers.
+	// This serves as workaround for not being able to use single quoted literals because those are taken for names.
+	ExpVal constval = static_cast<FxConstant *>(basex)->GetValue();
+	FString str = constval.GetString();
+	if (str.Len() == 1)
+	{
+		return new FxConstant(str[0], basex->ScriptPosition);
+	}
+	else if (str.Len() > 1)
+	{
+		// If the string is UTF-8, allow a single character UTF-8 sequence.
+		int size;
+		int c = utf8_decode(str.GetChars(), &size);
+		if (c >= 0 && size_t(size) == str.Len())
+		{
+			return new FxConstant(str[0], basex->ScriptPosition);
+		}
+	}
+	return nullptr;
+}
 //==========================================================================
 //
 //
@@ -951,6 +982,17 @@ FxExpression *FxIntCast::Resolve(FCompileContext &ctx)
 		}
 
 		return this;
+	}
+	else if (basex->ValueType == TypeString && basex->isConstant())
+	{
+		FxExpression *x = StringConstToChar(basex);
+		if (x)
+		{
+			x->ValueType = ValueType;
+			basex = nullptr;
+			delete this;
+			return x;
+		}
 	}
 	ScriptPosition.Message(MSG_ERROR, "Numeric type expected");
 	delete this;
@@ -3302,6 +3344,18 @@ FxExpression *FxCompareRel::Resolve(FCompileContext& ctx)
 		return nullptr;
 	}
 
+	FxExpression *x;
+	if (left->IsNumeric() && right->ValueType == TypeString && (x = StringConstToChar(right)))
+	{
+		delete right;
+		right = x;
+	}
+	else if (right->IsNumeric() && left->ValueType == TypeString && (x = StringConstToChar(left)))
+	{
+		delete left;
+		left = x;
+	}
+
 	if (left->ValueType == TypeString || right->ValueType == TypeString)
 	{
 		if (left->ValueType != TypeString)
@@ -3528,6 +3582,17 @@ FxExpression *FxCompareEq::Resolve(FCompileContext& ctx)
 
 	if (left->ValueType != right->ValueType)	// identical types are always comparable, if they can be placed in a register, so we can save most checks if this is the case.
 	{
+		FxExpression *x;
+		if (left->IsNumeric() && right->ValueType == TypeString && (x = StringConstToChar(right)))
+		{
+			delete right;
+			right = x;
+		}
+		else if (right->IsNumeric() && left->ValueType == TypeString && (x = StringConstToChar(left)))
+		{
+			delete left;
+			left = x;
+		}
 		// Special cases: Compare strings and names with names, sounds, colors, state labels and class types.
 		// These are all types a string can be implicitly cast into, so for convenience, so they should when doing a comparison.
 		if ((left->ValueType == TypeString || left->ValueType == TypeName) &&
@@ -6292,9 +6357,19 @@ FxExpression *FxMemberIdentifier::Resolve(FCompileContext& ctx)
 					}
 					else
 					{
-						ScriptPosition.Message(MSG_ERROR, "Unable to access '%s.%s' in a static context\n", ccls->TypeName.GetChars(), Identifier.GetChars());
-						delete this;
-						return nullptr;
+						auto f = dyn_cast<PField>(sym);
+						if (f != nullptr && (f->Flags & (VARF_Static | VARF_ReadOnly | VARF_Meta)) == (VARF_Static | VARF_ReadOnly))
+						{
+							auto x = new FxGlobalVariable(f, ScriptPosition);
+							delete this;
+							return x->Resolve(ctx);
+						}
+						else
+						{
+							ScriptPosition.Message(MSG_ERROR, "Unable to access '%s.%s' in a static context\n", ccls->TypeName.GetChars(), Identifier.GetChars());
+							delete this;
+							return nullptr;
+						}
 					}
 				}
 			}
@@ -6933,6 +7008,15 @@ FxExpression *FxStructMember::Resolve(FCompileContext &ctx)
 			BarrierSide = pmember->BarrierSide;
 	}
 
+	// Even though this is global, static and readonly, we still need to do the scope checks for consistency.
+	if ((membervar->Flags & (VARF_Static | VARF_ReadOnly | VARF_Meta)) == (VARF_Static | VARF_ReadOnly))
+	{
+		// This is a static constant array, which is stored at a constant address, like a global variable.
+		auto x = new FxGlobalVariable(membervar, ScriptPosition);
+		delete this;
+		return x->Resolve(ctx);
+	}
+
 	if (classx->ValueType->IsKindOf(RUNTIME_CLASS(PPointer)))
 	{
 		PPointer *ptrtype = dyn_cast<PPointer>(classx->ValueType);
@@ -7147,7 +7231,7 @@ FxExpression *FxArrayElement::Resolve(FCompileContext &ctx)
 	{
 		PDynArray *darraytype = static_cast<PDynArray*>(Array->ValueType);
 		elementtype = darraytype->ElementType;
-		Array->ValueType = NewPointer(NewResizableArray(elementtype));	// change type so that this can use the code for resizable arrays unchanged.
+		Array->ValueType = NewPointer(NewStaticArray(elementtype));	// change type so that this can use the code for resizable arrays unchanged.
 		arrayispointer = true;
 	}
 	else
@@ -8104,7 +8188,7 @@ FxExpression *FxMemberFunctionCall::Resolve(FCompileContext& ctx)
 				if (Self->ExprType == EFX_StructMember || Self->ExprType == EFX_ClassMember || Self->ExprType == EFX_GlobalVariable)
 				{
 					auto member = static_cast<FxMemberBase*>(Self);
-					auto newfield = new PField(NAME_None, TypeUInt32, VARF_ReadOnly, member->membervar->Offset + member->membervar->Type->Align);	// the size is stored right behind the pointer.
+					auto newfield = new PField(NAME_None, TypeUInt32, VARF_ReadOnly, member->membervar->Offset + sizeof(void*));	// the size is stored right behind the pointer.
 					member->membervar = newfield;
 					Self = nullptr;
 					delete this;
@@ -8815,7 +8899,8 @@ ExpEmit FxVMFunctionCall::Emit(VMFunctionBuilder *build)
 			if (outerside == FScopeBarrier::Side_Virtual)
 				outerside = FScopeBarrier::SideFromObjectFlags(CallingFunction->OwningClass->ObjectFlags);
 
-			if (selfside != outerside && (selfside == FScopeBarrier::Side_Play || selfside == FScopeBarrier::Side_UI))	// if the self pointer and the calling functions have the same scope the check here is not needed.
+			// [ZZ] only emit if target side cannot be checked at compile time.
+			if (selfside == FScopeBarrier::Side_PlainData)
 			{
 				// Check the self object against the calling function's flags at run time
 				build->Emit(OP_SCOPE, selfemit.RegNum, outerside + 1, build->GetConstantAddress(vmfunc, ATAG_OBJECT));
@@ -10508,8 +10593,12 @@ FxExpression *FxClassTypeCast::Resolve(FCompileContext &ctx)
 				ScriptPosition.Message(MSG_OPTERROR,
 					"Unknown class name '%s' of type '%s'",
 					clsname.GetChars(), desttype->TypeName.GetChars());
-				delete this;
-				return nullptr;
+				// When originating from DECORATE this must pass, when in ZScript it's an error that must abort the code generation here.
+				if (!ctx.FromDecorate)
+				{
+					delete this;
+					return nullptr;
+				}
 			}
 			else
 			{

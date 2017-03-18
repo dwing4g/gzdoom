@@ -70,6 +70,7 @@
 #include "a_keys.h"
 #include "r_data/colormaps.h"
 #include "g_levellocals.h"
+#include "actorinlines.h"
 
 
 //=============================================================================
@@ -153,12 +154,12 @@ CVAR (Color, am_ovportalcolor,			0x004022,	CVAR_ARCHIVE);
 struct AMColor
 {
 	int Index;
-	uint32 RGB;
+	uint32_t RGB;
 
 	void FromCVar(FColorCVar & cv)
 	{
 		Index = cv.GetIndex();
-		RGB = uint32(cv) | MAKEARGB(255, 0, 0, 0);
+		RGB = uint32_t(cv) | MAKEARGB(255, 0, 0, 0);
 	}
 
 	void FromRGB(int r,int g, int b)
@@ -1830,6 +1831,8 @@ void AM_drawGrid (int color)
 	mline_t ml;
 	double minlen, extx, exty;
 	double minx, miny;
+	auto bmaporgx = level.blockmap.bmaporgx;
+	auto bmaporgy = level.blockmap.bmaporgy;
 
 	// [RH] Calculate a minimum for how long the grid lines should be so that
 	// they cover the screen at any rotation.
@@ -1842,12 +1845,12 @@ void AM_drawGrid (int color)
 
 	// Figure out start of vertical gridlines
 	start = minx - extx;
-	start = ceil((start - bmaporgx) / MAPBLOCKUNITS) * MAPBLOCKUNITS + bmaporgx;
+	start = ceil((start - bmaporgx) / FBlockmap::MAPBLOCKUNITS) * FBlockmap::MAPBLOCKUNITS + bmaporgx;
 
 	end = minx + minlen - extx;
 
 	// draw vertical gridlines
-	for (x = start; x < end; x += MAPBLOCKUNITS)
+	for (x = start; x < end; x += FBlockmap::MAPBLOCKUNITS)
 	{
 		ml.a.x = x;
 		ml.b.x = x;
@@ -1863,11 +1866,11 @@ void AM_drawGrid (int color)
 
 	// Figure out start of horizontal gridlines
 	start = miny - exty;
-	start = ceil((start - bmaporgy) / MAPBLOCKUNITS) * MAPBLOCKUNITS + bmaporgy;
+	start = ceil((start - bmaporgy) / FBlockmap::MAPBLOCKUNITS) * FBlockmap::MAPBLOCKUNITS + bmaporgy;
 	end = miny + minlen - exty;
 
 	// draw horizontal gridlines
-	for (y=start; y<end; y+=MAPBLOCKUNITS)
+	for (y=start; y<end; y+=FBlockmap::MAPBLOCKUNITS)
 	{
 		ml.a.x = minx - extx;
 		ml.b.x = ml.a.x + minlen;
@@ -1882,6 +1885,124 @@ void AM_drawGrid (int color)
 	}
 }
 
+//==========================================================================
+//
+// This was previously using the variants from the renderers but with
+// all globals being factored out this will become dangerouns and unpredictable
+// as the original R_FakeFlat heavily depended on global variables from
+// the last rendered scene.
+//
+//==========================================================================
+
+sector_t * AM_FakeFlat(AActor *viewer, sector_t * sec, sector_t * dest)
+{
+	if (sec->GetHeightSec() == nullptr) return sec;
+
+	DVector3 pos = viewer->Pos();
+	
+	if (viewer->player)
+	{
+		pos.Z = viewer->player->viewz;
+	}
+	else
+	{
+		pos.Z += viewer->GetCameraHeight();
+	}
+
+	int in_area;
+	if (viewer->Sector->GetHeightSec() == nullptr)
+	{
+		in_area = 0;
+	}
+	else
+	{
+		in_area = pos.Z <= viewer->Sector->heightsec->floorplane.ZatPoint(pos) ? -1 :
+			(pos.Z > viewer->Sector->heightsec->ceilingplane.ZatPoint(pos) && !(viewer->Sector->heightsec->MoreFlags&SECF_FAKEFLOORONLY)) ? 1 : 0;
+	}
+
+	int diffTex = (sec->heightsec->MoreFlags & SECF_CLIPFAKEPLANES);
+	sector_t * s = sec->heightsec;
+
+	memcpy(dest, sec, sizeof(sector_t));
+
+	// Replace floor height with control sector's heights.
+	// The automap is only interested in the floor so let's skip the ceiling.
+	if (diffTex)
+	{
+		if (s->floorplane.CopyPlaneIfValid(&dest->floorplane, &sec->ceilingplane))
+		{
+			dest->SetTexture(sector_t::floor, s->GetTexture(sector_t::floor), false);
+			dest->SetPlaneTexZ(sector_t::floor, s->GetPlaneTexZ(sector_t::floor));
+		}
+		else if (s->MoreFlags & SECF_FAKEFLOORONLY)
+		{
+			if (in_area == -1)
+			{
+				dest->Colormap = s->Colormap;
+				if (!(s->MoreFlags & SECF_NOFAKELIGHT))
+				{
+					dest->lightlevel = s->lightlevel;
+					dest->SetPlaneLight(sector_t::floor, s->GetPlaneLight(sector_t::floor));
+					dest->ChangeFlags(sector_t::floor, -1, s->GetFlags(sector_t::floor));
+				}
+				return dest;
+			}
+			return sec;
+		}
+	}
+	else
+	{
+		dest->SetPlaneTexZ(sector_t::floor, s->GetPlaneTexZ(sector_t::floor));
+		dest->floorplane = s->floorplane;
+	}
+
+	if (in_area == -1)
+	{
+		dest->Colormap = s->Colormap;
+		dest->SetPlaneTexZ(sector_t::floor, sec->GetPlaneTexZ(sector_t::floor));
+		dest->floorplane = sec->floorplane;
+		if (!(s->MoreFlags & SECF_NOFAKELIGHT))
+		{
+			dest->lightlevel = s->lightlevel;
+		}
+
+		dest->SetTexture(sector_t::floor, diffTex ? sec->GetTexture(sector_t::floor) : s->GetTexture(sector_t::floor), false);
+		dest->planes[sector_t::floor].xform = s->planes[sector_t::floor].xform;
+
+		if (!(s->MoreFlags & SECF_NOFAKELIGHT))
+		{
+			dest->SetPlaneLight(sector_t::floor, s->GetPlaneLight(sector_t::floor));
+			dest->ChangeFlags(sector_t::floor, -1, s->GetFlags(sector_t::floor));
+		}
+	}
+	else if (in_area == 1)
+	{
+		dest->Colormap = s->Colormap;
+		dest->SetPlaneTexZ(sector_t::floor, s->GetPlaneTexZ(sector_t::ceiling));
+		dest->floorplane = s->ceilingplane;
+		if (!(s->MoreFlags & SECF_NOFAKELIGHT))
+		{
+			dest->lightlevel = s->lightlevel;
+		}
+
+		dest->SetTexture(sector_t::floor, s->GetTexture(sector_t::ceiling), false);
+
+		if (s->GetTexture(sector_t::floor) != skyflatnum)
+		{
+			dest->SetTexture(sector_t::floor, s->GetTexture(sector_t::floor), false);
+			dest->planes[sector_t::floor].xform = s->planes[sector_t::floor].xform;
+		}
+
+		if (!(s->MoreFlags & SECF_NOFAKELIGHT))
+		{
+			dest->lightlevel = s->lightlevel;
+			dest->SetPlaneLight(sector_t::floor, s->GetPlaneLight(sector_t::floor));
+			dest->ChangeFlags(sector_t::floor, -1, s->GetFlags(sector_t::floor));
+		}
+	}
+	return dest;
+}
+
 //=============================================================================
 //
 // AM_drawSubsectors
@@ -1894,14 +2015,15 @@ void AM_drawSubsectors()
 	double scale = scale_mtof;
 	DAngle rotation;
 	sector_t tempsec;
-	int floorlight, ceilinglight;
+	int floorlight;
 	double scalex, scaley;
 	double originx, originy;
-	FDynamicColormap *colormap;
+	FColormap colormap;
 	PalEntry flatcolor;
 	mpoint_t originpt;
 
-	for (int i = 0; i < numsubsectors; ++i)
+	auto &subsectors = level.subsectors;
+	for (unsigned i = 0; i < subsectors.Size(); ++i)
 	{
 		if (subsectors[i].flags & SSECF_POLYORG)
 		{
@@ -1932,13 +2054,14 @@ void AM_drawSubsectors()
 			points[j].Y = float(f_y + (f_h - (pt.y - m_y) * scale));
 		}
 		// For lighting and texture determination
-		sector_t *sec = Renderer->FakeFlat(subsectors[i].render_sector, &tempsec, &floorlight, &ceilinglight, false);
+		sector_t *sec = AM_FakeFlat(players[consoleplayer].camera, subsectors[i].render_sector, &tempsec);
+		floorlight = sec->GetFloorLight();
 		// Find texture origin.
 		originpt.x = -sec->GetXOffset(sector_t::floor);
 		originpt.y = sec->GetYOffset(sector_t::floor);
 		rotation = -sec->GetAngle(sector_t::floor);
 		// Coloring for the polygon
-		colormap = sec->ColorMap;
+		colormap = sec->Colormap;
 
 		FTextureID maptex = sec->GetTexture(sector_t::floor);
 		flatcolor = sec->SpecialColors[sector_t::floor];
@@ -1958,13 +2081,13 @@ void AM_drawSubsectors()
 			double secx;
 			double secy;
 			double seczb, seczt;
-			double cmpz = ViewPos.Z;
+			double cmpz = r_viewpoint.Pos.Z;
 
 			if (players[consoleplayer].camera && sec == players[consoleplayer].camera->Sector)
 			{
 				// For the actual camera sector use the current viewpoint as reference.
-				secx = ViewPos.X;
-				secy = ViewPos.Y;
+				secx = r_viewpoint.Pos.X;
+				secy = r_viewpoint.Pos.Y;
 			}
 			else
 			{
@@ -2030,14 +2153,11 @@ void AM_drawSubsectors()
 		// to see it on the map), tint and desaturate it.
 		if (!(subsectors[i].flags & SSECF_DRAWN))
 		{
-			colormap = GetSpecialLights(
-				MAKERGB(
-					(colormap->Color.r + 255) / 2,
-					(colormap->Color.g + 200) / 2,
-					(colormap->Color.b + 160) / 2),
-				colormap->Fade,
-				255 - (255 - colormap->Desaturate) / 4);
-			floorlight = (floorlight + 200 * 15) / 16;
+			colormap.LightColor = PalEntry(
+				(colormap.LightColor.r + 255) / 2,
+				(colormap.LightColor.g + 200) / 2,
+				(colormap.LightColor.b + 160) / 2);
+			colormap.Desaturation = 255 - (255 - colormap.Desaturation) / 4;
 		}
 
 		// Draw the polygon.
@@ -2130,19 +2250,18 @@ void AM_drawPolySeg(FPolySeg *seg, const AMColor &color)
 
 void AM_showSS()
 {
-	if (am_showsubsector >= 0 && am_showsubsector < numsubsectors)
+	if (am_showsubsector >= 0 && (unsigned)am_showsubsector < level.subsectors.Size())
 	{
 		AMColor yellow;
 		yellow.FromRGB(255,255,0);
 		AMColor red;
 		red.FromRGB(255,0,0);
 
-		subsector_t *sub = &subsectors[am_showsubsector];
+		subsector_t *sub = &level.subsectors[am_showsubsector];
 		for (unsigned int i = 0; i < sub->numlines; i++)
 		{
 			AM_drawSeg(sub->firstline + i, yellow);
 		}
-		PO_LinkToSubsectors();
 
 		for (int i = 0; i <po_NumPolyobjs; i++)
 		{

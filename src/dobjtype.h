@@ -8,6 +8,13 @@
 typedef std::pair<const class PType *, unsigned> FTypeAndOffset;
 class PStruct;
 
+// This is intentionally not in vm.h so that this file remains free of DObject pollution.
+class VMException : public DObject
+{
+	DECLARE_CLASS(VMException, DObject);
+};
+
+
 #include "vm.h"
 
 // Variable/parameter/field flags -------------------------------------------
@@ -461,17 +468,17 @@ protected:
 	PArray();
 };
 
-class PResizableArray : public PArray
+class PStaticArray : public PArray
 {
-	DECLARE_CLASS(PResizableArray, PArray);
+	DECLARE_CLASS(PStaticArray, PArray);
 public:
-	PResizableArray(PType *etype);
+	PStaticArray(PType *etype);
 
 	virtual bool IsMatch(intptr_t id1, intptr_t id2) const;
 	virtual void GetTypeIDs(intptr_t &id1, intptr_t &id2) const;
 
 protected:
-	PResizableArray();
+	PStaticArray();
 };
 
 class PDynArray : public PCompoundType
@@ -699,7 +706,7 @@ extern FTypeTable TypeTable;
 // Returns a type from the TypeTable. Will create one if it isn't present.
 PMap *NewMap(PType *keytype, PType *valuetype);
 PArray *NewArray(PType *type, unsigned int count);
-PResizableArray *NewResizableArray(PType *type);
+PStaticArray *NewStaticArray(PType *type);
 PDynArray *NewDynArray(PType *type);
 PPointer *NewPointer(PType *type, bool isconst = false);
 PClassPointer *NewClassPointer(PClass *restrict);

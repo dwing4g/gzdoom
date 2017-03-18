@@ -91,6 +91,7 @@
 
 #include "g_hub.h"
 #include "g_levellocals.h"
+#include "actorinlines.h"
 
 #include <string.h>
 
@@ -1080,7 +1081,7 @@ void G_DoLoadLevel (int position, bool autosave)
 			}
 			E_PlayerEntered(ii, finishstate == FINISH_SameHub);
 			// ENTER scripts are being handled when the player gets spawned, this cannot be changed due to its effect on voodoo dolls.
-			if (level.FromSnapshot) FBehavior::StaticStartTypedScripts(SCRIPT_Return, players[ii].mo, true);
+			if (level.FromSnapshot && !savegamerestore) FBehavior::StaticStartTypedScripts(SCRIPT_Return, players[ii].mo, true);
 		}
 	}
 
@@ -1389,10 +1390,6 @@ void G_InitLevelLocals ()
 	level_info_t *info;
 
 	BaseBlendA = 0.0f;		// Remove underwater blend effect, if any
-	NormalLight.Maps = realcolormaps;
-
-	// [BB] Instead of just setting the color, we also have to reset Desaturate and build the lights.
-	NormalLight.ChangeColor (PalEntry (255, 255, 255), 0);
 
 	level.gravity = sv_gravity * 35/TICRATE;
 	level.aircontrol = sv_aircontrol;
@@ -1414,17 +1411,10 @@ void G_InitLevelLocals ()
 	level.FromSnapshot = false;
 	if (level.fadeto == 0)
 	{
-		R_SetDefaultColormap (info->FadeTable);
 		if (strnicmp (info->FadeTable, "COLORMAP", 8) != 0)
 		{
 			level.flags |= LEVEL_HASFADETABLE;
 		}
-		/*
-	}
-	else
-	{
-		NormalLight.ChangeFade (level.fadeto);
-		*/
 	}
 	level.airsupply = info->airsupply*TICRATE;
 	level.outsidefog = info->outsidefog;
@@ -1464,11 +1454,14 @@ void G_InitLevelLocals ()
 	level.F1Pic = info->F1Pic;
 	level.hazardcolor = info->hazardcolor;
 	level.hazardflash = info->hazardflash;
+	
+	// GL fog stuff modifiable by SetGlobalFogParameter.
+	level.fogdensity = info->fogdensity;
+	level.outsidefogdensity = info->outsidefogdensity;
+	level.skyfog = info->skyfog;
 
 	compatflags.Callback();
 	compatflags2.Callback();
-
-	NormalLight.ChangeFade (level.fadeto);
 
 	level.DefaultEnvironment = info->DefaultEnvironment;
 }
@@ -1484,7 +1477,7 @@ bool FLevelLocals::IsJumpingAllowed() const
 		return false;
 	if (dmflags & DF_YES_JUMP)
 		return true;
-	return !(level.flags & LEVEL_JUMP_NO);
+	return !(flags & LEVEL_JUMP_NO);
 }
 
 //==========================================================================
@@ -1498,7 +1491,7 @@ bool FLevelLocals::IsCrouchingAllowed() const
 		return false;
 	if (dmflags & DF_YES_CROUCH)
 		return true;
-	return !(level.flags & LEVEL_CROUCH_NO);
+	return !(flags & LEVEL_CROUCH_NO);
 }
 
 //==========================================================================
@@ -1512,7 +1505,7 @@ bool FLevelLocals::IsFreelookAllowed() const
 		return false;
 	if (dmflags & DF_YES_FREELOOK)
 		return true;
-	return !(level.flags & LEVEL_FREELOOK_NO);
+	return !(flags & LEVEL_FREELOOK_NO);
 }
 
 //==========================================================================
@@ -1899,7 +1892,12 @@ void FLevelLocals::AddScroller (int secnum)
 //
 //
 //==========================================================================
-
+DEFINE_GLOBAL(level);
+DEFINE_FIELD(FLevelLocals, sectors)
+DEFINE_FIELD(FLevelLocals, lines)
+DEFINE_FIELD(FLevelLocals, sides)
+DEFINE_FIELD(FLevelLocals, vertexes)
+DEFINE_FIELD(FLevelLocals, sectorPortals)
 DEFINE_FIELD(FLevelLocals, time)
 DEFINE_FIELD(FLevelLocals, maptime)
 DEFINE_FIELD(FLevelLocals, totaltime)
@@ -1928,6 +1926,9 @@ DEFINE_FIELD(FLevelLocals, aircontrol)
 DEFINE_FIELD(FLevelLocals, airfriction)
 DEFINE_FIELD(FLevelLocals, airsupply)
 DEFINE_FIELD(FLevelLocals, teamdamage)
+DEFINE_FIELD(FLevelLocals, fogdensity)
+DEFINE_FIELD(FLevelLocals, outsidefogdensity)
+DEFINE_FIELD(FLevelLocals, skyfog)
 DEFINE_FIELD_BIT(FLevelLocals, flags, monsterstelefrag, LEVEL_MONSTERSTELEFRAG)
 DEFINE_FIELD_BIT(FLevelLocals, flags, actownspecial, LEVEL_ACTOWNSPECIAL)
 DEFINE_FIELD_BIT(FLevelLocals, flags, sndseqtotalctrl, LEVEL_SNDSEQTOTALCTRL)
@@ -1963,6 +1964,16 @@ CCMD(listmaps)
 	}
 }
 
-
-
+//==========================================================================
+//
+// For testing sky fog sheets
+//
+//==========================================================================
+CCMD(skyfog)
+{
+	if (argv.argc()>1)
+	{
+		level.skyfog = MAX(0, (int)strtoull(argv[1], NULL, 0));
+	}
+}
 

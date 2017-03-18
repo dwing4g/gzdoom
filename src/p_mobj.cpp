@@ -72,6 +72,7 @@
 #include "g_levellocals.h"
 #include "a_morph.h"
 #include "events.h"
+#include "actorinlines.h"
 
 // MACROS ------------------------------------------------------------------
 
@@ -699,7 +700,7 @@ bool AActor::SetState (FState *newstate, bool nofunction)
 
 	if (Renderer != NULL)
 	{
-		Renderer->StateChanged(this);
+		SetDynamicLights();
 	}
 	return true;
 }
@@ -917,6 +918,75 @@ DEFINE_ACTION_FUNCTION(AActor, TakeInventory)
 	PARAM_BOOL_DEF(fromdecorate);
 	PARAM_BOOL_DEF(notakeinfinite);
 	ACTION_RETURN_BOOL(self->TakeInventory(item, amount, fromdecorate, notakeinfinite));
+}
+
+
+
+bool AActor::SetInventory(PClassActor *itemtype, int amount, bool beyondMax)
+{
+	AInventory *item = FindInventory(itemtype);
+
+	if (item != nullptr)
+	{
+		// A_SetInventory sets the absolute amount. 
+		// Subtract or set the appropriate amount as necessary.
+
+		if (amount == item->Amount)
+		{
+			// Nothing was changed.
+			return false;
+		}
+		else if (amount <= 0)
+		{
+			//Remove it all.
+			return TakeInventory(itemtype, item->Amount, true, false);
+		}
+		else if (amount < item->Amount)
+		{
+			int amt = abs(item->Amount - amount);
+			return TakeInventory(itemtype, amt, true, false);
+		}
+		else
+		{
+			item->Amount = (beyondMax ? amount : clamp(amount, 0, item->MaxAmount));
+			return true;
+		}
+	}
+	else
+	{
+		if (amount <= 0)
+		{
+			return true;
+		}
+		item = static_cast<AInventory *>(Spawn(itemtype));
+		if (item == nullptr)
+		{
+			return false;
+		}
+		else
+		{
+			item->Amount = amount;
+			item->flags |= MF_DROPPED;
+			item->ItemFlags |= IF_IGNORESKILL;
+			item->ClearCounters();
+			if (!item->CallTryPickup(this))
+			{
+				item->Destroy();
+				return false;
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
+DEFINE_ACTION_FUNCTION(AActor, SetInventory)
+{
+	PARAM_SELF_PROLOGUE(AActor);
+	PARAM_CLASS_NOT_NULL(item, AInventory);
+	PARAM_INT(amount);
+	PARAM_BOOL_DEF(beyondMax);
+	ACTION_RETURN_BOOL(self->SetInventory(item, amount, beyondMax));
 }
 
 //============================================================================
@@ -1493,7 +1563,7 @@ bool AActor::IsInsideVisibleAngles() const
 	if (mo != nullptr)
 	{
 		
-		DVector3 diffang = ViewPos - Pos();
+		DVector3 diffang = r_viewpoint.Pos - Pos();
 		DAngle to = diffang.Angle();
 
 		if (!(renderflags & RF_ABSMASKANGLE)) 
@@ -5073,10 +5143,7 @@ void AActor::CallBeginPlay()
 
 void AActor::PostBeginPlay ()
 {
-	if (Renderer != NULL)
-	{
-		Renderer->StateChanged(this);
-	}
+	SetDynamicLights();
 	PrevAngles = Angles;
 	flags7 |= MF7_HANDLENODELAY;
 }
@@ -5623,7 +5690,7 @@ AActor *P_SpawnMapThing (FMapThing *mthing, int position)
 		{
 			// count deathmatch start positions
 			FPlayerStart start(mthing, 0);
-			deathmatchstarts.Push(start);
+			level.deathmatchstarts.Push(start);
 			return NULL;
 		}
 
@@ -5726,10 +5793,10 @@ AActor *P_SpawnMapThing (FMapThing *mthing, int position)
 
 		// save spots for respawning in network games
 		FPlayerStart start(mthing, pnum+1);
-		playerstarts[pnum] = start;
+		level.playerstarts[pnum] = start;
 		if (level.flags2 & LEVEL2_RANDOMPLAYERSTARTS)
 		{ // When using random player starts, all starts count
-			AllPlayerStarts.Push(start);
+			level.AllPlayerStarts.Push(start);
 		}
 		else
 		{ // When not using random player starts, later single player
@@ -5737,17 +5804,17 @@ AActor *P_SpawnMapThing (FMapThing *mthing, int position)
 		  // ones are for voodoo dolls and not likely to be ideal for
 		  // spawning regular players.
 			unsigned i;
-			for (i = 0; i < AllPlayerStarts.Size(); ++i)
+			for (i = 0; i < level.AllPlayerStarts.Size(); ++i)
 			{
-				if (AllPlayerStarts[i].type == pnum+1)
+				if (level.AllPlayerStarts[i].type == pnum+1)
 				{
-					AllPlayerStarts[i] = start;
+					level.AllPlayerStarts[i] = start;
 					break;
 				}
 			}
-			if (i == AllPlayerStarts.Size())
+			if (i == level.AllPlayerStarts.Size())
 			{
-				AllPlayerStarts.Push(start);
+				level.AllPlayerStarts.Push(start);
 			}
 		}
 		if (!deathmatch && !(level.flags2 & LEVEL2_RANDOMPLAYERSTARTS))

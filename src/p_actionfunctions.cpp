@@ -81,6 +81,7 @@
 #include "g_levellocals.h"
 #include "r_utility.h"
 #include "sbar.h"
+#include "actorinlines.h"
 
 AActor *SingleActorFromTID(int tid, AActor *defactor);
 
@@ -1898,7 +1899,7 @@ DEFINE_ACTION_FUNCTION(AStateProvider, A_FireProjectile)
 
 		// Temporarily adjusts the pitch
 		DAngle saved_player_pitch = self->Angles.Pitch;
-		self->Angles.Pitch -= pitch;
+		self->Angles.Pitch += pitch;
 		AActor * misl=P_SpawnPlayerMissile (self, ofs.X, ofs.Y, spawnheight, ti, shootangle, &t, NULL, false, (flags & FPF_NOAUTOAIM) != 0);
 		self->Angles.Pitch = saved_player_pitch;
 
@@ -2381,63 +2382,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_SetInventory)
 	{
 		mobj = mobj->player->mo;
 	}
-
-	AInventory *item = mobj->FindInventory(itemtype);
-
-	if (item != nullptr)
-	{
-		// A_SetInventory sets the absolute amount. 
-		// Subtract or set the appropriate amount as necessary.
-
-		if (amount == item->Amount)
-		{
-			// Nothing was changed.
-			ACTION_RETURN_BOOL(false);
-		}
-		else if (amount <= 0)
-		{
-			//Remove it all.
-			res = (mobj->TakeInventory(itemtype, item->Amount, true, false));
-			ACTION_RETURN_BOOL(res);
-		}
-		else if (amount < item->Amount)
-		{
-			int amt = abs(item->Amount - amount);
-			res = (mobj->TakeInventory(itemtype, amt, true, false));
-			ACTION_RETURN_BOOL(res);
-		}
-		else
-		{
-			item->Amount = (beyondMax ? amount : clamp(amount, 0, item->MaxAmount));
-			ACTION_RETURN_BOOL(true);
-		}
-	}
-	else
-	{
-		if (amount <= 0)
-		{
-			ACTION_RETURN_BOOL(false);
-		}
-		item = static_cast<AInventory *>(Spawn(itemtype));
-		if (item == nullptr)
-		{
-			ACTION_RETURN_BOOL(false);
-		}
-		else
-		{
-			item->Amount = amount;
-			item->flags |= MF_DROPPED;
-			item->ItemFlags |= IF_IGNORESKILL;
-			item->ClearCounters();
-			if (!item->CallTryPickup(mobj))
-			{
-				item->Destroy();
-				ACTION_RETURN_BOOL(false);
-			}
-			ACTION_RETURN_BOOL(true);
-		}
-	}
-	ACTION_RETURN_BOOL(false);
+	ACTION_RETURN_BOOL(mobj->SetInventory(itemtype, amount, beyondMax));
 }
 
 //===========================================================================
@@ -6851,4 +6796,16 @@ DEFINE_ACTION_FUNCTION(AActor, A_SetMugshotState)
 	if (self->CheckLocalView(consoleplayer))
 		StatusBar->SetMugShotState(name);
 	return 0;
+}
+
+// This needs to account for the fact that internally renderstyles are stored as a series of operations, 
+// but the script side only cares about symbolic constants.
+DEFINE_ACTION_FUNCTION(AActor, GetRenderStyle)
+{
+	PARAM_SELF_PROLOGUE(AActor);
+	for(unsigned i=0;i<STYLE_Count;i++)
+	{
+		if (self->RenderStyle == LegacyRenderStyles[i]) ACTION_RETURN_INT(i);
+	}
+	ACTION_RETURN_INT(-1);	// no symbolic constant exists to handle this style.
 }

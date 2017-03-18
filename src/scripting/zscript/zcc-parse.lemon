@@ -287,6 +287,8 @@ class_member(X) ::= states_def(A).						{ X = A; /*X-overwrites-A*/ }
 class_member(X) ::= default_def(A).						{ X = A; /*X-overwrites-A*/ }
 class_member(X) ::= const_def(A).						{ X = A; /*X-overwrites-A*/ }
 class_member(X) ::= property_def(A).					{ X = A; /*X-overwrites-A*/ }
+class_member(X) ::= staticarray_statement(A).			{ X = A; /*X-overwrites-A*/ }
+
 
 /*----- Struct Definition -----*/
 /* Structs can define variables and enums. */
@@ -764,11 +766,34 @@ type_name(X) ::= IDENTIFIER(A).			/* User-defined type (struct, enum, or class) 
 	id->Id = A.Name();
 	X = type;
 }
+
+type_name(X) ::= ATSIGN IDENTIFIER(A).
+{
+	NEW_AST_NODE(BasicType, type, A);
+	NEW_AST_NODE(Identifier, id, A);
+	type->Type = ZCC_NativeType;
+	type->UserType = id;
+	type->isconst = false;
+	id->Id = A.Name();
+	X = type;
+}
+
 type_name(X) ::= READONLY LT IDENTIFIER(A) GT.
 {
 	NEW_AST_NODE(BasicType, type, A);
 	NEW_AST_NODE(Identifier, id, A);
 	type->Type = ZCC_UserType;
+	type->UserType = id;
+	type->isconst = true;
+	id->Id = A.Name();
+	X = type;
+}
+
+type_name(X) ::= READONLY LT ATSIGN IDENTIFIER(A) GT.
+{
+	NEW_AST_NODE(BasicType, type, A);
+	NEW_AST_NODE(Identifier, id, A);
+	type->Type = ZCC_NativeType;
 	type->UserType = id;
 	type->isconst = true;
 	id->Id = A.Name();
@@ -1669,7 +1694,7 @@ statement(X) ::= staticarray_statement(A).			{ X = A; /*X-overwrites-A*/ }
 
 %type staticarray_statement{ZCC_StaticArrayStatement *}
 
-staticarray_statement(X) ::= STATIC CONST type(A) IDENTIFIER(B) LBRACKET RBRACKET EQ LBRACE expr_list(C) RBRACE.
+staticarray_statement(X) ::= STATICCONST type(A) IDENTIFIER(B) LBRACKET RBRACKET EQ LBRACE expr_list(C) RBRACE SEMICOLON.
 {
 	NEW_AST_NODE(StaticArrayStatement, stmt, A);
 	stmt->Type = A;
@@ -1678,7 +1703,7 @@ staticarray_statement(X) ::= STATIC CONST type(A) IDENTIFIER(B) LBRACKET RBRACKE
 	X = stmt;
 }
 
-staticarray_statement(X) ::= STATIC CONST type(A) LBRACKET RBRACKET IDENTIFIER(B)  EQ LBRACE expr_list(C) RBRACE.
+staticarray_statement(X) ::= STATICCONST type(A) LBRACKET RBRACKET IDENTIFIER(B)  EQ LBRACE expr_list(C) RBRACE SEMICOLON.
 {
 	NEW_AST_NODE(StaticArrayStatement, stmt, A);
 	stmt->Type = A;

@@ -25,8 +25,8 @@
 
 #include "doomdef.h"
 #include "templates.h"
-#include "memarena.h"
 #include "m_bbox.h"
+#include "dobjgc.h"
 
 // Some more or less basic data types
 // we depend on.
@@ -35,13 +35,15 @@
 // We rely on the thinker data struct
 // to handle sound origins in sectors.
 // SECTORS do store MObjs anyway.
-#include "actor.h"
 struct FLightNode;
 struct FGLSection;
+class FSerializer;
 struct FPortal;
+struct FSectorPortal;
+struct FLinePortal;
 struct seg_t;
-
-#include "dthinker.h"
+struct sector_t;
+class AActor;
 
 #define MAXWIDTH 5760
 #define MAXHEIGHT 3600
@@ -59,7 +61,6 @@ enum
 	SIL_BOTH
 };
 
-namespace swrenderer { extern size_t MaxDrawSegs; }
 struct FDisplacement;
 
 //
@@ -130,6 +131,7 @@ struct vertex_t
 	}
 
 	int Index() const;
+
 
 	angle_t viewangle;	// precalculated angle for clipping
 	int angletime;		// recalculation time for view angle
@@ -352,11 +354,6 @@ public:
 		return (D + normal.X*v->fX() + normal.Y*v->fY()) * negiC;
 	}
 
-	double ZatPoint(const AActor *ac) const
-	{
-		return (D + normal.X*ac->X() + normal.Y*ac->Y()) * negiC;
-	}
-
 	// Returns the value of z at vertex v if d is equal to dist
 	double ZatPointDist(const vertex_t *v, double dist)
 	{
@@ -435,6 +432,7 @@ public:
 	}
 
 	bool CopyPlaneIfValid (secplane_t *dest, const secplane_t *opp) const;
+	inline double ZatPoint(const AActor *ac) const;
 
 };
 
@@ -642,6 +640,9 @@ public:
 	void AdjustFloorClip () const;
 	void SetColor(int r, int g, int b, int desat);
 	void SetFade(int r, int g, int b);
+	void SetFogDensity(int dens);
+	void SetSpecialColor(int num, int r, int g, int b);
+	void SetSpecialColor(int num, PalEntry rgb);
 	void ClosestPoint(const DVector2 &pos, DVector2 &out) const;
 	int GetFloorLight () const;
 	int GetCeilingLight () const;
@@ -797,6 +798,26 @@ public:
 		planes[pos].Light = level;
 	}
 
+	double GetGlowHeight(int pos)
+	{
+		return planes[pos].GlowHeight;
+	}
+
+	PalEntry GetGlowColor(int pos)
+	{
+		return planes[pos].GlowColor;
+	}
+
+	void SetGlowHeight(int pos, float height)
+	{
+		planes[pos].GlowHeight = height;
+	}
+
+	void SetGlowColor(int pos, PalEntry color)
+	{
+		planes[pos].GlowColor = color;
+	}
+
 	FTextureID GetTexture(int pos) const
 	{
 		return planes[pos].Texture;
@@ -876,31 +897,11 @@ public:
 		Flags &= ~SECF_SPECIALFLAGS;
 	}
 
-	bool PortalBlocksView(int plane)
-	{
-		if (GetPortalType(plane) != PORTS_LINKEDPORTAL) return false;
-		return !!(planes[plane].Flags & (PLANEF_NORENDER | PLANEF_DISABLED | PLANEF_OBSTRUCTED));
-	}
-
-	bool PortalBlocksSight(int plane)
-	{
-		return PLANEF_LINKED != (planes[plane].Flags & (PLANEF_NORENDER | PLANEF_NOPASS | PLANEF_DISABLED | PLANEF_OBSTRUCTED | PLANEF_LINKED));
-	}
-
-	bool PortalBlocksMovement(int plane)
-	{
-		return PLANEF_LINKED != (planes[plane].Flags & (PLANEF_NOPASS | PLANEF_DISABLED | PLANEF_OBSTRUCTED | PLANEF_LINKED));
-	}
-
-	bool PortalBlocksSound(int plane)
-	{
-		return PLANEF_LINKED != (planes[plane].Flags & (PLANEF_BLOCKSOUND | PLANEF_DISABLED | PLANEF_OBSTRUCTED | PLANEF_LINKED));
-	}
-
-	bool PortalIsLinked(int plane)
-	{
-		return (GetPortalType(plane) == PORTS_LINKEDPORTAL);
-	}
+	inline bool PortalBlocksView(int plane);
+	inline bool PortalBlocksSight(int plane);
+	inline bool PortalBlocksMovement(int plane);
+	inline bool PortalBlocksSound(int plane);
+	inline bool PortalIsLinked(int plane);
 
 	void ClearPortal(int plane)
 	{
@@ -937,16 +938,8 @@ public:
 	double HighestCeilingAt(const DVector2 &a, sector_t **resultsec = NULL);
 	double LowestFloorAt(const DVector2 &a, sector_t **resultsec = NULL);
 
-
-	double HighestCeilingAt(AActor *a, sector_t **resultsec = NULL)
-	{
-		return HighestCeilingAt(a->Pos(), resultsec);
-	}
-
-	double LowestFloorAt(AActor *a, sector_t **resultsec = NULL)
-	{
-		return LowestFloorAt(a->Pos(), resultsec);
-	}
+	inline double HighestCeilingAt(AActor *a, sector_t **resultsec = NULL);
+	inline double LowestFloorAt(AActor *a, sector_t **resultsec = NULL);
 
 	bool isClosed() const
 	{
@@ -964,8 +957,27 @@ public:
 	secplane_t	floorplane, ceilingplane;
 
 	// [RH] give floor and ceiling even more properties
-	FDynamicColormap *ColorMap;	// [RH] Per-sector colormap
-	PalEntry	SpecialColors[5];
+	PalEntry SpecialColors[5];
+	FColormap Colormap;
+
+private:
+	FDynamicColormap *_ColorMap;	// [RH] Per-sector colormap
+
+public:
+	// just a helper for refactoring 
+	FDynamicColormap *GetColorMap()
+	{
+		return _ColorMap;
+	}
+
+	void CopyColors(sector_t *other)
+	{
+		memcpy(SpecialColors, other->SpecialColors, sizeof(SpecialColors));
+		Colormap = other->Colormap;
+
+		_ColorMap = other->_ColorMap;
+	}
+
 
 
 	TObjPtr<AActor*> SoundTarget;
@@ -1012,6 +1024,7 @@ public:
 
 	// killough 3/7/98: support flat heights drawn at another sector's heights
 	sector_t *heightsec;		// other sector, or NULL if no other sector
+	FLightNode *				lighthead;
 
 	uint32_t bottommap, midmap, topmap;	// killough 4/4/98: dynamic colormaps
 										// [RH] these can also be blend values if
@@ -1055,7 +1068,6 @@ public:
 	double						transdoorheight;	// for transparent door hacks
 	subsector_t **				subsectors;
 	FPortal *					portals[2];			// floor and ceiling portals
-	FLightNode *				lighthead;
 
 	enum
 	{
@@ -1118,8 +1130,8 @@ struct side_t
 		double yOffset;
 		double xScale;
 		double yScale;
-		FTextureID texture;
 		TObjPtr<DInterpolation*> interpolation;
+		FTextureID texture;
 		//int Light;
 	};
 
@@ -1127,12 +1139,12 @@ struct side_t
 	DBaseDecal*	AttachedDecals;	// [RH] Decals bound to the wall
 	part		textures[3];
 	line_t		*linedef;
-	//uint32_t		linenum;
-	uint32_t		LeftSide, RightSide;	// [RH] Group walls into loops
-	uint16_t		TexelLength;
+	uint32_t	LeftSide, RightSide;	// [RH] Group walls into loops
+	uint16_t	TexelLength;
 	int16_t		Light;
 	uint8_t		Flags;
 	int			UDMFIndex;		// needed to access custom UDMF fields which are stored in loading order.
+	FLightNode * lighthead;		// all dynamic lights that may affect this wall
 
 	int GetLightLevel (bool foggy, int baselight, bool is3dlight=false, int *pfakecontrast_usedbygzdoom=NULL) const;
 
@@ -1243,7 +1255,6 @@ struct side_t
 	int Index() const;
 
 	//For GL
-	FLightNode * lighthead;				// all blended lights that may affect this wall
 
 	seg_t **segs;	// all segs belonging to this sidedef in ascending order. Used for precise rendering
 	int numsegs;
@@ -1284,32 +1295,11 @@ struct line_t
 
 	FSectorPortal *GetTransferredPortal();
 
-	FLinePortal *getPortal() const
-	{
-		return portalindex >= linePortals.Size() ? (FLinePortal*)NULL : &linePortals[portalindex];
-	}
-
-	// returns true if the portal is crossable by actors
-	bool isLinePortal() const
-	{
-		return portalindex >= linePortals.Size() ? false : !!(linePortals[portalindex].mFlags & PORTF_PASSABLE);
-	}
-
-	// returns true if the portal needs to be handled by the renderer
-	bool isVisualPortal() const
-	{
-		return portalindex >= linePortals.Size() ? false : !!(linePortals[portalindex].mFlags & PORTF_VISIBLE);
-	}
-
-	line_t *getPortalDestination() const
-	{
-		return portalindex >= linePortals.Size() ? (line_t*)NULL : linePortals[portalindex].mDestination;
-	}
-
-	int getPortalAlignment() const
-	{
-		return portalindex >= linePortals.Size() ? 0 : linePortals[portalindex].mAlign;
-	}
+	inline FLinePortal *getPortal() const;
+	inline bool isLinePortal() const;
+	inline bool isVisualPortal() const;
+	inline line_t *getPortalDestination() const;
+	inline int getPortalAlignment() const;
 
 	int Index() const;
 };
@@ -1385,9 +1375,11 @@ struct seg_t
 	subsector_t*	Subsector;
 
 	float			sidefrac;		// relative position of seg's ending vertex on owning sidedef
+
+	int Index() const;
 };
 
-extern seg_t *segs;
+//extern seg_t *segs;
 
 
 //
@@ -1417,10 +1409,11 @@ struct subsector_t
 	FMiniBSP	*BSP;
 	seg_t		*firstline;
 	sector_t	*render_sector;
-	uint32_t		numlines;
+	uint32_t	numlines;
 	int			flags;
 
 	void BuildPolyBSP();
+	int Index() const;
 	// subsector related GL data
 	FLightNode *	lighthead;	// Light nodes (blended and additive)
 	int				validcount;
@@ -1454,6 +1447,8 @@ struct node_t
 		void	*children[2];	// If bit 0 is set, it's a subsector.
 		int		intchildren[2];	// Used by nodebuilder.
 	};
+
+	int Index() const;
 };
 
 
@@ -1469,22 +1464,11 @@ struct FMiniBSP
 	TArray<vertex_t> Verts;
 };
 
-
-
 //
 // OTHER TYPES
 //
 
 typedef uint8_t lighttable_t;	// This could be wider for >8 bit display.
-
-// This encapsulates the fields of vissprite_t that can be altered by AlterWeaponSprite
-struct visstyle_t
-{
-	bool			Invert;
-	float			Alpha;
-	ERenderStyle	RenderStyle;
-};
-
 
 //----------------------------------------------------------------------------------
 //
@@ -1504,40 +1488,6 @@ inline sector_t *P_PointInSector(double X, double Y)
 	return P_PointInSubsector(X, Y)->sector;
 }
 
-inline DVector3 AActor::PosRelative(int portalgroup) const
-{
-	return Pos() + Displacements.getOffset(Sector->PortalGroup, portalgroup);
-}
-
-inline DVector3 AActor::PosRelative(const AActor *other) const
-{
-	return Pos() + Displacements.getOffset(Sector->PortalGroup, other->Sector->PortalGroup);
-}
-
-inline DVector3 AActor::PosRelative(sector_t *sec) const
-{
-	return Pos() + Displacements.getOffset(Sector->PortalGroup, sec->PortalGroup);
-}
-
-inline DVector3 AActor::PosRelative(line_t *line) const
-{
-	return Pos() + Displacements.getOffset(Sector->PortalGroup, line->frontsector->PortalGroup);
-}
-
-inline DVector3 PosRelative(const DVector3 &pos, line_t *line, sector_t *refsec = NULL)
-{
-	return pos + Displacements.getOffset(refsec->PortalGroup, line->frontsector->PortalGroup);
-}
-
-
-inline void AActor::ClearInterpolation()
-{
-	Prev = Pos();
-	PrevAngles = Angles;
-	if (Sector) PrevPortalGroup = Sector->PortalGroup;
-	else PrevPortalGroup = 0;
-}
-
 inline bool FBoundingBox::inRange(const line_t *ld) const
 {
 	return Left() < ld->bbox[BOXRIGHT] &&
@@ -1547,5 +1497,13 @@ inline bool FBoundingBox::inRange(const line_t *ld) const
 }
 
 
+inline void FColormap::CopyFrom3DLight(lightlist_t *light)
+{
+	CopyLight(light->extra_colormap);
+	if (light->caster && (light->caster->flags&FF_FADEWALLS) && light->extra_colormap.FadeColor != 0)
+	{
+		CopyFog(light->extra_colormap);
+	}
+}
 
 #endif

@@ -47,6 +47,7 @@ struct subsector_t;
 struct FBlockNode;
 struct FPortalGroupArray;
 struct visstyle_t;
+class FLightDefaults;
 //
 // NOTES: AActor
 //
@@ -691,6 +692,7 @@ public:
 	int SpecialMissileHit (AActor *victim);
 
 	// Returns true if it's okay to switch target to "other" after being attacked by it.
+	bool CallOkayToSwitchTarget(AActor *other);
 	bool OkayToSwitchTarget (AActor *other);
 
 	// Note: Although some of the inventory functions are virtual, this
@@ -712,6 +714,8 @@ public:
 	// If nothing is left, the item may be destroyed.
 	// Returns true if the initial item count is positive.
 	virtual bool TakeInventory (PClassActor *itemclass, int amount, bool fromdecorate = false, bool notakeinfinite = false);
+
+	bool SetInventory(PClassActor *itemclass, int amount, bool beyondMax);
 
 	// Uses an item and removes it from the inventory.
 	virtual bool UseInventory (AInventory *item);
@@ -974,6 +978,10 @@ public:
 	void ClearRenderSectorList();
 	void ClearRenderLineList();
 
+	void AttachLight(unsigned int count, const FLightDefaults *lightdef);
+	void SetDynamicLights();
+
+
 // info for drawing
 // NOTE: The first member variable *must* be snext.
 	AActor			*snext, **sprev;	// links in sector (if needed)
@@ -1191,6 +1199,7 @@ public:
 	DVector3 Prev;
 	DRotator PrevAngles;
 	int PrevPortalGroup;
+	TArray<TObjPtr<AActor*> > AttachedLights;
 
 	// ThingIDs
 	static void ClearTIDHashes ();
@@ -1315,6 +1324,20 @@ public:
 		result.Roll = PrevAngles.Roll + deltaangle(PrevAngles.Roll, Angles.Roll) * ticFrac;
 		return result;
 	}
+	DAngle GetSpriteAngle(DAngle viewangle, double ticFrac)
+	{
+		if (flags7 & MF7_SPRITEANGLE)
+		{
+			return SpriteAngle;
+		}
+		else
+		{
+			DAngle thisang;
+			if (renderflags & RF_INTERPOLATEANGLES) thisang = PrevAngles.Yaw + deltaangle(PrevAngles.Yaw, Angles.Yaw) * ticFrac;
+			else thisang = Angles.Yaw;
+			return viewangle - (thisang + SpriteRotation);
+		}
+	}
 	DVector3 PosPlusZ(double zadd) const
 	{
 		return { X(), Y(), Z() + zadd };
@@ -1432,12 +1455,10 @@ public:
 	int ApplyDamageFactor(FName damagetype, int damage) const;
 	int GetModifiedDamage(FName damagetype, int damage, bool passive);
 
+	static void DeleteAllAttachedLights();
+	static void RecreateAllAttachedLights();
 
-	// begin of GZDoom specific additions
-	TArray<TObjPtr<AActor*> >		dynamiclights;
-	void *				lightassociations;
 	bool				hasmodel;
-	// end of GZDoom specific additions
 
 	size_t PropagateMark();
 };
@@ -1469,6 +1490,7 @@ public:
 	{
 		base = nullptr;
 	}
+
 private:
 	AActor *base;
 	int id;

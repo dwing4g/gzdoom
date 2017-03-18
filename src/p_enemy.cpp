@@ -53,6 +53,7 @@
 #include "math/cmath.h"
 #include "g_levellocals.h"
 #include "virtual.h"
+#include "actorinlines.h"
 
 #include "gi.h"
 
@@ -1433,7 +1434,7 @@ AActor *LookForTIDInBlock (AActor *lookee, int index, void *extparams)
 	AActor *link;
 	AActor *other;
 	
-	for (block = blocklinks[index]; block != NULL; block = block->NextActor)
+	for (block = level.blockmap.blocklinks[index]; block != NULL; block = block->NextActor)
 	{
 		link = block->Me;
 
@@ -1612,7 +1613,7 @@ AActor *LookForEnemiesInBlock (AActor *lookee, int index, void *extparam)
 	AActor *other;
 	FLookExParams *params = (FLookExParams *)extparam;
 	
-	for (block = blocklinks[index]; block != NULL; block = block->NextActor)
+	for (block = level.blockmap.blocklinks[index]; block != NULL; block = block->NextActor)
 	{
 		link = block->Me;
 

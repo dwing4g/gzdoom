@@ -1,7 +1,10 @@
 #pragma once
 
+#include "doomdata.h"
 #include "g_level.h"
 #include "r_defs.h"
+#include "portal.h"
+#include "p_blockmap.h"
 
 struct FLevelLocals
 {
@@ -28,12 +31,34 @@ struct FLevelLocals
 	FString		F1Pic;
 	EMapType	maptype;
 
-	TStaticArray<vertex_t> vertexes;
-	TStaticArray<sector_t> sectors;
-	TStaticArray<line_t> lines;
-	TStaticArray<side_t> sides;
+	TArray<vertex_t> vertexes;
+	TArray<sector_t> sectors;
+	TArray<line_t*> linebuffer;	// contains the line lists for the sectors.
+	TArray<line_t> lines;
+	TArray<side_t> sides;
+	TArray<seg_t> segs;
+	TArray<subsector_t> subsectors;
+	TArray<node_t> nodes;
+	TArray<subsector_t> gamesubsectors;
+	TArray<node_t> gamenodes;
+	node_t *headgamenode;
+	TArray<uint8_t> rejectmatrix;
 
 	TArray<FSectorPortal> sectorPortals;
+	TArray<zone_t>	Zones;
+
+	FBlockmap blockmap;
+
+	// These are copies of the loaded map data that get used by the savegame code to skip unaltered fields
+	// Without such a mechanism the savegame format would become too slow and large because more than 80-90% are normally still unaltered.
+	TArray<sector_t>	loadsectors;
+	TArray<line_t>	loadlines;
+	TArray<side_t>	loadsides;
+
+	// Maintain single and multi player starting spots.
+	TArray<FPlayerStart> deathmatchstarts;
+	FPlayerStart		playerstarts[MAXPLAYERS];
+	TArray<FPlayerStart> AllPlayerStarts;
 
 
 	uint32_t		flags;
@@ -80,9 +105,24 @@ struct FLevelLocals
 
 	double		teamdamage;
 
+	// former OpenGL-exclusive properties that should also be usable by the true color software renderer.
+	int fogdensity;
+	int outsidefogdensity;
+	int skyfog;
+
+
 	bool		IsJumpingAllowed() const;
 	bool		IsCrouchingAllowed() const;
 	bool		IsFreelookAllowed() const;
+
+	node_t		*HeadNode() const
+	{
+		return &nodes[nodes.Size() - 1];
+	}
+	node_t		*HeadGamenode() const
+	{
+		return headgamenode;
+	}
 };
 
 extern FLevelLocals level;
@@ -100,6 +140,21 @@ inline int side_t::Index() const
 inline int line_t::Index() const
 {
 	return int(this - &level.lines[0]);
+}
+
+inline int seg_t::Index() const
+{
+	return int(this - &level.segs[0]);
+}
+
+inline int subsector_t::Index() const
+{
+	return int(this - &level.subsectors[0]);
+}
+
+inline int node_t::Index() const
+{
+	return int(this - &level.nodes[0]);
 }
 
 inline FSectorPortal *line_t::GetTransferredPortal()
@@ -135,4 +190,57 @@ inline int sector_t::GetPortalType(int plane)
 inline int sector_t::GetOppositePortalGroup(int plane)
 {
 	return level.sectorPortals[Portals[plane]].mDestination->PortalGroup;
+}
+
+inline bool sector_t::PortalBlocksView(int plane)
+{
+	if (GetPortalType(plane) != PORTS_LINKEDPORTAL) return false;
+	return !!(planes[plane].Flags & (PLANEF_NORENDER | PLANEF_DISABLED | PLANEF_OBSTRUCTED));
+}
+
+inline bool sector_t::PortalBlocksSight(int plane)
+{
+	return PLANEF_LINKED != (planes[plane].Flags & (PLANEF_NORENDER | PLANEF_NOPASS | PLANEF_DISABLED | PLANEF_OBSTRUCTED | PLANEF_LINKED));
+}
+
+inline bool sector_t::PortalBlocksMovement(int plane)
+{
+	return PLANEF_LINKED != (planes[plane].Flags & (PLANEF_NOPASS | PLANEF_DISABLED | PLANEF_OBSTRUCTED | PLANEF_LINKED));
+}
+
+inline bool sector_t::PortalBlocksSound(int plane)
+{
+	return PLANEF_LINKED != (planes[plane].Flags & (PLANEF_BLOCKSOUND | PLANEF_DISABLED | PLANEF_OBSTRUCTED | PLANEF_LINKED));
+}
+
+inline bool sector_t::PortalIsLinked(int plane)
+{
+	return (GetPortalType(plane) == PORTS_LINKEDPORTAL);
+}
+
+inline FLinePortal *line_t::getPortal() const
+{
+	return portalindex >= linePortals.Size() ? (FLinePortal*)NULL : &linePortals[portalindex];
+}
+
+// returns true if the portal is crossable by actors
+inline bool line_t::isLinePortal() const
+{
+	return portalindex >= linePortals.Size() ? false : !!(linePortals[portalindex].mFlags & PORTF_PASSABLE);
+}
+
+// returns true if the portal needs to be handled by the renderer
+inline bool line_t::isVisualPortal() const
+{
+	return portalindex >= linePortals.Size() ? false : !!(linePortals[portalindex].mFlags & PORTF_VISIBLE);
+}
+
+inline line_t *line_t::getPortalDestination() const
+{
+	return portalindex >= linePortals.Size() ? (line_t*)NULL : linePortals[portalindex].mDestination;
+}
+
+inline int line_t::getPortalAlignment() const
+{
+	return portalindex >= linePortals.Size() ? 0 : linePortals[portalindex].mAlign;
 }

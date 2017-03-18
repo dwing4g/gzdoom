@@ -45,6 +45,7 @@
 
 gameinfo_t gameinfo;
 
+DEFINE_GLOBAL(gameinfo)
 DEFINE_FIELD_X(GameInfoStruct, gameinfo_t, backpacktype)
 DEFINE_FIELD_X(GameInfoStruct, gameinfo_t, Armor2Percent)
 DEFINE_FIELD_X(GameInfoStruct, gameinfo_t, ArmorIcon1)
@@ -122,6 +123,21 @@ const char* GameInfoBorders[] =
 				sc.ScriptError("Value for '%s' can not be longer than %d characters.", #key, length); \
 			} \
 			gameinfo.key[gameinfo.key.Reserve(1)] = sc.String; \
+		} \
+		while (sc.CheckToken(',')); \
+	}
+#define GAMEINFOKEY_SOUNDARRAY(key, variable, length, clear) \
+	else if(nextKey.CompareNoCase(variable) == 0) \
+	{ \
+		if (clear) gameinfo.key.Clear(); \
+		do \
+		{ \
+			sc.MustGetToken(TK_StringConst); \
+			if(length > 0 && strlen(sc.String) > length) \
+			{ \
+				sc.ScriptError("Value for '%s' can not be longer than %d characters.", #key, length); \
+			} \
+			gameinfo.key[gameinfo.key.Reserve(1)] = FSoundID(sc.String); \
 		} \
 		while (sc.CheckToken(',')); \
 	}
@@ -323,7 +339,7 @@ void FMapInfoParser::ParseGameInfo()
 		GAMEINFOKEY_STRINGARRAY(infoPages, "infoPage", 8, true)
 		GAMEINFOKEY_STRINGARRAY(PrecachedClasses, "precacheclasses", 0, false)
 		GAMEINFOKEY_STRINGARRAY(PrecachedTextures, "precachetextures", 0, false)
-		GAMEINFOKEY_STRINGARRAY(PrecachedSounds, "precachesounds", 0, false)
+		GAMEINFOKEY_SOUNDARRAY(PrecachedSounds, "precachesounds", 0, false)
 		GAMEINFOKEY_STRINGARRAY(EventHandlers, "addeventhandlers", 0, true)
 		GAMEINFOKEY_STRINGARRAY(EventHandlers, "eventhandlers", 0, false)
 		GAMEINFOKEY_STRING(PauseSign, "pausesign")

@@ -21,7 +21,7 @@ void gl_InitModels();
 //	and range check thing_t sprites patches
 TArray<spritedef_t> sprites;
 TArray<spriteframe_t> SpriteFrames;
-DWORD			NumStdSprites;		// The first x sprites that don't belong to skins.
+uint32_t			NumStdSprites;		// The first x sprites that don't belong to skins.
 
 struct spriteframewithrotate : public spriteframe_t
 {
@@ -34,6 +34,39 @@ TArray<FPlayerSkin> Skins;
 uint8_t			OtherGameSkinRemap[256];
 PalEntry		OtherGameSkinPalette[256];
 
+
+//===========================================================================
+//
+//  Gets the texture index for a sprite frame
+//
+//===========================================================================
+
+FTextureID spritedef_t::GetSpriteFrame(int frame, int rot, DAngle ang, bool *mirror)
+{
+	if ((unsigned)frame >= numframes)
+	{
+		// If there are no frames at all for this sprite, don't draw it.
+		return FNullTextureID();
+	}
+	else
+	{
+		// choose a different rotation based on player view
+		spriteframe_t *sprframe = &SpriteFrames[spriteframes + frame];
+		if (rot == -1)
+		{
+			if (sprframe->Texture[0] == sprframe->Texture[1])
+			{
+				rot = (ang + 45.0 / 2 * 9).BAMs() >> 28;
+			}
+			else
+			{
+				rot = (ang + (45.0 / 2 * 9 - 180.0 / 16)).BAMs() >> 28;
+			}
+		}
+		if (mirror) *mirror = !!(sprframe->Flip&(1 << rot));
+		return sprframe->Texture[rot];
+	}
+}
 
 
 //
@@ -262,7 +295,7 @@ void R_InitSpriteDefs ()
 		char Frame;
 	} *vhashes;
 	unsigned int i, j, smax, vmax;
-	DWORD intname;
+	uint32_t intname;
 
 	spriteframewithrotate sprtemp[MAX_SPRITE_FRAMES];
 
@@ -510,7 +543,7 @@ void R_InitSkins (void)
 	spritedef_t temp;
 	int sndlumps[NUMSKINSOUNDS];
 	char key[65];
-	DWORD intname, crouchname;
+	uint32_t intname, crouchname;
 	unsigned i;
 	int j, k, base;
 	int lastlump;
@@ -574,13 +607,13 @@ void R_InitSkins (void)
 			{
 				for (j = 3; j >= 0; j--)
 					sc.String[j] = toupper (sc.String[j]);
-				intname = *((DWORD *)sc.String);
+				intname = *((uint32_t *)sc.String);
 			}
 			else if (0 == stricmp (key, "crouchsprite"))
 			{
 				for (j = 3; j >= 0; j--)
 					sc.String[j] = toupper (sc.String[j]);
-				crouchname = *((DWORD *)sc.String);
+				crouchname = *((uint32_t *)sc.String);
 			}
 			else if (0 == stricmp (key, "face"))
 			{
@@ -787,7 +820,7 @@ void R_InitSkins (void)
 				for (k = base + 1; Wads.GetLumpNamespace(k) == basens; k++)
 				{
 					char lname[9];
-					DWORD lnameint;
+					uint32_t lnameint;
 					Wads.GetLumpName (lname, k);
 					memcpy(&lnameint, lname, 4);
 					if (lnameint == intname)

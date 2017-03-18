@@ -648,10 +648,10 @@ begin:
 			reg.a[a] = p->Virtuals[C];
 		}
 		NEXTOP;
-	OP(SCOPE) :
-	{
-		ASSERTA(a); ASSERTA(C);
-		FScopeBarrier::ValidateCall(((DObject*)konsta[a].v)->GetClass(), (VMFunction*)konsta[C].v, B - 1);
+	OP(SCOPE):
+		{
+			ASSERTA(a); ASSERTKA(C);
+			FScopeBarrier::ValidateCall(((DObject*)reg.a[a])->GetClass(), (VMFunction*)konsta[C].v, B - 1);
 		}
 		NEXTOP;
 
@@ -820,7 +820,7 @@ begin:
 			ThrowAbortException(X_OTHER, "Cannot instantiate abstract class %s", cls->TypeName.GetChars());
 		}
 		// Creating actors here must be outright prohibited,
-		if (cls->IsDescendantOf(RUNTIME_CLASS(AActor)))
+		if (cls->IsDescendantOf(NAME_Actor))
 		{
 			ThrowAbortException(X_OTHER, "Cannot create actors with 'new'");
 		}

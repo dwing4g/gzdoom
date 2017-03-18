@@ -1,6 +1,7 @@
 // 'None' must always be the first name.
 xx(None)
 xx(Null)
+xx(_)
 
 xx(Super)
 xx(Object)
@@ -642,6 +643,8 @@ xx(floorglowheight)
 xx(ceilingglowcolor)
 xx(ceilingglowheight)
 xx(fogdensity)
+xx(Static)
+xx(Staticconst)
 
 // USDF keywords
 xx(Amount)

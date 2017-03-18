@@ -135,7 +135,10 @@ uint8_t *S_SoundCurve;
 int S_SoundCurveSize;
 
 FBoolCVar noisedebug ("noise", false, 0);	// [RH] Print sound debugging info?
-CVAR (Int, snd_channels, 32, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)	// number of channels available
+CUSTOM_CVAR (Int, snd_channels, 128, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)	// number of channels available
+{
+	if (self < 64) self = 64;
+}
 CVAR (Bool, snd_flipstereo, false, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
 
 // CODE --------------------------------------------------------------------
@@ -491,14 +494,14 @@ void S_PrecacheLevel ()
 				actor->MarkPrecacheSounds();
 			}
 		}
-		for (auto i : gameinfo.PrecachedSounds)
+		for (auto snd : gameinfo.PrecachedSounds)
 		{
-			level.info->PrecacheSounds[i].MarkUsed();
+			FSoundID(snd).MarkUsed();
 		}
 		// Precache all extra sounds requested by this map.
-		for (i = 0; i < level.info->PrecacheSounds.Size(); ++i)
+		for (auto snd : level.info->PrecacheSounds)
 		{
-			level.info->PrecacheSounds[i].MarkUsed();
+			FSoundID(snd).MarkUsed();
 		}
 		// Don't unload sounds that are playing right now.
 		for (FSoundChan *chan = Channels; chan != NULL; chan = chan->NextChan)
@@ -2106,8 +2109,8 @@ static void S_SetListener(SoundListener &listener, AActor *listenactor)
 		listener.velocity.Zero();
 		listener.position = listenactor->SoundPos();
 		listener.underwater = listenactor->waterlevel == 3;
-		assert(Zones.Size() > listenactor->Sector->ZoneNumber);
-		listener.Environment = Zones[listenactor->Sector->ZoneNumber].Environment;
+		assert(level.Zones.Size() > listenactor->Sector->ZoneNumber);
+		listener.Environment = level.Zones[listenactor->Sector->ZoneNumber].Environment;
 		listener.valid = true;
 	}
 	else
@@ -2353,7 +2356,7 @@ void S_SerializeSounds(FSerializer &arc)
 			for (unsigned int i = chans.Size(); i-- != 0; )
 			{
 				// Replace start time with sample position.
-				QWORD start = chans[i]->StartTime.AsOne;
+				uint64_t start = chans[i]->StartTime.AsOne;
 				chans[i]->StartTime.AsOne = GSnd ? GSnd->GetPosition(chans[i]) : 0;
 				arc(nullptr, *chans[i]);
 				chans[i]->StartTime.AsOne = start;

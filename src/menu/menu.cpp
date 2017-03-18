@@ -49,7 +49,7 @@
 #include "hu_stuff.h"
 #include "gi.h"
 #include "v_palette.h"
-#include "i_input.h"
+#include "g_input.h"
 #include "gameconfigfile.h"
 #include "gstrings.h"
 #include "r_utility.h"
@@ -1057,7 +1057,9 @@ CCMD(undocolorpic)
 }
 
 
-
+DEFINE_GLOBAL(menuactive)
+DEFINE_GLOBAL(BackbuttonTime)
+DEFINE_GLOBAL(BackbuttonAlpha)
 
 DEFINE_FIELD(DMenu, mParentMenu)
 DEFINE_FIELD(DMenu, mMouseCapture);

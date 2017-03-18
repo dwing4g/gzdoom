@@ -44,21 +44,23 @@ static const char *BuiltInTypeNames[] =
 {
 	"sint8", "uint8",
 	"sint16", "uint16",
-	"sint32", "uint32",
+	"sint32", "uint32_t",
 	"intauto",
 
 	"bool",
-	"float32", "float64", "floatauto",
+	"float64", "floatauto",
 	"string",
 	"vector2",
 	"vector3",
 	"name",
+
 	"color",
 	"state",
 	"sound",
 
 	"usertype",
-
+	"nativetype",
+	"let",
 };
 
 class FLispString
@@ -482,8 +484,9 @@ static void PrintBasicType(FLispString &out, ZCC_TreeNode *node)
 	out.Open("basic-type");
 	PrintNodes(out, tnode->ArraySize);
 	PrintBuiltInType(out, tnode->Type);
-	if (tnode->Type == ZCC_UserType)
+	if (tnode->Type == ZCC_UserType || tnode->Type == ZCC_NativeType)
 	{
+		if (tnode->Type == ZCC_NativeType) out.Add("@", 1);
 		PrintNodes(out, tnode->UserType, false);
 	}
 	out.Close();

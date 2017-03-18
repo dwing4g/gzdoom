@@ -71,6 +71,7 @@
 #include "r_utility.h"
 #include "math/cmath.h"
 #include "g_levellocals.h"
+#include "actorinlines.h"
 
 static FRandom pr_script("FScript");
 
@@ -3884,15 +3885,17 @@ void FParser::SF_SetColor(void)
 		while ((i = itr.Next()) >= 0)
 		{
 			if (!DFraggleThinker::ActiveThinker->setcolormaterial)
-				level.sectors[i].ColorMap = GetSpecialLights(color, level.sectors[i].ColorMap->Fade, 0);
+			{
+				level.sectors[i].SetColor(color.r, color.g, color.b, 0);
+			}
 			else
 			{
 				// little hack for testing the D64 color stuff.
-				for (int j = 0; j < 4; j++) level.sectors[i].SpecialColors[j] = color;
+				for (int j = 0; j < 4; j++) level.sectors[i].SetSpecialColor(j, color);
 				// simulates 'nocoloredspritelighting' settings.
 				int v = (color.r + color.g + color.b) / 3;
 				v = (255 + v + v) / 3;
-				level.sectors[i].SpecialColors[sector_t::sprites] = PalEntry(255, v, v, v);
+				level.sectors[i].SetSpecialColor(sector_t::sprites, v, v, v);
 			}
 		}
 	}

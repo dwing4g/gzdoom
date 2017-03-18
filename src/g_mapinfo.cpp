@@ -275,6 +275,11 @@ void level_info_t::Reset()
 	teamdamage = 0.f;
 	hazardcolor = 0xff004200;
 	hazardflash = 0xff00ff00;
+	fogdensity = 0;
+	outsidefogdensity = 0;
+	skyfog = 0;
+	pixelstretch = 1.2f;
+
 	specialactions.Clear();
 	DefaultEnvironment = 0;
 	PrecacheSounds.Clear();
@@ -1216,6 +1221,34 @@ DEFINE_MAP_OPTION(hazardflash, true)
 	info->hazardflash = V_GetColor(NULL, parse.sc);
 }
 
+DEFINE_MAP_OPTION(fogdensity, false)
+{
+	parse.ParseAssign();
+	parse.sc.MustGetNumber();
+	info->fogdensity = clamp(parse.sc.Number, 0, 512) >> 1;
+}
+
+DEFINE_MAP_OPTION(outsidefogdensity, false)
+{
+	parse.ParseAssign();
+	parse.sc.MustGetNumber();
+	info->outsidefogdensity = clamp(parse.sc.Number, 0, 512) >> 1;
+}
+
+DEFINE_MAP_OPTION(skyfog, false)
+{
+	parse.ParseAssign();
+	parse.sc.MustGetNumber();
+	info->skyfog = parse.sc.Number;
+}
+
+DEFINE_MAP_OPTION(pixelratio, false)
+{
+	parse.ParseAssign();
+	parse.sc.MustGetFloat();
+	info->pixelstretch = (float)parse.sc.Float;
+}
+
 
 //==========================================================================
 //
@@ -1323,6 +1356,8 @@ MapFlagHandlers[] =
 	{ "unfreezesingleplayerconversations",MITYPE_SETFLAG2,	LEVEL2_CONV_SINGLE_UNFREEZE, 0 },
 	{ "spawnwithweaponraised",			MITYPE_SETFLAG2,	LEVEL2_PRERAISEWEAPON, 0 },
 	{ "forcefakecontrast",				MITYPE_SETFLAG3,	LEVEL3_FORCEFAKECONTRAST, 0 },
+	{ "nolightfade",					MITYPE_SETFLAG3,	LEVEL3_NOLIGHTFADE, 0 },
+	{ "nocoloredspritelighting",		MITYPE_SETFLAG3,	LEVEL3_NOCOLOREDSPRITELIGHTING, 0 },
 	{ "nobotnodes",						MITYPE_IGNORE,	0, 0 },		// Skulltag option: nobotnodes
 	{ "compat_shorttex",				MITYPE_COMPATFLAG, COMPATF_SHORTTEX, 0 },
 	{ "compat_stairs",					MITYPE_COMPATFLAG, COMPATF_STAIRINDEX, 0 },
@@ -1397,7 +1432,16 @@ void FMapInfoParser::ParseMapDefinition(level_info_t &info)
 				break;
 
 			case MITYPE_SETFLAG:
-				info.flags |= handler->data1;
+				if (!CheckAssign())
+				{
+					info.flags |= handler->data1;
+				}
+				else
+				{
+					sc.MustGetNumber();
+					if (sc.Number) info.flags |= handler->data1;
+					else info.flags &= ~handler->data1;
+				}
 				info.flags |= handler->data2;
 				break;
 
@@ -1411,7 +1455,16 @@ void FMapInfoParser::ParseMapDefinition(level_info_t &info)
 				break;
 
 			case MITYPE_SETFLAG2:
-				info.flags2 |= handler->data1;
+				if (!CheckAssign())
+				{
+					info.flags2 |= handler->data1;
+				}
+				else
+				{
+					sc.MustGetNumber();
+					if (sc.Number) info.flags2 |= handler->data1;
+					else info.flags2 &= ~handler->data1;
+				}
 				info.flags2 |= handler->data2;
 				break;
 
@@ -1425,7 +1478,16 @@ void FMapInfoParser::ParseMapDefinition(level_info_t &info)
 				break;
 
 			case MITYPE_SETFLAG3:
-				info.flags3 |= handler->data1;
+				if (!CheckAssign())
+				{
+					info.flags3 |= handler->data1;
+				}
+				else
+				{
+					sc.MustGetNumber();
+					if (sc.Number) info.flags3 |= handler->data1;
+					else info.flags3 &= ~handler->data1;
+				}
 				info.flags3 |= handler->data2;
 				break;
 

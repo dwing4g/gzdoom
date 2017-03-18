@@ -65,11 +65,6 @@
 #include "g_levellocals.h"
 #include "events.h"
 
-static TStaticArray<sector_t>	loadsectors;
-static TStaticArray<line_t>		loadlines;
-static TStaticArray<side_t>		loadsides;
-
-
 //==========================================================================
 //
 //
@@ -155,6 +150,30 @@ FSerializer &Serialize(FSerializer &arc, const char *key, FLinkedSector &ls, FLi
 	{
 		arc("sector", ls.Sector)
 			("type", ls.Type)
+			.EndObject();
+	}
+	return arc;
+}
+
+//============================================================================
+//
+// Save a sector portal for savegames.
+//
+//============================================================================
+
+FSerializer &Serialize(FSerializer &arc, const char *key, FColormap &port, FColormap *def)
+{
+	if (arc.canSkip() && def != nullptr && port == *def)
+	{
+		return arc;
+	}
+
+	if (arc.BeginObject(key))
+	{
+		arc("lightcolor", port.LightColor)
+			("fadecolor", port.FadeColor)
+			("desaturation", port.Desaturation)
+			("fogdensity", port.FogDensity)
 			.EndObject();
 	}
 	return arc;
@@ -275,14 +294,14 @@ FSerializer &Serialize(FSerializer &arc, const char *key, sector_t &p, sector_t 
 			("midtexc_sectors", p.e->Midtex.Ceiling.AttachedSectors)
 			("linked_floor", p.e->Linked.Floor.Sectors)
 			("linked_ceiling", p.e->Linked.Ceiling.Sectors)
-			("colormap", p.ColorMap, def->ColorMap)
+			("colormap", p.Colormap, def->Colormap)
 			.Array("specialcolors", p.SpecialColors, def->SpecialColors, 5, true)
 			("gravity", p.gravity, def->gravity)
 			.Terrain("floorterrain", p.terrainnum[0], &def->terrainnum[0])
 			.Terrain("ceilingterrain", p.terrainnum[1], &def->terrainnum[1])
 			("scrolls", scroll, nul)
 			// GZDoom exclusive:
-			.Array("reflect", p.reflect, def->reflect, 2)
+			.Array("reflect", p.reflect, def->reflect, 2, true)
 			.EndObject();
 
 		if (arc.isReading() && !scroll.isZero())
@@ -309,15 +328,14 @@ FSerializer &Serialize(FSerializer &arc, const char *key, sector_t &p, sector_t 
 
 void RecalculateDrawnSubsectors()
 {
-	for (int i = 0; i<numsubsectors; i++)
+	for (auto &sub : level.subsectors)
 	{
-		subsector_t *sub = &subsectors[i];
-		for (unsigned int j = 0; j<sub->numlines; j++)
+		for (unsigned int j = 0; j<sub.numlines; j++)
 		{
-			if (sub->firstline[j].linedef != NULL &&
-				(sub->firstline[j].linedef->flags & ML_MAPPED))
+			if (sub.firstline[j].linedef != NULL &&
+				(sub.firstline[j].linedef->flags & ML_MAPPED))
 			{
-				sub->flags |= SSECF_DRAWN;
+				sub.flags |= SSECF_DRAWN;
 			}
 		}
 	}
@@ -329,23 +347,24 @@ void RecalculateDrawnSubsectors()
 //
 //==========================================================================
 
-FSerializer &Serialize(FSerializer &arc, const char *key, subsector_t *&ss, subsector_t **)
+FSerializer &SerializeSubsectors(FSerializer &arc, const char *key)
 {
 	uint8_t by;
 	const char *str;
 
+	auto numsubsectors = level.subsectors.Size();
 	if (arc.isWriting())
 	{
 		if (hasglnodes)
 		{
 			TArray<char> encoded(1 + (numsubsectors + 5) / 6);
 			int p = 0;
-			for (int i = 0; i < numsubsectors; i += 6)
+			for (unsigned i = 0; i < numsubsectors; i += 6)
 			{
 				by = 0;
-				for (int j = 0; j < 6; j++)
+				for (unsigned j = 0; j < 6; j++)
 				{
-					if (i + j < numsubsectors && (subsectors[i + j].flags & SSECF_DRAWN))
+					if (i + j < numsubsectors && (level.subsectors[i + j].flags & SSECF_DRAWN))
 					{
 						by |= (1 << j);
 					}
@@ -380,7 +399,7 @@ FSerializer &Serialize(FSerializer &arc, const char *key, subsector_t *&ss, subs
 				.StringPtr(nullptr, str)
 				.EndArray();
 
-			if (num_verts == (int)level.vertexes.Size() && num_subs == numsubsectors && hasglnodes)
+			if (num_verts == (int)level.vertexes.Size() && num_subs == (int)numsubsectors && hasglnodes)
 			{
 				success = true;
 				int sub = 0;
@@ -399,9 +418,9 @@ FSerializer &Serialize(FSerializer &arc, const char *key, subsector_t *&ss, subs
 					}
 					for (int s = 0; s < 6; s++)
 					{
-						if (sub + s < numsubsectors && (by & (1 << s)))
+						if (sub + s < (int)numsubsectors && (by & (1 << s)))
 						{
-							subsectors[sub + s].flags |= SSECF_DRAWN;
+							level.subsectors[sub + s].flags |= SSECF_DRAWN;
 						}
 					}
 					sub += 6;
@@ -884,7 +903,7 @@ static void SpawnExtraPlayers()
 		if (playeringame[i] && players[i].mo == NULL)
 		{
 			players[i].playerstate = PST_ENTER;
-			P_SpawnPlayer(&playerstarts[i], i, (level.flags2 & LEVEL2_PRERAISEWEAPON) ? SPF_WEAPONFULLYUP : 0);
+			P_SpawnPlayer(&level.playerstarts[i], i, (level.flags2 & LEVEL2_PRERAISEWEAPON) ? SPF_WEAPONFULLYUP : 0);
 		}
 	}
 }
@@ -944,7 +963,10 @@ void G_SerializeLevel(FSerializer &arc, bool hubload)
 		("level.maptime", level.maptime)
 		("level.totaltime", i)
 		("level.skytexture1", level.skytexture1)
-		("level.skytexture2", level.skytexture2);
+		("level.skytexture2", level.skytexture2)
+		("level.fogdensity", level.fogdensity)
+		("level.outsidefogdensity", level.outsidefogdensity)
+		("level.skyfog", level.skyfog);
 
 	// Hub transitions must keep the current total time
 	if (!hubload)
@@ -964,10 +986,10 @@ void G_SerializeLevel(FSerializer &arc, bool hubload)
 
 	FBehavior::StaticSerializeModuleStates(arc);
 	// The order here is important: First world state, then portal state, then thinkers, and last polyobjects.
-	arc.Array("linedefs", &level.lines[0], &loadlines[0], level.lines.Size());
-	arc.Array("sidedefs", &level.sides[0], &loadsides[0], level.sides.Size());
-	arc.Array("sectors", &level.sectors[0], &loadsectors[0], level.sectors.Size());
-	arc("zones", Zones);
+	arc("linedefs", level.lines, level.loadlines);
+	arc("sidedefs", level.sides, level.loadsides);
+	arc("sectors", level.sectors, level.loadsectors);
+	arc("zones", level.Zones);
 	arc("lineportals", linePortals);
 	arc("sectorportals", level.sectorPortals);
 	if (arc.isReading()) P_CollectLinkedPortals();
@@ -976,7 +998,7 @@ void G_SerializeLevel(FSerializer &arc, bool hubload)
 	E_SerializeEvents(arc);
 	DThinker::SerializeThinkers(arc, !hubload);
 	arc.Array("polyobjs", polyobjs, po_NumPolyobjs);
-	arc("subsectors", subsectors);
+	SerializeSubsectors(arc, "subsectors");
 	StatusBar->SerializeMessages(arc);
 	AM_SerializeMarkers(arc);
 	FRemapTable::StaticSerializeTranslations(arc);
@@ -998,22 +1020,7 @@ void G_SerializeLevel(FSerializer &arc, bool hubload)
 			}
 		}
 	}
+	AActor::RecreateAllAttachedLights();
 	Renderer->EndSerialize(arc);
 
-}
-
-// Create a backup of the map data so the savegame code can toss out all fields that haven't changed in order to reduce processing time and file size.
-
-void P_BackupMapData()
-{
-	loadsectors = level.sectors;
-	loadlines = level.lines;
-	loadsides = level.sides;
-}
-
-void P_FreeMapDataBackup()
-{
-	loadsectors.Clear();
-	loadlines.Clear();
-	loadsides.Clear();
 }

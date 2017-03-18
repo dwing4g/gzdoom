@@ -22,6 +22,7 @@ struct ZCC_StructWork
 	TArray<ZCC_ConstantDef *> Constants;
 	TArray<ZCC_VarDeclarator *> Fields;
 	TArray<ZCC_FuncDeclarator *> Functions;
+	TArray<ZCC_StaticArrayStatement *> Arrays;
 
 	ZCC_StructWork()
 	{
@@ -101,6 +102,7 @@ private:
 	void CompileAllConstants();
 	void AddConstant(ZCC_ConstantWork &constant);
 	bool CompileConstant(ZCC_ConstantWork *def);
+	void CompileArrays(ZCC_StructWork *work);
 
 	void CompileAllFields();
 	bool CompileFields(PStruct *type, TArray<ZCC_VarDeclarator *> &Fields, PClass *Outer, PSymbolTable *TreeNodes, bool forstruct, bool hasnativechildren = false);
@@ -109,7 +111,7 @@ private:
 	FString FlagsToString(uint32_t flags);
 	PType *DetermineType(PType *outertype, ZCC_TreeNode *field, FName name, ZCC_Type *ztype, bool allowarraytypes, bool formember);
 	PType *ResolveArraySize(PType *baseType, ZCC_Expression *arraysize, PStruct *cls);
-	PType *ResolveUserType(ZCC_BasicType *type, PSymbolTable *sym);
+	PType *ResolveUserType(ZCC_BasicType *type, PSymbolTable *sym, bool nativetype);
 
 	void InitDefaults();
 	void ProcessDefaultFlag(PClassActor *cls, ZCC_FlagStmt *flg);
@@ -122,7 +124,6 @@ private:
 	void CompileStates();
 	FxExpression *SetupActionFunction(PClass *cls, ZCC_TreeNode *sl, int stateflags);
 
-	bool SimplifyingConstant;
 	TArray<ZCC_ConstantDef *> Constants;
 	TArray<ZCC_StructWork *> Structs;
 	TArray<ZCC_ClassWork *> Classes;

@@ -62,6 +62,7 @@
 #include "r_sky.h"
 #include "gstrings.h"
 #include "gi.h"
+#include "g_game.h"
 #include "sc_man.h"
 #include "c_bind.h"
 #include "info.h"
@@ -84,6 +85,7 @@
 #include "a_pickups.h"
 #include "r_data/colormaps.h"
 #include "g_levellocals.h"
+#include "actorinlines.h"
 #include "stats.h"
 
 	// P-codes for ACS scripts
@@ -658,6 +660,134 @@ struct CallReturn
 	int bDiscardResult;
 	unsigned int EntryInstrCount;
 };
+
+
+class DLevelScript : public DObject
+{
+	DECLARE_CLASS(DLevelScript, DObject)
+	HAS_OBJECT_POINTERS
+public:
+
+
+	enum EScriptState
+	{
+		SCRIPT_Running,
+		SCRIPT_Suspended,
+		SCRIPT_Delayed,
+		SCRIPT_TagWait,
+		SCRIPT_PolyWait,
+		SCRIPT_ScriptWaitPre,
+		SCRIPT_ScriptWait,
+		SCRIPT_PleaseRemove,
+		SCRIPT_DivideBy0,
+		SCRIPT_ModulusBy0,
+	};
+
+	DLevelScript(AActor *who, line_t *where, int num, const ScriptPtr *code, FBehavior *module,
+		const int *args, int argcount, int flags);
+	~DLevelScript();
+
+	void Serialize(FSerializer &arc);
+	int RunScript();
+
+	inline void SetState(EScriptState newstate) { state = newstate; }
+	inline EScriptState GetState() { return state; }
+
+	DLevelScript *GetNext() const { return next; }
+
+	void MarkLocalVarStrings() const
+	{
+		GlobalACSStrings.MarkStringArray(&Localvars[0], Localvars.Size());
+	}
+	void LockLocalVarStrings() const
+	{
+		GlobalACSStrings.LockStringArray(&Localvars[0], Localvars.Size());
+	}
+	void UnlockLocalVarStrings() const
+	{
+		GlobalACSStrings.UnlockStringArray(&Localvars[0], Localvars.Size());
+	}
+
+protected:
+	DLevelScript	*next, *prev;
+	int				script;
+	TArray<int32_t>	Localvars;
+	int				*pc;
+	EScriptState	state;
+	int				statedata;
+	TObjPtr<AActor*>	activator;
+	line_t			*activationline;
+	bool			backSide;
+	FFont			*activefont;
+	int				hudwidth, hudheight;
+	int				ClipRectLeft, ClipRectTop, ClipRectWidth, ClipRectHeight;
+	int				WrapWidth;
+	bool			HandleAspect;
+	FBehavior	    *activeBehavior;
+	int				InModuleScriptNumber;
+
+	void Link();
+	void Unlink();
+	void PutLast();
+	void PutFirst();
+	static int Random(int min, int max);
+	static int ThingCount(int type, int stringid, int tid, int tag);
+	static void ChangeFlat(int tag, int name, bool floorOrCeiling);
+	static int CountPlayers();
+	static void SetLineTexture(int lineid, int side, int position, int name);
+	static int DoSpawn(int type, const DVector3 &pos, int tid, DAngle angle, bool force);
+	static int DoSpawn(int type, int x, int y, int z, int tid, int angle, bool force);
+	static bool DoCheckActorTexture(int tid, AActor *activator, int string, bool floor);
+	int DoSpawnSpot(int type, int spot, int tid, int angle, bool forced);
+	int DoSpawnSpotFacing(int type, int spot, int tid, bool forced);
+	int DoClassifyActor(int tid);
+	int CallFunction(int argCount, int funcIndex, int32_t *args);
+
+	void DoFadeTo(int r, int g, int b, int a, int time);
+	void DoFadeRange(int r1, int g1, int b1, int a1,
+		int r2, int g2, int b2, int a2, int time);
+	void DoSetFont(int fontnum);
+	void SetActorProperty(int tid, int property, int value);
+	void DoSetActorProperty(AActor *actor, int property, int value);
+	int GetActorProperty(int tid, int property);
+	int CheckActorProperty(int tid, int property, int value);
+	int GetPlayerInput(int playernum, int inputnum);
+
+	int LineFromID(int id);
+	int SideFromID(int id, int side);
+
+private:
+	DLevelScript();
+
+	friend class DACSThinker;
+};
+
+class DACSThinker : public DThinker
+{
+	DECLARE_CLASS(DACSThinker, DThinker)
+	HAS_OBJECT_POINTERS
+public:
+	DACSThinker();
+	~DACSThinker();
+
+	void Serialize(FSerializer &arc);
+	void Tick();
+
+	typedef TMap<int, DLevelScript *> ScriptMap;
+	ScriptMap RunningScripts;	// Array of all synchronous scripts
+	static TObjPtr<DACSThinker*> ActiveThinker;
+
+	void DumpScriptStatus();
+	void StopScriptsFor(AActor *actor);
+
+private:
+	DLevelScript *LastScript;
+	DLevelScript *Scripts;				// List of all running scripts
+
+	friend class DLevelScript;
+	friend class FBehavior;
+};
+
 
 static DLevelScript *P_GetScriptGoing (AActor *who, line_t *where, int num, const ScriptPtr *code, FBehavior *module,
 	const int *args, int argcount, int flags);
@@ -4832,6 +4962,7 @@ enum EACSFunctions
 	ACSF_Round,
 	ACSF_Ceil,
 	ACSF_ScriptCall,
+	ACSF_StartSlideshow,
 
 
 	// OpenGL stuff
@@ -6629,9 +6760,7 @@ doplaysound:			if (funcIndex == ACSF_PlayActorSound)
 			int d = clamp(args[1]/2, 0, 255);
 			while ((s = it.Next()) >= 0)
 			{
-				auto &sec = level.sectors[s];
-				auto f = sec.ColorMap->Fade;
-				sec.ColorMap = GetSpecialLights(sec.ColorMap->Color, PalEntry(d, f.r, f.g, f.b), sec.ColorMap->Desaturate);
+				level.sectors[s].SetFogDensity(d);
 			}
 			break;
 		}
@@ -6678,6 +6807,10 @@ doplaysound:			if (funcIndex == ACSF_PlayActorSound)
 
 		case ACSF_ScriptCall:
 			return ScriptCall(argCount, args);
+
+		case ACSF_StartSlideshow:
+			G_StartSlideshow(FName(FBehavior::StaticLookupString(args[0])));
+			break;
 
 		default:
 			break;
@@ -10861,6 +10994,11 @@ CCMD(acsprofile)
 
 	ShowProfileData(ScriptProfiles, limit, sorter, false);
 	ShowProfileData(FuncProfiles, limit, sorter, true);
+}
+
+void MarkACSThinker()
+{
+	GC::Mark(DACSThinker::ActiveThinker);
 }
 
 ADD_STAT(ACS)
