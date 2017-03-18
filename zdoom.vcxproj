@@ -110,7 +110,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>src\g_inventory;src\scripting;src\scripting\zscript;src\scripting\vm;src\zscript;src\win32;src\sound;src\textures;src\thingdef;src;zlib;src\g_shared;src\g_statusbar;jpeg-6b;game-music-emu;gdtoa;bzip2;lzma\C;fmodex;dxsdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\g_inventory;src\scripting;src\scripting\zscript;src\scripting\vm;src\zscript;src\win32;src\sound;src\sound\oplsynth;src\textures;src\thingdef;src;zlib;src\g_shared;src\g_statusbar;jpeg-6b;game-music-emu;gdtoa;bzip2;lzma\C;fmodex;dxsdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_WINDOWS;HAVE_STRUPR;HAVE_FILELENGTH;NO_VA_COPY;BACKPATCH;HAVE_FLUIDSYNTH;DYN_FLUIDSYNTH;NO_OPENAL;HAVE_MMX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -185,7 +185,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>src\zscript;src\win32;src\sound;src;zlib;src\g_shared;src\g_doom;src\g_raven;src\g_heretic;src\g_hexen;src\g_strife;jpeg-6b;game-music-emu;gdtoa;bzip2;lzma\C;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\zscript;src\win32;src\sound;src\sound\oplsynth;src;zlib;src\g_shared;src\g_doom;src\g_raven;src\g_heretic;src\g_hexen;src\g_strife;jpeg-6b;game-music-emu;gdtoa;bzip2;lzma\C;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_WINDOWS;HAVE_STRUPR;HAVE_FILELENGTH;NO_VA_COPY;NO_OPENAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -340,6 +340,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\cycler.cpp" />
     <ClCompile Include="src\c_functions.cpp" />
     <ClCompile Include="src\events.cpp" />
     <ClCompile Include="src\gl\compatibility\gl_20.cpp" />
@@ -348,11 +349,11 @@
     <ClCompile Include="src\gl\data\gl_portaldata.cpp" />
     <ClCompile Include="src\gl\data\gl_setup.cpp" />
     <ClCompile Include="src\gl\data\gl_vertexbuffer.cpp" />
-    <ClCompile Include="src\gl\dynlights\a_dynlight.cpp" />
-    <ClCompile Include="src\gl\dynlights\gl_dynlight.cpp" />
+    <ClCompile Include="src\gl\dynlights\gl_aabbtree.cpp" />
     <ClCompile Include="src\gl\dynlights\gl_dynlight1.cpp" />
     <ClCompile Include="src\gl\dynlights\gl_glow.cpp" />
     <ClCompile Include="src\gl\dynlights\gl_lightbuffer.cpp" />
+    <ClCompile Include="src\gl\dynlights\gl_shadowmap.cpp" />
     <ClCompile Include="src\gl\hqnx\hq2x.cpp" />
     <ClCompile Include="src\gl\hqnx\hq3x.cpp" />
     <ClCompile Include="src\gl\hqnx\hq4x.cpp" />
@@ -400,6 +401,7 @@
     <ClCompile Include="src\gl\shaders\gl_presentshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_shader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_shaderprogram.cpp" />
+    <ClCompile Include="src\gl\shaders\gl_shadowmapshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_texshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_tonemapshader.cpp" />
     <ClCompile Include="src\gl\stereo3d\gl_anaglyph.cpp" />
@@ -415,6 +417,8 @@
     <ClCompile Include="src\gl\system\gl_interface.cpp" />
     <ClCompile Include="src\gl\system\gl_load.c" />
     <ClCompile Include="src\gl\system\gl_menu.cpp" />
+    <ClCompile Include="src\gl\system\gl_swframebuffer.cpp" />
+    <ClCompile Include="src\gl\system\gl_swwipe.cpp" />
     <ClCompile Include="src\gl\system\gl_threads.cpp" />
     <ClCompile Include="src\gl\system\gl_wipe.cpp" />
     <ClCompile Include="src\gl\textures\gl_bitmap.cpp" />
@@ -423,12 +427,9 @@
     <ClCompile Include="src\gl\textures\gl_hwtexture.cpp" />
     <ClCompile Include="src\gl\textures\gl_material.cpp" />
     <ClCompile Include="src\gl\textures\gl_samplers.cpp" />
-    <ClCompile Include="src\gl\textures\gl_skyboxtexture.cpp" />
     <ClCompile Include="src\gl\textures\gl_texture.cpp" />
     <ClCompile Include="src\gl\textures\gl_translate.cpp" />
     <ClCompile Include="src\gl\utility\gl_clock.cpp" />
-    <ClCompile Include="src\gl\utility\gl_cycler.cpp" />
-    <ClCompile Include="src\gl\utility\gl_geometric.cpp" />
     <ClCompile Include="src\gl\xbr\xbrz.cpp" />
     <ClCompile Include="src\gl\xbr\xbrz_old.cpp" />
     <ClCompile Include="src\g_inventory\a_keys.cpp" />
@@ -436,6 +437,8 @@
     <ClCompile Include="src\g_inventory\a_weapons.cpp" />
     <ClCompile Include="src\g_shared\a_action.cpp" />
     <ClCompile Include="src\g_shared\a_decals.cpp" />
+    <ClCompile Include="src\g_shared\a_dynlight.cpp" />
+    <ClCompile Include="src\g_shared\a_dynlightdata.cpp" />
     <ClCompile Include="src\g_shared\a_flashfader.cpp" />
     <ClCompile Include="src\g_shared\a_lightning.cpp" />
     <ClCompile Include="src\g_shared\a_morph.cpp" />
@@ -469,14 +472,11 @@
     <ClCompile Include="src\math\sqrt.c" />
     <ClCompile Include="src\math\tan.c" />
     <ClCompile Include="src\math\tanh.c" />
+    <ClCompile Include="src\polyrenderer\poly_all.cpp" />
     <ClCompile Include="src\p_actionfunctions.cpp" />
     <ClCompile Include="src\p_pusher.cpp" />
     <ClCompile Include="src\p_scroll.cpp" />
     <ClCompile Include="src\p_secnodes.cpp" />
-    <ClCompile Include="src\r_drawt_pal.cpp" />
-    <ClCompile Include="src\r_draw_pal.cpp" />
-    <ClCompile Include="src\r_thread.cpp" />
-    <ClCompile Include="src\r_walldraw.cpp" />
     <ClCompile Include="src\scripting\backend\codegen.cpp" />
     <ClCompile Include="src\scripting\backend\dynarrays.cpp" />
     <ClCompile Include="src\scripting\backend\scopebarrier.cpp" />
@@ -496,8 +496,51 @@
     <ClCompile Include="src\scripting\zscript\zcc_compile.cpp" />
     <ClCompile Include="src\scripting\zscript\zcc_parser.cpp" />
     <ClCompile Include="src\serializer.cpp" />
-    <ClCompile Include="src\sound\music_audiotoolbox_mididevice.cpp" />
+    <ClCompile Include="src\sound\mididevices\music_audiotoolbox_mididevice.cpp" />
+    <ClCompile Include="src\sound\mididevices\music_fluidsynth_mididevice.cpp" />
+    <ClCompile Include="src\sound\mididevices\music_opldumper_mididevice.cpp" />
+    <ClCompile Include="src\sound\mididevices\music_opl_mididevice.cpp" />
+    <ClCompile Include="src\sound\mididevices\music_pseudo_mididevice.cpp" />
+    <ClCompile Include="src\sound\mididevices\music_softsynth_mididevice.cpp" />
+    <ClCompile Include="src\sound\mididevices\music_timiditypp_mididevice.cpp" />
+    <ClCompile Include="src\sound\mididevices\music_timidity_mididevice.cpp" />
+    <ClCompile Include="src\sound\mididevices\music_wildmidi_mididevice.cpp" />
+    <ClCompile Include="src\sound\mididevices\music_win_mididevice.cpp" />
+    <ClCompile Include="src\sound\musicformats\music_cd.cpp" />
+    <ClCompile Include="src\sound\musicformats\music_dumb.cpp" />
+    <ClCompile Include="src\sound\musicformats\music_gme.cpp" />
+    <ClCompile Include="src\sound\musicformats\music_hmi_midiout.cpp" />
+    <ClCompile Include="src\sound\musicformats\music_midistream.cpp" />
+    <ClCompile Include="src\sound\musicformats\music_mus_midiout.cpp" />
+    <ClCompile Include="src\sound\musicformats\music_opl.cpp" />
+    <ClCompile Include="src\sound\musicformats\music_smf_midiout.cpp" />
+    <ClCompile Include="src\sound\musicformats\music_stream.cpp" />
+    <ClCompile Include="src\sound\musicformats\music_xmi_midiout.cpp" />
+    <ClCompile Include="src\sound\oplsynth\dosbox\opl.cpp" />
+    <ClCompile Include="src\sound\oplsynth\fmopl.cpp" />
+    <ClCompile Include="src\sound\oplsynth\mlopl.cpp" />
+    <ClCompile Include="src\sound\oplsynth\mlopl_io.cpp" />
+    <ClCompile Include="src\sound\oplsynth\nukedopl3.cpp" />
+    <ClCompile Include="src\sound\oplsynth\OPL3.cpp" />
+    <ClCompile Include="src\sound\oplsynth\opl_mus_player.cpp" />
+    <ClCompile Include="src\sound\timidity\common.cpp" />
+    <ClCompile Include="src\sound\timidity\instrum.cpp" />
+    <ClCompile Include="src\sound\timidity\instrum_dls.cpp" />
+    <ClCompile Include="src\sound\timidity\instrum_font.cpp" />
+    <ClCompile Include="src\sound\timidity\instrum_sf2.cpp" />
+    <ClCompile Include="src\sound\timidity\mix.cpp" />
+    <ClCompile Include="src\sound\timidity\playmidi.cpp" />
+    <ClCompile Include="src\sound\timidity\resample.cpp" />
+    <ClCompile Include="src\sound\timidity\timidity.cpp" />
+    <ClCompile Include="src\sound\wildmidi\file_io.cpp" />
+    <ClCompile Include="src\sound\wildmidi\gus_pat.cpp" />
+    <ClCompile Include="src\sound\wildmidi\reverb.cpp" />
+    <ClCompile Include="src\sound\wildmidi\wildmidi_lib.cpp" />
+    <ClCompile Include="src\sound\wildmidi\wm_error.cpp" />
+    <ClCompile Include="src\swrenderer\r_all.cpp" />
     <ClCompile Include="src\textures\backdroptexture.cpp" />
+    <ClCompile Include="src\textures\skyboxtexture.cpp" />
+    <ClCompile Include="src\win32\critsec.cpp" />
     <ClCompile Include="src\win32\i_specialpaths.cpp" />
     <ClCompile Include="src\win32\win32gliface.cpp" />
     <ClCompile Include="src\__autostart.cpp" />
@@ -661,63 +704,11 @@
     <ClCompile Include="src\win32\win32video.cpp" />
     <ClCompile Include="src\intermission\intermission.cpp" />
     <ClCompile Include="src\intermission\intermission_parse.cpp" />
-    <ClCompile Include="src\r_3dfloors.cpp" />
-    <ClCompile Include="src\r_bsp.cpp" />
-    <ClCompile Include="src\r_draw.cpp" />
-    <ClCompile Include="src\r_main.cpp" />
-    <ClCompile Include="src\r_plane.cpp" />
-    <ClCompile Include="src\r_segs.cpp" />
-    <ClCompile Include="src\r_swrenderer.cpp" />
-    <ClCompile Include="src\r_things.cpp" />
     <ClCompile Include="src\sound\fmodsound.cpp" />
     <ClCompile Include="src\sound\i_music.cpp" />
     <ClCompile Include="src\sound\i_sound.cpp" />
-    <ClCompile Include="src\sound\music_cd.cpp" />
-    <ClCompile Include="src\sound\music_dumb.cpp" />
-    <ClCompile Include="src\sound\music_fluidsynth_mididevice.cpp" />
-    <ClCompile Include="src\sound\music_gme.cpp" />
-    <ClCompile Include="src\sound\music_hmi_midiout.cpp" />
     <ClCompile Include="src\sound\music_midi_base.cpp" />
-    <ClCompile Include="src\sound\music_midi_timidity.cpp" />
-    <ClCompile Include="src\sound\music_midistream.cpp" />
-    <ClCompile Include="src\sound\music_mus_midiout.cpp" />
-    <ClCompile Include="src\sound\music_mus_opl.cpp" />
-    <ClCompile Include="src\oplsynth\music_opl_mididevice.cpp" />
-    <ClCompile Include="src\oplsynth\music_opldumper_mididevice.cpp" />
-    <ClCompile Include="src\sound\music_pseudo_mididevice.cpp" />
-    <ClCompile Include="src\sound\music_smf_midiout.cpp" />
-    <ClCompile Include="src\sound\music_softsynth_mididevice.cpp" />
-    <ClCompile Include="src\sound\music_stream.cpp" />
-    <ClCompile Include="src\sound\music_timidity_mididevice.cpp" />
-    <ClCompile Include="src\sound\music_wildmidi_mididevice.cpp" />
-    <ClCompile Include="src\sound\music_win_mididevice.cpp" />
-    <ClCompile Include="src\sound\music_xmi_midiout.cpp" />
     <ClCompile Include="src\sound\oalsound.cpp" />
-    <ClCompile Include="src\oplsynth\fmopl.cpp" />
-    <ClCompile Include="src\oplsynth\mlopl.cpp" />
-    <ClCompile Include="src\oplsynth\mlopl_io.cpp" />
-    <ClCompile Include="src\oplsynth\nukedopl3.cpp" />
-    <ClCompile Include="src\oplsynth\OPL3.cpp" />
-    <ClCompile Include="src\oplsynth\opl_mus_player.cpp" />
-    <ClCompile Include="src\oplsynth\dosbox\opl.cpp" />
-    <ClCompile Include="src\timidity\instrum_font.cpp" />
-    <ClCompile Include="src\timidity\common.cpp" />
-    <ClCompile Include="src\timidity\instrum.cpp" />
-    <ClCompile Include="src\timidity\instrum_dls.cpp" />
-    <ClCompile Include="src\timidity\instrum_sf2.cpp" />
-    <ClCompile Include="src\timidity\mix.cpp" />
-    <ClCompile Include="src\timidity\playmidi.cpp">
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotSet</EnableEnhancedInstructionSet>
-    </ClCompile>
-    <ClCompile Include="src\timidity\resample.cpp">
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotSet</EnableEnhancedInstructionSet>
-    </ClCompile>
-    <ClCompile Include="src\timidity\timidity.cpp" />
-    <ClCompile Include="src\wildmidi\file_io.cpp" />
-    <ClCompile Include="src\wildmidi\gus_pat.cpp" />
-    <ClCompile Include="src\wildmidi\reverb.cpp" />
-    <ClCompile Include="src\wildmidi\wildmidi_lib.cpp" />
-    <ClCompile Include="src\wildmidi\wm_error.cpp" />
     <ClCompile Include="src\xlat\parse_xlat.cpp" />
     <ClCompile Include="src\xlat\xlat_parser.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -922,15 +913,6 @@
     <ClInclude Include="src\win32\rawinput.h" />
     <ClInclude Include="src\win32\resource.h" />
     <ClInclude Include="src\win32\win32iface.h" />
-    <ClInclude Include="src\r_3dfloors.h" />
-    <ClInclude Include="src\r_bsp.h" />
-    <ClInclude Include="src\r_draw.h" />
-    <ClInclude Include="src\r_local.h" />
-    <ClInclude Include="src\r_main.h" />
-    <ClInclude Include="src\r_plane.h" />
-    <ClInclude Include="src\r_segs.h" />
-    <ClInclude Include="src\r_swrenderer.h" />
-    <ClInclude Include="src\r_things.h" />
     <ClInclude Include="src\sound\efx.h" />
     <ClInclude Include="src\sound\fmod_wrap.h" />
     <ClInclude Include="src\sound\fmodsound.h" />
@@ -939,23 +921,6 @@
     <ClInclude Include="src\sound\i_sound.h" />
     <ClInclude Include="src\sound\i_soundinternal.h" />
     <ClInclude Include="src\sound\oalsound.h" />
-    <ClInclude Include="src\oplsynth\DEFTYPES.H" />
-    <ClInclude Include="src\oplsynth\muslib.h" />
-    <ClInclude Include="src\oplsynth\nukedopl3.h" />
-    <ClInclude Include="src\oplsynth\opl.h" />
-    <ClInclude Include="src\oplsynth\opl_mus_player.h" />
-    <ClInclude Include="src\oplsynth\dosbox\opl.h" />
-    <ClInclude Include="src\timidity\dls1.h" />
-    <ClInclude Include="src\timidity\dls2.h" />
-    <ClInclude Include="src\timidity\gf1patch.h" />
-    <ClInclude Include="src\timidity\sf2.h" />
-    <ClInclude Include="src\timidity\timidity.h" />
-    <ClInclude Include="src\wildmidi\common.h" />
-    <ClInclude Include="src\wildmidi\file_io.h" />
-    <ClInclude Include="src\wildmidi\gus_pat.h" />
-    <ClInclude Include="src\wildmidi\reverb.h" />
-    <ClInclude Include="src\wildmidi\wildmidi_lib.h" />
-    <ClInclude Include="src\wildmidi\wm_error.h" />
     <ClInclude Include="src\fragglescript\t_fs.h" />
     <ClInclude Include="src\fragglescript\t_script.h" />
     <ClInclude Include="src\textures\bitmap.h" />
@@ -994,10 +959,6 @@
     </CustomBuild>
     <None Include="src\win32\cursor1.cur" />
     <None Include="wadsrc\static\shaders\d3d9\shaders.ps" />
-    <None Include="src\timidity\CHANGES" />
-    <None Include="src\timidity\COPYING" />
-    <None Include="src\timidity\FAQ" />
-    <None Include="src\timidity\README" />
     <CustomBuild Include="src\xlat\xlat_parser.y">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating xlat_parser.c and xlat_parser.h...</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">tools\lemon\lemon.exe "%(FullPath)"

@@ -208,6 +208,9 @@ CVAR(Bool, gl_finishbeforeswap, false, CVAR_ARCHIVE|CVAR_GLOBALCONFIG);
 CVAR(Bool, vid_frametimelog, false, CVAR_ARCHIVE|CVAR_GLOBALCONFIG);
 extern int camtexcount;
 
+#ifndef DWORD
+#define DWORD unsigned int
+#endif
 extern "C" void __stdcall Sleep(DWORD dwMilliseconds);
 extern "C" DWORD __stdcall timeGetTime();
 

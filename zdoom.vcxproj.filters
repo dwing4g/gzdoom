@@ -9,44 +9,14 @@
       <UniqueIdentifier>{e2dd5011-d922-4c39-ba57-681d55ca2f3d}</UniqueIdentifier>
       <Extensions>h</Extensions>
     </Filter>
-    <Filter Include="Render Core">
-      <UniqueIdentifier>{6381f30b-bcd7-4417-b208-a47ffbe75173}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Render Core\Render Sources">
-      <UniqueIdentifier>{351e74b7-666f-430e-ac4f-70f9d60ca18b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Render Core\Render Headers">
-      <UniqueIdentifier>{97249405-8b1f-4de3-a2e7-4be8f5a30f10}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Audio Files">
       <UniqueIdentifier>{c26c013e-55b3-4357-a428-82eafd5c92b5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Audio Files\OPL Synth">
-      <UniqueIdentifier>{df3f6989-0f82-43fe-87a8-b0846bbee484}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Audio Files\OPL Synth\DOSBox">
-      <UniqueIdentifier>{27f69ad1-517f-4633-a940-6748bd310b5d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Audio Files\Timidity">
       <UniqueIdentifier>{ca4d9bdc-c89a-43a9-912a-22a43f7849c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Audio Files\Timidity\Docs">
-      <UniqueIdentifier>{4c5dec3e-5950-407d-a5a1-b5da7dbdfe7e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Audio Files\Timidity\Headers">
-      <UniqueIdentifier>{faca3b09-5a7e-4ce9-bf71-cb91cd331095}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Audio Files\Timidity\Source">
-      <UniqueIdentifier>{797f4ce7-80f3-4641-b8ff-f98066dac7d6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Audio Files\WildMidi">
       <UniqueIdentifier>{5a1f673b-c944-4de8-b258-e2c906ba5313}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Audio Files\WildMidi\Headers">
-      <UniqueIdentifier>{95079f17-9019-455c-a249-15f304745f87}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Audio Files\WildMidi\Source">
-      <UniqueIdentifier>{7ec99353-f1d5-4be1-8eca-76000ae6783d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Render Data">
       <UniqueIdentifier>{c654f841-029c-481e-967b-f984f95c5ee4}</UniqueIdentifier>
@@ -119,6 +89,21 @@
     </Filter>
     <Filter Include="scripting\backend">
       <UniqueIdentifier>{cf84d21e-588d-4aa0-94d9-90780ad717de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="swrenderer">
+      <UniqueIdentifier>{a92e5b91-3396-4f16-a864-051123ad2a27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="polyrenderer">
+      <UniqueIdentifier>{945895cd-1701-4849-a6fe-0dde34300a47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio Files\oplsynth">
+      <UniqueIdentifier>{97707581-7cb5-4b7f-80ad-ccac7a5cc202}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio Files\musicformats">
+      <UniqueIdentifier>{916dee22-872b-4527-a0e6-a2dfced1af73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio Files\mididevices">
+      <UniqueIdentifier>{28d59023-c613-4ff5-9482-5f1e53d5b56c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -605,30 +590,6 @@
     <ClCompile Include="src\intermission\intermission_parse.cpp">
       <Filter>intermission</Filter>
     </ClCompile>
-    <ClCompile Include="src\r_3dfloors.cpp">
-      <Filter>Render Core\Render Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\r_bsp.cpp">
-      <Filter>Render Core\Render Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\r_draw.cpp">
-      <Filter>Render Core\Render Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\r_main.cpp">
-      <Filter>Render Core\Render Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\r_plane.cpp">
-      <Filter>Render Core\Render Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\r_segs.cpp">
-      <Filter>Render Core\Render Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\r_swrenderer.cpp">
-      <Filter>Render Core\Render Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\r_things.cpp">
-      <Filter>Render Core\Render Sources</Filter>
-    </ClCompile>
     <ClCompile Include="src\sound\fmodsound.cpp">
       <Filter>Audio Files</Filter>
     </ClCompile>
@@ -638,131 +599,11 @@
     <ClCompile Include="src\sound\i_sound.cpp">
       <Filter>Audio Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\sound\music_cd.cpp">
-      <Filter>Audio Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sound\music_dumb.cpp">
-      <Filter>Audio Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sound\music_fluidsynth_mididevice.cpp">
-      <Filter>Audio Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sound\music_gme.cpp">
-      <Filter>Audio Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sound\music_hmi_midiout.cpp">
-      <Filter>Audio Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\sound\music_midi_base.cpp">
-      <Filter>Audio Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sound\music_midi_timidity.cpp">
-      <Filter>Audio Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sound\music_midistream.cpp">
-      <Filter>Audio Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sound\music_mus_midiout.cpp">
-      <Filter>Audio Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sound\music_mus_opl.cpp">
-      <Filter>Audio Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\oplsynth\music_opl_mididevice.cpp">
-      <Filter>Audio Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\oplsynth\music_opldumper_mididevice.cpp">
-      <Filter>Audio Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sound\music_pseudo_mididevice.cpp">
-      <Filter>Audio Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sound\music_smf_midiout.cpp">
-      <Filter>Audio Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sound\music_softsynth_mididevice.cpp">
-      <Filter>Audio Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sound\music_stream.cpp">
-      <Filter>Audio Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sound\music_timidity_mididevice.cpp">
-      <Filter>Audio Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sound\music_wildmidi_mididevice.cpp">
-      <Filter>Audio Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sound\music_win_mididevice.cpp">
-      <Filter>Audio Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sound\music_xmi_midiout.cpp">
       <Filter>Audio Files</Filter>
     </ClCompile>
     <ClCompile Include="src\sound\oalsound.cpp">
       <Filter>Audio Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\oplsynth\fmopl.cpp">
-      <Filter>Audio Files\OPL Synth</Filter>
-    </ClCompile>
-    <ClCompile Include="src\oplsynth\mlopl.cpp">
-      <Filter>Audio Files\OPL Synth</Filter>
-    </ClCompile>
-    <ClCompile Include="src\oplsynth\mlopl_io.cpp">
-      <Filter>Audio Files\OPL Synth</Filter>
-    </ClCompile>
-    <ClCompile Include="src\oplsynth\nukedopl3.cpp">
-      <Filter>Audio Files\OPL Synth</Filter>
-    </ClCompile>
-    <ClCompile Include="src\oplsynth\OPL3.cpp">
-      <Filter>Audio Files\OPL Synth</Filter>
-    </ClCompile>
-    <ClCompile Include="src\oplsynth\opl_mus_player.cpp">
-      <Filter>Audio Files\OPL Synth</Filter>
-    </ClCompile>
-    <ClCompile Include="src\oplsynth\dosbox\opl.cpp">
-      <Filter>Audio Files\OPL Synth\DOSBox</Filter>
-    </ClCompile>
-    <ClCompile Include="src\timidity\instrum_font.cpp">
-      <Filter>Audio Files\Timidity</Filter>
-    </ClCompile>
-    <ClCompile Include="src\timidity\common.cpp">
-      <Filter>Audio Files\Timidity\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="src\timidity\instrum.cpp">
-      <Filter>Audio Files\Timidity\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="src\timidity\instrum_dls.cpp">
-      <Filter>Audio Files\Timidity\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="src\timidity\instrum_sf2.cpp">
-      <Filter>Audio Files\Timidity\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="src\timidity\mix.cpp">
-      <Filter>Audio Files\Timidity\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="src\timidity\playmidi.cpp">
-      <Filter>Audio Files\Timidity\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="src\timidity\resample.cpp">
-      <Filter>Audio Files\Timidity\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="src\timidity\timidity.cpp">
-      <Filter>Audio Files\Timidity\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wildmidi\file_io.cpp">
-      <Filter>Audio Files\WildMidi\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wildmidi\gus_pat.cpp">
-      <Filter>Audio Files\WildMidi\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wildmidi\reverb.cpp">
-      <Filter>Audio Files\WildMidi\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wildmidi\wildmidi_lib.cpp">
-      <Filter>Audio Files\WildMidi\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wildmidi\wm_error.cpp">
-      <Filter>Audio Files\WildMidi\Source</Filter>
     </ClCompile>
     <ClCompile Include="src\xlat\parse_xlat.cpp">
       <Filter>xlat</Filter>
@@ -941,12 +782,6 @@
     <ClCompile Include="src\portal.cpp">
       <Filter>Portals</Filter>
     </ClCompile>
-    <ClCompile Include="src\gl\dynlights\a_dynlight.cpp">
-      <Filter>gl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gl\dynlights\gl_dynlight.cpp">
-      <Filter>gl</Filter>
-    </ClCompile>
     <ClCompile Include="src\gl\dynlights\gl_dynlight1.cpp">
       <Filter>gl</Filter>
     </ClCompile>
@@ -1124,9 +959,6 @@
     <ClCompile Include="src\gl\textures\gl_samplers.cpp">
       <Filter>gl</Filter>
     </ClCompile>
-    <ClCompile Include="src\gl\textures\gl_skyboxtexture.cpp">
-      <Filter>gl</Filter>
-    </ClCompile>
     <ClCompile Include="src\gl\textures\gl_texture.cpp">
       <Filter>gl</Filter>
     </ClCompile>
@@ -1134,12 +966,6 @@
       <Filter>gl</Filter>
     </ClCompile>
     <ClCompile Include="src\gl\utility\gl_clock.cpp">
-      <Filter>gl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gl\utility\gl_cycler.cpp">
-      <Filter>gl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gl\utility\gl_geometric.cpp">
       <Filter>gl</Filter>
     </ClCompile>
     <ClCompile Include="src\win32\win32gliface.cpp">
@@ -1274,12 +1100,6 @@
     <ClCompile Include="src\i_module.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\r_draw_pal.cpp">
-      <Filter>Render Core\Render Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\r_drawt_pal.cpp">
-      <Filter>Render Core\Render Sources</Filter>
-    </ClCompile>
     <ClCompile Include="src\g_inventory\a_keys.cpp">
       <Filter>Game\g_inventory</Filter>
     </ClCompile>
@@ -1330,12 +1150,6 @@
     </ClCompile>
     <ClCompile Include="src\scripting\thingdef_properties.cpp">
       <Filter>scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="src\r_thread.cpp">
-      <Filter>!Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\r_walldraw.cpp">
-      <Filter>!Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\gl\shaders\gl_ambientshader.cpp">
       <Filter>gl</Filter>
@@ -1412,8 +1226,164 @@
     <ClCompile Include="src\scripting\backend\scopebarrier.cpp">
       <Filter>scripting\backend</Filter>
     </ClCompile>
-    <ClCompile Include="src\sound\music_audiotoolbox_mididevice.cpp">
+    <ClCompile Include="src\swrenderer\r_all.cpp">
+      <Filter>swrenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\polyrenderer\poly_all.cpp">
+      <Filter>polyrenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gl\dynlights\gl_aabbtree.cpp">
+      <Filter>gl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gl\dynlights\gl_shadowmap.cpp">
+      <Filter>gl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gl\shaders\gl_shadowmapshader.cpp">
+      <Filter>gl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gl\system\gl_swframebuffer.cpp">
+      <Filter>gl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gl\system\gl_swwipe.cpp">
+      <Filter>gl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\musicformats\music_stream.cpp">
       <Filter>Audio Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\oplsynth\fmopl.cpp">
+      <Filter>Audio Files\oplsynth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\oplsynth\mlopl.cpp">
+      <Filter>Audio Files\oplsynth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\oplsynth\mlopl_io.cpp">
+      <Filter>Audio Files\oplsynth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\oplsynth\nukedopl3.cpp">
+      <Filter>Audio Files\oplsynth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\oplsynth\opl_mus_player.cpp">
+      <Filter>Audio Files\oplsynth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\oplsynth\OPL3.cpp">
+      <Filter>Audio Files\oplsynth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\oplsynth\dosbox\opl.cpp">
+      <Filter>Audio Files\oplsynth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\musicformats\music_cd.cpp">
+      <Filter>Audio Files\musicformats</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\musicformats\music_dumb.cpp">
+      <Filter>Audio Files\musicformats</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\musicformats\music_gme.cpp">
+      <Filter>Audio Files\musicformats</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\musicformats\music_hmi_midiout.cpp">
+      <Filter>Audio Files\musicformats</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\musicformats\music_midistream.cpp">
+      <Filter>Audio Files\musicformats</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\musicformats\music_mus_midiout.cpp">
+      <Filter>Audio Files\musicformats</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\musicformats\music_opl.cpp">
+      <Filter>Audio Files\musicformats</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\musicformats\music_smf_midiout.cpp">
+      <Filter>Audio Files\musicformats</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\musicformats\music_xmi_midiout.cpp">
+      <Filter>Audio Files\musicformats</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\timidity\common.cpp">
+      <Filter>Audio Files\Timidity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\timidity\instrum.cpp">
+      <Filter>Audio Files\Timidity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\timidity\instrum_dls.cpp">
+      <Filter>Audio Files\Timidity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\timidity\instrum_font.cpp">
+      <Filter>Audio Files\Timidity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\timidity\instrum_sf2.cpp">
+      <Filter>Audio Files\Timidity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\timidity\mix.cpp">
+      <Filter>Audio Files\Timidity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\timidity\playmidi.cpp">
+      <Filter>Audio Files\Timidity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\timidity\resample.cpp">
+      <Filter>Audio Files\Timidity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\timidity\timidity.cpp">
+      <Filter>Audio Files\Timidity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\wildmidi\file_io.cpp">
+      <Filter>Audio Files\WildMidi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\wildmidi\gus_pat.cpp">
+      <Filter>Audio Files\WildMidi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\wildmidi\reverb.cpp">
+      <Filter>Audio Files\WildMidi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\wildmidi\wildmidi_lib.cpp">
+      <Filter>Audio Files\WildMidi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\wildmidi\wm_error.cpp">
+      <Filter>Audio Files\WildMidi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\mididevices\music_audiotoolbox_mididevice.cpp">
+      <Filter>Audio Files\mididevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\mididevices\music_fluidsynth_mididevice.cpp">
+      <Filter>Audio Files\mididevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\mididevices\music_opl_mididevice.cpp">
+      <Filter>Audio Files\mididevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\mididevices\music_opldumper_mididevice.cpp">
+      <Filter>Audio Files\mididevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\mididevices\music_pseudo_mididevice.cpp">
+      <Filter>Audio Files\mididevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\mididevices\music_softsynth_mididevice.cpp">
+      <Filter>Audio Files\mididevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\mididevices\music_timidity_mididevice.cpp">
+      <Filter>Audio Files\mididevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\mididevices\music_timiditypp_mididevice.cpp">
+      <Filter>Audio Files\mididevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\mididevices\music_wildmidi_mididevice.cpp">
+      <Filter>Audio Files\mididevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\mididevices\music_win_mididevice.cpp">
+      <Filter>Audio Files\mididevices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cycler.cpp">
+      <Filter>!Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_shared\a_dynlight.cpp">
+      <Filter>Game\g_shared</Filter>
+    </ClCompile>
+    <ClCompile Include="src\g_shared\a_dynlightdata.cpp">
+      <Filter>Game\g_shared</Filter>
+    </ClCompile>
+    <ClCompile Include="src\win32\critsec.cpp">
+      <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="src\textures\skyboxtexture.cpp">
+      <Filter>Render Data\Textures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1828,33 +1798,6 @@
     <ClInclude Include="src\win32\win32iface.h">
       <Filter>win32</Filter>
     </ClInclude>
-    <ClInclude Include="src\r_3dfloors.h">
-      <Filter>Render Core\Render Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\r_bsp.h">
-      <Filter>Render Core\Render Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\r_draw.h">
-      <Filter>Render Core\Render Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\r_local.h">
-      <Filter>Render Core\Render Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\r_main.h">
-      <Filter>Render Core\Render Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\r_plane.h">
-      <Filter>Render Core\Render Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\r_segs.h">
-      <Filter>Render Core\Render Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\r_swrenderer.h">
-      <Filter>Render Core\Render Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\r_things.h">
-      <Filter>Render Core\Render Headers</Filter>
-    </ClInclude>
     <ClInclude Include="src\sound\efx.h">
       <Filter>Audio Files</Filter>
     </ClInclude>
@@ -1878,57 +1821,6 @@
     </ClInclude>
     <ClInclude Include="src\sound\oalsound.h">
       <Filter>Audio Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\oplsynth\DEFTYPES.H">
-      <Filter>Audio Files\OPL Synth</Filter>
-    </ClInclude>
-    <ClInclude Include="src\oplsynth\muslib.h">
-      <Filter>Audio Files\OPL Synth</Filter>
-    </ClInclude>
-    <ClInclude Include="src\oplsynth\nukedopl3.h">
-      <Filter>Audio Files\OPL Synth</Filter>
-    </ClInclude>
-    <ClInclude Include="src\oplsynth\opl.h">
-      <Filter>Audio Files\OPL Synth</Filter>
-    </ClInclude>
-    <ClInclude Include="src\oplsynth\opl_mus_player.h">
-      <Filter>Audio Files\OPL Synth</Filter>
-    </ClInclude>
-    <ClInclude Include="src\oplsynth\dosbox\opl.h">
-      <Filter>Audio Files\OPL Synth\DOSBox</Filter>
-    </ClInclude>
-    <ClInclude Include="src\timidity\dls1.h">
-      <Filter>Audio Files\Timidity\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\timidity\dls2.h">
-      <Filter>Audio Files\Timidity\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\timidity\gf1patch.h">
-      <Filter>Audio Files\Timidity\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\timidity\sf2.h">
-      <Filter>Audio Files\Timidity\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\timidity\timidity.h">
-      <Filter>Audio Files\Timidity\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\wildmidi\common.h">
-      <Filter>Audio Files\WildMidi\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\wildmidi\file_io.h">
-      <Filter>Audio Files\WildMidi\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\wildmidi\gus_pat.h">
-      <Filter>Audio Files\WildMidi\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\wildmidi\reverb.h">
-      <Filter>Audio Files\WildMidi\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\wildmidi\wildmidi_lib.h">
-      <Filter>Audio Files\WildMidi\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\wildmidi\wm_error.h">
-      <Filter>Audio Files\WildMidi\Headers</Filter>
     </ClInclude>
     <ClInclude Include="src\fragglescript\t_fs.h">
       <Filter>fragglescript</Filter>
@@ -1988,18 +1880,6 @@
     </None>
     <None Include="wadsrc\static\shaders\d3d9\shaders.ps">
       <Filter>win32</Filter>
-    </None>
-    <None Include="src\timidity\CHANGES">
-      <Filter>Audio Files\Timidity\Docs</Filter>
-    </None>
-    <None Include="src\timidity\COPYING">
-      <Filter>Audio Files\Timidity\Docs</Filter>
-    </None>
-    <None Include="src\timidity\FAQ">
-      <Filter>Audio Files\Timidity\Docs</Filter>
-    </None>
-    <None Include="src\timidity\README">
-      <Filter>Audio Files\Timidity\Docs</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
