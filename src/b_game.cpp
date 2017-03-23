@@ -387,11 +387,6 @@ bool FCajunMaster::DoAddBot (uint8_t *info, botskill_t skill)
 		Printf ("%s joined the game\n", players[bnum].userinfo.GetName());
 
 	G_DoReborn (bnum, true);
-	if (StatusBar != NULL)
-	{
-		StatusBar->MultiplayerChanged ();
-	}
-
 	return true;
 }
 
@@ -631,4 +626,12 @@ ADD_STAT (bots)
 		BotThinkCycles.TimeMS(), BotSupportCycles.TimeMS(),
 		BotWTG);
 	return out;
+}
+
+DEFINE_ACTION_FUNCTION(FLevelLocals, RemoveAllBots)
+{
+	PARAM_PROLOGUE;
+	PARAM_BOOL(fromlist);
+	bglobal.RemoveAllBots(fromlist);
+	return 0;
 }

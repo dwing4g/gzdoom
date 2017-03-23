@@ -32,7 +32,7 @@
 #include "poly_decal.h"
 #include "polyrenderer/poly_renderer.h"
 #include "r_sky.h"
-#include "swrenderer/scene/r_light.h"
+#include "polyrenderer/scene/poly_light.h"
 #include "g_levellocals.h"
 
 EXTERN_CVAR(Bool, r_drawmirrors)
@@ -249,9 +249,9 @@ void RenderPolyWall::Render(const TriMatrix &worldToClip, const Vec4f &clipPlane
 	}
 
 	PolyDrawArgs args;
-	args.uniforms.globvis = (float)PolyRenderer::Instance()->Thread.Light->WallGlobVis(foggy);
+	args.uniforms.globvis = (float)PolyRenderer::Instance()->Light.WallGlobVis(foggy);
 	args.uniforms.light = (uint32_t)(GetLightLevel() / 255.0f * 256.0f);
-	args.uniforms.flags = 0;
+	args.uniforms.flags = TriUniforms::nearest_filter;
 	args.uniforms.subsectorDepth = SubsectorDepth;
 	args.objectToClip = &worldToClip;
 	args.vinput = vertices;
@@ -276,10 +276,9 @@ void RenderPolyWall::Render(const TriMatrix &worldToClip, const Vec4f &clipPlane
 		PolyTriangleDrawer::draw(args);
 		Polyportal->Shape.push_back({ args.vinput, args.vcount, args.ccw, args.uniforms.subsectorDepth });
 
-		int sx1, sx2;
-		LineSegmentRange range = cull.GetSegmentRangeForLine(v1.X, v1.Y, v2.X, v2.Y, sx1, sx2);
-		if (range == LineSegmentRange::HasSegment)
-			Polyportal->Segments.push_back({ sx1, sx2 });
+		angle_t angle1, angle2;
+		if (cull.GetAnglesForLine(v1.X, v1.Y, v2.X, v2.Y, angle1, angle2))
+			Polyportal->Segments.push_back({ angle1, angle2 });
 	}
 	else if (!Masked)
 	{
@@ -354,7 +353,7 @@ FTexture *RenderPolyWall::GetTexture()
 
 int RenderPolyWall::GetLightLevel()
 {
-	swrenderer::CameraLight *cameraLight = swrenderer::CameraLight::Instance();
+	PolyCameraLight *cameraLight = PolyCameraLight::Instance();
 	if (cameraLight->FixedLightLevel() >= 0 || cameraLight->FixedColormap())
 	{
 		return 255;
@@ -362,7 +361,7 @@ int RenderPolyWall::GetLightLevel()
 	else
 	{
 		bool foggy = false;
-		int actualextralight = foggy ? 0 : PolyRenderer::Instance()->Thread.Viewport->viewpoint.extralight << 4;
+		int actualextralight = foggy ? 0 : PolyRenderer::Instance()->Viewpoint.extralight << 4;
 		return clamp(Side->GetLightLevel(foggy, LineSeg->frontsector->lightlevel) + actualextralight, 0, 255);
 	}
 }

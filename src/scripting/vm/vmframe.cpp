@@ -384,12 +384,6 @@ VMFrame *VMFrameStack::PopFrame()
 	{
 		(regs++)->~FString();
 	}
-	// Free any parameters this frame left behind.
-	VMValue *param = frame->GetParam();
-	for (int i = frame->NumParam; i != 0; --i)
-	{
-		(param++)->~VMValue();
-	}
 	VMFrame *parent = frame->ParentFrame;
 	if (parent == NULL)
 	{
@@ -446,11 +440,11 @@ int VMFrameStack::Call(VMFunction *func, VMValue *params, int numparams, VMRetur
 			auto code = static_cast<VMScriptFunction *>(func)->Code;
 			// handle empty functions consisting of a single return explicitly so that empty virtual callbacks do not need to set up an entire VM frame.
 			// code cann be null here in case of some non-fatal DECORATE errors.
-			if (code == nullptr || code->word == 0x0080804e)
+			if (code == nullptr || code->word == (0x00808000|OP_RET))
 			{
 				return 0;
 			}
-			else if (code->word == 0x0004804e)
+			else if (code->word == (0x00048000|OP_RET))
 			{
 				if (numresults == 0) return 0;
 				results[0].SetInt(static_cast<VMScriptFunction *>(func)->KonstD[0]);
@@ -569,6 +563,14 @@ void ThrowAbortException(EVMAbortException reason, const char *moreinfo, ...)
 	va_start(ap, moreinfo);
 	throw CVMAbortException(reason, moreinfo, ap);
 	va_end(ap);
+}
+
+DEFINE_ACTION_FUNCTION(DObject, ThrowAbortException)
+{
+	PARAM_PROLOGUE;
+	FString s = FStringFormat(param, defaultparam, numparam, ret, numret);
+	ThrowAbortException(X_OTHER, s.GetChars());
+	return 0;
 }
 
 void NullParam(const char *varname)

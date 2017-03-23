@@ -50,6 +50,8 @@
 #include "gdtoa.h"
 #include "backend/vmbuilder.h"
 
+FSharedStringArena VMStringConstants;
+
 static int GetIntConst(FxExpression *ex, FCompileContext &ctx)
 {
 	ex = new FxIntCast(ex, false);
@@ -64,11 +66,13 @@ static double GetFloatConst(FxExpression *ex, FCompileContext &ctx)
 	return ex ? static_cast<FxConstant*>(ex)->GetValue().GetFloat() : 0;
 }
 
-static FString GetStringConst(FxExpression *ex, FCompileContext &ctx)
+const char * ZCCCompiler::GetStringConst(FxExpression *ex, FCompileContext &ctx)
 {
 	ex = new FxStringCast(ex);
 	ex = ex->Resolve(ctx);
-	return ex ? static_cast<FxConstant*>(ex)->GetValue().GetString() : FString();
+	if (!ex) return "";
+	// The string here must be stored in a persistent place that lasts long enough to have it processed.
+	return AST.Strings.Alloc(static_cast<FxConstant*>(ex)->GetValue().GetString())->GetChars();
 }
 
 int ZCCCompiler::IntConstFromNode(ZCC_TreeNode *node, PStruct *cls)
@@ -1211,6 +1215,9 @@ bool ZCCCompiler::CompileFields(PStruct *type, TArray<ZCC_VarDeclarator *> &Fiel
 			ZCC_Latent | ZCC_Final | ZCC_Action | ZCC_Static | ZCC_FuncConst | ZCC_Abstract | ZCC_Virtual | ZCC_Override | ZCC_Meta | ZCC_Extension | ZCC_VirtualScope | ZCC_ClearScope :
 			ZCC_Latent | ZCC_Final | ZCC_Action | ZCC_Static | ZCC_FuncConst | ZCC_Abstract | ZCC_Virtual | ZCC_Override | ZCC_Extension | ZCC_VirtualScope | ZCC_ClearScope;
 
+		// Some internal fields need to be set to clearscope.
+		if (Wads.GetLumpFile(Lump) == 0) notallowed &= ~ZCC_ClearScope;
+
 		if (field->Flags & notallowed)
 		{
 			Error(field, "Invalid qualifiers for %s (%s not allowed)", FName(field->Names->Name).GetChars(), FlagsToString(field->Flags & notallowed).GetChars());
@@ -1851,6 +1858,12 @@ void ZCCCompiler::DispatchProperty(FPropertyInfo *prop, ZCC_PropertyStmt *proper
 							params[0].i++;
 						}
 						exp = static_cast<ZCC_Expression *>(exp->SiblingNext);
+						if (exp != property->Values)
+						{
+							ex = ConvertNode(exp);
+							ex = ex->Resolve(ctx);
+							if (ex == nullptr) return;
+						}
 					} while (exp != property->Values);
 					goto endofparm;
 				}
@@ -1951,6 +1964,11 @@ void ZCCCompiler::DispatchScriptProperty(PProperty *prop, ZCC_PropertyStmt *prop
 	for (auto f : prop->Variables)
 	{
 		void *addr;
+		if (f == nullptr)
+		{
+			// This variable was missing. The error had been reported for the property itself already.
+			return;
+		}
 
 		if (f->Flags & VARF_Meta)
 		{
@@ -1988,7 +2006,7 @@ void ZCCCompiler::DispatchScriptProperty(PProperty *prop, ZCC_PropertyStmt *prop
 		}
 		else if (f->Type == TypeColor && ex->ValueType == TypeString)	// colors can also be specified as ints.
 		{
-			*(PalEntry*)addr = V_GetColor(nullptr, GetStringConst(ex, ctx).GetChars(), &ex->ScriptPosition);
+			*(PalEntry*)addr = V_GetColor(nullptr, GetStringConst(ex, ctx), &ex->ScriptPosition);
 		}
 		else if (f->Type->IsKindOf(RUNTIME_CLASS(PInt)))
 		{
@@ -2005,16 +2023,23 @@ void ZCCCompiler::DispatchScriptProperty(PProperty *prop, ZCC_PropertyStmt *prop
 		else if (f->Type->IsKindOf(RUNTIME_CLASS(PClassPointer)))
 		{
 			auto clsname = GetStringConst(ex, ctx);
-			auto cls = PClass::FindClass(clsname);
-			if (cls == nullptr)
+			if (*clsname == 0 || !stricmp(clsname, "none"))
 			{
-				cls = static_cast<PClassPointer*>(f->Type)->ClassRestriction->FindClassTentative(clsname);
+				*(PClass**)addr = nullptr;
 			}
-			else if (!cls->IsDescendantOf(static_cast<PClassPointer*>(f->Type)->ClassRestriction))
+			else
 			{
-				Error(property, "class %s is not compatible with property type %s", clsname.GetChars(), static_cast<PClassPointer*>(f->Type)->ClassRestriction->TypeName.GetChars());
+				auto cls = PClass::FindClass(clsname);
+				if (cls == nullptr)
+				{
+					cls = static_cast<PClassPointer*>(f->Type)->ClassRestriction->FindClassTentative(clsname);
+				}
+				else if (!cls->IsDescendantOf(static_cast<PClassPointer*>(f->Type)->ClassRestriction))
+				{
+					Error(property, "class %s is not compatible with property type %s", clsname, static_cast<PClassPointer*>(f->Type)->ClassRestriction->TypeName.GetChars());
+				}
+				*(PClass**)addr = cls;
 			}
-			*(PClass**)addr = cls;
 		}
 		else
 		{
@@ -2532,7 +2557,8 @@ void ZCCCompiler::CompileFunction(ZCC_StructWork *c, ZCC_FuncDeclarator *f, bool
 									break;
 
 								case REGT_STRING:
-									vmval[0] = cnst->GetValue().GetString();
+									// We need a reference to something permanently stored here.
+									vmval[0] = VMStringConstants.Alloc(cnst->GetValue().GetString());
 									break;
 
 								default:

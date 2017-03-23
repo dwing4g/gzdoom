@@ -784,7 +784,6 @@ file( GLOB HEADER_FILES
 	polyrenderer/*.h
 	polyrenderer/math/*.h
 	polyrenderer/drawers/*.h
-	polyrenderer/drawers/*.php
 	polyrenderer/scene/*.h
 	gl/*.h
 	gl/api/*.h
@@ -862,6 +861,7 @@ set( POLYRENDER_SOURCES
 	polyrenderer/scene/poly_wallsprite.cpp
 	polyrenderer/scene/poly_sprite.cpp
 	polyrenderer/scene/poly_sky.cpp
+	polyrenderer/scene/poly_light.cpp
 	polyrenderer/drawers/poly_buffer.cpp
 	polyrenderer/drawers/poly_triangle.cpp
 	polyrenderer/drawers/poly_draw_args.cpp
@@ -1096,7 +1096,6 @@ set (PCH_SOURCES
 	g_statusbar/sbarinfo.cpp
 	g_statusbar/sbar_mugshot.cpp
 	g_statusbar/shared_sbar.cpp
-	g_statusbar/strife_sbar.cpp
 	gl/compatibility/gl_20.cpp
 	gl/data/gl_data.cpp
 	gl/data/gl_portaldata.cpp

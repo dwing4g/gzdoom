@@ -29,7 +29,7 @@
 #include "poly_portal.h"
 #include "polyrenderer/poly_renderer.h"
 #include "r_sky.h"
-#include "swrenderer/scene/r_light.h"
+#include "polyrenderer/scene/poly_light.h"
 
 EXTERN_CVAR(Int, r_3dfloors)
 
@@ -39,7 +39,7 @@ void RenderPolyPlane::RenderPlanes(const TriMatrix &worldToClip, const Vec4f &cl
 
 	if (r_3dfloors)
 	{
-		const auto &viewpoint = PolyRenderer::Instance()->Thread.Viewport->viewpoint;
+		const auto &viewpoint = PolyRenderer::Instance()->Viewpoint;
 
 		auto frontsector = sub->sector;
 		auto &ffloors = frontsector->e->XFloor.ffloors;
@@ -98,7 +98,7 @@ void RenderPolyPlane::Render3DFloor(const TriMatrix &worldToClip, const Vec4f &c
 	if (tex->UseType == FTexture::TEX_Null)
 		return;
 
-	swrenderer::CameraLight *cameraLight = swrenderer::CameraLight::Instance();
+	PolyCameraLight *cameraLight = PolyCameraLight::Instance();
 
 	int lightlevel = 255;
 	bool foggy = false;
@@ -112,11 +112,11 @@ void RenderPolyPlane::Render3DFloor(const TriMatrix &worldToClip, const Vec4f &c
 	UVTransform xform(ceiling ? fakeFloor->top.model->planes[sector_t::ceiling].xform : fakeFloor->top.model->planes[sector_t::floor].xform, tex);
 
 	PolyDrawArgs args;
-	args.uniforms.globvis = (float)PolyRenderer::Instance()->Thread.Light->SlopePlaneGlobVis(foggy) * 48.0f;
+	args.uniforms.globvis = (float)PolyRenderer::Instance()->Light.WallGlobVis(foggy); // .SlopePlaneGlobVis(foggy) * 48.0f;
 	args.uniforms.light = (uint32_t)(lightlevel / 255.0f * 256.0f);
 	if (cameraLight->FixedLightLevel() >= 0 || cameraLight->FixedColormap())
 		args.uniforms.light = 256;
-	args.uniforms.flags = 0;
+	args.uniforms.flags = TriUniforms::nearest_filter;
 	args.uniforms.subsectorDepth = subsectorDepth;
 
 	TriVertex *vertices = PolyVertexBuffer::GetVertices(sub->numlines);
@@ -156,7 +156,7 @@ void RenderPolyPlane::Render3DFloor(const TriMatrix &worldToClip, const Vec4f &c
 
 void RenderPolyPlane::Render(const TriMatrix &worldToClip, const Vec4f &clipPlane, PolyCull &cull, subsector_t *sub, uint32_t subsectorDepth, uint32_t stencilValue, bool ceiling, double skyHeight, std::vector<std::unique_ptr<PolyDrawSectorPortal>> &sectorPortals)
 {
-	const auto &viewpoint = PolyRenderer::Instance()->Thread.Viewport->viewpoint;
+	const auto &viewpoint = PolyRenderer::Instance()->Viewpoint;
 	std::vector<PolyPortalSegment> portalSegments;
 	FSectorPortal *portal = nullptr;// sub->sector->ValidatePortal(ceiling ? sector_t::ceiling : sector_t::floor);
 	bool foggy = false;
@@ -208,10 +208,9 @@ void RenderPolyPlane::Render(const TriMatrix &worldToClip, const Vec4f &clipPlan
 				vdist = dist;
 			}
 
-			int sx1, sx2;
-			LineSegmentRange range = cull.GetSegmentRangeForLine(line->v1->fX(), line->v1->fY(), line->v2->fX(), line->v2->fY(), sx1, sx2);
-			if (range == LineSegmentRange::HasSegment)
-				portalSegments.push_back({ sx1, sx2 });
+			angle_t angle1, angle2;
+			if (cull.GetAnglesForLine(line->v1->fX(), line->v1->fY(), line->v2->fX(), line->v2->fY(), angle1, angle2))
+				portalSegments.push_back({ angle1, angle2 });
 		}
 
 		if (inside)
@@ -307,14 +306,14 @@ void RenderPolyPlane::Render(const TriMatrix &worldToClip, const Vec4f &clipPlan
 
 	UVTransform transform(ceiling ? frontsector->planes[sector_t::ceiling].xform : frontsector->planes[sector_t::floor].xform, tex);
 
-	swrenderer::CameraLight *cameraLight = swrenderer::CameraLight::Instance();
+	PolyCameraLight *cameraLight = PolyCameraLight::Instance();
 
 	PolyDrawArgs args;
-	args.uniforms.globvis = (float)PolyRenderer::Instance()->Thread.Light->SlopePlaneGlobVis(foggy) * 48.0f;
+	args.uniforms.globvis = (float)PolyRenderer::Instance()->Light.WallGlobVis(foggy);// ->SlopePlaneGlobVis(foggy) * 48.0f;
 	args.uniforms.light = (uint32_t)(frontsector->lightlevel / 255.0f * 256.0f);
 	if (cameraLight->FixedLightLevel() >= 0 || cameraLight->FixedColormap())
 		args.uniforms.light = 256;
-	args.uniforms.flags = 0;
+	args.uniforms.flags = TriUniforms::nearest_filter;
 	args.uniforms.subsectorDepth = isSky ? RenderPolyScene::SkySubsectorDepth : subsectorDepth;
 
 	TriVertex *vertices = PolyVertexBuffer::GetVertices(sub->numlines);

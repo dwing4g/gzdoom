@@ -761,6 +761,12 @@ DEFINE_ACTION_FUNCTION(_PlayerInfo, GetTeam)
 	ACTION_RETURN_INT(self->userinfo.GetTeam());
 }
 
+DEFINE_ACTION_FUNCTION(_PlayerInfo, GetNoAutostartMap)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(player_t);
+	ACTION_RETURN_INT(self->userinfo.GetNoAutostartMap());
+}
+
 
 //===========================================================================
 //
@@ -3465,6 +3471,7 @@ DEFINE_FIELD_X(PlayerInfo, player_t, cmd)
 DEFINE_FIELD_X(PlayerInfo, player_t, original_cmd)
 DEFINE_FIELD_X(PlayerInfo, player_t, userinfo)
 DEFINE_FIELD_X(PlayerInfo, player_t, weapons)
+DEFINE_FIELD_NAMED_X(PlayerInfo, player_t, cmd.ucmd.buttons, buttons)
 
 DEFINE_FIELD(FPlayerClass, Type)
 DEFINE_FIELD(FPlayerClass, Flags)

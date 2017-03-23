@@ -59,6 +59,8 @@
 #include "teaminfo.h"
 #include "r_data/sprites.h"
 #include "serializer.h"
+#include "wi_stuff.h"
+#include "a_dynlight.h"
 
 static TArray<FPropertyInfo*> properties;
 static TArray<AFuncDesc> AFTable;
@@ -478,6 +480,16 @@ static FFlagDef PlayerPawnFlagDefs[] =
 	DEFINE_FLAG(PPF, CROUCHABLEMORPH, APlayerPawn, PlayerFlags),
 };
 
+static FFlagDef DynLightFlagDefs[] =
+{
+	// PlayerPawn flags
+	DEFINE_FLAG(MF4, SUBTRACTIVE, ADynamicLight, flags4),
+	DEFINE_FLAG(MF4, ADDITIVE, ADynamicLight, flags4),
+	DEFINE_FLAG(MF4, DONTLIGHTSELF, ADynamicLight, flags4),
+	DEFINE_FLAG(MF4, ATTENUATE, ADynamicLight, flags4),
+	DEFINE_FLAG(MF4, NOSHADOWMAP, ADynamicLight, flags4),
+};
+
 static FFlagDef PowerSpeedFlagDefs[] =
 {
 	// PowerSpeed flags
@@ -873,6 +885,11 @@ void InitThingdef()
 			return true;
 		}
 	);
+
+	auto wbplayerstruct = NewNativeStruct("WBPlayerStruct", nullptr);
+	wbplayerstruct->Size = sizeof(wbplayerstruct_t);
+	wbplayerstruct->Align = alignof(wbplayerstruct_t);
+	
 
 	// Argh. It sucks when bad hacks need to be supported. WP_NOCHANGE is just a bogus pointer but it used everywhere as a special flag.
 	// It cannot be defined as constant because constants can either be numbers or strings but nothing else, so the only 'solution'

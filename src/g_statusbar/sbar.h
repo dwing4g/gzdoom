@@ -43,8 +43,6 @@
 class player_t;
 struct FRemapTable;
 
-extern int SB_state;
-
 enum EHudState
 {
 	HUD_StatusBar,
@@ -55,8 +53,6 @@ enum EHudState
 };
 
 class AWeapon;
-
-void ST_SetNeedRefresh();
 
 bool ST_IsTimeVisible();
 bool ST_IsLatencyVisible();
@@ -341,7 +337,8 @@ public:
 		ST_DEADFACE			= ST_GODFACE + 1
 	};
 
-	DBaseStatusBar (int reltop, int hres=320, int vres=200);
+	DBaseStatusBar ();
+	void SetSize(int reltop = 32, int hres = 320, int vres = 200);
 	void OnDestroy() override;
 
 	void AttachMessage (DHUDMessage *msg, uint32_t id=0, int layer=HUDMSGLayer_Default);
@@ -358,20 +355,21 @@ public:
 	void SerializeMessages(FSerializer &arc);
 
 	virtual void SetScaled(bool scale, bool force = false);
+	void CallSetScaled(bool scale, bool force = false);
 	virtual void Tick ();
+	void CallTick();
 	virtual void Draw (EHudState state);
+	void CallDraw(EHudState state);
 			void DrawBottomStuff (EHudState state);
 			void DrawTopStuff (EHudState state);
-	virtual void FlashItem (const PClass *itemtype);
-	virtual void AttachToPlayer (player_t *player);
+	void FlashItem (const PClass *itemtype);
+	void AttachToPlayer(player_t *player);
 	virtual void FlashCrosshair ();
 	virtual void BlendView (float blend[4]);
-	virtual void NewGame ();
+	void NewGame ();
 	virtual void ScreenSizeChanged ();
-	virtual void MultiplayerChanged ();
-	virtual void SetInteger (int pname, int param);
-	virtual void ShowPop (int popnum);
-	virtual void ReceivedWeapon (AWeapon *weapon);
+	void CallScreenSizeChanged();
+	void ShowPop (int popnum);
 	virtual bool MustDrawLog(EHudState state);
 	virtual void SetMugShotState (const char *state_name, bool wait_till_done=false, bool reset=false);
 	void DrawLog();
@@ -383,13 +381,11 @@ public:
 	}
 
 
-protected:
+//protected:
 	void DrawPowerups ();
 
 	
 	void RefreshBackground () const;
-
-	void GetCurrentAmmo (AInventory *&ammo1, AInventory *&ammo2, int &ammocount1, int &ammocount2) const;
 
 public:
 	AInventory *ValidateInvFirst (int numVisible) const;
@@ -404,20 +400,19 @@ public:
 	bool CompleteBorder;
 	double CrosshairSize;
 	double Displacement;
+	bool ShowLog;
 
 	FImageCollection Images;
 
 	player_t *CPlayer;
 
 private:
-	DBaseStatusBar() {}
 	bool RepositionCoords (int &x, int &y, int xo, int yo, const int w, const int h) const;
 	void DrawMessages (int layer, int bottom);
 	void DrawConsistancy () const;
 	void DrawWaiting () const;
 
 	TObjPtr<DHUDMessage*> Messages[NUM_HUDMSGLAYERS];
-	bool ShowLog;
 };
 
 extern DBaseStatusBar *StatusBar;

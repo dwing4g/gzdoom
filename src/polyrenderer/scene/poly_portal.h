@@ -36,8 +36,8 @@ struct PolyPortalVertexRange
 class PolyPortalSegment
 {
 public:
-	PolyPortalSegment(int x1, int x2) : X1(x1), X2(x2) { }
-	int X1, X2;
+	PolyPortalSegment(angle_t start, angle_t end) : Start(start), End(end) { }
+	angle_t Start, End;
 };
 
 class PolyDrawSectorPortal
@@ -64,7 +64,7 @@ private:
 	int savedextralight;
 	DVector3 savedpos;
 	DRotator savedangles;
-	double savedvisibility;
+	//double savedvisibility;
 	AActor *savedcamera;
 	sector_t *savedsector;
 };

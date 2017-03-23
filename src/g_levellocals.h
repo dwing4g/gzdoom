@@ -10,6 +10,7 @@ struct FLevelLocals
 {
 	void Tick ();
 	void AddScroller (int secnum);
+	void SetInterMusic(const char *nextmap);
 
 	uint8_t		md5[16];			// for savegame validation. If the MD5 does not match the savegame won't be loaded.
 	int			time;			// time in the hub
@@ -117,7 +118,7 @@ struct FLevelLocals
 
 	node_t		*HeadNode() const
 	{
-		return &nodes[nodes.Size() - 1];
+		return nodes.Size() == 0? nullptr : &nodes[nodes.Size() - 1];
 	}
 	node_t		*HeadGamenode() const
 	{

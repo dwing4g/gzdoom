@@ -87,7 +87,6 @@ DBaseStatusBar *StatusBar;
 extern int setblocks;
 
 int gST_X, gST_Y;
-int SB_state = 3;
 
 FTexture *CrosshairImage;
 static int CrosshairNum;
@@ -107,7 +106,7 @@ CUSTOM_CVAR (Bool, st_scale, true, CVAR_ARCHIVE)
 {
 	if (StatusBar)
 	{
-		StatusBar->SetScaled (self);
+		StatusBar->CallSetScaled (self);
 		setsizeneeded = true;
 	}
 }
@@ -221,37 +220,41 @@ void ST_Clear()
 
 //---------------------------------------------------------------------------
 //
-// ST_SetNeedRefresh
-//
-//---------------------------------------------------------------------------
-
-void ST_SetNeedRefresh()
-{
-	SB_state = (StatusBar == NULL || screen == NULL) ? 0 : screen->GetPageCount();
-}
-
-//---------------------------------------------------------------------------
-//
 // Constructor
 //
 //---------------------------------------------------------------------------
 
-DBaseStatusBar::DBaseStatusBar (int reltop, int hres, int vres)
+DBaseStatusBar::DBaseStatusBar ()
 {
 	CompleteBorder = false;
 	Centering = false;
 	FixedOrigin = false;
 	CrosshairSize = 1.;
-	RelTop = reltop;
 	memset(Messages, 0, sizeof(Messages));
 	Displacement = 0;
 	CPlayer = NULL;
 	ShowLog = false;
+}
+
+void DBaseStatusBar::SetSize(int reltop, int hres, int vres)
+{
+	RelTop = reltop;
 	HorizontalResolution = hres;
 	VerticalResolution = vres;
 
-	SetScaled (st_scale);
+	CallSetScaled(st_scale);
 }
+
+DEFINE_ACTION_FUNCTION(DBaseStatusBar, SetSize)
+{
+	PARAM_SELF_PROLOGUE(DBaseStatusBar);
+	PARAM_INT_DEF(rt);
+	PARAM_INT_DEF(vw);
+	PARAM_INT_DEF(vh);
+	self->SetSize(rt, vw, vh);
+	return 0;
+}
+
 
 //---------------------------------------------------------------------------
 //
@@ -319,7 +322,25 @@ void DBaseStatusBar::SetScaled (bool scale, bool force)
 		Displacement = 0;
 	}
 	gST_X = ST_X;
-	ST_SetNeedRefresh();
+}
+
+DEFINE_ACTION_FUNCTION(DBaseStatusBar, SetScaled)
+{
+	PARAM_SELF_PROLOGUE(DBaseStatusBar);
+	PARAM_BOOL(scale);
+	PARAM_BOOL_DEF(force);
+	self->SetScaled(scale, force);
+	return 0;
+}
+
+void DBaseStatusBar::CallSetScaled(bool scale, bool force)
+{
+	IFVIRTUAL(DBaseStatusBar, SetScaled)
+	{
+		VMValue params[] = { (DObject*)this, scale, force };
+		GlobalVMStack.Call(func, params, countof(params), nullptr, 0);
+	}
+	else SetScaled(scale, force);
 }
 
 //---------------------------------------------------------------------------
@@ -328,10 +349,13 @@ void DBaseStatusBar::SetScaled (bool scale, bool force)
 //
 //---------------------------------------------------------------------------
 
-void DBaseStatusBar::AttachToPlayer (player_t *player)
+void DBaseStatusBar::AttachToPlayer(player_t *player)
 {
-	CPlayer = player;
-	ST_SetNeedRefresh();
+	IFVIRTUAL(DBaseStatusBar, AttachToPlayer)
+	{
+		VMValue params[] = { (DObject*)this, player };
+		GlobalVMStack.Call(func, params, countof(params), nullptr, 0);
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -343,17 +367,6 @@ void DBaseStatusBar::AttachToPlayer (player_t *player)
 int DBaseStatusBar::GetPlayer ()
 {
 	return int(CPlayer - players);
-}
-
-//---------------------------------------------------------------------------
-//
-// PROC MultiplayerChanged
-//
-//---------------------------------------------------------------------------
-
-void DBaseStatusBar::MultiplayerChanged ()
-{
-	ST_SetNeedRefresh();
 }
 
 //---------------------------------------------------------------------------
@@ -395,6 +408,23 @@ void DBaseStatusBar::Tick ()
 			}
 		}
 	}
+}
+
+DEFINE_ACTION_FUNCTION(DBaseStatusBar, Tick)
+{
+	PARAM_SELF_PROLOGUE(DBaseStatusBar);
+	self->Tick();
+	return 0;
+}
+
+void DBaseStatusBar::CallTick()
+{
+	IFVIRTUAL(DBaseStatusBar, Tick)
+	{
+		VMValue params[] = { (DObject*)this };
+		GlobalVMStack.Call(func, params, countof(params), nullptr, 0);
+	}
+	else Tick();
 }
 
 //---------------------------------------------------------------------------
@@ -460,11 +490,6 @@ DHUDMessage *DBaseStatusBar::DetachMessage (DHUDMessage *msg)
 		{
 			*prev = probe->Next;
 			probe->Next = NULL;
-			// Redraw the status bar in case it was covered
-			if (screen != NULL)
-			{
-				ST_SetNeedRefresh();
-			}
 			return probe;
 		}
 	}
@@ -487,11 +512,6 @@ DHUDMessage *DBaseStatusBar::DetachMessage (uint32_t id)
 		{
 			*prev = probe->Next;
 			probe->Next = NULL;
-			// Redraw the status bar in case it was covered
-			if (screen != NULL)
-			{
-				ST_SetNeedRefresh();
-			}
 			return probe;
 		}
 	}
@@ -587,6 +607,13 @@ void DBaseStatusBar::RefreshBackground () const
 			}
 		}
 	}
+}
+
+DEFINE_ACTION_FUNCTION(DBaseStatusBar, RefreshBackground)
+{
+	PARAM_SELF_PROLOGUE(DBaseStatusBar);
+	self->RefreshBackground();
+	return 0;
 }
 
 //---------------------------------------------------------------------------
@@ -734,7 +761,7 @@ void DBaseStatusBar::Draw (EHudState state)
 
 	char line[64+10];
 
-	if ((SB_state != 0 || BorderNeedRefresh) && state == HUD_StatusBar)
+	if (state == HUD_StatusBar)
 	{
 		RefreshBackground ();
 	}
@@ -902,6 +929,25 @@ void DBaseStatusBar::Draw (EHudState state)
 	}
 }
 
+DEFINE_ACTION_FUNCTION(DBaseStatusBar, Draw)
+{
+	PARAM_SELF_PROLOGUE(DBaseStatusBar);
+	PARAM_INT(state);
+	self->Draw((EHudState)state);
+	return 0;
+}
+
+void DBaseStatusBar::CallDraw(EHudState state)
+{
+	IFVIRTUAL(DBaseStatusBar, Draw)
+	{
+		VMValue params[] = { (DObject*)this, state, r_viewpoint.TicFrac };
+		GlobalVMStack.Call(func, params, countof(params), nullptr, 0);
+	}
+	else Draw(state);
+}
+
+
 
 void DBaseStatusBar::DrawLog ()
 {
@@ -959,13 +1005,27 @@ void DBaseStatusBar::DrawLog ()
 	}
 }
 
-bool DBaseStatusBar::MustDrawLog(EHudState)
+bool DBaseStatusBar::MustDrawLog(EHudState state)
 {
+	IFVIRTUAL(DBaseStatusBar, MustDrawLog)
+	{
+		VMValue params[] = { (DObject*)this };
+		int rv;
+		VMReturn ret(&rv);
+		GlobalVMStack.Call(func, params, countof(params), &ret, 1);
+		return !!rv;
+	}
 	return true;
 }
 
 void DBaseStatusBar::SetMugShotState(const char *stateName, bool waitTillDone, bool reset)
 {
+	IFVIRTUAL(DBaseStatusBar, SetMugShotState)
+	{
+		FString statestring = stateName;
+		VMValue params[] = { (DObject*)this, &statestring, waitTillDone, reset };
+		GlobalVMStack.Call(func, params, countof(params), nullptr, 0);
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -1154,32 +1214,31 @@ void DBaseStatusBar::DrawWaiting () const
 
 void DBaseStatusBar::FlashItem (const PClass *itemtype)
 {
+	IFVIRTUAL(DBaseStatusBar, FlashItem)
+	{
+		VMValue params[] = { (DObject*)this, (PClass*)itemtype };
+		GlobalVMStack.Call(func, params, countof(params), nullptr, 0);
+	}
 }
 
 void DBaseStatusBar::NewGame ()
 {
+	IFVIRTUAL(DBaseStatusBar, NewGame)
+	{
+		VMValue params[] = { (DObject*)this };
+		GlobalVMStack.Call(func, params, countof(params), nullptr, 0);
+	}
 }
 
-void DBaseStatusBar::SetInteger (int pname, int param)
+void DBaseStatusBar::ShowPop(int pop)
 {
+	IFVIRTUAL(DBaseStatusBar, ShowPop)
+	{
+		VMValue params[] = { (DObject*)this, pop };
+		GlobalVMStack.Call(func, params, countof(params), nullptr, 0);
+	}
 }
 
-void DBaseStatusBar::ShowPop (int popnum)
-{
-	ShowLog = (popnum == POP_Log && !ShowLog);
-}
-
-void DBaseStatusBar::ReceivedWeapon (AWeapon *weapon)
-{
-}
-
-DEFINE_ACTION_FUNCTION(_StatusBar, ReceivedWeapon)
-{
-	PARAM_PROLOGUE;
-	PARAM_POINTER(w, AWeapon);
-	StatusBar->ReceivedWeapon(w);
-	return 0;
-}
 
 
 void DBaseStatusBar::SerializeMessages(FSerializer &arc)
@@ -1190,7 +1249,6 @@ void DBaseStatusBar::SerializeMessages(FSerializer &arc)
 void DBaseStatusBar::ScreenSizeChanged ()
 {
 	st_scale.Callback ();
-	ST_SetNeedRefresh();
 
 	for (size_t i = 0; i < countof(Messages); ++i)
 	{
@@ -1201,6 +1259,23 @@ void DBaseStatusBar::ScreenSizeChanged ()
 			message = message->Next;
 		}
 	}
+}
+
+DEFINE_ACTION_FUNCTION(DBaseStatusBar, ScreenSizeChanged)
+{
+	PARAM_SELF_PROLOGUE(DBaseStatusBar);
+	self->ScreenSizeChanged();
+	return 0;
+}
+
+void DBaseStatusBar::CallScreenSizeChanged()
+{
+	IFVIRTUAL(DBaseStatusBar, ScreenSizeChanged)
+	{
+		VMValue params[] = { (DObject*)this };
+		GlobalVMStack.Call(func, params, countof(params), nullptr, 0);
+	}
+	else ScreenSizeChanged();
 }
 
 //---------------------------------------------------------------------------
@@ -1294,34 +1369,13 @@ AInventory *DBaseStatusBar::ValidateInvFirst (int numVisible) const
 	}
 }
 
-//============================================================================
-//
-// DBaseStatusBar :: GetCurrentAmmo
-//
-// Returns the types and amounts of ammo used by the current weapon. If the
-// weapon only uses one type of ammo, it is always returned as ammo1.
-//
-//============================================================================
-
-void DBaseStatusBar::GetCurrentAmmo (AInventory *&ammo1, AInventory *&ammo2, int &ammocount1, int &ammocount2) const
+DEFINE_ACTION_FUNCTION(DBaseStatusBar, ValidateInvFirst)
 {
-	if (CPlayer->ReadyWeapon != NULL)
-	{
-		ammo1 = CPlayer->ReadyWeapon->Ammo1;
-		ammo2 = CPlayer->ReadyWeapon->Ammo2;
-		if (ammo1 == NULL)
-		{
-			ammo1 = ammo2;
-			ammo2 = NULL;
-		}
-	}
-	else
-	{
-		ammo1 = ammo2 = NULL;
-	}
-	ammocount1 = ammo1 != NULL ? ammo1->Amount : 0;
-	ammocount2 = ammo2 != NULL ? ammo2->Amount : 0;
+	PARAM_SELF_PROLOGUE(DBaseStatusBar);
+	PARAM_INT(num);
+	ACTION_RETURN_POINTER(self->ValidateInvFirst(num));
 }
+
 
 //============================================================================
 //
@@ -1347,3 +1401,73 @@ CCMD (showpop)
 		StatusBar->ShowPop (popnum);
 	}
 }
+
+DEFINE_FIELD(DBaseStatusBar, ST_X);
+DEFINE_FIELD(DBaseStatusBar, ST_Y);
+DEFINE_FIELD(DBaseStatusBar, RelTop);
+DEFINE_FIELD(DBaseStatusBar, HorizontalResolution);
+DEFINE_FIELD(DBaseStatusBar, VerticalResolution);
+DEFINE_FIELD(DBaseStatusBar, Scaled);
+DEFINE_FIELD(DBaseStatusBar, Centering);
+DEFINE_FIELD(DBaseStatusBar, FixedOrigin);
+DEFINE_FIELD(DBaseStatusBar, CompleteBorder);
+DEFINE_FIELD(DBaseStatusBar, CrosshairSize);
+DEFINE_FIELD(DBaseStatusBar, Displacement);
+DEFINE_FIELD(DBaseStatusBar, CPlayer);
+DEFINE_FIELD(DBaseStatusBar, ShowLog);
+
+DEFINE_GLOBAL(StatusBar);
+
+
+DBaseStatusBar *CreateStrifeStatusBar()
+{
+	auto sb = (DBaseStatusBar *)PClass::FindClass("StrifeStatusBar")->CreateNew();
+	IFVIRTUALPTR(sb, DBaseStatusBar, Init)
+	{
+		VMValue params[] = { sb };
+		GlobalVMStack.Call(func, params, 1, nullptr, 0);
+	}
+	return sb;
+}
+
+
+static DObject *InitObject(PClass *type, int paramnum, VM_ARGS)
+{
+	auto obj =  type->CreateNew();
+	// Todo: init
+	return obj;
+}
+
+DEFINE_ACTION_FUNCTION(DStatusbarWidget, AppendWidget)
+{
+	PARAM_SELF_PROLOGUE(DObject);
+	PARAM_CLASS(type, DObject); 
+	if (!type->IsDescendantOf(NAME_StatusbarWidget) || type->IsDescendantOf(NAME_StatusbarCondition))
+	{
+		ThrowAbortException(X_OTHER, "Invalid class %s for AppendWidget", type->TypeName.GetChars());
+	}
+	auto obj = InitObject(type, paramnum, VM_ARGS_NAMES);
+	auto owner = self->PointerVar<DObject>(NAME_Owner);
+	self->PointerVar<DObject>(NAME_Next) = obj;
+	obj->PointerVar<DObject>(NAME_Prev) = self;
+	obj->PointerVar<DObject>(NAME_Owner) = owner;
+	ACTION_RETURN_POINTER(obj);
+}
+
+DEFINE_ACTION_FUNCTION(DStatusbarWidget, BeginCondition)
+{
+	PARAM_SELF_PROLOGUE(DObject);
+	PARAM_CLASS(type, DObject);
+	if (!type->IsDescendantOf(NAME_StatusbarCondition))
+	{
+		ThrowAbortException(X_OTHER, "Invalid class %s for BeginCondition", type->TypeName.GetChars());
+	}
+	auto obj = InitObject(type, paramnum, VM_ARGS_NAMES);
+	auto head = PClass::FindClass(NAME_StatusbarWidget)->CreateNew();
+	
+	head->PointerVar<DObject>(NAME_Owner) = self;
+	self->PointerVar<DObject>(NAME_Children) = head;
+	ACTION_RETURN_POINTER(head);
+}
+
+

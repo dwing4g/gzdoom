@@ -419,29 +419,21 @@ struct VMValue
 		double f;
 		struct { int pad[3]; VM_UBYTE Type; };
 		struct { int foo[4]; } biggest;
+		const FString *sp;
 	};
 
 	// Unfortunately, FString cannot be used directly.
 	// Fortunately, it is relatively simple.
-	FString &s() { return *(FString *)&a; }
-	const FString &s() const { return *(FString *)&a; }
+	const FString &s() const { return *sp; }
 
 	VMValue()
 	{
 		a = NULL;
 		Type = REGT_NIL;
 	}
-	~VMValue()
-	{
-		Kill();
-	}
 	VMValue(const VMValue &o)
 	{
 		biggest = o.biggest;
-		if (Type == REGT_STRING)
-		{
-			::new(&s()) FString(o.s());
-		}
 	}
 	VMValue(int v)
 	{
@@ -453,14 +445,12 @@ struct VMValue
 		f = v;
 		Type = REGT_FLOAT;
 	}
-	VMValue(const char *s)
+	VMValue(const char *s) = delete;
+	VMValue(const FString &s) = delete;
+
+	VMValue(const FString *s)
 	{
-		::new(&a) FString(s);
-		Type = REGT_STRING;
-	}
-	VMValue(const FString &s)
-	{
-		::new(&a) FString(s);
+		sp = s;
 		Type = REGT_STRING;
 	}
 	VMValue(DObject *v)
@@ -483,178 +473,35 @@ struct VMValue
 	}
 	VMValue &operator=(const VMValue &o)
 	{
-		if (o.Type == REGT_STRING)
-		{
-			if (Type == REGT_STRING)
-			{
-				s() = o.s();
-			}
-			else
-			{
-				new(&s()) FString(o.s());
-				Type = REGT_STRING;
-			}
-		}
-		else
-		{
-			Kill();
-			biggest = o.biggest;
-		}
+		biggest = o.biggest;
 		return *this;
 	}
 	VMValue &operator=(int v)
 	{
-		Kill();
 		i = v;
 		Type = REGT_INT;
 		return *this;
 	}
 	VMValue &operator=(double v)
 	{
-		Kill();
 		f = v;
 		Type = REGT_FLOAT;
 		return *this;
 	}
-	VMValue &operator=(const FString &v)
+	VMValue &operator=(const FString *v)
 	{
-		if (Type == REGT_STRING)
-		{
-			s() = v;
-		}
-		else
-		{
-			::new(&s()) FString(v);
-			Type = REGT_STRING;
-		}
+		sp = v;
+		Type = REGT_STRING;
 		return *this;
 	}
-	VMValue &operator=(const char *v)
-	{
-		if (Type == REGT_STRING)
-		{
-			s() = v;
-		}
-		else
-		{
-			::new(&s()) FString(v);
-			Type = REGT_STRING;
-		}
-		return *this;
-	}
+	VMValue &operator=(const FString &v) = delete;
+	VMValue &operator=(const char *v) = delete;
 	VMValue &operator=(DObject *v)
 	{
-		Kill();
 		a = v;
 		atag = ATAG_OBJECT;
 		Type = REGT_POINTER;
 		return *this;
-	}
-	void SetPointer(void *v, VM_ATAG atag=ATAG_GENERIC)
-	{
-		Kill();
-		a = v;
-		this->atag = atag;
-		Type = REGT_POINTER;
-	}
-	void SetNil()
-	{
-		Kill();
-		Type = REGT_NIL;
-	}
-	bool operator==(const VMValue &o)
-	{
-		return Test(o) == 0;
-	}
-	bool operator!=(const VMValue &o)
-	{
-		return Test(o) != 0;
-	}
-	bool operator< (const VMValue &o)
-	{
-		return Test(o) <  0;
-	}
-	bool operator<=(const VMValue &o)
-	{
-		return Test(o) <= 0;
-	}
-	bool operator> (const VMValue &o)
-	{
-		return Test(o) >  0;
-	}
-	bool operator>=(const VMValue &o)
-	{
-		return Test(o) >= 0;
-	}
-	int Test(const VMValue &o, int inexact=false)
-	{
-		double diff;
-
-		if (Type == o.Type)
-		{
-			switch(Type)
-			{
-			case REGT_NIL:
-				return 0;
-
-			case REGT_INT:
-				return i - o.i;
-
-			case REGT_FLOAT:
-				diff = f - o.f;
-do_double:		if (inexact)
-				{
-					return diff < -VM_EPSILON ? -1 : diff > VM_EPSILON ? 1 : 0;
-				}
-				return diff < 0 ? -1 : diff > 0 ? 1 : 0;
-
-			case REGT_STRING:
-				return inexact ? s().CompareNoCase(o.s()) : s().Compare(o.s());
-
-			case REGT_POINTER:
-				return int((const VM_UBYTE *)a - (const VM_UBYTE *)o.a);
-			}
-			assert(0);		// Should not get here
-			return 2;
-		}
-		if (Type == REGT_FLOAT && o.Type == REGT_INT)
-		{
-			diff = f - o.i;
-			goto do_double;
-		}
-		if (Type == REGT_INT && o.Type == REGT_FLOAT)
-		{
-			diff = i - o.f;
-			goto do_double;
-		}
-		// Bad comparison
-		return 2;
-	}
-	FString ToString()
-	{
-		if (Type == REGT_STRING)
-		{
-			return s();
-		}
-		else if (Type == REGT_NIL)
-		{
-			return "nil";
-		}
-		FString t;
-		if (Type == REGT_INT)
-		{
-			t.Format ("%d", i);
-		}
-		else if (Type == REGT_FLOAT)
-		{
-			t.Format ("%.14g", f);
-		}
-		else if (Type == REGT_POINTER)
-		{
-			// FIXME
-			t.Format ("Object: %p", a);
-		}
-		return t;
 	}
 	int ToInt()
 	{
@@ -689,13 +536,6 @@ do_double:		if (inexact)
 		}
 		// FIXME
 		return 0;
-	}
-	void Kill()
-	{
-		if (Type == REGT_STRING)
-		{
-			s().~FString();
-		}
 	}
 };
 
@@ -1048,7 +888,7 @@ void NullParam(const char *varname);
 #define PARAM_COLOR_DEF_AT(p,x)			PalEntry x; if (PARAM_EXISTS(p)) { ASSERTINT(param[p]); x = param[p].i; } else { ASSERTINT(defaultparam[p]); x = defaultparam[p].i; }
 #define PARAM_FLOAT_DEF_AT(p,x)			double x; if (PARAM_EXISTS(p)) { ASSERTFLOAT(param[p]); x = param[p].f; } else { ASSERTFLOAT(defaultparam[p]); x = defaultparam[p].f; }
 #define PARAM_ANGLE_DEF_AT(p,x)			DAngle x; if (PARAM_EXISTS(p)) { ASSERTFLOAT(param[p]); x = param[p].f; } else { ASSERTFLOAT(defaultparam[p]); x = defaultparam[p].f; }
-#define PARAM_STRING_DEF_AT(p,x)		FString x; if (PARAM_EXISTS(p)) { ASSERTSTRING(param[p]); x = param[p].s; } else { ASSERTSTRING(defaultparam[p]); x = defaultparam[p].s; }
+#define PARAM_STRING_DEF_AT(p,x)		FString x; if (PARAM_EXISTS(p)) { ASSERTSTRING(param[p]); x = param[p].s(); } else { ASSERTSTRING(defaultparam[p]); x = defaultparam[p].s(); }
 #define PARAM_STATE_DEF_AT(p,x)			FState *x; if (PARAM_EXISTS(p)) { ASSERTINT(param[p]); x = (FState*)StateLabels.GetState(param[p].i, self->GetClass()); } else { ASSERTINT(defaultparam[p]); x = (FState*)StateLabels.GetState(defaultparam[p].i, self->GetClass()); }
 #define PARAM_STATE_ACTION_DEF_AT(p,x)	FState *x; if (PARAM_EXISTS(p)) { ASSERTINT(param[p]); x = (FState*)StateLabels.GetState(param[p].i, stateowner->GetClass()); } else { ASSERTINT(defaultparam[p]); x = (FState*)StateLabels.GetState(defaultparam[p].i, stateowner->GetClass()); }
 #define PARAM_POINTER_DEF_AT(p,x,t)		t *x; if (PARAM_EXISTS(p)) { ASSERTPOINTER(param[p]); x = (t*)param[p].a; } else { ASSERTPOINTER(defaultparam[p]); x = (t*)defaultparam[p].a; }
@@ -1073,6 +913,7 @@ void NullParam(const char *varname);
 #define PARAM_POINTER(x,type)		++paramnum; PARAM_POINTER_AT(paramnum,x,type)
 #define PARAM_POINTERTYPE(x,type)	++paramnum; PARAM_POINTERTYPE_AT(paramnum,x,type)
 #define PARAM_OBJECT(x,type)		++paramnum; PARAM_OBJECT_AT(paramnum,x,type)
+#define PARAM_CLASS(x,base)			++paramnum; PARAM_CLASS_AT(paramnum,x,base)
 #define PARAM_CLASS(x,base)			++paramnum; PARAM_CLASS_AT(paramnum,x,base)
 #define PARAM_POINTER_NOT_NULL(x,type)		++paramnum; PARAM_POINTER_NOT_NULL_AT(paramnum,x,type)
 #define PARAM_OBJECT_NOT_NULL(x,type)		++paramnum; PARAM_OBJECT_NOT_NULL_AT(paramnum,x,type)

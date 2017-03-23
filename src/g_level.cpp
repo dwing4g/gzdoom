@@ -328,7 +328,6 @@ void G_NewInit ()
 	}
 
 	G_ClearSnapshots ();
-	ST_SetNeedRefresh();
 	netgame = false;
 	multiplayer = multiplayernext;
 	multiplayernext = false;
@@ -445,7 +444,8 @@ void G_InitNew (const char *mapname, bool bTitleLevel)
 
 	if (bTitleLevel)
 	{
-		StatusBar = new DBaseStatusBar (0);
+		StatusBar = new DBaseStatusBar ();
+		StatusBar->SetSize(0);
 	}
 	else if (cls && gameinfo.gametype == GAME_Doom)
 	{
@@ -481,7 +481,8 @@ void G_InitNew (const char *mapname, bool bTitleLevel)
 		}
 		else
 		{
-			StatusBar = new DBaseStatusBar (0);
+			StatusBar = new DBaseStatusBar();
+			StatusBar->SetSize(0);
 		}
 	}
 	GC::WriteBarrier(StatusBar);
@@ -1186,6 +1187,12 @@ void G_WorldDone (void)
 	}
 } 
  
+DEFINE_ACTION_FUNCTION(FLevelLocals, WorldDone)
+{
+	G_WorldDone();
+	return 0;
+}
+
 //==========================================================================
 //
 //
@@ -1890,6 +1897,30 @@ void FLevelLocals::AddScroller (int secnum)
 //==========================================================================
 //
 //
+//==========================================================================
+
+void FLevelLocals::SetInterMusic(const char *nextmap)
+{
+	auto mus = level.info->MapInterMusic.CheckKey(nextmap);
+	if (mus != nullptr)
+		S_ChangeMusic(mus->first, mus->second);
+	else if (level.info->InterMusic.IsNotEmpty())
+		S_ChangeMusic(level.info->InterMusic, level.info->intermusicorder);
+	else
+		S_ChangeMusic(gameinfo.intermissionMusic.GetChars(), gameinfo.intermissionOrder);
+}
+
+DEFINE_ACTION_FUNCTION(FLevelLocals, SetInterMusic)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FLevelLocals);
+	PARAM_STRING(map);
+	self->SetInterMusic(map);
+	return 0;
+}
+
+//==========================================================================
+//
+//
 //
 //==========================================================================
 DEFINE_GLOBAL(level);
@@ -1929,6 +1960,7 @@ DEFINE_FIELD(FLevelLocals, teamdamage)
 DEFINE_FIELD(FLevelLocals, fogdensity)
 DEFINE_FIELD(FLevelLocals, outsidefogdensity)
 DEFINE_FIELD(FLevelLocals, skyfog)
+DEFINE_FIELD_BIT(FLevelLocals, flags, noinventorybar, LEVEL_NOINVENTORYBAR)
 DEFINE_FIELD_BIT(FLevelLocals, flags, monsterstelefrag, LEVEL_MONSTERSTELEFRAG)
 DEFINE_FIELD_BIT(FLevelLocals, flags, actownspecial, LEVEL_ACTOWNSPECIAL)
 DEFINE_FIELD_BIT(FLevelLocals, flags, sndseqtotalctrl, LEVEL_SNDSEQTOTALCTRL)
