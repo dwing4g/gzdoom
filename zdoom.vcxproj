@@ -452,7 +452,6 @@
     </ClCompile>
     <ClCompile Include="src\g_statusbar\sbar_mugshot.cpp" />
     <ClCompile Include="src\g_statusbar\shared_sbar.cpp" />
-    <ClCompile Include="src\g_statusbar\strife_sbar.cpp" />
     <ClCompile Include="src\i_module.cpp" />
     <ClCompile Include="src\math\asin.c" />
     <ClCompile Include="src\math\atan.c" />

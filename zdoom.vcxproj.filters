@@ -1199,9 +1199,6 @@
     <ClCompile Include="src\g_statusbar\shared_sbar.cpp">
       <Filter>Game\g_statusbar</Filter>
     </ClCompile>
-    <ClCompile Include="src\g_statusbar\strife_sbar.cpp">
-      <Filter>Game\g_statusbar</Filter>
-    </ClCompile>
     <ClCompile Include="src\scripting\symbols.cpp">
       <Filter>scripting</Filter>
     </ClCompile>
