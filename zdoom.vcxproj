@@ -539,6 +539,7 @@
     <ClCompile Include="src\sound\wildmidi\wm_error.cpp" />
     <ClCompile Include="src\swrenderer\r_all.cpp" />
     <ClCompile Include="src\textures\backdroptexture.cpp" />
+    <ClCompile Include="src\textures\shadertexture.cpp" />
     <ClCompile Include="src\textures\skyboxtexture.cpp" />
     <ClCompile Include="src\win32\critsec.cpp" />
     <ClCompile Include="src\win32\i_specialpaths.cpp" />

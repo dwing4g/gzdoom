@@ -1382,6 +1382,9 @@
     <ClCompile Include="src\textures\skyboxtexture.cpp">
       <Filter>Render Data\Textures</Filter>
     </ClCompile>
+    <ClCompile Include="src\textures\shadertexture.cpp">
+      <Filter>Render Data\Textures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\sc_man_scanner.h">
