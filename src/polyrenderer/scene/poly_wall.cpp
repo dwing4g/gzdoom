@@ -37,7 +37,7 @@
 
 EXTERN_CVAR(Bool, r_drawmirrors)
 
-bool RenderPolyWall::RenderLine(const TriMatrix &worldToClip, const Vec4f &clipPlane, PolyCull &cull, seg_t *line, sector_t *frontsector, uint32_t subsectorDepth, uint32_t stencilValue, std::vector<PolyTranslucentObject> &translucentWallsOutput, std::vector<std::unique_ptr<PolyDrawLinePortal>> &linePortals)
+bool RenderPolyWall::RenderLine(const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, PolyCull &cull, seg_t *line, sector_t *frontsector, uint32_t subsectorDepth, uint32_t stencilValue, std::vector<PolyTranslucentObject*> &translucentWallsOutput, std::vector<std::unique_ptr<PolyDrawLinePortal>> &linePortals)
 {
 	PolyDrawLinePortal *polyportal = nullptr;
 	if (line->backsector == nullptr && line->linedef && line->sidedef == line->linedef->sidedef[0] && (line->linedef->special == Line_Mirror && r_drawmirrors))
@@ -120,6 +120,7 @@ bool RenderPolyWall::RenderLine(const TriMatrix &worldToClip, const Vec4f &clipP
 		double middlefloorz2 = MIN(bottomceilz2, middleceilz2);
 
 		bool bothSkyCeiling = frontsector->GetTexture(sector_t::ceiling) == skyflatnum && backsector->GetTexture(sector_t::ceiling) == skyflatnum;
+		bool bothSkyFloor = frontsector->GetTexture(sector_t::floor) == skyflatnum && backsector->GetTexture(sector_t::floor) == skyflatnum;
 
 		if ((topceilz1 > topfloorz1 || topceilz2 > topfloorz2) && line->sidedef && !bothSkyCeiling)
 		{
@@ -131,7 +132,7 @@ bool RenderPolyWall::RenderLine(const TriMatrix &worldToClip, const Vec4f &clipP
 			wall.Render(worldToClip, clipPlane, cull);
 		}
 
-		if ((bottomfloorz1 < bottomceilz1 || bottomfloorz2 < bottomceilz2) && line->sidedef)
+		if ((bottomfloorz1 < bottomceilz1 || bottomfloorz2 < bottomceilz2) && line->sidedef && !bothSkyFloor)
 		{
 			wall.SetCoords(line->v1->fPos(), line->v2->fPos(), bottomceilz1, bottomfloorz1, bottomceilz2, bottomfloorz2);
 			wall.TopZ = bottomceilz1;
@@ -152,7 +153,7 @@ bool RenderPolyWall::RenderLine(const TriMatrix &worldToClip, const Vec4f &clipP
 
 			FTexture *midtex = TexMan(line->sidedef->GetTexture(side_t::mid), true);
 			if (midtex && midtex->UseType != FTexture::TEX_Null)
-				translucentWallsOutput.push_back({ wall });
+				translucentWallsOutput.push_back(PolyRenderer::Instance()->FrameMemory.NewObject<PolyTranslucentObject>(wall));
 
 			if (polyportal)
 			{
@@ -164,7 +165,7 @@ bool RenderPolyWall::RenderLine(const TriMatrix &worldToClip, const Vec4f &clipP
 	return polyportal != nullptr;
 }
 
-void RenderPolyWall::Render3DFloorLine(const TriMatrix &worldToClip, const Vec4f &clipPlane, PolyCull &cull, seg_t *line, sector_t *frontsector, uint32_t subsectorDepth, uint32_t stencilValue, F3DFloor *fakeFloor, std::vector<PolyTranslucentObject> &translucentWallsOutput)
+void RenderPolyWall::Render3DFloorLine(const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, PolyCull &cull, seg_t *line, sector_t *frontsector, uint32_t subsectorDepth, uint32_t stencilValue, F3DFloor *fakeFloor, std::vector<PolyTranslucentObject*> &translucentWallsOutput)
 {
 	double frontceilz1 = fakeFloor->top.plane->ZatPoint(line->v1);
 	double frontfloorz1 = fakeFloor->bottom.plane->ZatPoint(line->v1);
@@ -197,16 +198,14 @@ void RenderPolyWall::SetCoords(const DVector2 &v1, const DVector2 &v2, double ce
 	this->floor2 = floor2;
 }
 
-void RenderPolyWall::Render(const TriMatrix &worldToClip, const Vec4f &clipPlane, PolyCull &cull)
+void RenderPolyWall::Render(const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, PolyCull &cull)
 {
 	bool foggy = false;
 	FTexture *tex = GetTexture();
 	if (!tex && !Polyportal)
 		return;
 
-	TriVertex *vertices = PolyVertexBuffer::GetVertices(4);
-	if (!vertices)
-		return;
+	TriVertex *vertices = PolyRenderer::Instance()->FrameMemory.AllocMemory<TriVertex>(4);
 
 	vertices[0].x = (float)v1.X;
 	vertices[0].y = (float)v1.Y;
@@ -231,14 +230,14 @@ void RenderPolyWall::Render(const TriMatrix &worldToClip, const Vec4f &clipPlane
 	if (tex)
 	{
 		PolyWallTextureCoords texcoords(tex, LineSeg, Line, Side, Texpart, TopZ, BottomZ, UnpeggedCeil);
-		vertices[0].varying[0] = (float)texcoords.u1;
-		vertices[0].varying[1] = (float)texcoords.v1;
-		vertices[1].varying[0] = (float)texcoords.u2;
-		vertices[1].varying[1] = (float)texcoords.v1;
-		vertices[2].varying[0] = (float)texcoords.u2;
-		vertices[2].varying[1] = (float)texcoords.v2;
-		vertices[3].varying[0] = (float)texcoords.u1;
-		vertices[3].varying[1] = (float)texcoords.v2;
+		vertices[0].u = (float)texcoords.u1;
+		vertices[0].v = (float)texcoords.v1;
+		vertices[1].u = (float)texcoords.u2;
+		vertices[1].v = (float)texcoords.v1;
+		vertices[2].u = (float)texcoords.u2;
+		vertices[2].v = (float)texcoords.v2;
+		vertices[3].u = (float)texcoords.u1;
+		vertices[3].v = (float)texcoords.v2;
 	}
 
 	// Masked walls clamp to the 0-1 range (no texture repeat)
@@ -249,32 +248,23 @@ void RenderPolyWall::Render(const TriMatrix &worldToClip, const Vec4f &clipPlane
 	}
 
 	PolyDrawArgs args;
-	args.uniforms.globvis = (float)PolyRenderer::Instance()->Light.WallGlobVis(foggy);
-	args.uniforms.light = (uint32_t)(GetLightLevel() / 255.0f * 256.0f);
-	args.uniforms.flags = TriUniforms::nearest_filter;
-	args.uniforms.subsectorDepth = SubsectorDepth;
-	args.objectToClip = &worldToClip;
-	args.vinput = vertices;
-	args.vcount = 4;
-	args.mode = TriangleDrawMode::Fan;
-	args.ccw = true;
-	args.stenciltestvalue = StencilValue;
-	args.stencilwritevalue = StencilValue + 1;
+	args.SetLight(GetColorTable(Line->frontsector->Colormap, Line->frontsector->SpecialColors[sector_t::walltop]), GetLightLevel(), PolyRenderer::Instance()->Light.WallGlobVis(foggy), false);
+	args.SetSubsectorDepth(SubsectorDepth);
+	args.SetTransform(&worldToClip);
+	args.SetFaceCullCCW(true);
+	args.SetStencilTestValue(StencilValue);
+	args.SetWriteStencil(true, StencilValue + 1);
 	if (tex)
 		args.SetTexture(tex);
-	args.SetColormap(GetColorTable(Line->frontsector->Colormap, Line->frontsector->SpecialColors[sector_t::walltop]));
-	args.SetClipPlane(clipPlane.x, clipPlane.y, clipPlane.z, clipPlane.w);
-
-	//if (Side && Side->lighthead)
-	//	args.uniforms.light = 255; // Make walls touched by a light fullbright!
+	args.SetClipPlane(clipPlane);
 
 	if (Polyportal)
 	{
-		args.stencilwritevalue = Polyportal->StencilValue;
-		args.writeColor = false;
-		args.writeSubsector = false;
-		PolyTriangleDrawer::draw(args);
-		Polyportal->Shape.push_back({ args.vinput, args.vcount, args.ccw, args.uniforms.subsectorDepth });
+		args.SetWriteStencil(true, Polyportal->StencilValue);
+		args.SetWriteColor(false);
+		args.SetWriteSubsectorDepth(false);
+		args.DrawArray(vertices, 4, PolyDrawMode::TriangleFan);
+		Polyportal->Shape.push_back({ vertices, 4, true, SubsectorDepth });
 
 		angle_t angle1, angle2;
 		if (cull.GetAnglesForLine(v1.X, v1.Y, v2.X, v2.Y, angle1, angle2))
@@ -282,21 +272,19 @@ void RenderPolyWall::Render(const TriMatrix &worldToClip, const Vec4f &clipPlane
 	}
 	else if (!Masked)
 	{
-		args.blendmode = TriBlendMode::Copy;
-		PolyTriangleDrawer::draw(args);
+		args.SetStyle(TriBlendMode::TextureOpaque);
+		args.DrawArray(vertices, 4, PolyDrawMode::TriangleFan);
 	}
 	else
 	{
-		args.uniforms.destalpha = (Line->flags & ML_ADDTRANS) ? 256 : (uint32_t)(256 - Line->alpha * 256);
-		args.uniforms.srcalpha = (uint32_t)(Line->alpha * 256);
-		args.subsectorTest = true;
-		args.writeSubsector = false;
-		args.writeStencil = false;
-		if (args.uniforms.destalpha == 0 && args.uniforms.srcalpha == 256)
-			args.blendmode = TriBlendMode::AlphaBlend;
-		else
-			args.blendmode = TriBlendMode::Add;
-		PolyTriangleDrawer::draw(args);
+		bool addtrans = !!(Line->flags & ML_ADDTRANS);
+		double srcalpha = MIN(Line->alpha, 1.0);
+		double destalpha = addtrans ? 1.0 : 1.0 - srcalpha;
+		args.SetStyle(TriBlendMode::TextureAdd, srcalpha, destalpha);
+		args.SetSubsectorDepthTest(true);
+		args.SetWriteSubsectorDepth(true);
+		args.SetWriteStencil(false);
+		args.DrawArray(vertices, 4, PolyDrawMode::TriangleFan);
 	}
 
 	RenderPolyDecal::RenderWallDecals(worldToClip, clipPlane, LineSeg, SubsectorDepth, StencilValue);
@@ -306,8 +294,8 @@ void RenderPolyWall::ClampHeight(TriVertex &v1, TriVertex &v2)
 {
 	float top = v1.z;
 	float bottom = v2.z;
-	float texv1 = v1.varying[1];
-	float texv2 = v2.varying[1];
+	float texv1 = v1.v;
+	float texv2 = v2.v;
 	float delta = (texv2 - texv1);
 
 	float t1 = texv1 < 0.0f ? -texv1 / delta : 0.0f;
@@ -316,10 +304,10 @@ void RenderPolyWall::ClampHeight(TriVertex &v1, TriVertex &v2)
 	float inv_t2 = 1.0f - t2;
 
 	v1.z = top * inv_t1 + bottom * t1;
-	v1.varying[1] = texv1 * inv_t1 + texv2 * t1;
+	v1.v = texv1 * inv_t1 + texv2 * t1;
 
 	v2.z = top * inv_t2 + bottom * t2;
-	v2.varying[1] = texv1 * inv_t2 + texv2 * t2;
+	v2.v = texv1 * inv_t2 + texv2 * t2;
 }
 
 FTexture *RenderPolyWall::GetTexture()

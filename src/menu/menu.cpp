@@ -243,6 +243,12 @@ void DMenu::Close ()
 	if (CurrentMenu != nullptr)
 	{
 		GC::WriteBarrier(CurrentMenu);
+		IFVIRTUALPTR(CurrentMenu, DMenu, OnReturn)
+		{
+			VMValue params[] = { CurrentMenu };
+			GlobalVMStack.Call(func, params, 1, nullptr, 0, nullptr);
+		}
+
 	}
 	else
 	{
@@ -279,6 +285,7 @@ void DMenu::CallDrawer()
 	{
 		VMValue params[] = { (DObject*)this };
 		GlobalVMStack.Call(func, params, 1, nullptr, 0, nullptr);
+		screen->ClearClipRect();	// make sure the scripts don't leave a valid clipping rect behind.
 	}
 }
 

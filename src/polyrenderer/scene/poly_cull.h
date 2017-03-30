@@ -23,18 +23,18 @@
 #pragma once
 
 #include "polyrenderer/drawers/poly_triangle.h"
-#include "polyrenderer/math/poly_intersection.h"
 
 class PolyCull
 {
 public:
 	void ClearSolidSegments();
-	void CullScene(const TriMatrix &worldToClip, const Vec4f &portalClipPlane);
+	void CullScene(const TriMatrix &worldToClip, const PolyClipPlane &portalClipPlane);
 
 	bool GetAnglesForLine(double x1, double y1, double x2, double y2, angle_t &angle1, angle_t &angle2) const;
 	void MarkSegmentCulled(angle_t angle1, angle_t angle2);
 	bool IsSegmentCulled(angle_t angle1, angle_t angle2) const;
 	void InvertSegments();
+	void MarkViewFrustum();
 
 	std::vector<subsector_t *> PvsSectors;
 	double MaxCeilingHeight = 0.0;
@@ -58,9 +58,10 @@ private:
 	std::vector<SolidSegment> SolidSegments;
 	std::vector<SolidSegment> TempInvertSolidSegments;
 	const int SolidCullScale = 3000;
+	bool FirstSkyHeight = true;
 
-	FrustumPlanes frustumPlanes;
-	Vec4f PortalClipPlane;
+	PolyClipPlane PortalClipPlane;
 
 	static angle_t PointToPseudoAngle(double x, double y);
+	static angle_t AngleToPseudo(angle_t ang);
 };

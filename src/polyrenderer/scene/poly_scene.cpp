@@ -43,7 +43,7 @@ RenderPolyScene::~RenderPolyScene()
 {
 }
 
-void RenderPolyScene::SetViewpoint(const TriMatrix &worldToClip, const Vec4f &portalPlane, uint32_t stencilValue)
+void RenderPolyScene::SetViewpoint(const TriMatrix &worldToClip, const PolyClipPlane &portalPlane, uint32_t stencilValue)
 {
 	WorldToClip = worldToClip;
 	StencilValue = stencilValue;
@@ -52,13 +52,20 @@ void RenderPolyScene::SetViewpoint(const TriMatrix &worldToClip, const Vec4f &po
 
 void RenderPolyScene::SetPortalSegments(const std::vector<PolyPortalSegment> &segments)
 {
-	Cull.ClearSolidSegments();
-	for (const auto &segment : segments)
+	if (!segments.empty())
 	{
-		Cull.MarkSegmentCulled(segment.Start, segment.End);
+		Cull.ClearSolidSegments();
+		for (const auto &segment : segments)
+		{
+			Cull.MarkSegmentCulled(segment.Start, segment.End);
+		}
+		Cull.InvertSegments();
+		PortalSegmentsAdded = true;
 	}
-	Cull.InvertSegments();
-	PortalSegmentsAdded = true;
+	else
+	{
+		PortalSegmentsAdded = false;
+	}
 }
 
 void RenderPolyScene::Render(int portalDepth)
@@ -66,6 +73,7 @@ void RenderPolyScene::Render(int portalDepth)
 	ClearBuffers();
 	if (!PortalSegmentsAdded)
 		Cull.ClearSolidSegments();
+	Cull.MarkViewFrustum();
 	Cull.CullScene(WorldToClip, PortalPlane);
 	Cull.ClearSolidSegments();
 	RenderSectors();
@@ -117,6 +125,8 @@ void RenderPolyScene::RenderSubsector(subsector_t *sub)
 		}
 	}
 
+	RenderMemory &memory = PolyRenderer::Instance()->FrameMemory;
+
 	bool mainBSP = ((unsigned int)(sub->Index()) < level.subsectors.Size());
 	if (mainBSP)
 	{
@@ -124,7 +134,7 @@ void RenderPolyScene::RenderSubsector(subsector_t *sub)
 		for (int i = ParticlesInSubsec[subsectorIndex]; i != NO_PARTICLE; i = Particles[i].snext)
 		{
 			particle_t *particle = Particles + i;
-			TranslucentObjects.push_back({ particle, sub, subsectorDepth });
+			TranslucentObjects.push_back(memory.NewObject<PolyTranslucentObject>(particle, sub, subsectorDepth));
 		}
 	}
 
@@ -139,7 +149,7 @@ void RenderPolyScene::RenderSprite(AActor *thing, double sortDistance, const DVe
 		subsector_t *sub = &level.subsectors[0];
 		auto it = SubsectorDepths.find(sub);
 		if (it != SubsectorDepths.end())
-			TranslucentObjects.push_back({ thing, sub, it->second, sortDistance, 0.0f, 1.0f });
+			TranslucentObjects.push_back(PolyRenderer::Instance()->FrameMemory.NewObject<PolyTranslucentObject>(thing, sub, it->second, sortDistance, 0.0f, 1.0f));
 	}
 	else
 	{
@@ -180,7 +190,7 @@ void RenderPolyScene::RenderSprite(AActor *thing, double sortDistance, DVector2 
 	
 	auto it = SubsectorDepths.find(sub);
 	if (it != SubsectorDepths.end())
-		TranslucentObjects.push_back({ thing, sub, it->second, sortDistance, (float)t1, (float)t2 });
+		TranslucentObjects.push_back(PolyRenderer::Instance()->FrameMemory.NewObject<PolyTranslucentObject>(thing, sub, it->second, sortDistance, (float)t1, (float)t2));
 }
 
 void RenderPolyScene::RenderLine(subsector_t *sub, seg_t *line, sector_t *frontsector, uint32_t subsectorDepth)
@@ -239,40 +249,33 @@ void RenderPolyScene::RenderPortals(int portalDepth)
 	else // Fill with black
 	{
 		PolyDrawArgs args;
-		args.objectToClip = &WorldToClip;
-		args.mode = TriangleDrawMode::Fan;
-		args.uniforms.globvis = (float)PolyRenderer::Instance()->Light.WallGlobVis(foggy);
-		args.uniforms.color = 0;
-		args.uniforms.light = 256;
-		args.uniforms.flags = TriUniforms::fixed_light;
-		args.SetClipPlane(PortalPlane.x, PortalPlane.y, PortalPlane.z, PortalPlane.w);
+		args.SetTransform(&WorldToClip);
+		args.SetLight(&NormalLight, 255, PolyRenderer::Instance()->Light.WallGlobVis(foggy), true);
+		args.SetColor(0, 0);
+		args.SetClipPlane(PortalPlane);
+		args.SetStyle(TriBlendMode::FillOpaque);
 
 		for (auto &portal : SectorPortals)
 		{
-			args.stenciltestvalue = portal->StencilValue;
-			args.stencilwritevalue = portal->StencilValue + 1;
+			args.SetStencilTestValue(portal->StencilValue);
+			args.SetWriteStencil(true, portal->StencilValue + 1);
 			for (const auto &verts : portal->Shape)
 			{
-				args.vinput = verts.Vertices;
-				args.vcount = verts.Count;
-				args.ccw = verts.Ccw;
-				args.uniforms.subsectorDepth = verts.SubsectorDepth;
-				args.blendmode = TriBlendMode::Copy;
-				PolyTriangleDrawer::draw(args);
+				args.SetFaceCullCCW(verts.Ccw);
+				args.SetSubsectorDepth(verts.SubsectorDepth);
+				args.DrawArray(verts.Vertices, verts.Count, PolyDrawMode::TriangleFan);
 			}
 		}
 
 		for (auto &portal : LinePortals)
 		{
-			args.stenciltestvalue = portal->StencilValue;
-			args.stencilwritevalue = portal->StencilValue + 1;
+			args.SetStencilTestValue(portal->StencilValue);
+			args.SetWriteStencil(true, portal->StencilValue + 1);
 			for (const auto &verts : portal->Shape)
 			{
-				args.vinput = verts.Vertices;
-				args.vcount = verts.Count;
-				args.ccw = verts.Ccw;
-				args.uniforms.subsectorDepth = verts.SubsectorDepth;
-				PolyTriangleDrawer::draw(args);
+				args.SetFaceCullCCW(verts.Ccw);
+				args.SetSubsectorDepth(verts.SubsectorDepth);
+				args.DrawArray(verts.Vertices, verts.Count, PolyDrawMode::TriangleFan);
 			}
 		}
 	}
@@ -288,19 +291,16 @@ void RenderPolyScene::RenderTranslucent(int portalDepth)
 			portal->RenderTranslucent(portalDepth + 1);
 		
 			PolyDrawArgs args;
-			args.objectToClip = &WorldToClip;
-			args.mode = TriangleDrawMode::Fan;
-			args.stenciltestvalue = portal->StencilValue + 1;
-			args.stencilwritevalue = StencilValue + 1;
-			args.SetClipPlane(PortalPlane.x, PortalPlane.y, PortalPlane.z, PortalPlane.w);
+			args.SetTransform(&WorldToClip);
+			args.SetStencilTestValue(portal->StencilValue + 1);
+			args.SetWriteStencil(true, StencilValue + 1);
+			args.SetClipPlane(PortalPlane);
 			for (const auto &verts : portal->Shape)
 			{
-				args.vinput = verts.Vertices;
-				args.vcount = verts.Count;
-				args.ccw = verts.Ccw;
-				args.uniforms.subsectorDepth = verts.SubsectorDepth;
-				args.writeColor = false;
-				PolyTriangleDrawer::draw(args);
+				args.SetFaceCullCCW(verts.Ccw);
+				args.SetSubsectorDepth(verts.SubsectorDepth);
+				args.SetWriteColor(false);
+				args.DrawArray(verts.Vertices, verts.Count, PolyDrawMode::TriangleFan);
 			}
 		}
 
@@ -310,19 +310,16 @@ void RenderPolyScene::RenderTranslucent(int portalDepth)
 			portal->RenderTranslucent(portalDepth + 1);
 		
 			PolyDrawArgs args;
-			args.objectToClip = &WorldToClip;
-			args.mode = TriangleDrawMode::Fan;
-			args.stenciltestvalue = portal->StencilValue + 1;
-			args.stencilwritevalue = StencilValue + 1;
-			args.SetClipPlane(PortalPlane.x, PortalPlane.y, PortalPlane.z, PortalPlane.w);
+			args.SetTransform(&WorldToClip);
+			args.SetStencilTestValue(portal->StencilValue + 1);
+			args.SetWriteStencil(true, StencilValue + 1);
+			args.SetClipPlane(PortalPlane);
 			for (const auto &verts : portal->Shape)
 			{
-				args.vinput = verts.Vertices;
-				args.vcount = verts.Count;
-				args.ccw = verts.Ccw;
-				args.uniforms.subsectorDepth = verts.SubsectorDepth;
-				args.writeColor = false;
-				PolyTriangleDrawer::draw(args);
+				args.SetFaceCullCCW(verts.Ccw);
+				args.SetSubsectorDepth(verts.SubsectorDepth);
+				args.SetWriteColor(false);
+				args.DrawArray(verts.Vertices, verts.Count, PolyDrawMode::TriangleFan);
 			}
 		}
 	}
@@ -340,29 +337,29 @@ void RenderPolyScene::RenderTranslucent(int portalDepth)
 		}
 	}
 
-	std::stable_sort(TranslucentObjects.begin(), TranslucentObjects.end());
+	std::stable_sort(TranslucentObjects.begin(), TranslucentObjects.end(), [](auto a, auto b) { return *a < *b; });
 
 	for (auto it = TranslucentObjects.rbegin(); it != TranslucentObjects.rend(); ++it)
 	{
-		auto &obj = *it;
-		if (obj.particle)
+		PolyTranslucentObject *obj = *it;
+		if (obj->particle)
 		{
 			RenderPolyParticle spr;
-			spr.Render(WorldToClip, PortalPlane, obj.particle, obj.sub, obj.subsectorDepth, StencilValue + 1);
+			spr.Render(WorldToClip, PortalPlane, obj->particle, obj->sub, obj->subsectorDepth, StencilValue + 1);
 		}
-		else if (!obj.thing)
+		else if (!obj->thing)
 		{
-			obj.wall.Render(WorldToClip, PortalPlane, Cull);
+			obj->wall.Render(WorldToClip, PortalPlane, Cull);
 		}
-		else if ((obj.thing->renderflags & RF_SPRITETYPEMASK) == RF_WALLSPRITE)
+		else if ((obj->thing->renderflags & RF_SPRITETYPEMASK) == RF_WALLSPRITE)
 		{
 			RenderPolyWallSprite wallspr;
-			wallspr.Render(WorldToClip, PortalPlane, obj.thing, obj.sub, obj.subsectorDepth, StencilValue + 1);
+			wallspr.Render(WorldToClip, PortalPlane, obj->thing, obj->sub, obj->subsectorDepth, StencilValue + 1);
 		}
 		else
 		{
 			RenderPolySprite spr;
-			spr.Render(WorldToClip, PortalPlane, obj.thing, obj.sub, obj.subsectorDepth, StencilValue + 1, obj.SpriteLeft, obj.SpriteRight);
+			spr.Render(WorldToClip, PortalPlane, obj->thing, obj->sub, obj->subsectorDepth, StencilValue + 1, obj->SpriteLeft, obj->SpriteRight);
 		}
 	}
 }

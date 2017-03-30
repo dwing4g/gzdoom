@@ -29,7 +29,9 @@
 #include "polyrenderer/poly_renderer.h"
 #include "polyrenderer/scene/poly_light.h"
 
-void RenderPolyParticle::Render(const TriMatrix &worldToClip, const Vec4f &clipPlane, particle_t *particle, subsector_t *sub, uint32_t subsectorDepth, uint32_t stencilValue)
+EXTERN_CVAR(Int, gl_particles_style)
+
+void RenderPolyParticle::Render(const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, particle_t *particle, subsector_t *sub, uint32_t subsectorDepth, uint32_t stencilValue)
 {
 	DVector3 pos = particle->Pos;
 	double psize = particle->size / 8.0;
@@ -43,9 +45,7 @@ void RenderPolyParticle::Render(const TriMatrix &worldToClip, const Vec4f &clipP
 		{ pos.X + viewpoint.Sin * psize, pos.Y - viewpoint.Cos * psize }
 	};
 
-	TriVertex *vertices = PolyVertexBuffer::GetVertices(4);
-	if (!vertices)
-		return;
+	TriVertex *vertices = PolyRenderer::Instance()->FrameMemory.AllocMemory<TriVertex>(4);
 
 	bool foggy = false;
 	int actualextralight = foggy ? 0 : viewpoint.extralight << 4;
@@ -66,55 +66,52 @@ void RenderPolyParticle::Render(const TriMatrix &worldToClip, const Vec4f &clipP
 		vertices[i].y = (float)p.Y;
 		vertices[i].z = (float)(zpos + psize * (2.0 * offsets[i].second - 1.0));
 		vertices[i].w = 1.0f;
-		vertices[i].varying[0] = (float)(offsets[i].first);
-		vertices[i].varying[1] = (float)(1.0f - offsets[i].second);
+		vertices[i].u = (float)(offsets[i].first);
+		vertices[i].v = (float)(1.0f - offsets[i].second);
 	}
 
-	// int color = (particle->color >> 24) & 0xff; // pal index, I think
 	bool fullbrightSprite = particle->bright != 0;
-	PolyCameraLight *cameraLight = PolyCameraLight::Instance();
+	int lightlevel = fullbrightSprite ? 255 : sub->sector->lightlevel + actualextralight;
 
 	PolyDrawArgs args;
+	args.SetLight(GetColorTable(sub->sector->Colormap), lightlevel, PolyRenderer::Instance()->Light.ParticleGlobVis(foggy), fullbrightSprite);
+	args.SetSubsectorDepth(subsectorDepth);
+	args.SetSubsectorDepthTest(true);
+	args.SetColor(particle->color | 0xff000000, particle->color >> 24);
+	args.SetStyle(TriBlendMode::Shaded, particle->alpha, 1.0 - particle->alpha);
+	args.SetTransform(&worldToClip);
+	args.SetFaceCullCCW(true);
+	args.SetStencilTestValue(stencilValue);
+	args.SetWriteStencil(false);
+	args.SetWriteSubsectorDepth(false);
+	args.SetClipPlane(clipPlane);
+	args.SetTexture(GetParticleTexture(), ParticleTextureSize, ParticleTextureSize);
+	args.DrawArray(vertices, 4, PolyDrawMode::TriangleFan);
+}
 
-	args.uniforms.globvis = (float)PolyRenderer::Instance()->Light.ParticleGlobVis(foggy);
-
-	if (fullbrightSprite || cameraLight->FixedLightLevel() >= 0 || cameraLight->FixedColormap())
+uint8_t *RenderPolyParticle::GetParticleTexture()
+{
+	static uint8_t particle_texture[NumParticleTextures][ParticleTextureSize * ParticleTextureSize];
+	static bool first_call = true;
+	if (first_call)
 	{
-		args.uniforms.light = 256;
-		args.uniforms.flags = TriUniforms::fixed_light | TriUniforms::nearest_filter;
-	}
-	else
-	{
-		args.uniforms.light = (uint32_t)((sub->sector->lightlevel + actualextralight) / 255.0f * 256.0f);
-		args.uniforms.flags = TriUniforms::nearest_filter;
-	}
-	args.uniforms.subsectorDepth = subsectorDepth;
+		double center = ParticleTextureSize * 0.5f;
+		for (int y = 0; y < ParticleTextureSize; y++)
+		{
+			for (int x = 0; x < ParticleTextureSize; x++)
+			{
+				double dx = (center - x - 0.5f) / center;
+				double dy = (center - y - 0.5f) / center;
+				double dist2 = dx * dx + dy * dy;
+				double round_alpha = clamp<double>(1.7f - dist2 * 1.7f, 0.0f, 1.0f);
+				double smooth_alpha = clamp<double>(1.1f - dist2 * 1.1f, 0.0f, 1.0f);
 
-	uint32_t alpha = (uint32_t)clamp(particle->alpha * 255.0f + 0.5f, 0.0f, 255.0f);
-
-	if (PolyRenderer::Instance()->RenderTarget->IsBgra())
-	{
-		args.uniforms.color = (alpha << 24) | (particle->color & 0xffffff);
+				particle_texture[0][x + y * ParticleTextureSize] = 255;
+				particle_texture[1][x + y * ParticleTextureSize] = (int)(round_alpha * 255.0f + 0.5f);
+				particle_texture[2][x + y * ParticleTextureSize] = (int)(smooth_alpha * 255.0f + 0.5f);
+			}
+		}
+		first_call = false;
 	}
-	else
-	{
-		args.uniforms.color = ((uint32_t)particle->color) >> 24;
-		args.uniforms.srcalpha = alpha;
-		args.uniforms.destalpha = 255 - alpha;
-	}
-
-	args.objectToClip = &worldToClip;
-	args.vinput = vertices;
-	args.vcount = 4;
-	args.mode = TriangleDrawMode::Fan;
-	args.ccw = true;
-	args.stenciltestvalue = stencilValue;
-	args.stencilwritevalue = stencilValue;
-	args.SetColormap(GetColorTable(sub->sector->Colormap));
-	args.SetClipPlane(clipPlane.x, clipPlane.y, clipPlane.z, clipPlane.w);
-	args.subsectorTest = true;
-	args.writeStencil = false;
-	args.writeSubsector = false;
-	args.blendmode = TriBlendMode::AlphaBlend;
-	PolyTriangleDrawer::draw(args);
+	return particle_texture[MIN<int>(gl_particles_style, NumParticleTextures)];
 }

@@ -63,7 +63,6 @@ void PolyRenderer::RenderView(player_t *player)
 
 	int width = SCREENWIDTH;
 	int height = SCREENHEIGHT;
-	int stHeight = gST_Y;
 	float trueratio;
 	ActiveRatio(width, height, &trueratio);
 	//viewport->SetViewport(&Thread, width, height, trueratio);
@@ -135,7 +134,7 @@ void PolyRenderer::RenderActorView(AActor *actor, bool dontmaplines)
 	ClearBuffers();
 	SetSceneViewport();
 	SetupPerspectiveMatrix();
-	MainPortal.SetViewpoint(WorldToClip, Vec4f(0.0f, 0.0f, 0.0f, 1.0f), GetNextStencilValue());
+	MainPortal.SetViewpoint(WorldToClip, PolyClipPlane(0.0f, 0.0f, 0.0f, 1.0f), GetNextStencilValue());
 	MainPortal.Render(0);
 	Skydome.Render(WorldToClip);
 	MainPortal.RenderTranslucent(0);
@@ -154,7 +153,7 @@ void PolyRenderer::RenderRemainingPlayerSprites()
 
 void PolyRenderer::ClearBuffers()
 {
-	PolyVertexBuffer::Clear();
+	FrameMemory.Clear();
 	PolyStencilBuffer::Instance()->Clear(RenderTarget->GetWidth(), RenderTarget->GetHeight(), 0);
 	PolySubsectorGBuffer::Instance()->Resize(RenderTarget->GetPitch(), RenderTarget->GetHeight());
 	NextStencilValue = 0;

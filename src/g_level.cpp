@@ -435,59 +435,7 @@ void G_InitNew (const char *mapname, bool bTitleLevel)
 		S_ResumeSound (false);
 	}
 
-	if (StatusBar != NULL)
-	{
-		StatusBar->Destroy();
-		StatusBar = NULL;
-	}
-	auto cls = PClass::FindClass("DoomStatusBar");
-
-	if (bTitleLevel)
-	{
-		StatusBar = new DBaseStatusBar ();
-		StatusBar->SetSize(0);
-	}
-	else if (cls && gameinfo.gametype == GAME_Doom)
-	{
-		StatusBar = (DBaseStatusBar*)cls->CreateNew();
-	}
-	else if (SBarInfoScript[SCRIPT_CUSTOM] != NULL)
-	{
-		int cstype = SBarInfoScript[SCRIPT_CUSTOM]->GetGameType();
-
-		//Did the user specify a "base"
-		if(cstype == GAME_Strife)
-		{
-			StatusBar = CreateStrifeStatusBar();
-		}
-		else if(cstype == GAME_Any) //Use the default, empty or custom.
-		{
-			StatusBar = CreateCustomStatusBar(SCRIPT_CUSTOM);
-		}
-		else
-		{
-			StatusBar = CreateCustomStatusBar(SCRIPT_DEFAULT);
-		}
-	}
-	if (StatusBar == NULL)
-	{
-		if (gameinfo.gametype & (GAME_DoomChex|GAME_Heretic|GAME_Hexen))
-		{
-			StatusBar = CreateCustomStatusBar (SCRIPT_DEFAULT);
-		}
-		else if (gameinfo.gametype == GAME_Strife)
-		{
-			StatusBar = CreateStrifeStatusBar ();
-		}
-		else
-		{
-			StatusBar = new DBaseStatusBar();
-			StatusBar->SetSize(0);
-		}
-	}
-	GC::WriteBarrier(StatusBar);
-	StatusBar->AttachToPlayer (&players[consoleplayer]);
-	StatusBar->NewGame ();
+	ST_CreateStatusBar(bTitleLevel);
 	setsizeneeded = true;
 
 	if (gameinfo.gametype == GAME_Strife || (SBarInfoScript[SCRIPT_CUSTOM] != NULL && SBarInfoScript[SCRIPT_CUSTOM]->GetGameType() == GAME_Strife))
@@ -1080,7 +1028,10 @@ void G_DoLoadLevel (int position, bool autosave)
 			{
 				players[ii].camera = players[ii].mo;
 			}
-			E_PlayerEntered(ii, finishstate == FINISH_SameHub);
+			if (!savegamerestore)
+			{
+				E_PlayerEntered(ii, finishstate == FINISH_SameHub);
+			}
 			// ENTER scripts are being handled when the player gets spawned, this cannot be changed due to its effect on voodoo dolls.
 			if (level.FromSnapshot && !savegamerestore) FBehavior::StaticStartTypedScripts(SCRIPT_Return, players[ii].mo, true);
 		}

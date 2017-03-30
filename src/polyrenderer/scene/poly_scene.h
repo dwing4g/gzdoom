@@ -29,7 +29,6 @@
 #include "doomdata.h"
 #include "r_utility.h"
 #include "polyrenderer/drawers/poly_triangle.h"
-#include "polyrenderer/math/poly_intersection.h"
 #include "poly_wall.h"
 #include "poly_sprite.h"
 #include "poly_wallsprite.h"
@@ -74,7 +73,7 @@ class RenderPolyScene
 public:
 	RenderPolyScene();
 	~RenderPolyScene();
-	void SetViewpoint(const TriMatrix &worldToClip, const Vec4f &portalPlane, uint32_t stencilValue);
+	void SetViewpoint(const TriMatrix &worldToClip, const PolyClipPlane &portalPlane, uint32_t stencilValue);
 	void SetPortalSegments(const std::vector<PolyPortalSegment> &segments);
 	void Render(int portalDepth);
 	void RenderTranslucent(int portalDepth);
@@ -91,13 +90,13 @@ private:
 	void RenderSprite(AActor *thing, double sortDistance, DVector2 left, DVector2 right, double t1, double t2, void *node);
 
 	TriMatrix WorldToClip;
-	Vec4f PortalPlane;
+	PolyClipPlane PortalPlane;
 	uint32_t StencilValue = 0;
 	PolyCull Cull;
 	uint32_t NextSubsectorDepth = 0;
 	std::set<sector_t *> SeenSectors;
 	std::unordered_map<subsector_t *, uint32_t> SubsectorDepths;
-	std::vector<PolyTranslucentObject> TranslucentObjects;
+	std::vector<PolyTranslucentObject *> TranslucentObjects;
 
 	std::vector<std::unique_ptr<PolyDrawSectorPortal>> SectorPortals;
 	std::vector<std::unique_ptr<PolyDrawLinePortal>> LinePortals;

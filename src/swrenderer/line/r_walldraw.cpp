@@ -13,6 +13,7 @@
 
 #include <stdlib.h>
 #include <stddef.h>
+#include <cmath>
 
 #include "doomdef.h"
 #include "doomstat.h"

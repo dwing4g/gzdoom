@@ -14,6 +14,7 @@ struct _ native	// These are the global variables, the struct is only here to av
 	native play @PlayerInfo players[MAXPLAYERS];
 	native readonly bool playeringame[MAXPLAYERS];
 
+	native readonly bool automapactive;
 	native play uint gameaction;
 	native readonly int gamestate;
 	native readonly TextureID skyflatnum;
@@ -159,13 +160,18 @@ struct Screen native
 	native static void Clear(int left, int top, int right, int bottom, Color color, int palcolor = -1);
 	native static void Dim(Color col, double amount, int x, int y, int w, int h);
 
-	native static void DrawHUDTexture(TextureID tex, double x, double y);
 	native static vararg void DrawTexture(TextureID tex, bool animate, double x, double y, ...);
 	native static vararg void DrawChar(Font font, int normalcolor, double x, double y, int character, ...);
 	native static vararg void DrawText(Font font, int normalcolor, double x, double y, String text, ...);
 	native static void DrawFrame(int x, int y, int w, int h);
 	native static Vector2, Vector2 VirtualToRealCoords(Vector2 pos, Vector2 size, Vector2 vsize, bool vbottom=false, bool handleaspect=true);
 	native static double GetAspectRatio();
+	
+	// This is a leftover of the abandoned Inventory.DrawPowerup method.
+	deprecated("2.5") static ui void DrawHUDTexture(TextureID tex, double x, double y)
+	{
+		statusBar.DrawTexture(tex, (x, y), BaseStatusBar.DI_SCREEN_RIGHT_TOP, 1., (32, 32));
+	}
 }
 
 struct Font native
@@ -316,6 +322,7 @@ class Object native
 	native bool bDestroyed;
 
 	// These really should be global functions...
+	native static String G_SkillName();
 	native static int G_SkillPropertyInt(int p);
 	native static double G_SkillPropertyFloat(int p);
 	native static vector3, int G_PickDeathmatchStart();
@@ -514,6 +521,13 @@ struct LevelLocals native
 	native static void WorldDone();
 	native static void RemoveAllBots(bool fromlist);
 	native void SetInterMusic(String nextmap);
+	native String FormatMapName(int mapnamecolor);
+	
+	String TimeFormatted(bool totals = false)
+	{
+		int sec = Thinker.Tics2Seconds(totals? totaltime : time); 
+		return String.Format("%02d:%02d:%02d", sec / 3600, (sec % 3600) / 60, sec % 60);
+	}
 }
 
 struct StringTable native

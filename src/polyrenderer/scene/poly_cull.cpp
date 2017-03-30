@@ -28,13 +28,13 @@
 #include "poly_cull.h"
 #include "polyrenderer/poly_renderer.h"
 
-void PolyCull::CullScene(const TriMatrix &worldToClip, const Vec4f &portalClipPlane)
+void PolyCull::CullScene(const TriMatrix &worldToClip, const PolyClipPlane &portalClipPlane)
 {
 	PvsSectors.clear();
-	frustumPlanes = FrustumPlanes(worldToClip);
 	PortalClipPlane = portalClipPlane;
 
 	// Cull front to back
+	FirstSkyHeight = true;
 	MaxCeilingHeight = 0.0;
 	MinFloorHeight = 0.0;
 	if (level.nodes.Size() == 0)
@@ -71,8 +71,17 @@ void PolyCull::CullNode(void *node)
 void PolyCull::CullSubsector(subsector_t *sub)
 {
 	// Update sky heights for the scene
-	MaxCeilingHeight = MAX(MaxCeilingHeight, sub->sector->ceilingplane.Zat0());
-	MinFloorHeight = MIN(MinFloorHeight, sub->sector->floorplane.Zat0());
+	if (!FirstSkyHeight)
+	{
+		MaxCeilingHeight = MAX(MaxCeilingHeight, sub->sector->ceilingplane.Zat0());
+		MinFloorHeight = MIN(MinFloorHeight, sub->sector->floorplane.Zat0());
+	}
+	else
+	{
+		MaxCeilingHeight = sub->sector->ceilingplane.Zat0();
+		MinFloorHeight = sub->sector->floorplane.Zat0();
+		FirstSkyHeight = false;
+	}
 
 	// Mark that we need to render this
 	PvsSectors.push_back(sub);
@@ -110,7 +119,8 @@ void PolyCull::InvertSegments()
 	angle_t cur = 0;
 	for (const auto &segment : TempInvertSolidSegments)
 	{
-		MarkSegmentCulled(cur, segment.Start - 1);
+		if (segment.Start != 0 || segment.End != ANGLE_MAX)
+			MarkSegmentCulled(cur, segment.Start - 1);
 		cur = segment.End + 1;
 	}
 	if (cur != 0)
@@ -199,20 +209,6 @@ int PolyCull::PointOnSide(const DVector2 &pos, const node_t *node)
 
 bool PolyCull::CheckBBox(float *bspcoord)
 {
-#if 0 // This doesn't work because it creates gaps in the angle based clipper segment list :(
-	// Start using a quick frustum AABB test:
-
-	AxisAlignedBoundingBox aabb(Vec3f(bspcoord[BOXLEFT], bspcoord[BOXBOTTOM], (float)PolyRenderer::Instance()->Viewpoint.Pos.Z - 1000.0f), Vec3f(bspcoord[BOXRIGHT], bspcoord[BOXTOP], (float)PolyRenderer::Instance()->Viewpoint.Pos.Z + 1000.0f));
-	auto result = IntersectionTest::frustum_aabb(frustumPlanes, aabb);
-	if (result == IntersectionTest::outside)
-		return false;
-
-	// Skip if its in front of the portal:
-
-	if (IntersectionTest::plane_aabb(PortalClipPlane, aabb) == IntersectionTest::outside)
-		return false;
-#endif
-
 	// Occlusion test using solid segments:
 	static const uint8_t checkcoord[12][4] =
 	{
@@ -245,6 +241,7 @@ bool PolyCull::CheckBBox(float *bspcoord)
 
 bool PolyCull::GetAnglesForLine(double x1, double y1, double x2, double y2, angle_t &angle1, angle_t &angle2) const
 {
+#if 0
 	// Clip line to the portal clip plane
 	float distance1 = Vec4f::dot(PortalClipPlane, Vec4f((float)x1, (float)y1, 0.0f, 1.0f));
 	float distance2 = Vec4f::dot(PortalClipPlane, Vec4f((float)x2, (float)y2, 0.0f, 1.0f));
@@ -268,10 +265,28 @@ bool PolyCull::GetAnglesForLine(double x1, double y1, double x2, double y2, angl
 		y1 = ny1;
 		y2 = ny2;
 	}
+#endif
 
 	angle2 = PointToPseudoAngle(x1, y1);
 	angle1 = PointToPseudoAngle(x2, y2);
 	return !IsSegmentCulled(angle1, angle2);
+}
+
+void PolyCull::MarkViewFrustum()
+{
+	// Clips things outside the viewing frustum.
+	auto &viewpoint = PolyRenderer::Instance()->Viewpoint;
+	auto &viewwindow = PolyRenderer::Instance()->Viewwindow;
+	double tilt = fabs(viewpoint.Angles.Pitch.Degrees);
+	if (tilt > 46.0) // If the pitch is larger than this you can look all around
+		return;
+
+	double floatangle = 2.0 + (45.0 + ((tilt / 1.9)))*viewpoint.FieldOfView.Degrees*48.0 / AspectMultiplier(viewwindow.WidescreenRatio) / 90.0;
+	angle_t a1 = DAngle(floatangle).BAMs();
+	if (a1 < ANGLE_180)
+	{
+		MarkSegmentCulled(AngleToPseudo(viewpoint.Angles.Yaw.BAMs() + a1), AngleToPseudo(viewpoint.Angles.Yaw.BAMs() - a1));
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -306,4 +321,17 @@ angle_t PolyCull::PointToPseudoAngle(double x, double y)
 		}
 		return xs_Fix<30>::ToFix(result);
 	}
+}
+
+angle_t PolyCull::AngleToPseudo(angle_t ang)
+{
+	double vecx = cos(ang * M_PI / ANGLE_180);
+	double vecy = sin(ang * M_PI / ANGLE_180);
+
+	double result = vecy / (fabs(vecx) + fabs(vecy));
+	if (vecx < 0)
+	{
+		result = 2.f - result;
+	}
+	return xs_Fix<30>::ToFix(result);
 }

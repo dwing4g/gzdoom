@@ -489,6 +489,11 @@ class Actor : Thinker native
 		return Obituary;
 	}
 	
+	virtual int OnDrain(Actor victim, int damage, Name dmgtype)
+	{
+		return damage;
+	}
+	
 	native virtual bool OkayToSwitchTarget(Actor other);
 	native static class<Actor> GetReplacement(class<Actor> cls);
 	native static class<Actor> GetReplacee(class<Actor> cls);
@@ -501,6 +506,8 @@ class Actor : Thinker native
 	native static int FindUniqueTid(int start = 0, int limit = 0);
 	native void SetShade(color col);
 	native clearscope int GetRenderStyle() const;
+	native clearscope bool CheckKeys(int locknum, bool remote, bool quiet = false);
+	native clearscope Inventory FirstInv() const;
 		
 	native clearscope string GetTag(string defstr = "") const;
 	native void SetTag(string defstr = "");
@@ -509,7 +516,7 @@ class Actor : Thinker native
 	native bool GiveBody (int num, int max=0);
 	native bool HitFloor();
 	native clearscope bool isTeammate(Actor other) const;
-	native int PlayerNumber();
+	native clearscope int PlayerNumber() const;
 	native void SetFriendPlayer(PlayerInfo player);
 	native void SoundAlert(Actor target, bool splash = false, double maxdist = 0);
 	native void DaggerAlert(Actor target);
@@ -669,6 +676,7 @@ class Actor : Thinker native
 	native clearscope int GetSpawnHealth() const;
 	native double GetCrouchFactor(int ptr = AAPTR_PLAYER1);
 	native double GetCVar(string cvar);
+	native double GetCVarString(string cvar);
 	native int GetPlayerInput(int inputnum, int ptr = AAPTR_DEFAULT);
 	native int CountProximity(class<Actor> classname, double distance, int flags = 0, int ptr = AAPTR_DEFAULT);
 	native double GetSpriteAngle(int ptr = AAPTR_DEFAULT);

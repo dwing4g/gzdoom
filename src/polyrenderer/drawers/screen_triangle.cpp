@@ -52,12 +52,13 @@ void ScreenTriangle::SetupNormal(const TriDrawTriangleArgs *args, WorkerThreadDa
 	int stencilPitch = args->stencilPitch;
 	uint8_t * RESTRICT stencilValues = args->stencilValues;
 	uint32_t * RESTRICT stencilMasks = args->stencilMasks;
-	uint8_t stencilTestValue = args->stencilTestValue;
+	uint8_t stencilTestValue = args->uniforms->StencilTestValue();
 	
 	TriFullSpan * RESTRICT span = thread->FullSpans;
 	TriPartialBlock * RESTRICT partial = thread->PartialBlocks;
 	
 	// 28.4 fixed-point coordinates
+#ifdef NO_SSE
 	const int Y1 = (int)round(16.0f * v1.y);
 	const int Y2 = (int)round(16.0f * v2.y);
 	const int Y3 = (int)round(16.0f * v3.y);
@@ -65,6 +66,20 @@ void ScreenTriangle::SetupNormal(const TriDrawTriangleArgs *args, WorkerThreadDa
 	const int X1 = (int)round(16.0f * v1.x);
 	const int X2 = (int)round(16.0f * v2.x);
 	const int X3 = (int)round(16.0f * v3.x);
+#else
+	int tempround[4 * 3];
+	__m128 m16 = _mm_set1_ps(16.0f);
+	__m128 mhalf = _mm_set1_ps(0.5f);
+	_mm_storeu_si128((__m128i*)tempround, _mm_cvtps_epi32(_mm_add_ps(_mm_mul_ps(_mm_loadu_ps((const float*)&v1), m16), mhalf)));
+	_mm_storeu_si128((__m128i*)(tempround + 4), _mm_cvtps_epi32(_mm_add_ps(_mm_mul_ps(_mm_loadu_ps((const float*)&v2), m16), mhalf)));
+	_mm_storeu_si128((__m128i*)(tempround + 8), _mm_cvtps_epi32(_mm_add_ps(_mm_mul_ps(_mm_loadu_ps((const float*)&v3), m16), mhalf)));
+	const int X1 = tempround[0];
+	const int X2 = tempround[4];
+	const int X3 = tempround[8];
+	const int Y1 = tempround[1];
+	const int Y2 = tempround[5];
+	const int Y3 = tempround[9];
+#endif
 	
 	// Deltas
 	const int DX12 = X1 - X2;
@@ -122,6 +137,22 @@ void ScreenTriangle::SetupNormal(const TriDrawTriangleArgs *args, WorkerThreadDa
 	thread->StartX = minx;
 	thread->StartY = miny;
 	span->Length = 0;
+
+#ifndef NO_SSE
+	__m128i mnotxor = _mm_set1_epi32(0xffffffff);
+	__m128i mstencilTestValue = _mm_set1_epi16(stencilTestValue);
+	__m128i mFDY12Offset = _mm_setr_epi32(0, FDY12, FDY12 * 2, FDY12 * 3);
+	__m128i mFDY23Offset = _mm_setr_epi32(0, FDY23, FDY23 * 2, FDY23 * 3);
+	__m128i mFDY31Offset = _mm_setr_epi32(0, FDY31, FDY31 * 2, FDY31 * 3);
+	__m128i mFDY12x4 = _mm_set1_epi32(FDY12 * 4);
+	__m128i mFDY23x4 = _mm_set1_epi32(FDY23 * 4);
+	__m128i mFDY31x4 = _mm_set1_epi32(FDY31 * 4);
+	__m128i mFDX12 = _mm_set1_epi32(FDX12);
+	__m128i mFDX23 = _mm_set1_epi32(FDX23);
+	__m128i mFDX31 = _mm_set1_epi32(FDX31);
+	__m128i mClipCompare0 = _mm_setr_epi32(clipright, clipright - 1, clipright - 2, clipright - 3);
+	__m128i mClipCompare1 = _mm_setr_epi32(clipright - 4, clipright - 5, clipright - 6, clipright - 7);
+#endif
 
 	// Loop through blocks
 	for (int y = miny; y < maxy; y += q * num_cores)
@@ -196,6 +227,7 @@ void ScreenTriangle::SetupNormal(const TriDrawTriangleArgs *args, WorkerThreadDa
 				uint32_t mask0 = 0;
 				uint32_t mask1 = 0;
 
+#ifdef NO_SSE
 				for (int iy = 0; iy < 4; iy++)
 				{
 					int CX1 = CY1;
@@ -241,6 +273,69 @@ void ScreenTriangle::SetupNormal(const TriDrawTriangleArgs *args, WorkerThreadDa
 					CY2 += FDX23;
 					CY3 += FDX31;
 				}
+#else
+				__m128i mSingleStencilMask = _mm_set1_epi32(blockIsSingleStencil ? 0xffffffff : 0);
+				__m128i mCY1 = _mm_sub_epi32(_mm_set1_epi32(CY1), mFDY12Offset);
+				__m128i mCY2 = _mm_sub_epi32(_mm_set1_epi32(CY2), mFDY23Offset);
+				__m128i mCY3 = _mm_sub_epi32(_mm_set1_epi32(CY3), mFDY31Offset);
+				__m128i mx = _mm_set1_epi32(x);
+				__m128i mClipTest0 = _mm_cmplt_epi32(mx, mClipCompare0);
+				__m128i mClipTest1 = _mm_cmplt_epi32(mx, mClipCompare1);
+				int iy;
+				for (iy = 0; iy < 4 && iy < clipbottom - y; iy++)
+				{
+					__m128i mstencilBlock = _mm_unpacklo_epi8(_mm_loadl_epi64((const __m128i *)(stencilBlock + iy * 8)), _mm_setzero_si128());
+					__m128i mstencilTest = _mm_or_si128(_mm_cmpeq_epi16(mstencilBlock, mstencilTestValue), mSingleStencilMask);
+					__m128i mstencilTest0 = _mm_unpacklo_epi16(mstencilTest, mstencilTest);
+					__m128i mstencilTest1 = _mm_unpackhi_epi16(mstencilTest, mstencilTest);
+					__m128i mtest0 = _mm_and_si128(mstencilTest0, mClipTest0);
+					__m128i mtest1 = _mm_and_si128(mstencilTest1, mClipTest1);
+
+					mtest0 = _mm_and_si128(_mm_cmpgt_epi32(mCY1, _mm_setzero_si128()), mtest0);
+					mtest0 = _mm_and_si128(_mm_cmpgt_epi32(mCY2, _mm_setzero_si128()), mtest0);
+					mtest0 = _mm_and_si128(_mm_cmpgt_epi32(mCY3, _mm_setzero_si128()), mtest0);
+					mtest1 = _mm_and_si128(_mm_cmpgt_epi32(_mm_sub_epi32(mCY1, mFDY12x4), _mm_setzero_si128()), mtest1);
+					mtest1 = _mm_and_si128(_mm_cmpgt_epi32(_mm_sub_epi32(mCY2, mFDY23x4), _mm_setzero_si128()), mtest1);
+					mtest1 = _mm_and_si128(_mm_cmpgt_epi32(_mm_sub_epi32(mCY3, mFDY31x4), _mm_setzero_si128()), mtest1);
+
+					mCY1 = _mm_add_epi32(mCY1, mFDX12);
+					mCY2 = _mm_add_epi32(mCY2, mFDX23);
+					mCY3 = _mm_add_epi32(mCY3, mFDX31);
+
+					mask0 <<= 4;
+					mask0 |= _mm_movemask_ps(_mm_castsi128_ps(_mm_shuffle_epi32(mtest0, _MM_SHUFFLE(0, 1, 2, 3))));
+					mask0 <<= 4;
+					mask0 |= _mm_movemask_ps(_mm_castsi128_ps(_mm_shuffle_epi32(mtest1, _MM_SHUFFLE(0, 1, 2, 3))));
+				}
+				mask0 <<= (4 - iy) * 8;
+
+				for (iy = 4; iy < q && iy < clipbottom - y; iy++)
+				{
+					__m128i mstencilBlock = _mm_unpacklo_epi8(_mm_loadl_epi64((const __m128i *)(stencilBlock + iy * 8)), _mm_setzero_si128());
+					__m128i mstencilTest = _mm_or_si128(_mm_cmpeq_epi16(mstencilBlock, mstencilTestValue), mSingleStencilMask);
+					__m128i mstencilTest0 = _mm_unpacklo_epi16(mstencilTest, mstencilTest);
+					__m128i mstencilTest1 = _mm_unpackhi_epi16(mstencilTest, mstencilTest);
+					__m128i mtest0 = _mm_and_si128(mstencilTest0, mClipTest0);
+					__m128i mtest1 = _mm_and_si128(mstencilTest1, mClipTest1);
+
+					mtest0 = _mm_and_si128(_mm_cmpgt_epi32(mCY1, _mm_setzero_si128()), mtest0);
+					mtest0 = _mm_and_si128(_mm_cmpgt_epi32(mCY2, _mm_setzero_si128()), mtest0);
+					mtest0 = _mm_and_si128(_mm_cmpgt_epi32(mCY3, _mm_setzero_si128()), mtest0);
+					mtest1 = _mm_and_si128(_mm_cmpgt_epi32(_mm_sub_epi32(mCY1, mFDY12x4), _mm_setzero_si128()), mtest1);
+					mtest1 = _mm_and_si128(_mm_cmpgt_epi32(_mm_sub_epi32(mCY2, mFDY23x4), _mm_setzero_si128()), mtest1);
+					mtest1 = _mm_and_si128(_mm_cmpgt_epi32(_mm_sub_epi32(mCY3, mFDY31x4), _mm_setzero_si128()), mtest1);
+
+					mCY1 = _mm_add_epi32(mCY1, mFDX12);
+					mCY2 = _mm_add_epi32(mCY2, mFDX23);
+					mCY3 = _mm_add_epi32(mCY3, mFDX31);
+
+					mask1 <<= 4;
+					mask1 |= _mm_movemask_ps(_mm_castsi128_ps(_mm_shuffle_epi32(mtest0, _MM_SHUFFLE(0, 1, 2, 3))));
+					mask1 <<= 4;
+					mask1 |= _mm_movemask_ps(_mm_castsi128_ps(_mm_shuffle_epi32(mtest1, _MM_SHUFFLE(0, 1, 2, 3))));
+				}
+				mask1 <<= (q - iy) * 8;
+#endif
 
 				if (mask0 != 0xffffffff || mask1 != 0xffffffff)
 				{
@@ -294,16 +389,17 @@ void ScreenTriangle::SetupSubsector(const TriDrawTriangleArgs *args, WorkerThrea
 	int stencilPitch = args->stencilPitch;
 	uint8_t * RESTRICT stencilValues = args->stencilValues;
 	uint32_t * RESTRICT stencilMasks = args->stencilMasks;
-	uint8_t stencilTestValue = args->stencilTestValue;
+	uint8_t stencilTestValue = args->uniforms->StencilTestValue();
 
 	uint32_t * RESTRICT subsectorGBuffer = args->subsectorGBuffer;
-	uint32_t subsectorDepth = args->uniforms->subsectorDepth;
+	uint32_t subsectorDepth = args->uniforms->SubsectorDepth();
 	int32_t pitch = args->pitch;
 
 	TriFullSpan * RESTRICT span = thread->FullSpans;
 	TriPartialBlock * RESTRICT partial = thread->PartialBlocks;
 
 	// 28.4 fixed-point coordinates
+#ifdef NO_SSE
 	const int Y1 = (int)round(16.0f * v1.y);
 	const int Y2 = (int)round(16.0f * v2.y);
 	const int Y3 = (int)round(16.0f * v3.y);
@@ -311,6 +407,20 @@ void ScreenTriangle::SetupSubsector(const TriDrawTriangleArgs *args, WorkerThrea
 	const int X1 = (int)round(16.0f * v1.x);
 	const int X2 = (int)round(16.0f * v2.x);
 	const int X3 = (int)round(16.0f * v3.x);
+#else
+	int tempround[4 * 3];
+	__m128 m16 = _mm_set1_ps(16.0f);
+	__m128 mhalf = _mm_set1_ps(0.5f);
+	_mm_storeu_si128((__m128i*)tempround, _mm_cvtps_epi32(_mm_add_ps(_mm_mul_ps(_mm_loadu_ps((const float*)&v1), m16), mhalf)));
+	_mm_storeu_si128((__m128i*)(tempround + 4), _mm_cvtps_epi32(_mm_add_ps(_mm_mul_ps(_mm_loadu_ps((const float*)&v2), m16), mhalf)));
+	_mm_storeu_si128((__m128i*)(tempround + 8), _mm_cvtps_epi32(_mm_add_ps(_mm_mul_ps(_mm_loadu_ps((const float*)&v3), m16), mhalf)));
+	const int X1 = tempround[0];
+	const int X2 = tempround[4];
+	const int X3 = tempround[8];
+	const int Y1 = tempround[1];
+	const int Y2 = tempround[5];
+	const int Y3 = tempround[9];
+#endif
 
 	// Deltas
 	const int DX12 = X1 - X2;
@@ -368,6 +478,23 @@ void ScreenTriangle::SetupSubsector(const TriDrawTriangleArgs *args, WorkerThrea
 	thread->StartX = minx;
 	thread->StartY = miny;
 	span->Length = 0;
+
+#ifndef NO_SSE
+	__m128i msubsectorDepth = _mm_set1_epi32(subsectorDepth);
+	__m128i mnotxor = _mm_set1_epi32(0xffffffff);
+	__m128i mstencilTestValue = _mm_set1_epi16(stencilTestValue);
+	__m128i mFDY12Offset = _mm_setr_epi32(0, FDY12, FDY12 * 2, FDY12 * 3);
+	__m128i mFDY23Offset = _mm_setr_epi32(0, FDY23, FDY23 * 2, FDY23 * 3);
+	__m128i mFDY31Offset = _mm_setr_epi32(0, FDY31, FDY31 * 2, FDY31 * 3);
+	__m128i mFDY12x4 = _mm_set1_epi32(FDY12 * 4);
+	__m128i mFDY23x4 = _mm_set1_epi32(FDY23 * 4);
+	__m128i mFDY31x4 = _mm_set1_epi32(FDY31 * 4);
+	__m128i mFDX12 = _mm_set1_epi32(FDX12);
+	__m128i mFDX23 = _mm_set1_epi32(FDX23);
+	__m128i mFDX31 = _mm_set1_epi32(FDX31);
+	__m128i mClipCompare0 = _mm_setr_epi32(clipright, clipright - 1, clipright - 2, clipright - 3);
+	__m128i mClipCompare1 = _mm_setr_epi32(clipright - 4, clipright - 5, clipright - 6, clipright - 7);
+#endif
 
 	// Loop through blocks
 	for (int y = miny; y < maxy; y += q * num_cores)
@@ -427,6 +554,7 @@ void ScreenTriangle::SetupSubsector(const TriDrawTriangleArgs *args, WorkerThrea
 				uint32_t mask0 = 0;
 				uint32_t mask1 = 0;
 
+#ifdef NO_SSE
 				for (int iy = 0; iy < 4; iy++)
 				{
 					for (int ix = 0; ix < q; ix++)
@@ -437,7 +565,6 @@ void ScreenTriangle::SetupSubsector(const TriDrawTriangleArgs *args, WorkerThrea
 					}
 					subsector += pitch;
 				}
-
 				for (int iy = 4; iy < q; iy++)
 				{
 					for (int ix = 0; ix < q; ix++)
@@ -448,6 +575,24 @@ void ScreenTriangle::SetupSubsector(const TriDrawTriangleArgs *args, WorkerThrea
 					}
 					subsector += pitch;
 				}
+#else
+				for (int iy = 0; iy < 4; iy++)
+				{
+					mask0 <<= 4;
+					mask0 |= _mm_movemask_ps(_mm_castsi128_ps(_mm_shuffle_epi32(_mm_xor_si128(_mm_cmplt_epi32(_mm_loadu_si128((const __m128i *)subsector), msubsectorDepth), mnotxor), _MM_SHUFFLE(0, 1, 2, 3))));
+					mask0 <<= 4;
+					mask0 |= _mm_movemask_ps(_mm_castsi128_ps(_mm_shuffle_epi32(_mm_xor_si128(_mm_cmplt_epi32(_mm_loadu_si128((const __m128i *)(subsector + 4)), msubsectorDepth), mnotxor), _MM_SHUFFLE(0, 1, 2, 3))));
+					subsector += pitch;
+				}
+				for (int iy = 4; iy < q; iy++)
+				{
+					mask1 <<= 4;
+					mask1 |= _mm_movemask_ps(_mm_castsi128_ps(_mm_shuffle_epi32(_mm_xor_si128(_mm_cmplt_epi32(_mm_loadu_si128((const __m128i *)subsector), msubsectorDepth), mnotxor), _MM_SHUFFLE(0, 1, 2, 3))));
+					mask1 <<= 4;
+					mask1 |= _mm_movemask_ps(_mm_castsi128_ps(_mm_shuffle_epi32(_mm_xor_si128(_mm_cmplt_epi32(_mm_loadu_si128((const __m128i *)(subsector + 4)), msubsectorDepth), mnotxor), _MM_SHUFFLE(0, 1, 2, 3))));
+					subsector += pitch;
+				}
+#endif
 
 				if (mask0 != 0xffffffff || mask1 != 0xffffffff)
 				{
@@ -490,6 +635,7 @@ void ScreenTriangle::SetupSubsector(const TriDrawTriangleArgs *args, WorkerThrea
 				uint32_t mask0 = 0;
 				uint32_t mask1 = 0;
 
+#ifdef NO_SSE
 				for (int iy = 0; iy < 4; iy++)
 				{
 					int CX1 = CY1;
@@ -537,6 +683,77 @@ void ScreenTriangle::SetupSubsector(const TriDrawTriangleArgs *args, WorkerThrea
 					CY3 += FDX31;
 					subsector += pitch;
 				}
+#else
+				__m128i mSingleStencilMask = _mm_set1_epi32(blockIsSingleStencil ? 0 : 0xffffffff);
+				__m128i mCY1 = _mm_sub_epi32(_mm_set1_epi32(CY1), mFDY12Offset);
+				__m128i mCY2 = _mm_sub_epi32(_mm_set1_epi32(CY2), mFDY23Offset);
+				__m128i mCY3 = _mm_sub_epi32(_mm_set1_epi32(CY3), mFDY31Offset);
+				__m128i mx = _mm_set1_epi32(x);
+				__m128i mClipTest0 = _mm_cmplt_epi32(mx, mClipCompare0);
+				__m128i mClipTest1 = _mm_cmplt_epi32(mx, mClipCompare1);
+				int iy;
+				for (iy = 0; iy < 4 && iy < clipbottom - y; iy++)
+				{
+					__m128i mstencilBlock = _mm_unpacklo_epi8(_mm_loadl_epi64((const __m128i *)(stencilBlock + iy * 8)), _mm_setzero_si128());
+					__m128i mstencilTest = _mm_and_si128(_mm_cmplt_epi16(mstencilBlock, mstencilTestValue), mSingleStencilMask);
+					__m128i mstencilTest0 = _mm_unpacklo_epi16(mstencilTest, mstencilTest);
+					__m128i mstencilTest1 = _mm_unpackhi_epi16(mstencilTest, mstencilTest);
+					__m128i msubsectorTest0 = _mm_cmplt_epi32(_mm_loadu_si128((const __m128i *)subsector), msubsectorDepth);
+					__m128i msubsectorTest1 = _mm_cmplt_epi32(_mm_loadu_si128((const __m128i *)(subsector + 4)), msubsectorDepth);
+					__m128i mtest0 = _mm_and_si128(_mm_xor_si128(_mm_or_si128(mstencilTest0, msubsectorTest0), mnotxor), mClipTest0);
+					__m128i mtest1 = _mm_and_si128(_mm_xor_si128(_mm_or_si128(mstencilTest1, msubsectorTest1), mnotxor), mClipTest1);
+
+					mtest0 = _mm_and_si128(_mm_cmpgt_epi32(mCY1, _mm_setzero_si128()), mtest0);
+					mtest0 = _mm_and_si128(_mm_cmpgt_epi32(mCY2, _mm_setzero_si128()), mtest0);
+					mtest0 = _mm_and_si128(_mm_cmpgt_epi32(mCY3, _mm_setzero_si128()), mtest0);
+					mtest1 = _mm_and_si128(_mm_cmpgt_epi32(_mm_sub_epi32(mCY1, mFDY12x4), _mm_setzero_si128()), mtest1);
+					mtest1 = _mm_and_si128(_mm_cmpgt_epi32(_mm_sub_epi32(mCY2, mFDY23x4), _mm_setzero_si128()), mtest1);
+					mtest1 = _mm_and_si128(_mm_cmpgt_epi32(_mm_sub_epi32(mCY3, mFDY31x4), _mm_setzero_si128()), mtest1);
+
+					mCY1 = _mm_add_epi32(mCY1, mFDX12);
+					mCY2 = _mm_add_epi32(mCY2, mFDX23);
+					mCY3 = _mm_add_epi32(mCY3, mFDX31);
+
+					mask0 <<= 4;
+					mask0 |= _mm_movemask_ps(_mm_castsi128_ps(_mm_shuffle_epi32(mtest0, _MM_SHUFFLE(0, 1, 2, 3))));
+					mask0 <<= 4;
+					mask0 |= _mm_movemask_ps(_mm_castsi128_ps(_mm_shuffle_epi32(mtest1, _MM_SHUFFLE(0, 1, 2, 3))));
+
+					subsector += pitch;
+				}
+				mask0 <<= (4 - iy) * 8;
+
+				for (iy = 4; iy < q && iy < clipbottom - y; iy++)
+				{
+					__m128i mstencilBlock = _mm_unpacklo_epi8(_mm_loadl_epi64((const __m128i *)(stencilBlock + iy * 8)), _mm_setzero_si128());
+					__m128i mstencilTest = _mm_and_si128(_mm_cmplt_epi16(mstencilBlock, mstencilTestValue), mSingleStencilMask);
+					__m128i mstencilTest0 = _mm_unpacklo_epi16(mstencilTest, mstencilTest);
+					__m128i mstencilTest1 = _mm_unpackhi_epi16(mstencilTest, mstencilTest);
+					__m128i msubsectorTest0 = _mm_cmplt_epi32(_mm_loadu_si128((const __m128i *)subsector), msubsectorDepth);
+					__m128i msubsectorTest1 = _mm_cmplt_epi32(_mm_loadu_si128((const __m128i *)(subsector + 4)), msubsectorDepth);
+					__m128i mtest0 = _mm_and_si128(_mm_xor_si128(_mm_or_si128(mstencilTest0, msubsectorTest0), mnotxor), mClipTest0);
+					__m128i mtest1 = _mm_and_si128(_mm_xor_si128(_mm_or_si128(mstencilTest1, msubsectorTest1), mnotxor), mClipTest1);
+
+					mtest0 = _mm_and_si128(_mm_cmpgt_epi32(mCY1, _mm_setzero_si128()), mtest0);
+					mtest0 = _mm_and_si128(_mm_cmpgt_epi32(mCY2, _mm_setzero_si128()), mtest0);
+					mtest0 = _mm_and_si128(_mm_cmpgt_epi32(mCY3, _mm_setzero_si128()), mtest0);
+					mtest1 = _mm_and_si128(_mm_cmpgt_epi32(_mm_sub_epi32(mCY1, mFDY12x4), _mm_setzero_si128()), mtest1);
+					mtest1 = _mm_and_si128(_mm_cmpgt_epi32(_mm_sub_epi32(mCY2, mFDY23x4), _mm_setzero_si128()), mtest1);
+					mtest1 = _mm_and_si128(_mm_cmpgt_epi32(_mm_sub_epi32(mCY3, mFDY31x4), _mm_setzero_si128()), mtest1);
+
+					mCY1 = _mm_add_epi32(mCY1, mFDX12);
+					mCY2 = _mm_add_epi32(mCY2, mFDX23);
+					mCY3 = _mm_add_epi32(mCY3, mFDX31);
+
+					mask1 <<= 4;
+					mask1 |= _mm_movemask_ps(_mm_castsi128_ps(_mm_shuffle_epi32(mtest0, _MM_SHUFFLE(0, 1, 2, 3))));
+					mask1 <<= 4;
+					mask1 |= _mm_movemask_ps(_mm_castsi128_ps(_mm_shuffle_epi32(mtest1, _MM_SHUFFLE(0, 1, 2, 3))));
+
+					subsector += pitch;
+				}
+				mask1 <<= (q - iy) * 8;
+#endif
 
 				if (mask0 != 0xffffffff || mask1 != 0xffffffff)
 				{
@@ -583,7 +800,7 @@ void ScreenTriangle::StencilWrite(const TriDrawTriangleArgs *args, WorkerThreadD
 {
 	uint8_t * RESTRICT stencilValues = args->stencilValues;
 	uint32_t * RESTRICT stencilMasks = args->stencilMasks;
-	uint32_t stencilWriteValue = args->stencilWriteValue;
+	uint32_t stencilWriteValue = args->uniforms->StencilWriteValue();
 	uint32_t stencilPitch = args->stencilPitch;
 
 	int numSpans = thread->NumFullSpans;
@@ -652,7 +869,7 @@ void ScreenTriangle::StencilWrite(const TriDrawTriangleArgs *args, WorkerThreadD
 void ScreenTriangle::SubsectorWrite(const TriDrawTriangleArgs *args, WorkerThreadData *thread)
 {
 	uint32_t * RESTRICT subsectorGBuffer = args->subsectorGBuffer;
-	uint32_t subsectorDepth = args->uniforms->subsectorDepth;
+	uint32_t subsectorDepth = args->uniforms->SubsectorDepth();
 	int pitch = args->pitch;
 
 	int numSpans = thread->NumFullSpans;
@@ -705,87 +922,128 @@ void ScreenTriangle::SubsectorWrite(const TriDrawTriangleArgs *args, WorkerThrea
 	}
 }
 
-std::vector<void(*)(const TriDrawTriangleArgs *, WorkerThreadData *)> ScreenTriangle::TriDraw8 =
+void(*ScreenTriangle::TriDrawers8[])(const TriDrawTriangleArgs *, WorkerThreadData *) = 
 {
-	&TriScreenDrawer8<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::TextureSampler>::Execute,      // "Copy", "opaque", false
-	&TriScreenDrawer8<TriScreenDrawerModes::MaskedBlend, TriScreenDrawerModes::TextureSampler>::Execute,      // "AlphaBlend", "masked", false
-	&TriScreenDrawer8<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::TextureSampler>::Execute,    // "AddSolid", "translucent", false
-	&TriScreenDrawer8<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::TextureSampler>::Execute,    // "Add", "add", false
-	&TriScreenDrawer8<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::TextureSampler>::Execute,    // "Sub", "sub", false
-	&TriScreenDrawer8<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::TextureSampler>::Execute, // "RevSub", "revsub", false
-	&TriScreenDrawer8<TriScreenDrawerModes::ShadedBlend, TriScreenDrawerModes::ShadedSampler>::Execute,       // "Stencil", "stencil", false
-	&TriScreenDrawer8<TriScreenDrawerModes::ShadedBlend, TriScreenDrawerModes::ShadedSampler>::Execute,       // "Shaded", "shaded", false
-	&TriScreenDrawer8<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateCopy", "opaque", true
-	&TriScreenDrawer8<TriScreenDrawerModes::MaskedBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateAlphaBlend", "masked", true
-	&TriScreenDrawer8<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateAdd", "add", true
-	&TriScreenDrawer8<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateSub", "sub", true
-	&TriScreenDrawer8<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateRevSub", "revsub", true
-	&TriScreenDrawer8<TriScreenDrawerModes::AddSrcColorBlend, TriScreenDrawerModes::TextureSampler>::Execute, // "AddSrcColorOneMinusSrcColor", "addsrccolor", false
-	&TriScreenDrawer8<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::SkycapSampler>::Execute        // "Skycap", "skycap", false
-};
-
-std::vector<void(*)(const TriDrawTriangleArgs *, WorkerThreadData *)> ScreenTriangle::TriFill8 =
-{
-	&TriScreenDrawer8<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::FillSampler>::Execute,         // "Copy", "opaque", false
-	&TriScreenDrawer8<TriScreenDrawerModes::MaskedBlend, TriScreenDrawerModes::FillSampler>::Execute,         // "AlphaBlend", "masked", false
-	&TriScreenDrawer8<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::FillSampler>::Execute,       // "AddSolid", "translucent", false
-	&TriScreenDrawer8<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::FillSampler>::Execute,       // "Add", "add", false
-	&TriScreenDrawer8<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::FillSampler>::Execute,       // "Sub", "sub", false
-	&TriScreenDrawer8<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::FillSampler>::Execute,    // "RevSub", "revsub", false
-	&TriScreenDrawer8<TriScreenDrawerModes::ShadedBlend, TriScreenDrawerModes::ShadedSampler>::Execute,       // "Stencil", "stencil", false
-	&TriScreenDrawer8<TriScreenDrawerModes::ShadedBlend, TriScreenDrawerModes::ShadedSampler>::Execute,       // "Shaded", "shaded", false
-	&TriScreenDrawer8<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateCopy", "opaque", true
-	&TriScreenDrawer8<TriScreenDrawerModes::MaskedBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateAlphaBlend", "masked", true
-	&TriScreenDrawer8<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateAdd", "add", true
-	&TriScreenDrawer8<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateSub", "sub", true
-	&TriScreenDrawer8<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateRevSub", "revsub", true
-	&TriScreenDrawer8<TriScreenDrawerModes::AddSrcColorBlend, TriScreenDrawerModes::FillSampler>::Execute,    // "AddSrcColorOneMinusSrcColor", "addsrccolor", false
-	&TriScreenDrawer8<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::FillSampler>::Execute          // "Skycap", "skycap", false
+	&TriScreenDrawer8<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::TextureSampler>::Execute,         // TextureOpaque
+	&TriScreenDrawer8<TriScreenDrawerModes::MaskedBlend, TriScreenDrawerModes::TextureSampler>::Execute,         // TextureMasked
+	&TriScreenDrawer8<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::TextureSampler>::Execute,       // TextureAdd
+	&TriScreenDrawer8<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::TextureSampler>::Execute,       // TextureSub
+	&TriScreenDrawer8<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::TextureSampler>::Execute,    // TextureRevSub
+	&TriScreenDrawer8<TriScreenDrawerModes::AddSrcColorBlend, TriScreenDrawerModes::TextureSampler>::Execute,    // TextureAddSrcColor
+	&TriScreenDrawer8<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,      // TranslatedOpaque
+	&TriScreenDrawer8<TriScreenDrawerModes::MaskedBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,      // TranslatedMasked
+	&TriScreenDrawer8<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,    // TranslatedAdd
+	&TriScreenDrawer8<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,    // TranslatedSub
+	&TriScreenDrawer8<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute, // TranslatedRevSub
+	&TriScreenDrawer8<TriScreenDrawerModes::AddSrcColorBlend, TriScreenDrawerModes::TranslatedSampler>::Execute, // TranslatedAddSrcColor
+	&TriScreenDrawer8<TriScreenDrawerModes::ShadedBlend, TriScreenDrawerModes::ShadedSampler>::Execute,          // Shaded
+	&TriScreenDrawer8<TriScreenDrawerModes::AddClampShadedBlend, TriScreenDrawerModes::ShadedSampler>::Execute,  // AddShaded
+	&TriScreenDrawer8<TriScreenDrawerModes::ShadedBlend, TriScreenDrawerModes::StencilSampler>::Execute,         // Stencil
+	&TriScreenDrawer8<TriScreenDrawerModes::AddClampShadedBlend, TriScreenDrawerModes::StencilSampler>::Execute, // AddStencil
+	&TriScreenDrawer8<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::FillSampler>::Execute,            // FillOpaque
+	&TriScreenDrawer8<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::FillSampler>::Execute,          // FillAdd
+	&TriScreenDrawer8<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::FillSampler>::Execute,          // FillSub
+	&TriScreenDrawer8<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::FillSampler>::Execute,       // FillRevSub
+	&TriScreenDrawer8<TriScreenDrawerModes::AddSrcColorBlend, TriScreenDrawerModes::FillSampler>::Execute,       // FillAddSrcColor
+	&TriScreenDrawer8<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::SkycapSampler>::Execute           // Skycap
 };
 
 #ifdef NO_SSE
 
-std::vector<void(*)(const TriDrawTriangleArgs *, WorkerThreadData *)> ScreenTriangle::TriDraw32;
-std::vector<void(*)(const TriDrawTriangleArgs *, WorkerThreadData *)> ScreenTriangle::TriFill32;
+void(*ScreenTriangle::TriDrawers32[])(const TriDrawTriangleArgs *, WorkerThreadData *) =
+{
+	nullptr
+};
 
 #else
 
-std::vector<void(*)(const TriDrawTriangleArgs *, WorkerThreadData *)> ScreenTriangle::TriDraw32 =
+void(*ScreenTriangle::TriDrawers32[])(const TriDrawTriangleArgs *, WorkerThreadData *) =
 {
-	&TriScreenDrawer32<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::TextureSampler>::Execute,      // "Copy", "opaque", false
-	&TriScreenDrawer32<TriScreenDrawerModes::MaskedBlend, TriScreenDrawerModes::TextureSampler>::Execute,      // "AlphaBlend", "masked", false
-	&TriScreenDrawer32<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::TextureSampler>::Execute,    // "AddSolid", "translucent", false
-	&TriScreenDrawer32<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::TextureSampler>::Execute,    // "Add", "add", false
-	&TriScreenDrawer32<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::TextureSampler>::Execute,    // "Sub", "sub", false
-	&TriScreenDrawer32<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::TextureSampler>::Execute, // "RevSub", "revsub", false
-	&TriScreenDrawer32<TriScreenDrawerModes::ShadedBlend, TriScreenDrawerModes::ShadedSampler>::Execute,       // "Stencil", "stencil", false
-	&TriScreenDrawer32<TriScreenDrawerModes::ShadedBlend, TriScreenDrawerModes::ShadedSampler>::Execute,       // "Shaded", "shaded", false
-	&TriScreenDrawer32<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateCopy", "opaque", true
-	&TriScreenDrawer32<TriScreenDrawerModes::MaskedBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateAlphaBlend", "masked", true
-	&TriScreenDrawer32<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateAdd", "add", true
-	&TriScreenDrawer32<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateSub", "sub", true
-	&TriScreenDrawer32<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateRevSub", "revsub", true
-	&TriScreenDrawer32<TriScreenDrawerModes::AddSrcColorBlend, TriScreenDrawerModes::TextureSampler>::Execute, // "AddSrcColorOneMinusSrcColor", "addsrccolor", false
-	&TriScreenDrawer32<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::SkycapSampler>::Execute        // "Skycap", "skycap", false
+	&TriScreenDrawer32<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::TextureSampler>::Execute,         // TextureOpaque
+	&TriScreenDrawer32<TriScreenDrawerModes::MaskedBlend, TriScreenDrawerModes::TextureSampler>::Execute,         // TextureMasked
+	&TriScreenDrawer32<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::TextureSampler>::Execute,       // TextureAdd
+	&TriScreenDrawer32<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::TextureSampler>::Execute,       // TextureSub
+	&TriScreenDrawer32<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::TextureSampler>::Execute,    // TextureRevSub
+	&TriScreenDrawer32<TriScreenDrawerModes::AddSrcColorBlend, TriScreenDrawerModes::TextureSampler>::Execute,    // TextureAddSrcColor
+	&TriScreenDrawer32<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,      // TranslatedOpaque
+	&TriScreenDrawer32<TriScreenDrawerModes::MaskedBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,      // TranslatedMasked
+	&TriScreenDrawer32<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,    // TranslatedAdd
+	&TriScreenDrawer32<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,    // TranslatedSub
+	&TriScreenDrawer32<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute, // TranslatedRevSub
+	&TriScreenDrawer32<TriScreenDrawerModes::AddSrcColorBlend, TriScreenDrawerModes::TranslatedSampler>::Execute, // TranslatedAddSrcColor
+	&TriScreenDrawer32<TriScreenDrawerModes::ShadedBlend, TriScreenDrawerModes::ShadedSampler>::Execute,          // Shaded
+	&TriScreenDrawer32<TriScreenDrawerModes::AddClampShadedBlend, TriScreenDrawerModes::ShadedSampler>::Execute,  // AddShaded
+	&TriScreenDrawer32<TriScreenDrawerModes::ShadedBlend, TriScreenDrawerModes::StencilSampler>::Execute,         // Stencil
+	&TriScreenDrawer32<TriScreenDrawerModes::AddClampShadedBlend, TriScreenDrawerModes::StencilSampler>::Execute, // AddStencil
+	&TriScreenDrawer32<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::FillSampler>::Execute,            // FillOpaque
+	&TriScreenDrawer32<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::FillSampler>::Execute,          // FillAdd
+	&TriScreenDrawer32<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::FillSampler>::Execute,          // FillSub
+	&TriScreenDrawer32<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::FillSampler>::Execute,       // FillRevSub
+	&TriScreenDrawer32<TriScreenDrawerModes::AddSrcColorBlend, TriScreenDrawerModes::FillSampler>::Execute,       // FillAddSrcColor
+	&TriScreenDrawer32<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::SkycapSampler>::Execute           // Skycap
 };
 
-std::vector<void(*)(const TriDrawTriangleArgs *, WorkerThreadData *)> ScreenTriangle::TriFill32 =
+#endif
+
+void(*ScreenTriangle::RectDrawers8[])(const void *, int, int, int, const RectDrawArgs *, WorkerThreadData *) =
 {
-	&TriScreenDrawer32<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::FillSampler>::Execute,         // "Copy", "opaque", false
-	&TriScreenDrawer32<TriScreenDrawerModes::MaskedBlend, TriScreenDrawerModes::FillSampler>::Execute,         // "AlphaBlend", "masked", false
-	&TriScreenDrawer32<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::FillSampler>::Execute,       // "AddSolid", "translucent", false
-	&TriScreenDrawer32<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::FillSampler>::Execute,       // "Add", "add", false
-	&TriScreenDrawer32<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::FillSampler>::Execute,       // "Sub", "sub", false
-	&TriScreenDrawer32<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::FillSampler>::Execute,    // "RevSub", "revsub", false
-	&TriScreenDrawer32<TriScreenDrawerModes::ShadedBlend, TriScreenDrawerModes::ShadedSampler>::Execute,       // "Stencil", "stencil", false
-	&TriScreenDrawer32<TriScreenDrawerModes::ShadedBlend, TriScreenDrawerModes::ShadedSampler>::Execute,       // "Shaded", "shaded", false
-	&TriScreenDrawer32<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateCopy", "opaque", true
-	&TriScreenDrawer32<TriScreenDrawerModes::MaskedBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateAlphaBlend", "masked", true
-	&TriScreenDrawer32<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateAdd", "add", true
-	&TriScreenDrawer32<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateSub", "sub", true
-	&TriScreenDrawer32<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,   // "TranslateRevSub", "revsub", true
-	&TriScreenDrawer32<TriScreenDrawerModes::AddSrcColorBlend, TriScreenDrawerModes::FillSampler>::Execute,    // "AddSrcColorOneMinusSrcColor", "addsrccolor", false
-	&TriScreenDrawer32<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::FillSampler>::Execute          // "Skycap", "skycap", false
+	&RectScreenDrawer8<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::TextureSampler>::Execute,         // TextureOpaque
+	&RectScreenDrawer8<TriScreenDrawerModes::MaskedBlend, TriScreenDrawerModes::TextureSampler>::Execute,         // TextureMasked
+	&RectScreenDrawer8<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::TextureSampler>::Execute,       // TextureAdd
+	&RectScreenDrawer8<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::TextureSampler>::Execute,       // TextureSub
+	&RectScreenDrawer8<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::TextureSampler>::Execute,    // TextureRevSub
+	&RectScreenDrawer8<TriScreenDrawerModes::AddSrcColorBlend, TriScreenDrawerModes::TextureSampler>::Execute,    // TextureAddSrcColor
+	&RectScreenDrawer8<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,      // TranslatedOpaque
+	&RectScreenDrawer8<TriScreenDrawerModes::MaskedBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,      // TranslatedMasked
+	&RectScreenDrawer8<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,    // TranslatedAdd
+	&RectScreenDrawer8<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,    // TranslatedSub
+	&RectScreenDrawer8<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute, // TranslatedRevSub
+	&RectScreenDrawer8<TriScreenDrawerModes::AddSrcColorBlend, TriScreenDrawerModes::TranslatedSampler>::Execute, // TranslatedAddSrcColor
+	&RectScreenDrawer8<TriScreenDrawerModes::ShadedBlend, TriScreenDrawerModes::ShadedSampler>::Execute,          // Shaded
+	&RectScreenDrawer8<TriScreenDrawerModes::AddClampShadedBlend, TriScreenDrawerModes::ShadedSampler>::Execute,  // AddShaded
+	&RectScreenDrawer8<TriScreenDrawerModes::ShadedBlend, TriScreenDrawerModes::StencilSampler>::Execute,         // Stencil
+	&RectScreenDrawer8<TriScreenDrawerModes::AddClampShadedBlend, TriScreenDrawerModes::StencilSampler>::Execute, // AddStencil
+	&RectScreenDrawer8<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::FillSampler>::Execute,            // FillOpaque
+	&RectScreenDrawer8<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::FillSampler>::Execute,          // FillAdd
+	&RectScreenDrawer8<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::FillSampler>::Execute,          // FillSub
+	&RectScreenDrawer8<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::FillSampler>::Execute,       // FillRevSub
+	&RectScreenDrawer8<TriScreenDrawerModes::AddSrcColorBlend, TriScreenDrawerModes::FillSampler>::Execute,       // FillAddSrcColor
+	&RectScreenDrawer8<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::SkycapSampler>::Execute           // Skycap
+};
+
+#ifdef NO_SSE
+
+void(*ScreenTriangle::RectDrawers32[])(const void *, int, int, int, const RectDrawArgs *, WorkerThreadData *) =
+{
+	nullptr
+};
+
+#else
+
+void(*ScreenTriangle::RectDrawers32[])(const void *, int, int, int, const RectDrawArgs *, WorkerThreadData *) =
+{
+	&RectScreenDrawer32<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::TextureSampler>::Execute,         // TextureOpaque
+	&RectScreenDrawer32<TriScreenDrawerModes::MaskedBlend, TriScreenDrawerModes::TextureSampler>::Execute,         // TextureMasked
+	&RectScreenDrawer32<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::TextureSampler>::Execute,       // TextureAdd
+	&RectScreenDrawer32<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::TextureSampler>::Execute,       // TextureSub
+	&RectScreenDrawer32<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::TextureSampler>::Execute,    // TextureRevSub
+	&RectScreenDrawer32<TriScreenDrawerModes::AddSrcColorBlend, TriScreenDrawerModes::TextureSampler>::Execute,    // TextureAddSrcColor
+	&RectScreenDrawer32<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,      // TranslatedOpaque
+	&RectScreenDrawer32<TriScreenDrawerModes::MaskedBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,      // TranslatedMasked
+	&RectScreenDrawer32<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,    // TranslatedAdd
+	&RectScreenDrawer32<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute,    // TranslatedSub
+	&RectScreenDrawer32<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::TranslatedSampler>::Execute, // TranslatedRevSub
+	&RectScreenDrawer32<TriScreenDrawerModes::AddSrcColorBlend, TriScreenDrawerModes::TranslatedSampler>::Execute, // TranslatedAddSrcColor
+	&RectScreenDrawer32<TriScreenDrawerModes::ShadedBlend, TriScreenDrawerModes::ShadedSampler>::Execute,          // Shaded
+	&RectScreenDrawer32<TriScreenDrawerModes::AddClampShadedBlend, TriScreenDrawerModes::ShadedSampler>::Execute,  // AddShaded
+	&RectScreenDrawer32<TriScreenDrawerModes::ShadedBlend, TriScreenDrawerModes::StencilSampler>::Execute,         // Stencil
+	&RectScreenDrawer32<TriScreenDrawerModes::AddClampShadedBlend, TriScreenDrawerModes::StencilSampler>::Execute, // AddStencil
+	&RectScreenDrawer32<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::FillSampler>::Execute,            // FillOpaque
+	&RectScreenDrawer32<TriScreenDrawerModes::AddClampBlend, TriScreenDrawerModes::FillSampler>::Execute,          // FillAdd
+	&RectScreenDrawer32<TriScreenDrawerModes::SubClampBlend, TriScreenDrawerModes::FillSampler>::Execute,          // FillSub
+	&RectScreenDrawer32<TriScreenDrawerModes::RevSubClampBlend, TriScreenDrawerModes::FillSampler>::Execute,       // FillRevSub
+	&RectScreenDrawer32<TriScreenDrawerModes::AddSrcColorBlend, TriScreenDrawerModes::FillSampler>::Execute,       // FillAddSrcColor
+	&RectScreenDrawer32<TriScreenDrawerModes::OpaqueBlend, TriScreenDrawerModes::SkycapSampler>::Execute           // Skycap
 };
 
 #endif

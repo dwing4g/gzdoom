@@ -198,15 +198,6 @@ bool	setmodeneeded = false;
 int		NewWidth, NewHeight, NewBits;
 
 
-//
-// V_MarkRect 
-// 
-void V_MarkRect (int x, int y, int width, int height)
-{
-}
-
-DCanvas *DCanvas::CanvasChain = NULL;
-
 //==========================================================================
 //
 // DCanvas Constructor
@@ -221,10 +212,6 @@ DCanvas::DCanvas (int _width, int _height, bool _bgra)
 	Width = _width;
 	Height = _height;
 	Bgra = _bgra;
-
-	// Add to list of active canvases
-	Next = CanvasChain;
-	CanvasChain = this;
 }
 
 //==========================================================================
@@ -235,22 +222,6 @@ DCanvas::DCanvas (int _width, int _height, bool _bgra)
 
 DCanvas::~DCanvas ()
 {
-	// Remove from list of active canvases
-	DCanvas *probe = CanvasChain, **prev;
-
-	prev = &CanvasChain;
-	probe = CanvasChain;
-
-	while (probe != NULL)
-	{
-		if (probe == this)
-		{
-			*prev = probe->Next;
-			break;
-		}
-		prev = &probe->Next;
-		probe = probe->Next;
-	}
 }
 
 //==========================================================================
@@ -336,20 +307,6 @@ void DCanvas::Dim (PalEntry color)
 	}
 	Dim (dimmer, amount, 0, 0, Width, Height);
 }
-
-DEFINE_ACTION_FUNCTION(_Screen, Dim)
-{
-	PARAM_PROLOGUE;
-	PARAM_INT(color);
-	PARAM_FLOAT(amount);
-	PARAM_INT(x1);
-	PARAM_INT(y1);
-	PARAM_INT(w);
-	PARAM_INT(h);
-	screen->Dim(color, float(amount), x1, y1, w, h);
-	return 0;
-}
-
 
 //==========================================================================
 //
@@ -914,13 +871,10 @@ void DFrameBuffer::DrawRateStuff ()
 			chars = mysnprintf (fpsbuff, countof(fpsbuff), "%2u ms (%3u fps)", howlong, LastCount);
 			rate_x = Width / textScale - ConFont->StringWidth(&fpsbuff[0]);
 			Clear (rate_x * textScale, 0, Width, ConFont->GetHeight() * textScale, GPalette.BlackIndex, 0);
-			if (textScale == 1)
-				DrawText (ConFont, CR_WHITE, rate_x, 0, (char *)&fpsbuff[0], TAG_DONE);
-			else
-				DrawText (ConFont, CR_WHITE, rate_x, 0, (char *)&fpsbuff[0],
-					DTA_VirtualWidth, screen->GetWidth() / textScale,
-					DTA_VirtualHeight, screen->GetHeight() / textScale,
-					DTA_KeepRatio, true, TAG_DONE);
+			DrawText (ConFont, CR_WHITE, rate_x, 0, (char *)&fpsbuff[0],
+				DTA_VirtualWidth, screen->GetWidth() / textScale,
+				DTA_VirtualHeight, screen->GetHeight() / textScale,
+				DTA_KeepRatio, true, TAG_DONE);
 
 			uint32_t thisSec = ms/1000;
 			if (LastSec < thisSec)
@@ -1169,6 +1123,7 @@ void DFrameBuffer::SetBlendingRect (int x1, int y1, int x2, int y2)
 
 bool DFrameBuffer::Begin2D (bool copy3d)
 {
+	ClearClipRect();
 	return false;
 }
 

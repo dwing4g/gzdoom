@@ -2503,10 +2503,7 @@ void ZCCCompiler::CompileFunction(ZCC_StructWork *c, ZCC_FuncDeclarator *f, bool
 					{
 						flags |= VARF_Optional;
 						hasoptionals = true;
-						// The simplifier is not suited to convert the constant into something usable. 
-						// All it does is reduce the expression to a constant but we still got to do proper type checking and conversion.
-						// It will also lose important type info about enums, once these get implemented
-						// The code generator can do this properly for us.
+
 						FxExpression *x = new FxTypeCast(ConvertNode(p->Default), type, false);
 						FCompileContext ctx(OutNamespace, c->Type(), false);
 						x = x->Resolve(ctx);
@@ -3485,7 +3482,15 @@ FxExpression *ZCCCompiler::ConvertNode(ZCC_TreeNode *ast)
 		}
 		else if (iter->LoopBumper != nullptr)
 		{
-			return new FxForLoop(nullptr, ConvertNode(iter->LoopCondition), ConvertNode(iter->LoopBumper), ConvertNode(iter->LoopStatement), *ast);
+			FArgumentList bumper;
+			ConvertNodeList(bumper, iter->LoopBumper);
+			FxCompoundStatement *bumps = new FxCompoundStatement(*ast);
+			for (auto &ex : bumper)
+			{
+				bumps->Add(ex);
+				ex = nullptr;
+			}
+			return new FxForLoop(nullptr, ConvertNode(iter->LoopCondition), bumps, ConvertNode(iter->LoopStatement), *ast);
 		}
 		else
 		{

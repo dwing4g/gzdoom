@@ -15,23 +15,10 @@ class StrifeStatusBar : BaseStatusBar
 	{
 		imgINVCURS,
 		imgCURSOR01,
-		imgINVBACK,
-		imgINVTOP,
 		imgINVPOP,
 		imgINVPOP2,
 		imgINVPBAK,
 		imgINVPBAK2,
-		imgFONG0,
-		imgFONG1,
-		imgFONG2,
-		imgFONG3,
-		imgFONG4,
-		imgFONG5,
-		imgFONG6,
-		imgFONG7,
-		imgFONG8,
-		imgFONG9,
-		imgFONG_PERCENT,
 		imgFONY0,
 		imgFONY1,
 		imgFONY2,
@@ -43,33 +30,53 @@ class StrifeStatusBar : BaseStatusBar
 		imgFONY8,
 		imgFONY9,
 		imgFONY_PERCENT,
-		imgCOMM,
-		imgMEDI,
-		imgARM1,
-		imgARM2,
 		imgNEGATIVE,
-		imgINumbers = imgFONG0,
 	};
 	
 	TextureID Images[imgNEGATIVE + 1];
 	int CursorImage;
 	int CurrentPop, PendingPop, PopHeight, PopHeightChange;
 	int KeyPopPos, KeyPopScroll;
-	double ItemFlash;
+	
+	HUDFont mYelFont, mGrnFont, mBigFont;
 
 	override void Init()
 	{
+		static const Name strifeLumpNames[] =
+		{
+			"INVCURS", "CURSOR01", "INVPOP", "INVPOP2",
+			"INVPBAK", "INVPBAK2",
+			"INVFONY0", "INVFONY1", "INVFONY2", "INVFONY3", "INVFONY4",
+			"INVFONY5", "INVFONY6", "INVFONY7", "INVFONY8", "INVFONY9",
+			"INVFONY%", ""
+
+		};
+		
+		Super.Init();
 		SetSize(32, 320, 200);
-		DoCommonInit();
+		Reset();
+		
+		for(int i = 0; i <= imgNEGATIVE; i++)
+		{
+			Images[i] = TexMan.CheckForTexture(strifeLumpNames[i], TexMan.TYPE_MiscPatch);
+		}
+
+		CursorImage = Images[imgINVCURS].IsValid() ? imgINVCURS : imgCURSOR01;
+		
+		mYelFont = HUDFont.Create("Indexfont_Strife_Yellow", 7, true, 1, 1);
+		mGrnFont = HUDFont.Create("Indexfont_Strife_Green", 7, true, 1, 1);
+		mBigFont = HUDFont.Create("BigFont", 0, false, 2, 2);
 	}
 
 	override void NewGame ()
 	{
-		DoCommonInit ();
-		if (CPlayer != NULL)
-		{
-			AttachToPlayer (CPlayer);
-		}
+		Super.NewGame();
+		Reset ();
+	}
+
+	override int GetProtrusion(double scaleratio) const
+	{
+		return 10;
 	}
 
 	override void Draw (int state, double TicFrac)
@@ -78,18 +85,22 @@ class StrifeStatusBar : BaseStatusBar
 
 		if (state == HUD_StatusBar)
 		{
+			BeginStatusBar();
 			DrawMainBar (TicFrac);
 		}
 		else
 		{
 			if (state == HUD_Fullscreen)
 			{
+				BeginHUD();
 				DrawFullScreenStuff ();
 			}
 
 			// Draw pop screen (log, keys, and status)
 			if (CurrentPop != POP_None && PopHeight < 0)
 			{
+				// This uses direct low level draw commands and would otherwise require calling
+				// BeginStatusBar(true);
 				DrawPopScreen (screen.GetHeight(), TicFrac);
 			}
 		}
@@ -138,49 +149,18 @@ class StrifeStatusBar : BaseStatusBar
 		return false;
 	}
 
-	void DoCommonInit ()
+	void Reset ()
 	{
-		static const String strifeLumpNames[] =
-		{
-			"INVCURS", "CURSOR01", "INVBACK", "INVTOP", "INVPOP", "INVPOP2",
-			"INVPBAK", "INVPBAK2",
-			"INVFONG0", "INVFONG1", "INVFONG2", "INVFONG3", "INVFONG4",
-			"INVFONG5", "INVFONG6", "INVFONG7", "INVFONG8", "INVFONG9",
-			"INVFONG%",
-			"INVFONY0", "INVFONY1", "INVFONY2", "INVFONY3", "INVFONY4",
-			"INVFONY5", "INVFONY6", "INVFONY7", "INVFONY8", "INVFONY9",
-			"INVFONY%",
-			"I_COMM", "I_MDKT", "I_ARM1", "I_ARM2", ""
-
-		};
-		
-		for(int i = 0; i <= imgNEGATIVE; i++)
-		{
-			Images[i] = TexMan.CheckForTexture(strifeLumpNames[i], TexMan.TYPE_MiscPatch);
-		}
-
-		CursorImage = Images[imgINVCURS].IsValid() ? imgINVCURS : imgCURSOR01;
-
 		CurrentPop = POP_None;
 		PendingPop = POP_NoChange;
 		PopHeight = 0;
 		KeyPopPos = 0;
 		KeyPopScroll = 0;
-		ItemFlash = 0;
 	}
 
 	override void Tick ()
 	{
 		Super.Tick ();
-
-		if (ItemFlash > 0)
-		{
-			ItemFlash -= 1/14.;
-			if (ItemFlash < 0)
-			{
-				ItemFlash = 0;
-			}
-		}
 
 		PopHeightChange = 0;
 		if (PendingPop != POP_NoChange)
@@ -225,39 +205,25 @@ class StrifeStatusBar : BaseStatusBar
 		}
 	}
 
-	override void FlashItem (Class<Inventory> itemtype)
-	{
-		ItemFlash = 0.75;
-	}
-	
 	private void FillBar(double x, double y, double start, double stopp, Color color1, Color color2)
 	{
-		Vector2 virt = Scaled? (320., 200.) : (screen.GetWidth(), screen.GetHeight());
-		Vector2 pos, sizev;
-		
-		start *=2;
-		stopp *=2;
-		
-		[pos, sizev] = screen.VirtualToRealCoords((ST_X + x + start, ST_Y + y), (stopp - start, 1), virt, true, Scaled); 
-		screen.Dim(color1, 1.0, pos.X + 0.5, pos.Y + 0.5, sizev.X + 0.5, sizev.Y + 0.5);
-
-		[pos, sizev] = screen.VirtualToRealCoords((ST_X + x + start, ST_Y + y + 1), (stopp - start, 1), virt, true, Scaled); 
-		screen.Dim(color2, 1.0, pos.X + 0.5, pos.Y + 0.5, sizev.X + 0.5, sizev.Y + 0.5);
+		Fill(color1, x, y, (stopp-start)*2, 1);
+		Fill(color2, x, y+1, (stopp-start)*2, 1);
 	}
 	
 	protected void DrawHealthBar(int health, int x, int y)
 	{
-		Color green1 = Color(180, 228, 128);	// light green
-		Color green2 = Color(128, 180, 80);		// dark green
+		Color green1 = Color(255, 180, 228, 128);	// light green
+		Color green2 = Color(255, 128, 180, 80);	// dark green
 
-		Color blue1 = Color(196, 204, 252);		// light blue
-		Color blue2 = Color(148, 152, 200);		// dark blue
+		Color blue1 = Color(255, 196, 204, 252);	// light blue
+		Color blue2 = Color(255, 148, 152, 200);	// dark blue
 
-		Color gold1 = Color(224, 188, 0);	// light gold
-		Color gold2 = Color(208, 128, 0);	// dark gold
+		Color gold1 = Color(255, 224, 188, 0);	// light gold
+		Color gold2 = Color(255, 208, 128, 0);	// dark gold
 
-		Color red1 = Color(216, 44,  44);	// light red
-		Color red2 = Color(172, 28,  28);	// dark red
+		Color red1 = Color(255, 216, 44,  44);	// light red
+		Color red2 = Color(255, 172, 28,  28);	// dark red
 		
 		if (health == 999)
 		{
@@ -298,14 +264,16 @@ class StrifeStatusBar : BaseStatusBar
 		// Pop screen (log, keys, and status)
 		if (CurrentPop != POP_None && PopHeight < 0)
 		{
-			DrawPopScreen (Scaled ? (ST_Y - 8) * screen.GetHeight() / 200 : ST_Y - 8, TicFrac);
+			double tmp, h;
+			[tmp, tmp, h] = StatusbarToRealCoords(0, 0, 8);
+			DrawPopScreen (GetTopOfStatusBar() - h, TicFrac);
 		}
 
-		DrawImage (Images[imgINVBACK], 0, 0);
-		DrawImage (Images[imgINVTOP], 0, -8);
+		DrawImage("INVBACK", (0, 168), DI_ITEM_OFFSETS);
+		DrawImage("INVTOP", (0, 160), DI_ITEM_OFFSETS);
 
 		// Health
-		DrINumber (CPlayer.health, 79, -6, imgFONG0);
+		DrawString(mGrnFont, FormatNumber(CPlayer.health, 3, 5), (79, 162), DI_TEXT_ALIGN_RIGHT);
 		int points;
 		if (CPlayer.cheats & CF_GODMODE)
 		{
@@ -315,33 +283,30 @@ class StrifeStatusBar : BaseStatusBar
 		{
 			points = min(CPlayer.health, 200);
 		}
-		DrawHealthBar (points, 49, 4);
-		DrawHealthBar (points, 49, 7);
+		DrawHealthBar (points, 49, 172);
+		DrawHealthBar (points, 49, 175);
 
 		// Armor
 		item = CPlayer.mo.FindInventory('BasicArmor');
 		if (item != NULL && item.Amount > 0)
 		{
-			DrawImage (item.Icon, 2, 9);
-			DrINumber (item.Amount, 27, 23, imgFONY0);
+			DrawInventoryIcon(item, (2, 177), DI_ITEM_OFFSETS);
+			DrawString(mYelFont, FormatNumber(item.Amount, 3, 5), (27, 191), DI_TEXT_ALIGN_RIGHT);
 		}
 
 		// Ammo
-		Inventory ammo1, ammo2;
-		int ammocount1, ammocount2;
-
-		[ammo1, ammo2, ammocount1, ammocount2] = GetCurrentAmmo ();
+		Inventory ammo1 = GetCurrentAmmo ();
 		if (ammo1 != NULL)
 		{
-			DrINumber (ammo1.Amount, 311, -6, imgFONG0);
-			DrawImage (ammo1.Icon, 290, 13);
+			DrawString(mGrnFont, FormatNumber(ammo1.Amount, 3, 5), (311, 162), DI_TEXT_ALIGN_RIGHT);
+			DrawInventoryIcon (ammo1, (290, 181), DI_ITEM_OFFSETS);
 		}
 
 		// Sigil
 		item = CPlayer.mo.FindInventory('Sigil');
 		if (item != NULL)
 		{
-			DrawImage (item.Icon, 253, 7);
+			DrawInventoryIcon (item, (253, 175), DI_ITEM_OFFSETS);
 		}
 
 		// Inventory
@@ -350,38 +315,29 @@ class StrifeStatusBar : BaseStatusBar
 		i = 0;
 		for (item = CPlayer.mo.InvFirst; item != NULL && i < 6; item = item.NextInv())
 		{
+			int flags = item.Amount <= 0? DI_ITEM_OFFSETS|DI_DIM : DI_ITEM_OFFSETS;
 			if (item == CPlayer.mo.InvSel)
 			{
-				screen.DrawTexture (Images[CursorImage], true,
-					42 + 35*i + ST_X, 12 + ST_Y,
-					DTA_Bottom320x200, Scaled,
-					DTA_Alpha, 1. - ItemFlash);
+				DrawTexture (Images[CursorImage], (42 + 35*i, 180), flags, 1. - itemflashFade);
 			}
-			if (item.Icon.isValid())
-			{
-				DrawDimImage (item.Icon, 48 + 35*i, 14, item.Amount <= 0);
-			}
-			DrINumber (item.Amount, 74 + 35*i, 23, imgFONY0);
+			DrawInventoryIcon (item, (48 + 35*i, 182), flags);
+			DrawString(mYelFont, FormatNumber(item.Amount, 3, 5), (75 + 35*i, 191), DI_TEXT_ALIGN_RIGHT);
 			i++;
 		}
 	}
 
 	protected void DrawFullScreenStuff ()
 	{
-		// Draw health
-		DrINumberOuter (CPlayer.health, 4, -10, false, 7);
-		screen.DrawTexture (Images[imgMEDI], true, 14, -17,
-			DTA_HUDRules, HUD_Normal,
-			DTA_CenterBottomOffset, true);
+		// Draw health (use red color if health is below the run health threashold.)
+		DrawString(mGrnFont, FormatNumber(CPlayer.health, 3), (4, -10), DI_TEXT_ALIGN_LEFT, (CPlayer.health < CPlayer.mo.RunHealth)? Font.CR_BRICK : Font.CR_UNTRANSLATED);
+		DrawImage("I_MDKT", (14, -17));
 
 		// Draw armor
 		let armor = CPlayer.mo.FindInventory('BasicArmor');
 		if (armor != NULL && armor.Amount != 0)
 		{
-			DrINumberOuter (armor.Amount, 35, -10, false, 7);
-			screen.DrawTexture (armor.Icon, true, 45, -17,
-				DTA_HUDRules, HUD_Normal,
-				DTA_CenterBottomOffset, true);
+			DrawString(mYelFont, FormatNumber(armor.Amount, 3), (35, -10));
+			DrawInventoryIcon(armor, (45, -17));
 		}
 
 		// Draw ammo
@@ -392,23 +348,19 @@ class StrifeStatusBar : BaseStatusBar
 		if (ammo1 != NULL)
 		{
 			// Draw primary ammo in the bottom-right corner
-			DrINumberOuter (ammo1.Amount, -23, -10, false, 7);
-			screen.DrawTexture (ammo1.Icon, true, -14, -17,
-				DTA_HUDRules, HUD_Normal,
-				DTA_CenterBottomOffset, true);
+			DrawString(mGrnFont, FormatNumber(ammo1.Amount, 3), (-23, -10));
+			DrawInventoryIcon(ammo1, (-14, -17));
 			if (ammo2 != NULL && ammo1!=ammo2)
 			{
 				// Draw secondary ammo just above the primary ammo
-				DrINumberOuter (ammo2.Amount, -23, -48, false, 7);
-				screen.DrawTexture (ammo2.Icon, -14, -55,
-					DTA_HUDRules, HUD_Normal,
-					DTA_CenterBottomOffset, true);
+				DrawString(mGrnFont, FormatNumber(ammo1.Amount, 3), (-23, -48));
+				DrawInventoryIcon(ammo1, (-14, -55));
 			}
 		}
 
 		if (deathmatch)
 		{ // Draw frags (in DM)
-			DrBNumberOuterFont (CPlayer.fragcount, -44, 1);
+			DrawString(mBigFont, FormatNumber(CPlayer.FragCount, 3), (4, 1));
 		}
 
 		// Draw inventory
@@ -416,20 +368,12 @@ class StrifeStatusBar : BaseStatusBar
 		{
 			if (CPlayer.mo.InvSel != null)
 			{
-				if (ItemFlash > 0)
+				if (itemflashFade > 0)
 				{
-					vector2 size = TexMan.GetScaledSize(Images[CursorImage]);
-					screen.DrawTexture (Images[CursorImage], true, -28, -15,
-						DTA_HUDRules, HUD_Normal,
-						DTA_LeftOffsetF, size.X,
-						DTA_TopOffsetF, size.Y,
-						DTA_Alpha, ItemFlash);
+					DrawTexture(Images[CursorImage], (-42, -15));
 				}
-				DrINumberOuter (CPlayer.mo.InvSel.Amount, -51, -10, false, 7);
-				screen.DrawTexture (CPlayer.mo.InvSel.Icon, true, -42, -17,
-					DTA_HUDRules, HUD_Normal,
-					DTA_CenterBottomOffset, true,
-					DTA_ColorOverlay, CPlayer.mo.InvSel.Amount > 0 ? 0 : Color(170, 0, 0, 0));
+				DrawString(mYelFont, FormatNumber(CPlayer.mo.InvSel.Amount, 3, 5), (-30, -10), DI_TEXT_ALIGN_RIGHT);
+				DrawInventoryIcon(CPlayer.mo.InvSel, (-42, -17), DI_DIMDEPLETED);
 			}
 		}
 		else
@@ -437,23 +381,20 @@ class StrifeStatusBar : BaseStatusBar
 			CPlayer.mo.InvFirst = ValidateInvFirst (6);
 			int i = 0;
 			Inventory item;
+			Vector2 box = TexMan.GetScaledSize(Images[CursorImage]) - (4, 4);	// Fit oversized icons into the box.
 			if (CPlayer.mo.InvFirst != NULL)
 			{
 				for (item = CPlayer.mo.InvFirst; item != NULL && i < 6; item = item.NextInv())
 				{
 					if (item == CPlayer.mo.InvSel)
 					{
-						screen.DrawTexture (Images[CursorImage], true, -100+i*35, -21,
-							DTA_HUDRules, HUD_HorizCenter,
-							DTA_Alpha, 0.75);
+						DrawTexture(Images[CursorImage], (-90+i*35, -3), DI_SCREEN_CENTER_BOTTOM, 0.75);
 					}
 					if (item.Icon.isValid())
 					{
-						screen.DrawTexture (item.Icon, true, -94 + i*35, -19,
-							DTA_HUDRules, HUD_HorizCenter,
-							DTA_ColorOverlay, CPlayer.mo.InvSel.Amount > 0 ? 0 : Color(170, 0, 0, 0));
+						DrawInventoryIcon(item, (-90+i*35, -5), DI_SCREEN_CENTER_BOTTOM|DI_DIMDEPLETED, 0.75);
 					}
-					DrINumberOuter (item.Amount, -89 + i*35, -10, true, 7);
+					DrawString(mYelFont, FormatNumber(item.Amount, 3, 5), (-72 + i*35, -8), DI_TEXT_ALIGN_RIGHT|DI_SCREEN_CENTER_BOTTOM);
 					++i;
 				}
 			}
@@ -485,14 +426,8 @@ class StrifeStatusBar : BaseStatusBar
 		{
 		case POP_Log:
 		{
-			int seconds = Thinker.Tics2Seconds(level.time);
 			// Draw the latest log message.
-			buff = String.Format("%02d:%02d:%02d",
-				seconds / 3600,
-				(seconds % 3600) / 60,
-				(seconds) % 60);
-
-			screen.DrawText(SmallFont2, Font.CR_UNTRANSLATED, left + 210 * xscale, top + 8 * yscale, buff,
+			screen.DrawText(SmallFont2, Font.CR_UNTRANSLATED, left + 210 * xscale, top + 8 * yscale, Level.TimeFormatted(),
 				DTA_CleanNoMove, true);
 
 			if (CPlayer.LogText.Length() > 0)
@@ -645,25 +580,6 @@ class StrifeStatusBar : BaseStatusBar
 		}
 	}
 
-	void DrINumber (int val, int x, int y, int imgBase) const
-	{
-		x -= 7;
-
-		if (val == 0)
-		{
-			DrawImage (Images[imgBase], x, y);
-		}
-		else
-		{
-			while (val != 0)
-			{
-				DrawImage (Images[imgBase+val%10], x, y);
-				val /= 10;
-				x -= 7;
-			}
-		}
-	}
-
 	void DrINumber2 (int val, int x, int y, int width, int imgBase) const
 	{
 		x -= width;
@@ -680,184 +596,6 @@ class StrifeStatusBar : BaseStatusBar
 				val /= 10;
 				x -= width;
 			}
-		}
-	}
-
-
-	//---------------------------------------------------------------------------
-	//
-	// PROC DrINumberOuter
-	//
-	// Draws a number outside the status bar, possibly scaled.
-	//
-	//---------------------------------------------------------------------------
-
-	void DrINumberOuter(int val, int x, int y, bool center, int w) const
-	{
-		bool negative = false;
-
-		x += w * 2;
-		if (val < 0)
-		{
-			negative = true;
-			val = -val;
-		}
-		else if (val == 0)
-		{
-			screen.DrawTexture(Images[imgINumbers], true, x + 1, y + 1,
-				DTA_FillColor, 0, DTA_Alpha, HR_SHADOW,
-				DTA_HUDRules, center ? HUD_HorizCenter : HUD_Normal);
-			screen.DrawTexture(Images[imgINumbers], true, x, y,
-				DTA_HUDRules, center ? HUD_HorizCenter : HUD_Normal);
-			return;
-		}
-
-		int oval = val;
-		int ox = x;
-
-		// First the shadow
-		while (val != 0)
-		{
-			screen.DrawTexture(Images[imgINumbers + val % 10], true, x + 1, y + 1,
-				DTA_FillColor, 0, DTA_Alpha, HR_SHADOW,
-				DTA_HUDRules, center ? HUD_HorizCenter : HUD_Normal);
-			x -= w;
-			val /= 10;
-		}
-		if (negative)
-		{
-			screen.DrawTexture(Images[imgNEGATIVE], true, x + 1, y + 1,
-				DTA_FillColor, 0, DTA_Alpha, HR_SHADOW,
-				DTA_HUDRules, center ? HUD_HorizCenter : HUD_Normal);
-		}
-
-		// Then the real deal
-		val = oval;
-		x = ox;
-		while (val != 0)
-		{
-			screen.DrawTexture(Images[imgINumbers + val % 10], true, x, y,
-				DTA_HUDRules, center ? HUD_HorizCenter : HUD_Normal);
-			x -= w;
-			val /= 10;
-		}
-		if (negative)
-		{
-			screen.DrawTexture(Images[imgNEGATIVE], true, x, y,
-				DTA_HUDRules, center ? HUD_HorizCenter : HUD_Normal);
-		}
-	}
-
-
-	//---------------------------------------------------------------------------
-	//
-	// PROC DrBNumberOuter
-	//
-	// Draws a three digit number using the real big font outside the status bar.
-	//
-	//---------------------------------------------------------------------------
-
-	void DrBNumberOuterFont(int val, int x, int y, int size = 3) const
-	{
-		int v;
-		bool negative = false;
-		TextureID pic;
-
-		int w = BigFont.GetCharWidth("0");
-		int ww = w;
-
-		if (w > 1)
-		{
-			w--;
-		}
-		int xpos = x + w / 2 + (size - 1)*w;
-
-		if (val == 0)
-		{
-			screen.DrawChar(BigFont, Font.CR_UNTRANSLATED, xpos - v / 2 + 2, y + 2, "0",
-				DTA_HUDRules, HUD_Normal,
-				DTA_Alpha, HR_SHADOW,
-				DTA_FillColor, 0);
-			screen.DrawChar(BigFont, Font.CR_UNTRANSLATED, xpos - v / 2, y, "0",
-				DTA_HUDRules, HUD_Normal);
-			return;
-		}
-		else if (val < 0)
-		{
-			negative = true;
-			val = -val;
-		}
-
-		int oval = val;
-		int oxpos = xpos;
-
-		// First the shadow
-		while (val != 0)
-		{
-			v = BigFont.GetCharWidth(int("0") + val % 10);
-			screen.DrawChar(BigFont, Font.CR_UNTRANSLATED, xpos - v / 2 + 2, y + 2,
-				DTA_HUDRules, HUD_Normal,
-				DTA_Alpha, HR_SHADOW,
-				DTA_FillColor, 0);
-			val /= 10;
-			xpos -= w;
-		}
-		if (negative)
-		{
-			v = BigFont.GetCharWidth("-");
-			screen.DrawChar(BigFont, Font.CR_UNTRANSLATED, xpos - v / 2 + 2, y + 2, "-",
-				DTA_HUDRules, HUD_Normal,
-				DTA_Alpha, HR_SHADOW,
-				DTA_FillColor, 0);
-		}
-
-		// Then the foreground number
-		val = oval;
-		xpos = oxpos;
-		while (val != 0)
-		{
-			v = BigFont.GetCharWidth(int("0") + val % 10);
-			screen.DrawChar(BigFont, Font.CR_UNTRANSLATED, xpos - v / 2, y, "0", DTA_HUDRules, HUD_Normal);
-			val /= 10;
-			xpos -= w;
-		}
-		if (negative)
-		{
-			v = BigFont.GetCharWidth("-");
-			screen.DrawChar(BigFont, Font.CR_UNTRANSLATED, xpos - v / 2, y, "-", DTA_HUDRules, HUD_Normal);
-		}
-	}
-
-	//---------------------------------------------------------------------------
-	//
-	// PROC DrawImage
-	//
-	// Draws an image with the status bar's upper-left corner as the origin.
-	//
-	//---------------------------------------------------------------------------
-
-	void DrawImage(TextureID img, int x, int y) const
-	{
-		if (img.IsValid())
-		{
-			screen.DrawTexture(img, true, x + ST_X, y + ST_Y, DTA_Bottom320x200, Scaled);
-		}
-	}
-
-	//---------------------------------------------------------------------------
-	//
-	// PROC DrawImage
-	//
-	// Draws an optionally dimmed image with the status bar's upper-left corner
-	// as the origin.
-	//
-	//---------------------------------------------------------------------------
-
-	void DrawDimImage(TextureID img, int x, int y, bool dimmed) const
-	{
-		if (img.IsValid())
-		{
-			screen.DrawTexture(img, true, x + ST_X, y + ST_Y, DTA_ColorOverlay, dimmed ? Color(170, 0, 0, 0) : 0, DTA_Bottom320x200, Scaled);
 		}
 	}
 }

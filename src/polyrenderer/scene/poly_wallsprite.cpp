@@ -29,7 +29,7 @@
 #include "polyrenderer/poly_renderer.h"
 #include "polyrenderer/scene/poly_light.h"
 
-void RenderPolyWallSprite::Render(const TriMatrix &worldToClip, const Vec4f &clipPlane, AActor *thing, subsector_t *sub, uint32_t subsectorDepth, uint32_t stencilValue)
+void RenderPolyWallSprite::Render(const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, AActor *thing, subsector_t *sub, uint32_t subsectorDepth, uint32_t stencilValue)
 {
 	if (RenderPolySprite::IsThingCulled(thing))
 		return;
@@ -69,9 +69,7 @@ void RenderPolyWallSprite::Render(const TriMatrix &worldToClip, const Vec4f &cli
 
 	DVector2 points[2] = { left, right };
 
-	TriVertex *vertices = PolyVertexBuffer::GetVertices(4);
-	if (!vertices)
-		return;
+	TriVertex *vertices = PolyRenderer::Instance()->FrameMemory.AllocMemory<TriVertex>(4);
 
 	bool foggy = false;
 	int actualextralight = foggy ? 0 : viewpoint.extralight << 4;
@@ -92,42 +90,25 @@ void RenderPolyWallSprite::Render(const TriMatrix &worldToClip, const Vec4f &cli
 		vertices[i].y = (float)p.Y;
 		vertices[i].z = (float)(pos.Z + spriteHeight * offsets[i].second);
 		vertices[i].w = 1.0f;
-		vertices[i].varying[0] = (float)(offsets[i].first * tex->Scale.X);
-		vertices[i].varying[1] = (float)((1.0f - offsets[i].second) * tex->Scale.Y);
+		vertices[i].u = (float)(offsets[i].first * tex->Scale.X);
+		vertices[i].v = (float)((1.0f - offsets[i].second) * tex->Scale.Y);
 		if (flipTextureX)
-			vertices[i].varying[0] = 1.0f - vertices[i].varying[0];
+			vertices[i].u = 1.0f - vertices[i].u;
 	}
 
 	bool fullbrightSprite = ((thing->renderflags & RF_FULLBRIGHT) || (thing->flags5 & MF5_BRIGHT));
-	PolyCameraLight *cameraLight = PolyCameraLight::Instance();
+	int lightlevel = fullbrightSprite ? 255 : thing->Sector->lightlevel + actualextralight;
 
 	PolyDrawArgs args;
-	args.uniforms.globvis = (float)PolyRenderer::Instance()->Light.WallGlobVis(foggy);
-	if (fullbrightSprite || cameraLight->FixedLightLevel() >= 0 || cameraLight->FixedColormap())
-	{
-		args.uniforms.light = 256;
-		args.uniforms.flags = TriUniforms::fixed_light | TriUniforms::nearest_filter;
-	}
-	else
-	{
-		args.uniforms.light = (uint32_t)((thing->Sector->lightlevel + actualextralight) / 255.0f * 256.0f);
-		args.uniforms.flags = TriUniforms::nearest_filter;
-	}
-	args.uniforms.subsectorDepth = subsectorDepth;
-
-	args.objectToClip = &worldToClip;
-	args.vinput = vertices;
-	args.vcount = 4;
-	args.mode = TriangleDrawMode::Fan;
-	args.ccw = true;
-	args.stenciltestvalue = stencilValue;
-	args.stencilwritevalue = stencilValue;
+	args.SetLight(GetColorTable(sub->sector->Colormap, sub->sector->SpecialColors[sector_t::sprites], true), lightlevel, PolyRenderer::Instance()->Light.WallGlobVis(foggy), fullbrightSprite);
+	args.SetTransform(&worldToClip);
+	args.SetFaceCullCCW(true);
+	args.SetStencilTestValue(stencilValue);
 	args.SetTexture(tex);
-	args.SetColormap(GetColorTable(sub->sector->Colormap, sub->sector->SpecialColors[sector_t::sprites], true));
-	args.SetClipPlane(clipPlane.x, clipPlane.y, clipPlane.z, clipPlane.w);
-	args.subsectorTest = true;
-	args.writeSubsector = false;
-	args.writeStencil = false;
-	args.blendmode = TriBlendMode::AlphaBlend;
-	PolyTriangleDrawer::draw(args);
+	args.SetClipPlane(clipPlane);
+	args.SetSubsectorDepthTest(true);
+	args.SetWriteSubsectorDepth(false);
+	args.SetWriteStencil(false);
+	args.SetStyle(TriBlendMode::TextureMasked);
+	args.DrawArray(vertices, 4, PolyDrawMode::TriangleFan);
 }

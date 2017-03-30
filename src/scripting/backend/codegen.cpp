@@ -8674,6 +8674,11 @@ FxExpression *FxVMFunctionCall::Resolve(FCompileContext& ctx)
 		return nullptr;
 	}
 
+	if (Function->Variants[0].Implementation->PrintableName.CompareNoCase("CustomStatusBar.DrawTexture") == 0)
+	{
+		int a = 0;
+	}
+
 	CallingFunction = ctx.Function;
 	if (ArgList.Size() > 0)
 	{
@@ -8736,6 +8741,12 @@ FxExpression *FxVMFunctionCall::Resolve(FCompileContext& ctx)
 						delete old;
 						// now fill the gap with constants created from the default list so that we got a full list of arguments.
 						int insert = j - i;
+						int skipdefs = 0;
+						// Defaults contain multiple entries for pointers so we need to calculate how much additional defaults we need to skip
+						for (unsigned k = 0; k < i + implicit; k++)
+						{
+							skipdefs += argtypes[k]->GetRegCount() - 1;
+						}
 						for (int k = 0; k < insert; k++)
 						{
 							auto ntype = argtypes[i + k + implicit];
@@ -8745,8 +8756,23 @@ FxExpression *FxVMFunctionCall::Resolve(FCompileContext& ctx)
 								assert(ntype->IsKindOf(RUNTIME_CLASS(PPointer)));
 								ntype = TypeNullPtr; // the default of a reference type can only be a null pointer
 							}
-							auto x = new FxConstant(ntype, defaults[i + k + implicit], ScriptPosition);
-							ArgList.Insert(i + k, x);
+							if (ntype->GetRegCount() == 1)
+							{
+								auto x = new FxConstant(ntype, defaults[i + k + skipdefs + implicit], ScriptPosition);
+								ArgList.Insert(i + k, x);
+							}
+							else 
+							{
+								// Vectors need special treatment because they are not normal constants
+								FxConstant *cs[3] = { nullptr };
+								for (int l = 0; l < ntype->GetRegCount(); l++)
+								{
+									cs[l] = new FxConstant(TypeFloat64, defaults[l + i + k + skipdefs + implicit], ScriptPosition);
+								}
+								FxExpression *x = new FxVectorValue(cs[0], cs[1], cs[2], ScriptPosition);
+								ArgList.Insert(i + k, x);
+								skipdefs += ntype->GetRegCount() - 1;
+							}
 						}
 						done = true;
 						break;
@@ -8790,8 +8816,16 @@ FxExpression *FxVMFunctionCall::Resolve(FCompileContext& ctx)
 				ArgList[i] = ArgList[i]->Resolve(ctx);	// nust be resolved before the address is requested.
 				if (ArgList[i] != nullptr && ArgList[i]->ValueType != TypeNullPtr)
 				{
-					ArgList[i]->RequestAddress(ctx, &writable);
-					if (flag & VARF_Ref) ArgList[i]->ValueType = NewPointer(ArgList[i]->ValueType);
+					if (type == ArgList[i]->ValueType && type->IsA(RUNTIME_CLASS(PPointer)) && static_cast<PPointer*>(type)->IsA(RUNTIME_CLASS(PStruct)))
+					{
+						// trying to pass a struct reference as a struct refg
+					}
+					else
+					{
+						ArgList[i]->RequestAddress(ctx, &writable);
+						if (flag & VARF_Ref)ArgList[i]->ValueType = NewPointer(ArgList[i]->ValueType);
+					}
+
 					// For a reference argument the types must match 100%.
 					if (type != ArgList[i]->ValueType)
 					{

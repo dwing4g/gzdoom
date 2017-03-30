@@ -38,7 +38,6 @@ PolySkyDome::PolySkyDome()
 void PolySkyDome::Render(const TriMatrix &worldToClip)
 {
 	FTextureID sky1tex, sky2tex;
-	bool foggy = false;
 	if ((level.flags & LEVEL_SWAPSKIES) && !(level.flags & LEVEL_DOUBLESKY))
 		sky1tex = sky2texture;
 	else
@@ -57,15 +56,12 @@ void PolySkyDome::Render(const TriMatrix &worldToClip)
 	int rc = mRows + 1;
 
 	PolyDrawArgs args;
-	args.uniforms.globvis = (float)PolyRenderer::Instance()->Light.WallGlobVis(foggy);
-	args.uniforms.light = 256;
-	args.uniforms.flags = TriUniforms::nearest_filter;
-	args.uniforms.subsectorDepth = RenderPolyScene::SkySubsectorDepth;
-	args.objectToClip = &objectToClip;
-	args.stenciltestvalue = 255;
-	args.stencilwritevalue = 1;
-	args.SetColormap(&NormalLight);
-	args.SetClipPlane(0.0f, 0.0f, 0.0f, 0.0f);
+	args.SetLight(&NormalLight, 255, PolyRenderer::Instance()->Light.WallGlobVis(false), true);
+	args.SetSubsectorDepth(RenderPolyScene::SkySubsectorDepth);
+	args.SetTransform(&objectToClip);
+	args.SetStencilTestValue(255);
+	args.SetWriteStencil(true, 1);
+	args.SetClipPlane(PolyClipPlane(0.0f, 0.0f, 0.0f, 1.0f));
 
 	RenderCapColorRow(args, frontskytex, 0, false);
 	RenderCapColorRow(args, frontskytex, rc, true);
@@ -74,38 +70,33 @@ void PolySkyDome::Render(const TriMatrix &worldToClip)
 
 	uint32_t topcapcolor = frontskytex->GetSkyCapColor(false);
 	uint32_t bottomcapcolor = frontskytex->GetSkyCapColor(true);
+	uint8_t topcapindex = RGB256k.All[((RPART(topcapcolor) >> 2) << 12) | ((GPART(topcapcolor) >> 2) << 6) | (BPART(topcapcolor) >> 2)];
+	uint8_t bottomcapindex = RGB256k.All[((RPART(bottomcapcolor) >> 2) << 12) | ((GPART(bottomcapcolor) >> 2) << 6) | (BPART(bottomcapcolor) >> 2)];
 
 	for (int i = 1; i <= mRows; i++)
 	{
-		RenderRow(args, i, topcapcolor);
-		RenderRow(args, rc + i, bottomcapcolor);
+		RenderRow(args, i, topcapcolor, topcapindex);
+		RenderRow(args, rc + i, bottomcapcolor, bottomcapindex);
 	}
 }
 
-void PolySkyDome::RenderRow(PolyDrawArgs &args, int row, uint32_t capcolor)
+void PolySkyDome::RenderRow(PolyDrawArgs &args, int row, uint32_t capcolor, uint8_t capcolorindex)
 {
-	args.vinput = &mVertices[mPrimStart[row]];
-	args.vcount = mPrimStart[row + 1] - mPrimStart[row];
-	args.mode = TriangleDrawMode::Strip;
-	args.ccw = false;
-	args.uniforms.color = capcolor;
-	args.blendmode = TriBlendMode::Skycap;
-	PolyTriangleDrawer::draw(args);
+	args.SetFaceCullCCW(false);
+	args.SetColor(capcolor, capcolorindex);
+	args.SetStyle(TriBlendMode::Skycap);
+	args.DrawArray(&mVertices[mPrimStart[row]], mPrimStart[row + 1] - mPrimStart[row], PolyDrawMode::TriangleStrip);
 }
 
 void PolySkyDome::RenderCapColorRow(PolyDrawArgs &args, FTexture *skytex, int row, bool bottomCap)
 {
 	uint32_t solid = skytex->GetSkyCapColor(bottomCap);
-	if (!PolyRenderer::Instance()->RenderTarget->IsBgra())
-		solid = RGB32k.RGB[(RPART(solid) >> 3)][(GPART(solid) >> 3)][(BPART(solid) >> 3)];
+	uint8_t palsolid = RGB32k.RGB[(RPART(solid) >> 3)][(GPART(solid) >> 3)][(BPART(solid) >> 3)];
 
-	args.vinput = &mVertices[mPrimStart[row]];
-	args.vcount = mPrimStart[row + 1] - mPrimStart[row];
-	args.mode = TriangleDrawMode::Fan;
-	args.ccw = bottomCap;
-	args.uniforms.color = solid;
-	args.blendmode = TriBlendMode::Copy;
-	PolyTriangleDrawer::draw(args);
+	args.SetFaceCullCCW(bottomCap);
+	args.SetColor(solid, palsolid);
+	args.SetStyle(TriBlendMode::FillOpaque);
+	args.DrawArray(&mVertices[mPrimStart[row]], mPrimStart[row + 1] - mPrimStart[row], PolyDrawMode::TriangleFan);
 }
 
 void PolySkyDome::CreateDome()
@@ -148,8 +139,8 @@ TriVertex PolySkyDome::SetVertexXYZ(float xx, float yy, float zz, float uu, floa
 	v.y = zz;
 	v.z = yy;
 	v.w = 1.0f;
-	v.varying[0] = uu;
-	v.varying[1] = vv;
+	v.u = uu;
+	v.v = vv;
 	return v;
 }
 

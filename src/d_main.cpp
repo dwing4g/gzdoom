@@ -160,7 +160,6 @@ EXTERN_CVAR (Bool, sv_unlimited_pickup)
 extern int testingmode;
 extern bool setmodeneeded;
 extern int NewWidth, NewHeight, NewBits, DisplayBits;
-EXTERN_CVAR (Bool, st_scale)
 extern bool gameisdead;
 extern bool demorecording;
 extern bool M_DemoNoPlay;	// [RH] if true, then skip any demos in the loop
@@ -790,19 +789,17 @@ void D_Display ()
 			screen->DrawBlendingRect();
 			if (automapactive)
 			{
-				int saved_ST_Y = gST_Y;
-				if (hud_althud && viewheight == SCREENHEIGHT)
-				{
-					gST_Y = viewheight;
-				}
-				AM_Drawer ();
-				gST_Y = saved_ST_Y;
+				AM_Drawer (hud_althud? viewheight : StatusBar->GetTopOfStatusbar());
 			}
 			if (!automapactive || viewactive)
 			{
 				V_RefreshViewBorder ();
 			}
 
+			// for timing the statusbar code.
+			//cycle_t stb;
+			//stb.Reset();
+			//stb.Clock();
 			if (hud_althud && viewheight == SCREENHEIGHT && screenblocks > 10)
 			{
 				StatusBar->DrawBottomStuff (HUD_AltHud);
@@ -828,6 +825,8 @@ void D_Display ()
 				StatusBar->CallDraw (HUD_StatusBar);
 				StatusBar->DrawTopStuff (HUD_StatusBar);
 			}
+			//stb.Unclock();
+			//Printf("Stbar = %f\n", stb.TimeMS());
 			CT_Drawer ();
 			break;
 
@@ -901,7 +900,6 @@ void D_Display ()
 		NetUpdate ();			// send out any new accumulation
 		// normal update
 		// draw ZScript UI stuff
-		//E_RenderOverlay();
 		C_DrawConsole (hw2d);	// draw console
 		M_Drawer ();			// menu is drawn even on top of everything
 		FStat::PrintStat ();
@@ -2562,7 +2560,7 @@ void D_DoomMain (void)
 
 		P_SetupWeapons_ntohton();
 
-		//SBarInfo support.
+		//SBarInfo support. Note that the first SBARINFO lump contains the mugshot definition so it even needs to be read when a regular status bar is being used.
 		SBarInfo::Load();
 		HUD_InitHud();
 

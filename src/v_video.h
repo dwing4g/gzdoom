@@ -125,6 +125,9 @@ enum
 	DTA_TextLen,		// stop after this many characters, even if \0 not hit
 	DTA_CellX,			// horizontal size of character cell
 	DTA_CellY,			// vertical size of character cell
+
+	// New additions. 
+	DTA_Color,
 };
 
 enum
@@ -161,6 +164,7 @@ struct DrawParms
 	uint32_t fillcolor;
 	FRemapTable *remap;
 	uint32_t colorOverlay;
+	PalEntry color;
 	INTBOOL alphaChannel;
 	INTBOOL flipX;
 	//float shadowAlpha;
@@ -225,7 +229,8 @@ public:
 	virtual void Dim (PalEntry color = 0);
 
 	// Dim part of the canvas
-	virtual void Dim (PalEntry color, float amount, int x1, int y1, int w, int h);
+	virtual void Dim (PalEntry color, float amount, int x1, int y1, int w, int h) final;
+	virtual void DoDim(PalEntry color, float amount, int x1, int y1, int w, int h);
 
 	// Fill an area with a texture
 	virtual void FlatFill (int left, int top, int right, int bottom, FTexture *src, bool local_origin=false);
@@ -236,7 +241,8 @@ public:
 		const FColormap &colormap, PalEntry flatcolor, int lightlevel, int bottomclip);
 
 	// Set an area to a specified color
-	virtual void Clear (int left, int top, int right, int bottom, int palcolor, uint32_t color);
+	virtual void Clear (int left, int top, int right, int bottom, int palcolor, uint32_t color) final;
+	virtual void DoClear(int left, int top, int right, int bottom, int palcolor, uint32_t color);
 
 	// Draws a line
 	virtual void DrawLine(int x0, int y0, int x1, int y1, int palColor, uint32_t realcolor);
@@ -259,6 +265,10 @@ public:
 	// Text drawing functions -----------------------------------------------
 
 	// 2D Texture drawing
+	void ClearClipRect() { clipleft = cliptop = 0; clipwidth = clipheight = -1; }
+	void SetClipRect(int x, int y, int w, int h);
+	void GetClipRect(int *x, int *y, int *w, int *h);
+
 	bool SetTextureParms(DrawParms *parms, FTexture *img, double x, double y) const;
 	void DrawTexture (FTexture *img, double x, double y, int tags, ...);
 	void DrawTexture(FTexture *img, double x, double y, VMVa_List &);
@@ -266,7 +276,6 @@ public:
 	void VirtualToRealCoords(double &x, double &y, double &w, double &h, double vwidth, double vheight, bool vbottom=false, bool handleaspect=true) const;
 
 	// Code that uses these (i.e. SBARINFO) should probably be evaluated for using doubles all around instead.
-	void VirtualToRealCoordsFixed(fixed_t &x, fixed_t &y, fixed_t &w, fixed_t &h, int vwidth, int vheight, bool vbottom=false, bool handleaspect=true) const;
 	void VirtualToRealCoordsInt(int &x, int &y, int &w, int &h, int vwidth, int vheight, bool vbottom=false, bool handleaspect=true) const;
 
 #ifdef DrawText
@@ -285,6 +294,7 @@ protected:
 	int Pitch;
 	int LockCount;
 	bool Bgra;
+	int clipleft = 0, cliptop = 0, clipwidth = -1, clipheight = -1;
 
 	void DrawTextCommon(FFont *font, int normalcolor, double x, double y, const char *string, DrawParms &parms);
 
@@ -404,6 +414,9 @@ public:
 	// Returns true if hardware-accelerated 2D has been entered, false if not.
 	virtual bool Begin2D(bool copy3d);
 
+	// Returns true if Begin2D has been called and 2D drawing is now active
+	virtual bool HasBegun2D() { return IsLocked(); }
+
 	// DrawTexture calls after Begin2D use native textures.
 
 	// Draws the blending rectangle over the viewwindow if in hardware-
@@ -519,8 +532,6 @@ void V_Init2 ();
 
 void V_Shutdown ();
 
-void V_MarkRect (int x, int y, int width, int height);
-
 class FScanner;
 // Returns the closest color to the one desired. String
 // should be of the form "rr gg bb".
@@ -552,7 +563,21 @@ int AspectBaseHeight(float aspect);
 double AspectPspriteOffset(float aspect);
 int AspectMultiplier(float aspect);
 bool AspectTallerThanWide(float aspect);
+int GetUIScale(int altval);
 
 EXTERN_CVAR(Int, uiscale);
+EXTERN_CVAR(Int, con_scaletext);
+EXTERN_CVAR(Int, con_scale);
+
+inline int active_con_scaletext()
+{
+	return GetUIScale(con_scaletext);
+}
+
+inline int active_con_scale()
+{
+	return GetUIScale(con_scale);
+}
+
 
 #endif // __V_VIDEO_H__
