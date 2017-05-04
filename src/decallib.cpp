@@ -370,6 +370,12 @@ void FDecalLib::ReadAllDecals ()
 	for (i = 0; i < PClassActor::AllActorClasses.Size(); i++)
 	{
 		AActor *def = (AActor*)GetDefaultByType (PClassActor::AllActorClasses[i]);
+		if (nullptr == def)
+		{
+			// This is referenced but undefined class
+			// The corresponding warning should be already reported by DECORATE parser
+			continue;
+		}
 
 		FName v = ENamedName(intptr_t(def->DecalGenerator));
 		if (v.IsValidName())
@@ -1195,7 +1201,7 @@ void DDecalFader::Tick ()
 
 DThinker *FDecalFaderAnim::CreateThinker (DBaseDecal *actor, side_t *wall) const
 {
-	DDecalFader *fader = new DDecalFader (actor);
+	DDecalFader *fader = Create<DDecalFader> (actor);
 
 	fader->TimeToStartDecay = level.maptime + DecayStart;
 	fader->TimeToEndDecay = fader->TimeToStartDecay + DecayTime;
@@ -1221,7 +1227,7 @@ void DDecalStretcher::Serialize(FSerializer &arc)
 
 DThinker *FDecalStretcherAnim::CreateThinker (DBaseDecal *actor, side_t *wall) const
 {
-	DDecalStretcher *thinker = new DDecalStretcher (actor);
+	DDecalStretcher *thinker = Create<DDecalStretcher> (actor);
 
 	thinker->TimeToStart = level.maptime + StretchStart;
 	thinker->TimeToStop = thinker->TimeToStart + StretchTime;
@@ -1307,7 +1313,7 @@ void DDecalSlider::Serialize(FSerializer &arc)
 
 DThinker *FDecalSliderAnim::CreateThinker (DBaseDecal *actor, side_t *wall) const
 {
-	DDecalSlider *thinker = new DDecalSlider (actor);
+	DDecalSlider *thinker = Create<DDecalSlider> (actor);
 
 	thinker->TimeToStart = level.maptime + SlideStart;
 	thinker->TimeToStop = thinker->TimeToStart + SlideTime;
@@ -1426,7 +1432,7 @@ void DDecalColorer::Tick ()
 
 DThinker *FDecalColorerAnim::CreateThinker (DBaseDecal *actor, side_t *wall) const
 {
-	DDecalColorer *Colorer = new DDecalColorer (actor);
+	DDecalColorer *Colorer = Create<DDecalColorer>(actor);
 
 	Colorer->TimeToStartDecay = level.maptime + DecayStart;
 	Colorer->TimeToEndDecay = Colorer->TimeToStartDecay + DecayTime;

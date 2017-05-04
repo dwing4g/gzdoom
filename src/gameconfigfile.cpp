@@ -376,9 +376,15 @@ void FGameConfigFile::DoGlobalSetup ()
 				if (var != NULL) var->ResetToDefault();
 				var = FindCVar("con_scaletext", NULL);
 				if (var != NULL) var->ResetToDefault();
-
+				var = FindCVar("uiscale", NULL);
+				if (var != NULL) var->ResetToDefault();
 			}
-
+			if (last < 215)
+			{
+				// Previously a true/false boolean. Now an on/off/auto tri-state with auto as the default.
+				FBaseCVar *var = FindCVar("snd_hrtf", NULL);
+				if (var != NULL) var->ResetToDefault();
+			}
 		}
 	}
 }
@@ -641,7 +647,7 @@ void FGameConfigFile::CreateStandardAutoExec(const char *section, bool start)
 	}
 }
 
-void FGameConfigFile::AddAutoexec (DArgs *list, const char *game)
+void FGameConfigFile::AddAutoexec (FArgs *list, const char *game)
 {
 	char section[64];
 	const char *key;

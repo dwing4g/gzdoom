@@ -87,6 +87,8 @@
 #include "g_levellocals.h"
 #include "actorinlines.h"
 #include "stats.h"
+#include "types.h"
+#include "vm.h"
 
 	// P-codes for ACS scripts
 	enum
@@ -3657,7 +3659,7 @@ DLevelScript::DLevelScript ()
 {
 	next = prev = NULL;
 	if (DACSThinker::ActiveThinker == NULL)
-		new DACSThinker;
+		Create<DACSThinker>();
 	activefont = SmallFont;
 }
 
@@ -4069,7 +4071,7 @@ showme:
 							fa1 = viewer->BlendA;
 						}
 					}
-					new DFlashFader (fr1, fg1, fb1, fa1, fr2, fg2, fb2, fa2, ftime, viewer->mo);
+					Create<DFlashFader> (fr1, fg1, fb1, fa1, fr2, fg2, fb2, fa2, ftime, viewer->mo);
 				}
 			}
 		}
@@ -5012,8 +5014,7 @@ int DLevelScript::LineFromID(int id)
 
 bool GetVarAddrType(AActor *self, FName varname, int index, void *&addr, PType *&type, bool readonly)
 {
-	PField *var = dyn_cast<PField>(self->GetClass()->Symbols.FindSymbol(varname, true));
-	PArray *arraytype;
+	PField *var = dyn_cast<PField>(self->GetClass()->FindSymbol(varname, true));
 
 	if (var == NULL || (!readonly && (var->Flags & VARF_Native)))
 	{
@@ -5021,9 +5022,9 @@ bool GetVarAddrType(AActor *self, FName varname, int index, void *&addr, PType *
 	}
 	type = var->Type;
 	uint8_t *baddr = reinterpret_cast<uint8_t *>(self) + var->Offset;
-	arraytype = dyn_cast<PArray>(type);
-	if (arraytype != NULL)
+	if (type->isArray())
 	{
+		PArray *arraytype = static_cast<PArray*>(type);
 		// unwrap contained type
 		type = arraytype->ElementType;
 		// offset by index (if in bounds)
@@ -5038,12 +5039,11 @@ bool GetVarAddrType(AActor *self, FName varname, int index, void *&addr, PType *
 		return false;
 	}
 	addr = baddr;
-	// We don't want Int subclasses like Name or Color to be accessible,
-	// but we do want to support Float subclasses like Fixed.
-	if (!type->IsA(RUNTIME_CLASS(PInt)) && !type->IsKindOf(RUNTIME_CLASS(PFloat)))
+	// We don't want Int subclasses like Name or Color to be accessible here.
+	if (!type->isInt() && !type->isFloat() && type != TypeBool)
 	{
 		// For reading, we also support Name and String types.
-		if (readonly && (type->IsA(RUNTIME_CLASS(PName)) || type->IsA(RUNTIME_CLASS(PString))))
+		if (readonly && (type == TypeName || type == TypeString))
 		{
 			return true;
 		}
@@ -5059,7 +5059,7 @@ static void SetUserVariable(AActor *self, FName varname, int index, int value)
 
 	if (GetVarAddrType(self, varname, index, addr, type, false))
 	{
-		if (!type->IsKindOf(RUNTIME_CLASS(PFloat)))
+		if (!type->isFloat())
 		{
 			type->SetValue(addr, value);
 		}
@@ -5077,15 +5077,15 @@ static int GetUserVariable(AActor *self, FName varname, int index)
 
 	if (GetVarAddrType(self, varname, index, addr, type, true))
 	{
-		if (type->IsKindOf(RUNTIME_CLASS(PFloat)))
+		if (type->isFloat())
 		{
 			return DoubleToACS(type->GetValueFloat(addr));
 		}
-		else if (type->IsA(RUNTIME_CLASS(PName)))
+		else if (type == TypeName)
 		{
 			return GlobalACSStrings.AddString(FName(ENamedName(type->GetValueInt(addr))).GetChars());
 		}
-		else if (type->IsA(RUNTIME_CLASS(PString)))
+		else if (type == TypeString)
 		{
 			return GlobalACSStrings.AddString(*(FString *)addr);
 		}
@@ -5362,7 +5362,7 @@ static int ScriptCall(AActor *activator, unsigned argc, int32_t *args)
 		{
 			I_Error("ACS call to unknown class in script function %s.%s", clsname, funcname);
 		}
-		auto funcsym = dyn_cast<PFunction>(cls->Symbols.FindSymbol(funcname, true));
+		auto funcsym = dyn_cast<PFunction>(cls->FindSymbol(funcname, true));
 		if (funcsym == nullptr)
 		{
 			I_Error("ACS call to unknown script function %s.%s", clsname, funcname);
@@ -5431,7 +5431,7 @@ static int ScriptCall(AActor *activator, unsigned argc, int32_t *args)
 		// The return value can be the same types as the parameter types, plus void
 		if (func->Proto->ReturnTypes.Size() == 0)
 		{
-			GlobalVMStack.Call(func, &params[0], params.Size(), nullptr, 0);
+			VMCall(func, &params[0], params.Size(), nullptr, 0);
 		}
 		else
 		{
@@ -5439,7 +5439,7 @@ static int ScriptCall(AActor *activator, unsigned argc, int32_t *args)
 			if (rettype == TypeSInt32 || rettype == TypeBool || rettype == TypeColor || rettype == TypeName || rettype == TypeSound)
 			{
 				VMReturn ret(&retval);
-				GlobalVMStack.Call(func, &params[0], params.Size(), &ret, 1);
+				VMCall(func, &params[0], params.Size(), &ret, 1);
 				if (rettype == TypeName)
 				{
 					retval = GlobalACSStrings.AddString(FName(ENamedName(retval)));
@@ -5453,20 +5453,20 @@ static int ScriptCall(AActor *activator, unsigned argc, int32_t *args)
 			{
 				double d;
 				VMReturn ret(&d);
-				GlobalVMStack.Call(func, &params[0], params.Size(), &ret, 1);
+				VMCall(func, &params[0], params.Size(), &ret, 1);
 				retval = DoubleToACS(d);
 			}
 			else if (rettype == TypeString)
 			{
 				FString d;
 				VMReturn ret(&d);
-				GlobalVMStack.Call(func, &params[0], params.Size(), &ret, 1);
+				VMCall(func, &params[0], params.Size(), &ret, 1);
 				retval = GlobalACSStrings.AddString(d);
 			}
 			else
 			{
 				// All other return values can not be handled so ignore them.
-				GlobalVMStack.Call(func, &params[0], params.Size(), nullptr, 0);
+				VMCall(func, &params[0], params.Size(), nullptr, 0);
 			}
 		}
 	}
@@ -6910,7 +6910,7 @@ static void SetMarineWeapon(AActor *marine, int weapon)
 	if (smw)
 	{
 		VMValue params[2] = { marine, weapon };
-		GlobalVMStack.Call(smw, params, 2, nullptr, 0, nullptr);
+		VMCall(smw, params, 2, nullptr, 0);
 	}
 }
 
@@ -6921,7 +6921,7 @@ static void SetMarineSprite(AActor *marine, PClassActor *source)
 	if (sms)
 	{
 		VMValue params[2] = { marine, source };
-		GlobalVMStack.Call(sms, params, 2, nullptr, 0, nullptr);
+		VMCall(sms, params, 2, nullptr, 0);
 	}
 }
 
@@ -8819,13 +8819,13 @@ scriptwait:
 					{
 					default:	// normal
 						alpha = (optstart < sp) ? ACSToFloat(Stack[optstart]) : 1.f;
-						msg = new DHUDMessage (activefont, work, x, y, hudwidth, hudheight, color, holdTime);
+						msg = Create<DHUDMessage> (activefont, work, x, y, hudwidth, hudheight, color, holdTime);
 						break;
 					case 1:		// fade out
 						{
 							float fadeTime = (optstart < sp) ? ACSToFloat(Stack[optstart]) : 0.5f;
 							alpha = (optstart < sp-1) ? ACSToFloat(Stack[optstart+1]) : 1.f;
-							msg = new DHUDMessageFadeOut (activefont, work, x, y, hudwidth, hudheight, color, holdTime, fadeTime);
+							msg = Create<DHUDMessageFadeOut> (activefont, work, x, y, hudwidth, hudheight, color, holdTime, fadeTime);
 						}
 						break;
 					case 2:		// type on, then fade out
@@ -8833,7 +8833,7 @@ scriptwait:
 							float typeTime = (optstart < sp) ? ACSToFloat(Stack[optstart]) : 0.05f;
 							float fadeTime = (optstart < sp-1) ? ACSToFloat(Stack[optstart+1]) : 0.5f;
 							alpha = (optstart < sp-2) ? ACSToFloat(Stack[optstart+2]) : 1.f;
-							msg = new DHUDMessageTypeOnFadeOut (activefont, work, x, y, hudwidth, hudheight, color, typeTime, holdTime, fadeTime);
+							msg = Create<DHUDMessageTypeOnFadeOut> (activefont, work, x, y, hudwidth, hudheight, color, typeTime, holdTime, fadeTime);
 						}
 						break;
 					case 3:		// fade in, then fade out
@@ -8841,7 +8841,7 @@ scriptwait:
 							float inTime = (optstart < sp) ? ACSToFloat(Stack[optstart]) : 0.5f;
 							float outTime = (optstart < sp-1) ? ACSToFloat(Stack[optstart+1]) : 0.5f;
 							alpha = (optstart < sp-2) ? ACSToFloat(Stack[optstart + 2]) : 1.f;
-							msg = new DHUDMessageFadeInOut (activefont, work, x, y, hudwidth, hudheight, color, holdTime, inTime, outTime);
+							msg = Create<DHUDMessageFadeInOut> (activefont, work, x, y, hudwidth, hudheight, color, holdTime, inTime, outTime);
 						}
 						break;
 					}
@@ -8869,7 +8869,6 @@ scriptwait:
 					{
 						static const char bar[] = TEXTCOLOR_ORANGE "\n\35\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36"
 					"\36\36\36\36\36\36\36\36\36\36\36\36\37" TEXTCOLOR_NORMAL "\n";
-						static const char logbar[] = "\n<------------------------------->\n";
 						char consolecolor[3];
 
 						consolecolor[0] = '\x1c';
@@ -9630,13 +9629,13 @@ scriptwait:
 			break;
 
 		case PCD_SETFLOORTRIGGER:
-			new DPlaneWatcher (activator, activationline, backSide, false, STACK(8),
+			Create<DPlaneWatcher> (activator, activationline, backSide, false, STACK(8),
 				STACK(7), STACK(6), STACK(5), STACK(4), STACK(3), STACK(2), STACK(1));
 			sp -= 8;
 			break;
 
 		case PCD_SETCEILINGTRIGGER:
-			new DPlaneWatcher (activator, activationline, backSide, true, STACK(8),
+			Create<DPlaneWatcher> (activator, activationline, backSide, true, STACK(8),
 				STACK(7), STACK(6), STACK(5), STACK(4), STACK(3), STACK(2), STACK(1));
 			sp -= 8;
 			break;
@@ -9777,8 +9776,7 @@ scriptwait:
 			}
 			else
 			{
-				AInventory *item = activator->FindInventory (dyn_cast<PClassActor>(
-					PClass::FindClass (FBehavior::StaticLookupString (STACK(1)))));
+				AInventory *item = activator->FindInventory (PClass::FindActor (FBehavior::StaticLookupString (STACK(1))));
 
 				if (item == NULL || !item->IsKindOf(NAME_Weapon))
 				{
@@ -10514,7 +10512,7 @@ static DLevelScript *P_GetScriptGoing (AActor *who, line_t *where, int num, cons
 		return NULL;
 	}
 
-	return new DLevelScript (who, where, num, code, module, args, argcount, flags);
+	return Create<DLevelScript> (who, where, num, code, module, args, argcount, flags);
 }
 
 DLevelScript::DLevelScript (AActor *who, line_t *where, int num, const ScriptPtr *code, FBehavior *module,
@@ -10522,7 +10520,7 @@ DLevelScript::DLevelScript (AActor *who, line_t *where, int num, const ScriptPtr
 	: activeBehavior (module)
 {
 	if (DACSThinker::ActiveThinker == NULL)
-		new DACSThinker;
+		Create<DACSThinker>();
 
 	script = num;
 	assert(code->VarCount >= code->ArgCount);
@@ -11021,11 +11019,6 @@ CCMD(acsprofile)
 
 	ShowProfileData(ScriptProfiles, limit, sorter, false);
 	ShowProfileData(FuncProfiles, limit, sorter, true);
-}
-
-void MarkACSThinker()
-{
-	GC::Mark(DACSThinker::ActiveThinker);
 }
 
 ADD_STAT(ACS)

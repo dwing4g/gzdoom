@@ -364,11 +364,14 @@ CCMD (changemap)
 
 	if (argv.argc() > 1)
 	{
+		const char *mapname = argv[1];
+		if (!strcmp(mapname, "*")) mapname = level.MapName.GetChars();
+
 		try
 		{
-			if (!P_CheckMapData(argv[1]))
+			if (!P_CheckMapData(mapname))
 			{
-				Printf ("No map %s\n", argv[1]);
+				Printf ("No map %s\n", mapname);
 			}
 			else
 			{
@@ -381,7 +384,7 @@ CCMD (changemap)
 				{
 					Net_WriteByte (DEM_CHANGEMAP);
 				}
-				Net_WriteString (argv[1]);
+				Net_WriteString (mapname);
 			}
 		}
 		catch(CRecoverableError &error)
@@ -1145,34 +1148,6 @@ CCMD(currentpos)
 	{
 		Printf("You are not in game!\n");
 	}
-}
-
-//-----------------------------------------------------------------------------
-//
-//
-//
-//-----------------------------------------------------------------------------
-CCMD(vmengine)
-{
-	if (argv.argc() == 2)
-	{
-		if (stricmp(argv[1], "default") == 0)
-		{
-			VMSelectEngine(VMEngine_Default);
-			return;
-		}
-		else if (stricmp(argv[1], "checked") == 0)
-		{
-			VMSelectEngine(VMEngine_Checked);
-			return;
-		}
-		else if (stricmp(argv[1], "unchecked") == 0)
-		{
-			VMSelectEngine(VMEngine_Unchecked);
-			return;
-		}
-	}
-	Printf("Usage: vmengine <default|checked|unchecked>\n");
 }
 
 //-----------------------------------------------------------------------------

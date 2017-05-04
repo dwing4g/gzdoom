@@ -1,20 +1,24 @@
-// Emacs style mode select	 -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id:$
+// Copyright 1993-1996 id Software
+// Copyright 1994-1996 Raven Software
+// Copyright 1999-2016 Randy Heit
+// Copyright 2002-2016 Christoph Oelckers
 //
-// Copyright (C) 1993-1996 by id Software, Inc.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-// $Log:$
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/
+//
+//-----------------------------------------------------------------------------
 //
 // DESCRIPTION:
 //		Rendering main loop and setup functions,
@@ -61,6 +65,7 @@
 #include "p_maputl.h"
 #include "sbar.h"
 #include "math/cmath.h"
+#include "vm.h"
 
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
@@ -149,6 +154,7 @@ FCanvasTextureInfo *FCanvasTextureInfo::List;
 DVector3a view;
 DAngle viewpitch;
 
+DEFINE_GLOBAL(LocalViewPitch);
 
 // CODE --------------------------------------------------------------------
 static void R_Shutdown ();
@@ -977,6 +983,18 @@ void FCanvasTextureInfo::Add (AActor *viewpoint, FTextureID picnum, int fov)
 	probe->Next = List;
 	texture->bFirstUpdate = true;
 	List = probe;
+}
+
+// [ZZ] expose this to ZScript
+DEFINE_ACTION_FUNCTION(_TexMan, SetCameraToTexture)
+{
+	PARAM_PROLOGUE;
+	PARAM_OBJECT(viewpoint, AActor);
+	PARAM_STRING(texturename); // [ZZ] there is no point in having this as FTextureID because it's easier to refer to a cameratexture by name and it isn't executed too often to cache it.
+	PARAM_INT(fov);
+	FTextureID textureid = TexMan.CheckForTexture(texturename, FTexture::TEX_Wall, FTextureManager::TEXMAN_Overridable);
+	FCanvasTextureInfo::Add(viewpoint, textureid, fov);
+	return 0;
 }
 
 //==========================================================================

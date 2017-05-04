@@ -1,23 +1,26 @@
-// Emacs style mode select	 -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id:$
+// Copyright 1993-1996 id Software
+// Copyright 1994-1996 Raven Software
+// Copyright 1998-1998 Chi Hoang, Lee Killough, Jim Flynn, Rand Phares, Ty Halderman
+// Copyright 1999-2016 Randy Heit
+// Copyright 2002-2016 Christoph Oelckers
 //
-// Copyright (C) 1993-1996 by id Software, Inc.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-// DESCRIPTION:
-//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/
 //
 //-----------------------------------------------------------------------------
+//
 
 
 #ifndef __D_PLAYER_H__
@@ -94,12 +97,9 @@ public:
 
 	bool ResetAirSupply (bool playgasp = true);
 	int GetMaxHealth(bool withupgrades = false) const;
-	void TweakSpeeds (double &forwardmove, double &sidemove);
-	void MorphPlayerThink ();
 	void ActivateMorphWeapon ();
 	AWeapon *PickNewWeapon (PClassActor *ammotype);
 	AWeapon *BestWeapon (PClassActor *ammotype);
-	void CheckWeaponSwitch(PClassActor *ammotype);
 	void GiveDeathmatchInventory ();
 	void FilterCoopRespawnInventory (APlayerPawn *oldplayer);
 
@@ -108,8 +108,6 @@ public:
 
 	// These are virtual on the script side only.
 	void PlayIdle();
-	void PlayRunning();
-	void PlayAttacking ();
 	void PlayAttacking2 ();
 
 	const char *GetSoundClass () const;
@@ -235,7 +233,7 @@ enum
 // The VM cannot deal with this as an invalid pointer because it performs a read barrier on every object pointer read.
 // This doesn't have to point to a valid weapon, though, because WP_NOCHANGE is never dereferenced, but it must point to a valid object
 // and the class descriptor just works fine for that.
-#define WP_NOCHANGE ((AWeapon*)RUNTIME_CLASS_CASTLESS(AWeapon))
+extern AWeapon *WP_NOCHANGE;
 
 
 #define MAXPLAYERNAME	15
@@ -563,8 +561,6 @@ inline bool AActor::IsNoClip2() const
 	}
 	return false;
 }
-
-#define CROUCHSPEED (1./12)
 
 bool P_IsPlayerTotallyFrozen(const player_t *player);
 

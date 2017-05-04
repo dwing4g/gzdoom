@@ -54,7 +54,7 @@
 #include "r_utility.h"
 #include "cmdlib.h"
 #include "g_levellocals.h"
-#include "virtual.h"
+#include "vm.h"
 
 #include <time.h>
 
@@ -385,21 +385,20 @@ static void SetKeyTypes()
 {
 	for(unsigned int i = 0; i < PClassActor::AllActorClasses.Size(); i++)
 	{
-		PClass *ti = PClassActor::AllActorClasses[i];
+		PClassActor *ti = PClassActor::AllActorClasses[i];
 		auto kt = PClass::FindActor(NAME_Key);
 
 		if (ti->IsDescendantOf(kt))
 		{
-			PClassActor *tia = static_cast<PClassActor *>(ti);
-			AInventory *key = (AInventory*)(GetDefaultByType(tia));
+			AInventory *key = (AInventory*)(GetDefaultByType(ti));
 
 			if (key->Icon.isValid() && key->special1 > 0)
 			{
-				KeyTypes.Push(tia);
+				KeyTypes.Push(ti);
 			}
 			else 
 			{
-				UnassignedKeyTypes.Push(tia);
+				UnassignedKeyTypes.Push(ti);
 			}
 		}
 	}
@@ -1089,23 +1088,35 @@ static void DrawPowerups(player_t *CPlayer)
 
 	for (item = CPlayer->mo->Inventory; item != NULL; item = item->Inventory)
 	{
-		IFVIRTUALPTR(item, AInventory, GetPowerupIcon)
+		if (item->IsKindOf(NAME_Powerup))
 		{
-			VMValue param[] = { item };
-			int rv;
-			VMReturn ret(&rv);
-			GlobalVMStack.Call(func, param, 1, &ret, 1);
-			auto tex = FSetTextureID(rv);
-			if (!tex.isValid()) continue;
-			auto texture = TexMan(tex);
-
-			screen->DrawTexture(texture, x, y, DTA_KeepRatio, true, DTA_VirtualWidth, hudwidth, DTA_VirtualHeight, hudheight, DTA_CenterBottomOffset, true, TAG_DONE);
-
-			x -= POWERUPICONSIZE;
-			if (x < -hudwidth / 2)
+			IFVIRTUALPTRNAME(item, NAME_Powerup, GetPowerupIcon)
 			{
-				x = -20;
-				y += POWERUPICONSIZE * 3 / 2;
+				VMValue param[] = { item };
+				int rv;
+				VMReturn ret(&rv);
+				VMCall(func, param, 1, &ret, 1);
+				auto tex = FSetTextureID(rv);
+				if (!tex.isValid()) continue;
+				auto texture = TexMan(tex);
+
+				IFVIRTUALPTRNAME(item, NAME_Powerup, IsBlinking)
+				{
+					// Reuse the parameters from GetPowerupIcon
+					VMCall(func, param, 1, &ret, 1);
+					if (!rv)
+					{
+
+						screen->DrawTexture(texture, x, y, DTA_KeepRatio, true, DTA_VirtualWidth, hudwidth, DTA_VirtualHeight, hudheight, DTA_CenterBottomOffset, true, TAG_DONE);
+
+						x -= POWERUPICONSIZE;
+						if (x < -hudwidth / 2)
+						{
+							x = -20;
+							y += POWERUPICONSIZE * 3 / 2;
+						}
+					}
+				}
 			}
 		}
 	}

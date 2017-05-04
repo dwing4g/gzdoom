@@ -5,6 +5,7 @@
 #include <mutex>
 #include <atomic>
 #include <condition_variable>
+#include <unordered_map>
 
 #include "i_sound.h"
 #include "s_sound.h"
@@ -14,10 +15,14 @@
 
 #ifdef DYN_OPENAL
 #define AL_NO_PROTOTYPES
-#endif // DYN_OPENAL
-
+#include "thirdparty/al.h"
+#include "thirdparty/alc.h"
+#else
 #include "al.h"
 #include "alc.h"
+#endif
+
+#include "efx.h"
 
 #ifndef ALC_ENUMERATE_ALL_EXT
 #define ALC_ENUMERATE_ALL_EXT 1
@@ -28,6 +33,28 @@
 #ifndef ALC_EXT_disconnect
 #define ALC_EXT_disconnect 1
 #define ALC_CONNECTED                            0x313
+#endif
+
+#ifndef ALC_SOFT_HRTF
+#define ALC_SOFT_HRTF 1
+#define ALC_HRTF_SOFT                            0x1992
+#define ALC_DONT_CARE_SOFT                       0x0002
+#define ALC_HRTF_STATUS_SOFT                     0x1993
+#define ALC_HRTF_DISABLED_SOFT                   0x0000
+#define ALC_HRTF_ENABLED_SOFT                    0x0001
+#define ALC_HRTF_DENIED_SOFT                     0x0002
+#define ALC_HRTF_REQUIRED_SOFT                   0x0003
+#define ALC_HRTF_HEADPHONES_DETECTED_SOFT        0x0004
+#define ALC_HRTF_UNSUPPORTED_FORMAT_SOFT         0x0005
+#define ALC_NUM_HRTF_SPECIFIERS_SOFT             0x1994
+#define ALC_HRTF_SPECIFIER_SOFT                  0x1995
+#define ALC_HRTF_ID_SOFT                         0x1996
+typedef const ALCchar* (ALC_APIENTRY*LPALCGETSTRINGISOFT)(ALCdevice *device, ALCenum paramName, ALCsizei index);
+typedef ALCboolean (ALC_APIENTRY*LPALCRESETDEVICESOFT)(ALCdevice *device, const ALCint *attribs);
+#ifdef AL_ALEXT_PROTOTYPES
+ALC_API const ALCchar* ALC_APIENTRY alcGetStringiSOFT(ALCdevice *device, ALCenum paramName, ALCsizei index);
+ALC_API ALCboolean ALC_APIENTRY alcResetDeviceSOFT(ALCdevice *device, const ALCint *attribs);
+#endif
 #endif
 
 #ifndef AL_EXT_source_distance_model
@@ -70,7 +97,6 @@
 #define AL_SOURCE_RADIUS                         0x1031
 #endif
 
-#include "efx.h"
 
 
 class OpenALSoundStream;
@@ -83,7 +109,8 @@ public:
 
 	virtual void SetSfxVolume(float volume);
 	virtual void SetMusicVolume(float volume);
-	virtual std::pair<SoundHandle,bool> LoadSound(uint8_t *sfxdata, int length, bool monoize);
+	virtual std::pair<SoundHandle, bool> LoadSound(uint8_t *sfxdata, int length, bool monoize, FSoundLoadBuffer *buffer);
+	virtual std::pair<SoundHandle,bool> LoadSoundBuffered(FSoundLoadBuffer *buffer,  bool monoize);
 	virtual std::pair<SoundHandle,bool> LoadSoundRaw(uint8_t *sfxdata, int length, int frequency, int channels, int bits, int loopstart, int loopend = -1, bool monoize = false);
 	virtual void UnloadSound(SoundHandle sfx);
 	virtual unsigned int GetMSLength(SoundHandle sfx);
@@ -137,6 +164,7 @@ private:
     struct {
         bool EXT_EFX;
         bool EXT_disconnect;
+        bool SOFT_HRTF;
         bool SOFT_pause_device;
     } ALC;
     struct {
@@ -197,8 +225,10 @@ private:
     void RemoveStream(OpenALSoundStream *stream);
 
 	void LoadReverb(const ReverbContainer *env);
+	void FreeSource(ALuint source);
 	void PurgeStoppedSources();
 	static FSoundChan *FindLowestChannel();
+	void ForceStopChannel(FISoundChannel *chan);
 
     std::thread StreamThread;
     std::mutex StreamLock;
@@ -218,6 +248,10 @@ private:
 	TArray<ALuint> PausableSfx;
 	TArray<ALuint> ReverbSfx;
 	TArray<ALuint> SfxGroup;
+
+	int UpdateTimeMS;
+	using SourceTimeMap = std::unordered_map<ALuint,int64_t>;
+	SourceTimeMap FadingSources;
 
 	const ReverbContainer *PrevEnvironment;
 

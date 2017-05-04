@@ -57,6 +57,7 @@
 #include "gstrings.h"
 #include "cmdlib.h"
 #include "g_levellocals.h"
+#include "vm.h"
 
 #define ARTIFLASH_OFFSET (statusBar->invBarOffset+6)
 enum
@@ -1549,6 +1550,7 @@ DBaseStatusBar *CreateCustomStatusBar(int scriptno)
 	sbar->PointerVar<DSBarInfo>("core") = core;
 	sbar->SetSize(script->height, script->_resW, script->_resH);
 	sbar->CompleteBorder = script->completeBorder;
+
 	return sbar;
 }
 

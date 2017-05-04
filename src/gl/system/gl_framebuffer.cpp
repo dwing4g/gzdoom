@@ -52,7 +52,6 @@
 #include "gl/renderer/gl_2ddrawer.h"
 #include "gl_debug.h"
 
-IMPLEMENT_CLASS(OpenGLFrameBuffer, false, false)
 EXTERN_CVAR (Float, vid_brightness)
 EXTERN_CVAR (Float, vid_contrast)
 EXTERN_CVAR (Bool, vid_vsync)
@@ -122,7 +121,10 @@ void OpenGLFrameBuffer::InitializeState()
 
 	if (first)
 	{
-		ogl_LoadFunctions();
+		if (ogl_LoadFunctions() == ogl_LOAD_FAILED)
+		{
+			I_FatalError("Failed to load OpenGL functions.");
+		}
 	}
 
 	gl_LoadExtensions();
@@ -390,8 +392,9 @@ FNativePalette *OpenGLFrameBuffer::CreatePalette(FRemapTable *remap)
 //
 //
 //==========================================================================
-bool OpenGLFrameBuffer::Begin2D(bool)
+bool OpenGLFrameBuffer::Begin2D(bool copy3d)
 {
+	Super::Begin2D(copy3d);
 	ClearClipRect();
 	gl_RenderState.mViewMatrix.loadIdentity();
 	gl_RenderState.mProjectionMatrix.ortho(0, GetWidth(), GetHeight(), 0, -1.0f, 1.0f);

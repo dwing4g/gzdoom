@@ -51,6 +51,9 @@
 #include "gi.h"
 #include "i_sound.h"
 #include "cmdlib.h"
+#include "vm.h"
+#include "types.h"
+#include "gameconfigfile.h"
 
 
 
@@ -134,7 +137,7 @@ DEFINE_ACTION_FUNCTION(FOptionValues, GetText)
 }
 
 
-static void DeinitMenus()
+void DeinitMenus()
 {
 	{
 		FOptionMap::Iterator it(OptionValues);
@@ -244,10 +247,6 @@ static bool CheckSkipOptionBlock(FScanner &sc)
 		else if (sc.Compare("OpenAL"))
 		{
 			filter |= IsOpenALPresent();
-		}
-		else if (sc.Compare("FModEx"))
-		{
-			filter |= IsFModExPresent();
 		}
 	}
 	while (sc.CheckString(","));
@@ -371,7 +370,7 @@ static void ParseListMenuBody(FScanner &sc, DListMenuDescriptor *desc)
 			PClass *cls = PClass::FindClass(buildname);
 			if (cls != nullptr && cls->IsDescendantOf("ListMenuItem"))
 			{
-				auto func = dyn_cast<PFunction>(cls->Symbols.FindSymbol("Init", true));
+				auto func = dyn_cast<PFunction>(cls->FindSymbol("Init", true));
 				if (func != nullptr && !(func->Variants[0].Flags & (VARF_Protected | VARF_Private)))	// skip internal classes which have a protexted init method.
 				{
 					auto &args = func->Variants[0].Proto->ArgumentTypes;
@@ -384,7 +383,7 @@ static void ParseListMenuBody(FScanner &sc, DListMenuDescriptor *desc)
 						params.Push(desc);
 						start = 2;
 					}
-					auto TypeCVar = NewPointer(NewNativeStruct("CVar", nullptr));
+					auto TypeCVar = NewPointer(NewStruct("CVar", nullptr, true));
 
 					// Note that this array may not be reallocated so its initial size must be the maximum possible elements.
 					TArray<FString> strings(args.Size());
@@ -422,7 +421,7 @@ static void ParseListMenuBody(FScanner &sc, DListMenuDescriptor *desc)
 							}
 							params.Push(f.GetIndex());
 						}
-						else if (args[i]->IsKindOf(RUNTIME_CLASS(PInt)))
+						else if (args[i]->isIntCompatible())
 						{
 							char *endp;
 							int v = (int)strtoll(sc.String, &endp, 0);
@@ -439,7 +438,7 @@ static void ParseListMenuBody(FScanner &sc, DListMenuDescriptor *desc)
 							if (args[i] == TypeBool) v = !!v;
 							params.Push(v);
 						}
-						else if (args[i]->IsKindOf(RUNTIME_CLASS(PFloat)))
+						else if (args[i]->isFloat())
 						{
 							char *endp;
 							double v = strtod(sc.String, &endp);
@@ -480,7 +479,7 @@ static void ParseListMenuBody(FScanner &sc, DListMenuDescriptor *desc)
 					}
 					DMenuItemBase *item = (DMenuItemBase*)cls->CreateNew();
 					params[0] = item;
-					GlobalVMStack.Call(func->Variants[0].Implementation, &params[0], params.Size(), nullptr, 0);
+					VMCall(func->Variants[0].Implementation, &params[0], params.Size(), nullptr, 0);
 					desc->mItems.Push((DMenuItemBase*)item);
 
 					if (cls->IsDescendantOf("ListMenuItemSelectable"))
@@ -541,7 +540,7 @@ static void ParseListMenu(FScanner &sc)
 {
 	sc.MustGetString();
 
-	DListMenuDescriptor *desc = new DListMenuDescriptor;
+	DListMenuDescriptor *desc = Create<DListMenuDescriptor>();
 	desc->mMenuName = sc.String;
 	desc->mSelectedItem = -1;
 	desc->mAutoselect = -1;
@@ -746,14 +745,14 @@ static void ParseOptionMenuBody(FScanner &sc, DOptionMenuDescriptor *desc)
 			PClass *cls = PClass::FindClass(buildname);
 			if (cls != nullptr && cls->IsDescendantOf("OptionMenuItem"))
 			{
-				auto func = dyn_cast<PFunction>(cls->Symbols.FindSymbol("Init", true));
+				auto func = dyn_cast<PFunction>(cls->FindSymbol("Init", true));
 				if (func != nullptr && !(func->Variants[0].Flags & (VARF_Protected | VARF_Private)))	// skip internal classes which have a protexted init method.
 				{
 					auto &args = func->Variants[0].Proto->ArgumentTypes;
 					TArray<VMValue> params;
 
 					params.Push(0);
-					auto TypeCVar = NewPointer(NewNativeStruct("CVar", nullptr));
+					auto TypeCVar = NewPointer(NewStruct("CVar", nullptr, true));
 
 					// Note that this array may not be reallocated so its initial size must be the maximum possible elements.
 					TArray<FString> strings(args.Size());
@@ -773,7 +772,7 @@ static void ParseOptionMenuBody(FScanner &sc, DOptionMenuDescriptor *desc)
 						{
 							params.Push(V_GetColor(nullptr, sc));
 						}
-						else if (args[i]->IsKindOf(RUNTIME_CLASS(PInt)))
+						else if (args[i]->isIntCompatible())
 						{
 							char *endp;
 							int v = (int)strtoll(sc.String, &endp, 0);
@@ -792,7 +791,7 @@ static void ParseOptionMenuBody(FScanner &sc, DOptionMenuDescriptor *desc)
 							if (args[i] == TypeBool) v = !!v;
 							params.Push(v);
 						}
-						else if (args[i]->IsKindOf(RUNTIME_CLASS(PFloat)))
+						else if (args[i]->isFloat())
 						{
 							char *endp;
 							double v = strtod(sc.String, &endp);
@@ -837,7 +836,7 @@ static void ParseOptionMenuBody(FScanner &sc, DOptionMenuDescriptor *desc)
 
 					DMenuItemBase *item = (DMenuItemBase*)cls->CreateNew();
 					params[0] = item;
-					GlobalVMStack.Call(func->Variants[0].Implementation, &params[0], params.Size(), nullptr, 0);
+					VMCall(func->Variants[0].Implementation, &params[0], params.Size(), nullptr, 0);
 					desc->mItems.Push((DMenuItemBase*)item);
 
 					success = true;
@@ -865,7 +864,7 @@ static void ParseOptionMenu(FScanner &sc)
 {
 	sc.MustGetString();
 
-	DOptionMenuDescriptor *desc = new DOptionMenuDescriptor;
+	DOptionMenuDescriptor *desc = Create<DOptionMenuDescriptor>();
 	desc->mMenuName = sc.String;
 	desc->mSelectedItem = -1;
 	desc->mScrollPos = 0;
@@ -917,8 +916,8 @@ void M_ParseMenuDefs()
 	OptionSettings.mFontColorHighlight = V_FindFontColor(gameinfo.mFontColorHighlight);
 	OptionSettings.mFontColorSelection = V_FindFontColor(gameinfo.mFontColorSelection);
 	// these are supposed to get GC'd after parsing is complete.
-	DefaultListMenuSettings = new DListMenuDescriptor;
-	DefaultOptionMenuSettings = new DOptionMenuDescriptor;
+	DefaultListMenuSettings = Create<DListMenuDescriptor>();
+	DefaultOptionMenuSettings = Create<DOptionMenuDescriptor>();
 	DefaultListMenuSettings->Reset();
 	DefaultOptionMenuSettings->Reset();
 
@@ -1064,7 +1063,7 @@ static void BuildEpisodeMenu()
 	{
 		// Couldn't create the episode menu, either because there's too many episodes or some error occured
 		// Create an option menu for episode selection instead.
-		DOptionMenuDescriptor *od = new DOptionMenuDescriptor;
+		DOptionMenuDescriptor *od = Create<DOptionMenuDescriptor>();
 		MenuDescriptors[NAME_Episodemenu] = od;
 		od->mMenuName = NAME_Episodemenu;
 		od->mTitle = "$MNU_EPISODE";
@@ -1197,7 +1196,7 @@ static void BuildPlayerclassMenu()
 	{
 		// Couldn't create the playerclass menu, either because there's too many episodes or some error occured
 		// Create an option menu for class selection instead.
-		DOptionMenuDescriptor *od = new DOptionMenuDescriptor;
+		DOptionMenuDescriptor *od = Create<DOptionMenuDescriptor>();
 		MenuDescriptors[NAME_Playerclassmenu] = od;
 		od->mMenuName = NAME_Playerclassmenu;
 		od->mTitle = "$MNU_CHOOSECLASS";
@@ -1287,6 +1286,93 @@ static void InitCrosshairsList()
 
 //=============================================================================
 //
+// Initialize the music configuration submenus
+//
+//=============================================================================
+static void InitMusicMenus()
+{
+	DMenuDescriptor **advmenu = MenuDescriptors.CheckKey("AdvSoundOptions");
+	DMenuDescriptor **gusmenu = MenuDescriptors.CheckKey("GusConfigMenu");
+	DMenuDescriptor **timiditymenu = MenuDescriptors.CheckKey("TimidityExeMenu");
+	DMenuDescriptor **wildmidimenu = MenuDescriptors.CheckKey("WildMidiConfigMenu");
+	DMenuDescriptor **fluidmenu = MenuDescriptors.CheckKey("FluidPatchsetMenu");
+
+	const char *key, *value;
+	if (GameConfig->SetSection("SoundFonts"))
+	{
+		while (GameConfig->NextInSection(key, value))
+		{
+			if (FileExists(value))
+			{
+				if (fluidmenu != nullptr)
+				{
+					auto it = CreateOptionMenuItemCommand(key, FStringf("fluid_patchset %s", NicePath(value).GetChars()), true);
+					static_cast<DOptionMenuDescriptor*>(*fluidmenu)->mItems.Push(it);
+				}
+			}
+		}
+	}
+	else if (advmenu != nullptr)
+	{
+		// Remove the item for this submenu
+		auto d = static_cast<DOptionMenuDescriptor*>(*advmenu);
+		auto it = d->GetItem("FluidPatchsetMenu");
+		if (it != nullptr) d->mItems.Delete(d->mItems.Find(it));
+	}
+	if (GameConfig->SetSection("PatchSets"))
+	{
+		while (GameConfig->NextInSection(key, value))
+		{
+			if (FileExists(value))
+			{
+				if (gusmenu != nullptr)
+				{
+					auto it = CreateOptionMenuItemCommand(key, FStringf("midi_config %s", NicePath(value).GetChars()), true);
+					static_cast<DOptionMenuDescriptor*>(*gusmenu)->mItems.Push(it);
+				}
+				if (wildmidimenu != nullptr)
+				{
+					auto it = CreateOptionMenuItemCommand(key, FStringf("wildmidi_config %s", NicePath(value).GetChars()), true);
+					static_cast<DOptionMenuDescriptor*>(*wildmidimenu)->mItems.Push(it);
+				}
+			}
+		}
+	}
+	else if (advmenu != nullptr)
+	{
+		// Remove the item for this submenu
+		auto d = static_cast<DOptionMenuDescriptor*>(*advmenu);
+		auto it = d->GetItem("GusConfigMenu");
+		if (it != nullptr) d->mItems.Delete(d->mItems.Find(it));
+		it = d->GetItem("WildMidiConfigMenu");
+		if (it != nullptr) d->mItems.Delete(d->mItems.Find(it));
+	}
+#ifdef _WIN32	// Different Timidity paths only make sense if they can be stored in arbitrary paths with local configs (i.e. not if things are done the Linux way)
+	if (GameConfig->SetSection("TimidityExes"))
+	{
+		while (GameConfig->NextInSection(key, value))
+		{
+			if (FileExists(value))
+			{
+				if (timiditymenu != nullptr)
+				{
+					auto it = CreateOptionMenuItemCommand(key, FStringf("timidity_exe %s", NicePath(value).GetChars()), true);
+					static_cast<DOptionMenuDescriptor*>(*timiditymenu)->mItems.Push(it);
+				}
+			}
+		}
+	}
+	else
+	{
+		auto d = static_cast<DOptionMenuDescriptor*>(*advmenu);
+		auto it = d->GetItem("TimidityExeMenu");
+		if (it != nullptr) d->mItems.Delete(d->mItems.Find(it));
+	}
+#endif
+}
+
+//=============================================================================
+//
 // With the current workings of the menu system this cannot be done any longer
 // from within the respective CCMDs.
 //
@@ -1334,6 +1420,7 @@ void M_CreateMenus()
 	BuildEpisodeMenu();
 	BuildPlayerclassMenu();
 	InitCrosshairsList();
+	InitMusicMenus();
 	InitKeySections();
 
 	FOptionValues **opt = OptionValues.CheckKey(NAME_Mididevices);
@@ -1503,7 +1590,7 @@ fail:
 	DOptionMenuDescriptor *od;
 	if (desc == nullptr)
 	{
-		od = new DOptionMenuDescriptor;
+		od = Create<DOptionMenuDescriptor>();
 		MenuDescriptors[NAME_Skillmenu] = od;
 		od->mMenuName = NAME_Skillmenu;
 		od->mTitle = "$MNU_CHOOSESKILL";

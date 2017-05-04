@@ -64,6 +64,7 @@ extern void ChildSigHandler (int signum);
 #include "templates.h"
 #include "stats.h"
 #include "timidity/timidity.h"
+#include "vm.h"
 
 #define GZIP_ID1		31
 #define GZIP_ID2		139
@@ -183,9 +184,6 @@ void I_ShutdownMusic(bool onexit)
 	}
 	Timidity::FreeAll();
 	if (onexit) WildMidi_Shutdown();
-#ifdef _WIN32
-	I_ShutdownMusicWin32();
-#endif // _WIN32
 }
 
 void I_ShutdownMusicExit()
@@ -488,6 +486,11 @@ retry_as_sndsys:
 	{
 		info = MOD_OpenSong(*reader);
 	}
+	if (info == nullptr)
+	{
+		info = SndFile_OpenSong(*reader);
+		if (info != nullptr) reader = nullptr;
+	}
 
     if (info == NULL)
     {
@@ -553,25 +556,6 @@ MusInfo *I_RegisterCDSong (int track, int id)
 	}
 
 	return info;
-}
-
-//==========================================================================
-//
-//
-//
-//==========================================================================
-
-MusInfo *I_RegisterURLSong (const char *url)
-{
-	StreamSong *song;
-
-	song = new StreamSong(url);
-	if (song->IsValid())
-	{
-		return song;
-	}
-	delete song;
-	return NULL;
 }
 
 //==========================================================================

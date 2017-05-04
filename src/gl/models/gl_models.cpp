@@ -521,7 +521,7 @@ void gl_InitModels()
 				path = "";
 				sc.MustGetString();
 				memset(&smf, 0, sizeof(smf));
-				smf.modelIDs[1] = smf.modelIDs[2] = smf.modelIDs[3] = -1;
+				smf.modelIDs[0] = smf.modelIDs[1] = smf.modelIDs[2] = smf.modelIDs[3] = -1;
 				smf.xscale=smf.yscale=smf.zscale=1.f;
 
 				smf.type = PClass::FindClass(sc.String);
@@ -1003,12 +1003,12 @@ void gl_RenderModel(GLSprite * spr)
 	}
 
 	// Added MDL_USEACTORPITCH and MDL_USEACTORROLL flags processing.
-	// If both flags MDL_USEACTORPITCH and MDL_PITCHFROMMOMENTUM are set, the pitch sums up the actor pitch and the momentum vector pitch.
+	// If both flags MDL_USEACTORPITCH and MDL_PITCHFROMMOMENTUM are set, the pitch sums up the actor pitch and the velocity vector pitch.
 	if (smf->flags & MDL_USEACTORPITCH)
 	{
 		double d = spr->actor->Angles.Pitch.Degrees;
-		if (smf->flags & MDL_BADROTATION) pitch -= d;
-		else pitch += d;
+		if (smf->flags & MDL_BADROTATION) pitch += d;
+		else pitch -= d;
 	}
 	if(smf->flags & MDL_USEACTORROLL) roll += spr->actor->Angles.Roll.Degrees;
 

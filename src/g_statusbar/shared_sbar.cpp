@@ -57,7 +57,7 @@
 #include "r_utility.h"
 #include "cmdlib.h"
 #include "g_levellocals.h"
-#include "virtual.h"
+#include "vm.h"
 #include "p_acs.h"
 #include "r_data/r_translate.h"
 #include "sbarinfo.h"
@@ -251,6 +251,17 @@ void ST_Clear()
 //
 //---------------------------------------------------------------------------
 
+static void CreateBaseStatusBar()
+{
+	assert(nullptr == StatusBar);
+
+	PClass* const statusBarClass = PClass::FindClass("BaseStatusBar");
+	assert(nullptr != statusBarClass);
+
+	StatusBar = static_cast<DBaseStatusBar*>(statusBarClass->CreateNew());
+	StatusBar->SetSize(0);
+}
+
 void ST_CreateStatusBar(bool bTitleLevel)
 {
 	if (StatusBar != NULL)
@@ -261,8 +272,7 @@ void ST_CreateStatusBar(bool bTitleLevel)
 
 	if (bTitleLevel)
 	{
-		StatusBar = new DBaseStatusBar();
-		StatusBar->SetSize(0);
+		CreateBaseStatusBar();
 	}
 	else
 	{
@@ -277,11 +287,6 @@ void ST_CreateStatusBar(bool bTitleLevel)
 			if (cls != nullptr)
 			{
 				StatusBar = (DBaseStatusBar *)cls->CreateNew();
-				IFVIRTUALPTR(StatusBar, DBaseStatusBar, Init)
-				{
-					VMValue params[] = { StatusBar };
-					GlobalVMStack.Call(func, params, 1, nullptr, 0);
-				}
 			}
 		}
 	}
@@ -313,18 +318,18 @@ void ST_CreateStatusBar(bool bTitleLevel)
 			if (cls != nullptr)
 			{
 				StatusBar = (DBaseStatusBar *)cls->CreateNew();
-				IFVIRTUALPTR(StatusBar, DBaseStatusBar, Init)
-				{
-					VMValue params[] = { StatusBar };
-					GlobalVMStack.Call(func, params, 1, nullptr, 0);
-				}
 			}
 		}
 	}
 	if (StatusBar == nullptr)
 	{
-		StatusBar = new DBaseStatusBar();
-		StatusBar->SetSize(0);
+		CreateBaseStatusBar();
+	}
+
+	IFVIRTUALPTR(StatusBar, DBaseStatusBar, Init)
+	{
+		VMValue params[] = { StatusBar };
+		VMCall(func, params, 1, nullptr, 0);
 	}
 
 	GC::WriteBarrier(StatusBar);
@@ -555,7 +560,7 @@ void DBaseStatusBar::AttachToPlayer(player_t *player)
 	IFVIRTUAL(DBaseStatusBar, AttachToPlayer)
 	{
 		VMValue params[] = { (DObject*)this, player };
-		GlobalVMStack.Call(func, params, countof(params), nullptr, 0);
+		VMCall(func, params, countof(params), nullptr, 0);
 	}
 }
 
@@ -636,7 +641,7 @@ void DBaseStatusBar::CallTick()
 	IFVIRTUAL(DBaseStatusBar, Tick)
 	{
 		VMValue params[] = { (DObject*)this };
-		GlobalVMStack.Call(func, params, countof(params), nullptr, 0);
+		VMCall(func, params, countof(params), nullptr, 0);
 	}
 	else Tick();
 	mugshot.Tick(CPlayer);
@@ -766,7 +771,7 @@ void DBaseStatusBar::ShowPlayerName ()
 	EColorRange color;
 
 	color = (CPlayer == &players[consoleplayer]) ? CR_GOLD : CR_GREEN;
-	AttachMessage (new DHUDMessageFadeOut (SmallFont, CPlayer->userinfo.GetName(),
+	AttachMessage (Create<DHUDMessageFadeOut> (SmallFont, CPlayer->userinfo.GetName(),
 		1.5f, 0.92f, 0, 0, color, 2.f, 0.35f), MAKE_ID('P','N','A','M'));
 }
 
@@ -968,7 +973,7 @@ void DBaseStatusBar::Draw (EHudState state)
 		IFVIRTUAL(DBaseStatusBar, DrawMyPos)
 		{
 			VMValue params[] = { (DObject*)this };
-			GlobalVMStack.Call(func, params, countof(params), nullptr, 0);
+			VMCall(func, params, countof(params), nullptr, 0);
 		}
 		V_SetBorderNeedRefresh();
 	}
@@ -985,7 +990,7 @@ void DBaseStatusBar::Draw (EHudState state)
 		IFVIRTUAL(DBaseStatusBar, DrawAutomapHUD)
 		{
 			VMValue params[] = { (DObject*)this, r_viewpoint.TicFrac };
-			GlobalVMStack.Call(func, params, countof(params), nullptr, 0);
+			VMCall(func, params, countof(params), nullptr, 0);
 		}
 	}
 }
@@ -1003,7 +1008,7 @@ void DBaseStatusBar::CallDraw(EHudState state)
 	IFVIRTUAL(DBaseStatusBar, Draw)
 	{
 		VMValue params[] = { (DObject*)this, state, r_viewpoint.TicFrac };
-		GlobalVMStack.Call(func, params, countof(params), nullptr, 0);
+		VMCall(func, params, countof(params), nullptr, 0);
 	}
 	else Draw(state);
 	screen->ClearClipRect();	// make sure the scripts don't leave a valid clipping rect behind.
@@ -1068,7 +1073,7 @@ bool DBaseStatusBar::MustDrawLog(EHudState state)
 		VMValue params[] = { (DObject*)this };
 		int rv;
 		VMReturn ret(&rv);
-		GlobalVMStack.Call(func, params, countof(params), &ret, 1);
+		VMCall(func, params, countof(params), &ret, 1);
 		return !!rv;
 	}
 	return true;
@@ -1090,7 +1095,7 @@ void DBaseStatusBar::SetMugShotState(const char *stateName, bool waitTillDone, b
 	{
 		FString statestring = stateName;
 		VMValue params[] = { (DObject*)this, &statestring, waitTillDone, reset };
-		GlobalVMStack.Call(func, params, countof(params), nullptr, 0);
+		VMCall(func, params, countof(params), nullptr, 0);
 	}
 }
 
@@ -1128,7 +1133,7 @@ void DBaseStatusBar::DrawTopStuff (EHudState state)
 		IFVIRTUAL(DBaseStatusBar, DrawPowerups)
 		{
 			VMValue params[] = { (DObject*)this };
-			GlobalVMStack.Call(func, params, 1, nullptr, 0);
+			VMCall(func, params, 1, nullptr, 0);
 		}
 		fullscreenOffsets = saved;
 	}
@@ -1256,7 +1261,7 @@ void DBaseStatusBar::FlashItem (const PClass *itemtype)
 	IFVIRTUAL(DBaseStatusBar, FlashItem)
 	{
 		VMValue params[] = { (DObject*)this, (PClass*)itemtype };
-		GlobalVMStack.Call(func, params, countof(params), nullptr, 0);
+		VMCall(func, params, countof(params), nullptr, 0);
 	}
 }
 
@@ -1265,7 +1270,7 @@ void DBaseStatusBar::NewGame ()
 	IFVIRTUAL(DBaseStatusBar, NewGame)
 	{
 		VMValue params[] = { (DObject*)this };
-		GlobalVMStack.Call(func, params, countof(params), nullptr, 0);
+		VMCall(func, params, countof(params), nullptr, 0);
 	}
 	mugshot.Reset();
 }
@@ -1275,7 +1280,7 @@ void DBaseStatusBar::ShowPop(int pop)
 	IFVIRTUAL(DBaseStatusBar, ShowPop)
 	{
 		VMValue params[] = { (DObject*)this, pop };
-		GlobalVMStack.Call(func, params, countof(params), nullptr, 0);
+		VMCall(func, params, countof(params), nullptr, 0);
 	}
 }
 
@@ -1314,7 +1319,7 @@ void DBaseStatusBar::CallScreenSizeChanged()
 	IFVIRTUAL(DBaseStatusBar, ScreenSizeChanged)
 	{
 		VMValue params[] = { (DObject*)this };
-		GlobalVMStack.Call(func, params, countof(params), nullptr, 0);
+		VMCall(func, params, countof(params), nullptr, 0);
 	}
 	else ScreenSizeChanged();
 }
@@ -1587,7 +1592,8 @@ void DBaseStatusBar::DrawGraphic(FTextureID texture, double x, double y, int fla
 		DTA_ColorOverlay, (flags & DI_DIM) ? MAKEARGB(170, 0, 0, 0) : 0,
 		DTA_Alpha, Alpha,
 		DTA_AlphaChannel, !!(flags & DI_ALPHAMAPPED),
-		DTA_FillColor, (flags & DI_ALPHAMAPPED) ? 0 : -1);
+		DTA_FillColor, (flags & DI_ALPHAMAPPED) ? 0 : -1,
+		TAG_DONE);
 }
 
 
@@ -1658,7 +1664,7 @@ DEFINE_ACTION_FUNCTION(DHUDFont, Create)
 	PARAM_BOOL_DEF(mono);
 	PARAM_INT_DEF(sx);
 	PARAM_INT_DEF(sy);
-	ACTION_RETURN_POINTER(new DHUDFont(fnt, spac, mono, sy, sy));
+	ACTION_RETURN_POINTER(Create<DHUDFont>(fnt, spac, mono, sy, sy));
 }
 
 DEFINE_FIELD(DHUDFont, mFont);
@@ -1841,7 +1847,7 @@ DEFINE_ACTION_FUNCTION(DBaseStatusBar, DrawString)
 //
 //============================================================================
 
-void DBaseStatusBar::Fill(PalEntry color, double x, double y, double w, double h, int flags)
+void DBaseStatusBar::TransformRect(double &x, double &y, double &w, double &h, int flags)
 {
 	// resolve auto-alignment before making any adjustments to the position values.
 	if (!(flags & DI_SCREEN_MANUAL_ALIGN))
@@ -1852,8 +1858,6 @@ void DBaseStatusBar::Fill(PalEntry color, double x, double y, double w, double h
 		else flags |= DI_SCREEN_TOP;
 	}
 
-	double Alpha = color.a * this->Alpha / 255;
-	if (Alpha <= 0) return;
 	x += drawOffset.X;
 	y += drawOffset.Y;
 
@@ -1891,10 +1895,42 @@ void DBaseStatusBar::Fill(PalEntry color, double x, double y, double w, double h
 		x += orgx;
 		y += orgy;
 	}
+}
+
+
+DEFINE_ACTION_FUNCTION(DBaseStatusBar, TransformRect)
+{
+	PARAM_SELF_PROLOGUE(DBaseStatusBar);
+	PARAM_FLOAT(x);
+	PARAM_FLOAT(y);
+	PARAM_FLOAT(w);
+	PARAM_FLOAT(h);
+	PARAM_INT_DEF(flags);
+	self->TransformRect(x, y, w, h, flags);
+	if (numret > 0) ret[0].SetFloat(x);
+	if (numret > 1) ret[1].SetFloat(y);
+	if (numret > 2) ret[2].SetFloat(w);
+	if (numret > 3) ret[3].SetFloat(h);
+	return MIN(4, numret);
+}
+
+//============================================================================
+//
+// draw stuff
+//
+//============================================================================
+
+void DBaseStatusBar::Fill(PalEntry color, double x, double y, double w, double h, int flags)
+{
+	double Alpha = color.a * this->Alpha / 255;
+	if (Alpha <= 0) return;
+
+	TransformRect(x, y, w, h, flags);
+
 	int x1 = int(x);
 	int y1 = int(y);
 	int ww = int(x + w - x1);	// account for scaling to non-integers. Truncating the values separately would fail for cases like 
-	int hh = int(y + h - y1); // y=3.5, height = 5.5 where adding both values gives a larger integer than adding the two integers.
+	int hh = int(y + h - y1);	// y=3.5, height = 5.5 where adding both values gives a larger integer than adding the two integers.
 
 	screen->Dim(color, float(Alpha), x1, y1, ww, hh);
 }
@@ -1910,7 +1946,36 @@ DEFINE_ACTION_FUNCTION(DBaseStatusBar, Fill)
 	PARAM_FLOAT(h);
 	PARAM_INT_DEF(flags);
 	if (!screen->HasBegun2D()) ThrowAbortException(X_OTHER, "Attempt to draw to screen outside a draw function");
-	self->Fill(color, x, y, w, h);
+	self->Fill(color, x, y, w, h, flags);
+	return 0;
+}
+
+//============================================================================
+//
+// draw stuff
+//
+//============================================================================
+
+void DBaseStatusBar::SetClipRect(double x, double y, double w, double h, int flags)
+{
+	TransformRect(x, y, w, h, flags);
+	int x1 = int(x);
+	int y1 = int(y);
+	int ww = int(x + w - x1);	// account for scaling to non-integers. Truncating the values separately would fail for cases like 
+	int hh = int(y + h - y1); // y=3.5, height = 5.5 where adding both values gives a larger integer than adding the two integers.
+	screen->SetClipRect(x1, y1, ww, hh);
+}
+
+
+DEFINE_ACTION_FUNCTION(DBaseStatusBar, SetClipRect)
+{
+	PARAM_SELF_PROLOGUE(DBaseStatusBar);
+	PARAM_FLOAT(x);
+	PARAM_FLOAT(y);
+	PARAM_FLOAT(w);
+	PARAM_FLOAT(h);
+	PARAM_INT_DEF(flags);
+	self->SetClipRect(x, y, w, h, flags);
 	return 0;
 }
 

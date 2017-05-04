@@ -309,6 +309,13 @@ OptionValue "OffOn"
 	1, "$OPTVAL_OFF"
 }
 
+OptionValue AutoOffOn
+{
+	-1, "$OPTVAL_AUTO"
+	0, "$OPTVAL_OFF"
+	1, "$OPTVAL_ON"
+}
+
 OptionMenuSettings
 {
 	// These can be overridden if a different menu fonts requires it.
@@ -699,7 +706,6 @@ OptionMenu "TrueColorOptions"
 	Option "$TCMNU_MINFILTER",				"r_minfilter", "OnOff"
 	Option "$TCMNU_MAGFILTER",				"r_magfilter", "OnOff"
 	Option "$TCMNU_MIPMAP",					"r_mipmap", "OnOff"
-	Option "$TCMNU_DYNLIGHTS",				"r_dynlights", "OnOff"
 }
 
 OptionMenu "SWROptions"
@@ -852,15 +858,15 @@ OptionMenu "HUDOptions"
 OptionMenu "ScalingOptions"
 {
 	Title "$SCALEMNU_TITLE"
-	Slider "$HUDMNU_UISCALE",				"uiscale", 0.0, 8.0, 1.0, 0
+	ScaleSlider "$HUDMNU_UISCALE",				"uiscale", 0.0, 8.0, 1.0, "$SCALEMNU_ADAPT"
 	StaticText " "
 	// These will need a new control type.
 	StaticText "$SCALEMNU_OVERRIDE", 1
-	Option "$SCALEMNU_MESSAGES", 				"con_scaletext", "OnOff"
-	Option "$SCALEMNU_CONSOLE", 				"con_scale", "OnOff"
-	Option "$SCALEMNU_STATBAR",					"st_scale", "OnOff"
-	Option "$SCALEMNU_HUD", 					"hud_scale", "OnOff"
-	Option "$SCALEMNU_ALTHUD",					"hud_althudscale", "OnOff"
+	ScaleSlider "$SCALEMNU_MESSAGES", 			"con_scaletext", 0.0, 8.0, 1.0, "$SCALEMNU_USEUI"
+	ScaleSlider "$SCALEMNU_CONSOLE", 			"con_scale", 0.0, 8.0, 1.0, "$SCALEMNU_USEUI"
+	ScaleSlider "$SCALEMNU_STATBAR",			"st_scale", -1.0, 8.0, 1.0, "$SCALEMNU_USEUI", "$SCALEMNU_USEFS"
+	ScaleSlider "$SCALEMNU_HUD", 				"hud_scale", -1.0, 8.0, 1.0, "$SCALEMNU_USEUI", "$SCALEMNU_USEFS"
+	ScaleSlider "$SCALEMNU_ALTHUD",				"hud_althudscale", 0.0, 8.0, 1.0, "$SCALEMNU_USEUI"
 	StaticText " "
 	Option "$SCALEMNU_HUDASPECT", 				"hud_aspectscale", "OnOff"
 }
@@ -1557,50 +1563,11 @@ OptionString Resamplers
 }
 
 
-OptionString SoundBackends
-{
-	"fmod",		"$OPTSTR_FMOD"
-	"openal",	"$OPTSTR_OPENAL"
-	"null",		"$OPTSTR_NOSOUND"
-}
-
-OptionString SoundBackendsFModOnly
-{
-	"fmod",		"$OPTSTR_FMOD"
-	"null",		"$OPTSTR_NOSOUND"
-}
-
 OptionString SoundBackendsOpenALOnly
 {
 	"openal",	"$OPTSTR_OPENAL"
 	"null",		"$OPTSTR_NOSOUND"
 }
-
-OptionMenu FMODSoundItems
-{
-	Title "$FMODMNU_TITLE"
-	Slider	"$FMODMNU_WATERCUTOFF",			"snd_waterlp", 0.0, 2000.0, 50.0, 0
-	IfOption(Windows)
-	{
-		Option "$FMODMNU_OUTPUTSYSTEM",		"snd_output", "SoundOutputsWindows"
-	}
-	IfOption(Unix)
-	{
-		Option "$FMODMNU_OUTPUTSYSTEM",		"snd_output", "SoundOutputsUnix"
-	}
-	IfOption(Mac)
-	{
-		Option "$FMODMNU_OUTPUTSYSTEM",		"snd_output", "SoundOutputsMac"
-	}
-	Option "$FMODMNU_OUTPUTFORMAT",			"snd_output_format", "OutputFormats"
-	Option "$FMODMNU_SPEAKERMODE",			"snd_speakermode", "SpeakerModes"
-	Option "$FMODMNU_RESAMPLER",			"snd_resampler", "Resamplers"
-	Option "$FMODMNU_HRTFFILTER",			"snd_hrtf", "OnOff"
-	StaticText " "
-	Option "$FMODMNU_BUFFERSIZE",			"snd_buffersize", "BufferSizes"
-	Option "$FMODMNU_BUFFERCOUNT",			"snd_buffercount", "BufferCounts"
-}
-
 
 OptionMenu OpenALSoundItems
 {
@@ -1628,31 +1595,9 @@ OptionMenu SoundOptions
 	Slider "$SNDMNU_CHANNELS",			"snd_channels", 64, 256, 8, 0
 	StaticText " "
 
-	ifoption(fmodex)
-	{
-		ifoption(openal)
-		{
-			Option "$SNDMNU_BACKEND",		"snd_backend", "SoundBackends"
-		}
-		else
-		{
-			Option "$SNDMNU_BACKEND",		"snd_backend", "SoundBackendsFModOnly"
-		}
-	}
-	else
-	{
-		ifoption(openal)
-		{
-			Option "$SNDMNU_BACKEND",		"snd_backend", "SoundBackendsOpenALOnly"
-		}
-	}
-	
-	ifoption(fmodex)
-	{
-		Submenu "$SNDMNU_FMOD",			"FMODSoundItems"
-	}
 	ifoption(openal)
 	{
+		Option "$SNDMNU_BACKEND",		"snd_backend", "SoundBackendsOpenALOnly"
 		Submenu "$SNDMNU_OPENAL",		"OpenALSoundItems"
 	}
 	StaticText " "
@@ -1690,6 +1635,7 @@ OptionMenu AdvSoundOptions
 {
 	Title "$ADVSNDMNU_TITLE"
 	Option "$ADVSNDMNU_SAMPLERATE",			"snd_samplerate", "SampleRates"
+	Option "$ADVSNDMNU_HRTF",				"snd_hrtf", "AutoOffOn"
 	StaticText " "
 	StaticText "$ADVSNDMNU_OPLSYNTHESIS",	1
 	Slider "$ADVSNDMNU_OPLNUMCHIPS", 		"opl_numchips", 1, 8, 1, 0
@@ -1698,12 +1644,14 @@ OptionMenu AdvSoundOptions
 	StaticText " "
 	StaticText "$ADVSNDMNU_GUSEMULATION",	1
 	TextField "$ADVSNDMNU_GUSCONFIG", 		"midi_config"
+	SubMenu "$ADVSNDMNU_SELCONFIG",		"GusConfigMenu"
 	Slider "$ADVSNDMNU_MIDIVOICES",			"midi_voices", 16, 256, 4, 0
 	Option "$ADVSNDMNU_DMXGUS", 			"midi_dmxgus", "OnOff"
 	Option "$ADVSNDMNU_GUSMEMSIZE", 		"gus_memsize", "GusMemory"
 	StaticText " "
 	StaticText "$ADVSNDMNU_FLUIDSYNTH",	1
 	TextField "$ADVSNDMNU_FLUIDPATCHSET", 	"fluid_patchset"
+	SubMenu "$ADVSNDMNU_SELCONFIG",		"FluidPatchsetMenu"
 	Slider "$ADVSNDMNU_FLUIDGAIN",			"fluid_gain", 0, 10, 0.5, 1
 	Option "$ADVSNDMNU_REVERB", 			"fluid_reverb", "OnOff"
 	Slider "$ADVSNDMNU_FLUIDVOICES", 		"fluid_voices", 16, 4096, 16, 1
@@ -1711,13 +1659,38 @@ OptionMenu AdvSoundOptions
 	StaticText " "
 	StaticText "$ADVSNDMNU_TIMIDITY",	1
 	TextField "$ADVSNDMNU_TIMIDITYEXE", 	"timidity_exe"
+	IfOption(Windows)
+	{
+		SubMenu "$ADVSNDMNU_SELCONFIG",		"TimidityExeMenu"
+	}
 	Option "$ADVSNDMNU_REVERB", 			"timidity_reverb", "OnOff"
 	Option "$ADVSNDMNU_TIMIDITYCHORUS", 	"timidity_chorus", "OnOff"
 	Slider "$ADVSNDMNU_TIMIDITYVOLUME",		"timidity_mastervolume", 0, 4, 0.2, 1
 	StaticText " "
 	StaticText "$ADVSNDMNU_WILDMIDI",	1
 	TextField "$ADVSNDMNU_WILDMIDICONFIG", 	"wildmidi_config"
+	SubMenu "$ADVSNDMNU_SELCONFIG",		"WildMidiConfigMenu"
 	Option "$ADVSNDMNU_REVERB", 			"wildmidi_reverb", "OnOff"
+}
+
+OptionMenu GusConfigMenu
+{
+	Title "$ADVSNDMNU_SELCONFIG"
+}
+
+OptionMenu WildMidiConfigMenu
+{
+	Title "$ADVSNDMNU_SELCONFIG"
+}
+
+OptionMenu TimidityExeMenu
+{
+	Title "$ADVSNDMNU_SELCONFIG"
+}
+
+OptionMenu FluidPatchsetMenu
+{
+	Title "$ADVSNDMNU_SELCONFIG"
 }
 
 /*=======================================
@@ -1757,14 +1730,12 @@ OptionValue ModVolumeRamps
 OptionMenu ModReplayerOptions
 {
 	Title "$MODMNU_TITLE"
-	Option "$MODMNU_REPLAYERENGINE",		"mod_dumb", "ModReplayers"
-	StaticText " "
 	Slider "$MODMNU_MASTERVOLUME",			"mod_dumb_mastervolume", 1, 16, 0.5, 1
-	Option "$ADVSNDMNU_SAMPLERATE",			"mod_samplerate", "SampleRates", "mod_dumb"
-	Option "$MODMNU_QUALITY",				"mod_interp", "ModQuality", "mod_dumb"
-	Option "$MODMNU_VOLUMERAMPING",			"mod_volramp", "ModVolumeRamps", "mod_dumb"
+	Option "$ADVSNDMNU_SAMPLERATE",			"mod_samplerate", "SampleRates"
+	Option "$MODMNU_QUALITY",				"mod_interp", "ModQuality"
+	Option "$MODMNU_VOLUMERAMPING",			"mod_volramp", "ModVolumeRamps"
 	StaticText " "
-	Option "$MODMNU_CHIPOMATIC",			"mod_autochip", "OnOff", "mod_dumb"
+	Option "$MODMNU_CHIPOMATIC",			"mod_autochip", "OnOff"
 	// TODO if the menu system is ever rewritten: Provide a decent
 	// mechanism to edit the chip-o-matic settings like you can with
 	// the foo_dumb preferences in foobar2000.
@@ -2122,7 +2093,8 @@ OptionMenu "GLTextureGLOptions"
 OptionMenu "GLLightOptions"
 {
 	Title "$GLLIGHTMNU_TITLE"
-	Option "$GLLIGHTMNU_LIGHTSENABLED",		gl_lights,						"YesNo"
+	Option "$TCMNU_DYNLIGHTS",				"r_dynlights", "OnOff"
+	Option "$GLLIGHTMNU_LIGHTSENABLED",		gl_lights,						"OnOff"
 	Option "$GLLIGHTMNU_LIGHTDEFS",			gl_attachedlights,				"YesNo"
 	Option "$GLLIGHTMNU_CLIPLIGHTS",		gl_lights_checkside,			"YesNo"
 	Option "$GLLIGHTMNU_LIGHTSPRITES",		gl_light_sprites,				"YesNo"

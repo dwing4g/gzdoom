@@ -35,6 +35,7 @@
 #define __DOBJECT_H__
 
 #include <stdlib.h>
+#include <type_traits>
 #include "doomtype.h"
 #include "i_system.h"
 
@@ -45,8 +46,6 @@ class FSoundID;
 
 class   DObject;
 /*
-class           DArgs;
-class           DCanvas;
 class           DConsoleCommand;
 class                   DConsoleAlias;
 class           DSeqNode;
@@ -85,8 +84,7 @@ class                                   DPillar;
 class PClassActor;
 
 #define RUNTIME_CLASS_CASTLESS(cls)	(cls::RegistrationInfo.MyClass)	// Passed a native class name, returns a PClass representing that class
-#define RUNTIME_CLASS(cls)			((cls::MetaClass *)RUNTIME_CLASS_CASTLESS(cls))	// Like above, but returns the true type of the meta object
-#define RUNTIME_TEMPLATE_CLASS(cls)	((typename cls::MetaClass *)RUNTIME_CLASS_CASTLESS(cls))	// RUNTIME_CLASS, but works with templated parameters on GCC
+#define RUNTIME_CLASS(cls)			((typename cls::MetaClass *)RUNTIME_CLASS_CASTLESS(cls))	// Like above, but returns the true type of the meta object
 #define NATIVE_TYPE(object)			(object->StaticType())			// Passed an object, returns the type of the C++ class representing the object
 
 // Enumerations for the meta classes created by ClassReg::RegisterClass()
@@ -200,6 +198,14 @@ protected:
 	enum { MetaClassNum = CLASSREG_PClass };
 
 	// Per-instance variables. There are four.
+#ifdef _DEBUG
+public:
+	enum
+	{
+		MAGIC_ID = 0x1337cafe
+	};
+	uint32_t MagicID = MAGIC_ID;	// only used by the VM for checking native function parameter types.
+#endif
 private:
 	PClass *Class;				// This object's type
 public:
@@ -223,11 +229,6 @@ public:
 	void SerializeUserVars(FSerializer &arc);
 	virtual void Serialize(FSerializer &arc);
 
-	void ClearClass()
-	{
-		Class = NULL;
-	}
-
 	// Releases the object from the GC, letting the caller care of any maintenance.
 	void Release();
 
@@ -239,13 +240,13 @@ public:
 	void Destroy();
 
 	// Add other types as needed.
-	bool &BoolVar(FName field);
-	int &IntVar(FName field);
-	FSoundID &SoundVar(FName field);
-	PalEntry &ColorVar(FName field);
-	FName &NameVar(FName field);
-	double &FloatVar(FName field);
-	FString &StringVar(FName field);
+	inline bool &BoolVar(FName field);
+	inline int &IntVar(FName field);
+	inline FSoundID &SoundVar(FName field);
+	inline PalEntry &ColorVar(FName field);
+	inline FName &NameVar(FName field);
+	inline double &FloatVar(FName field);
+	inline FString &StringVar(FName field);
 	template<class T> T*& PointerVar(FName field);
 
 	// If you need to replace one object with another and want to
@@ -256,12 +257,7 @@ public:
 
 	PClass *GetClass() const
 	{
-		if (Class == NULL)
-		{
-			// Save a little time the next time somebody wants this object's type
-			// by recording it now.
-			const_cast<DObject *>(this)->Class = StaticType();
-		}
+		assert(Class != nullptr);
 		return Class;
 	}
 
@@ -270,9 +266,20 @@ public:
 		Class = inClass;
 	}
 
-	void *operator new(size_t len)
+private:
+	struct nonew
+	{
+	};
+
+	void *operator new(size_t len, nonew&)
 	{
 		return M_Malloc(len);
+	}
+public:
+
+	void operator delete (void *mem, nonew&)
+	{
+		M_Free(mem);
 	}
 
 	void operator delete (void *mem)
@@ -346,7 +353,27 @@ protected:
 	{
 		M_Free (mem);
 	}
+
+	template<typename T, typename... Args>
+		friend T* Create(Args&&... args);
+
 };
+
+// This is the only method aside from calling CreateNew that should be used for creating DObjects
+// to ensure that the Class pointer is always set.
+template<typename T, typename... Args>
+T* Create(Args&&... args)
+{
+	DObject::nonew nono;
+	T *object = new(nono) T(std::forward<Args>(args)...);
+	if (object != nullptr)
+	{
+		object->SetClass(RUNTIME_CLASS(T));
+		assert(object->GetClass() != nullptr);	// beware of objects that get created before the type system is up.
+	}
+	return object;
+}
+
 
 class AInventory;//
 
@@ -369,6 +396,8 @@ static inline void GC::WriteBarrier(DObject *pointed)
 	}
 }
 
+#include "memarena.h"
+extern FMemArena ClassDataAllocator;
 #include "symbols.h"
 #include "dobjtype.h"
 
@@ -399,6 +428,42 @@ template<class T> T *dyn_cast(DObject *p)
 template<class T> const T *dyn_cast(const DObject *p)
 {
 	return dyn_cast<T>(const_cast<DObject *>(p));
+}
+
+inline bool &DObject::BoolVar(FName field)
+{
+	return *(bool*)ScriptVar(field, nullptr);
+}
+
+inline int &DObject::IntVar(FName field)
+{
+	return *(int*)ScriptVar(field, nullptr);
+}
+
+inline FSoundID &DObject::SoundVar(FName field)
+{
+	return *(FSoundID*)ScriptVar(field, nullptr);
+}
+
+inline PalEntry &DObject::ColorVar(FName field)
+{
+	return *(PalEntry*)ScriptVar(field, nullptr);
+}
+
+inline FName &DObject::NameVar(FName field)
+{
+	return *(FName*)ScriptVar(field, nullptr);
+}
+
+inline double &DObject::FloatVar(FName field)
+{
+	return *(double*)ScriptVar(field, nullptr);
+}
+
+template<class T>
+inline T *&DObject::PointerVar(FName field)
+{
+	return *(T**)ScriptVar(field, nullptr);	// pointer check is more tricky and for the handful of uses in the DECORATE parser not worth the hassle.
 }
 
 #endif //__DOBJECT_H__

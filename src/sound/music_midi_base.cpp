@@ -1,3 +1,36 @@
+/*
+** music_midi_base.cpp
+**
+**---------------------------------------------------------------------------
+** Copyright 1998-2010 Randy Heit
+** All rights reserved.
+**
+** Redistribution and use in source and binary forms, with or without
+** modification, are permitted provided that the following conditions
+** are met:
+**
+** 1. Redistributions of source code must retain the above copyright
+**    notice, this list of conditions and the following disclaimer.
+** 2. Redistributions in binary form must reproduce the above copyright
+**    notice, this list of conditions and the following disclaimer in the
+**    documentation and/or other materials provided with the distribution.
+** 3. The name of the author may not be used to endorse or promote products
+**    derived from this software without specific prior written permission.
+**
+** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+**---------------------------------------------------------------------------
+**
+*/
+
 #include "i_midi_win32.h"
 
 
@@ -5,6 +38,10 @@
 #include "c_dispatch.h"
 #include "i_music.h"
 #include "i_system.h"
+#include "gameconfigfile.h"
+#include "cmdlib.h"
+#include "m_misc.h"
+#include "s_sound.h"
 
 #include "templates.h"
 #include "v_text.h"
@@ -43,20 +80,32 @@ static void AddDefaultMidiDevices(FOptionValues *opt)
 
 }
 
-static void MIDIDeviceChanged(int newdev)
+extern MusPlayingInfo mus_playing;
+
+void MIDIDeviceChanged(int newdev, bool force)
 {
 	static int oldmididev = INT_MIN;
 
 	// If a song is playing, move it to the new device.
-	if (oldmididev != newdev)
+	if (oldmididev != newdev || force)
 	{
 		if (currSong != NULL && currSong->IsMIDI())
 		{
 			MusInfo *song = currSong;
 			if (song->m_Status == MusInfo::STATE_Playing)
 			{
-				song->Stop();
-				song->Start(song->m_Looping);
+				if (song->GetDeviceType() == MDEV_FLUIDSYNTH && force)
+				{
+					// FluidSynth must reload the song to change the patch set.
+					auto mi = mus_playing;
+					S_StopMusic(true);
+					S_ChangeMusic(mi.name, mi.baseorder, mi.loop);
+				}
+				else
+				{
+					song->Stop();
+					song->Start(song->m_Looping);
+				}
 			}
 		}
 		else
@@ -64,7 +113,8 @@ static void MIDIDeviceChanged(int newdev)
 			S_MIDIDeviceChanged();
 		}
 	}
-	oldmididev = newdev;
+	// 'force' 
+	if (!force) oldmididev = newdev;
 }
 
 #ifdef _WIN32
@@ -94,23 +144,6 @@ void I_InitMusicWin32 ()
 	nummididevices = midiOutGetNumDevs ();
 	nummididevicesset = true;
 	snd_mididevice.Callback ();
-}
-
-void I_ShutdownMusicWin32 ()
-{
-	// Ancient bug a saw on NT 4.0 and an old version of FMOD 3: If waveout
-	// is used for sound and a MIDI is also played, then when I quit, the OS
-	// tells me a free block was modified after being freed. This is
-	// apparently a synchronization issue between two threads, because if I
-	// put this Sleep here after stopping the music but before shutting down
-	// the entire sound system, the error does not happen. Observed with a
-	// Vortex 2 (may Aureal rest in peace) and an Audigy (damn you, Creative!).
-	// I no longer have a system with NT4 drivers, so I don't know if this
-	// workaround is still needed or not.
-	if (OSPlatform == os_WinNT4)
-	{
-		Sleep(50);
-	}
 }
 
 void I_BuildMIDIMenuList (FOptionValues *opt)

@@ -39,7 +39,6 @@
 #include "doomtype.h"
 #include <math.h>
 
-#include "fmodsound.h"
 #include "oalsound.h"
 
 #include "mpg123_decoder.h"
@@ -67,10 +66,9 @@ EXTERN_CVAR (Float, snd_sfxvolume)
 CVAR (Int, snd_samplerate, 0, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
 CVAR (Int, snd_buffersize, 0, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
 CVAR (String, snd_output, "default", CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
+CVAR (Int, snd_hrtf, -1, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
 
-#ifndef NO_FMOD
-#define DEF_BACKEND "fmod"
-#elif !defined(NO_OPENAL)
+#if !defined(NO_OPENAL)
 #define DEF_BACKEND "openal"
 #else
 #define DEF_BACKEND "null"
@@ -123,7 +121,7 @@ public:
 	void SetMusicVolume (float volume)
 	{
 	}
-	std::pair<SoundHandle,bool> LoadSound(uint8_t *sfxdata, int length, bool monoize)
+	std::pair<SoundHandle,bool> LoadSound(uint8_t *sfxdata, int length, bool monoize, FSoundLoadBuffer *pBuffer)
 	{
 		SoundHandle retval = { NULL };
 		return std::make_pair(retval, true);
@@ -259,28 +257,18 @@ void I_InitSound ()
 		return;
 	}
 
-	// This has been extended to allow falling back from FMod to OpenAL and vice versa if the currently active sound system cannot be found.
+#ifndef NO_OPENAL
+	// Simplify transition to OpenAL backend
+	if (stricmp(snd_backend, "fmod") == 0)
+	{
+		Printf (TEXTCOLOR_ORANGE "FMOD Ex sound system was removed, switching to OpenAL\n");
+		snd_backend = "openal";
+	}
+#endif // NO_OPENAL
+
 	if (stricmp(snd_backend, "null") == 0)
 	{
 		GSnd = new NullSoundRenderer;
-	}
-	else if(stricmp(snd_backend, "fmod") == 0)
-	{
-		#ifndef NO_FMOD
-			if (IsFModExPresent())
-			{
-				GSnd = new FMODSoundRenderer;
-			}
-		#endif
-		#ifndef NO_OPENAL
-			if ((!GSnd || !GSnd->IsValid()) && IsOpenALPresent())
-			{
-				Printf (TEXTCOLOR_RED"FMod Ex Sound init failed. Trying OpenAL.\n");
-				I_CloseSound();
-				GSnd = new OpenALSoundRenderer;
-				snd_backend = "openal";
-			}
-		#endif
 	}
 	else if(stricmp(snd_backend, "openal") == 0)
 	{
@@ -288,15 +276,6 @@ void I_InitSound ()
 			if (IsOpenALPresent())
 			{
 				GSnd = new OpenALSoundRenderer;
-			}
-		#endif
-		#ifndef NO_FMOD
-			if ((!GSnd || !GSnd->IsValid()) && IsFModExPresent())
-			{
-				Printf (TEXTCOLOR_RED"OpenAL Sound init failed. Trying FMod Ex.\n");
-				I_CloseSound();
-				GSnd = new FMODSoundRenderer;
-				snd_backend = "fmod";
 			}
 		#endif
 	}
@@ -598,9 +577,10 @@ std::pair<SoundHandle,bool> SoundRenderer::LoadSoundVoc(uint8_t *sfxdata, int le
 	return retval;
 }
 
-SoundStream *SoundRenderer::OpenStream(const char *url, int flags)
+std::pair<SoundHandle, bool> SoundRenderer::LoadSoundBuffered(FSoundLoadBuffer *buffer, bool monoize)
 {
-    return 0;
+	SoundHandle retval = { NULL };
+	return std::make_pair(retval, true);
 }
 
 SoundDecoder *SoundRenderer::CreateDecoder(FileReader *reader)
@@ -631,14 +611,14 @@ SoundDecoder *SoundRenderer::CreateDecoder(FileReader *reader)
 
 
 // Default readAll implementation, for decoders that can't do anything better
-TArray<char> SoundDecoder::readAll()
+TArray<uint8_t> SoundDecoder::readAll()
 {
-    TArray<char> output;
+    TArray<uint8_t> output;
     unsigned total = 0;
     unsigned got;
 
     output.Resize(total+32768);
-    while((got=(unsigned)read(&output[total], output.Size()-total)) > 0)
+    while((got=(unsigned)read((char*)&output[total], output.Size()-total)) > 0)
     {
         total += got;
         output.Resize(total*2);

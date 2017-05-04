@@ -10,7 +10,7 @@ if( COMMAND cmake_policy )
 	endif()
 endif()
 
-list( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR} )
+list( APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake )
 include( CreateLaunchers )
 include( FindPackageHandleStandardArgs )
 
@@ -148,9 +148,6 @@ if( ZD_CMAKE_COMPILER_IS_GNUCXX_COMPATIBLE )
 	set( PROFILE 0 CACHE BOOL "Enable profiling with gprof for Debug and RelWithDebInfo build types." )
 endif()
 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}")
-
-option( NO_FMOD "Disable FMODEx sound support" OFF )
 option( NO_OPENAL "Disable OpenAL sound support" OFF )
 
 find_package( BZip2 )
@@ -327,10 +324,6 @@ add_subdirectory( wadsrc )
 add_subdirectory( wadsrc_bm )
 add_subdirectory( wadsrc_lights )
 add_subdirectory( src )
-
-if( NOT WIN32 AND NOT APPLE )
-	add_subdirectory( output_sdl )
-endif()
 
 if( NOT CMAKE_CROSSCOMPILING )
 	export(TARGETS ${CROSS_EXPORTS} FILE "${CMAKE_BINARY_DIR}/ImportExecutables.cmake" )

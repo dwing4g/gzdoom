@@ -1,20 +1,37 @@
-// Emacs style mode select	 -*- C++ -*- 
+/*
+**
+**
+**---------------------------------------------------------------------------
+** Copyright 1999-2016 Randy Heit
+** Copyright 2005-2016 Christoph Oelckers
+** All rights reserved.
+**
+** Redistribution and use in source and binary forms, with or without
+** modification, are permitted provided that the following conditions
+** are met:
+**
+** 1. Redistributions of source code must retain the above copyright
+**    notice, this list of conditions and the following disclaimer.
+** 2. Redistributions in binary form must reproduce the above copyright
+**    notice, this list of conditions and the following disclaimer in the
+**    documentation and/or other materials provided with the distribution.
+** 3. The name of the author may not be used to endorse or promote products
+**    derived from this software without specific prior written permission.
+**
+** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+**---------------------------------------------------------------------------
+**
+*/
 //-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// $Log:$
 //
 // DESCRIPTION:
 //		Functions to draw patches (by post) directly to screen->
@@ -65,6 +82,7 @@
 #include "r_renderer.h"
 #include "menu/menu.h"
 #include "r_data/voxels.h"
+#include "vm.h"
 
 EXTERN_CVAR(Bool, r_blendmethod)
 
@@ -72,8 +90,6 @@ int active_con_scale();
 
 FRenderer *Renderer;
 
-IMPLEMENT_CLASS(DCanvas, true, false)
-IMPLEMENT_CLASS(DFrameBuffer, true, false)
 EXTERN_CVAR (Bool, swtruecolor)
 EXTERN_CVAR (Bool, fullscreen)
 
@@ -85,7 +101,7 @@ EXTERN_CVAR (Bool, fullscreen)
 
 class DDummyFrameBuffer : public DFrameBuffer
 {
-	DECLARE_CLASS (DDummyFrameBuffer, DFrameBuffer);
+	typedef DFrameBuffer Super;
 public:
 	DDummyFrameBuffer (int width, int height)
 		: DFrameBuffer (0, 0, false)
@@ -111,11 +127,6 @@ public:
 
 	float Gamma;
 };
-IMPLEMENT_CLASS(DDummyFrameBuffer, true, false)
-
-// SimpleCanvas is not really abstract, but this macro does not
-// try to generate a CreateNew() function.
-IMPLEMENT_CLASS(DSimpleCanvas, true, false)
 
 class FPaletteTester : public FTexture
 {
@@ -1123,6 +1134,7 @@ void DFrameBuffer::SetBlendingRect (int x1, int y1, int x2, int y2)
 
 bool DFrameBuffer::Begin2D (bool copy3d)
 {
+	isIn2D = true;
 	ClearClipRect();
 	return false;
 }
@@ -1271,7 +1283,6 @@ bool V_DoModeSetup (int width, int height, int bits)
 	}
 
 	screen = buff;
-	GC::WriteBarrier(screen);
 	screen->SetGamma (Gamma);
 
 	// Load fonts now so they can be packed into textures straight away,
@@ -1543,7 +1554,6 @@ void V_Init (bool restart)
 
 void V_Init2()
 {
-	assert (screen->IsKindOf(RUNTIME_CLASS(DDummyFrameBuffer)));
 	int width = screen->GetWidth();
 	int height = screen->GetHeight();
 	float gamma = static_cast<DDummyFrameBuffer *>(screen)->Gamma;
@@ -1551,7 +1561,6 @@ void V_Init2()
 	{
 		DFrameBuffer *s = screen;
 		screen = NULL;
-		s->ObjectFlags |= OF_YesReallyDelete;
 		delete s;
 	}
 
@@ -1578,7 +1587,6 @@ void V_Shutdown()
 	{
 		DFrameBuffer *s = screen;
 		screen = NULL;
-		s->ObjectFlags |= OF_YesReallyDelete;
 		delete s;
 	}
 	V_ClearFonts();

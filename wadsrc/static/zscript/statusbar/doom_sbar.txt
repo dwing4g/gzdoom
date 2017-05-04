@@ -48,10 +48,8 @@ class DoomStatusBar : BaseStatusBar
 		DrawImage("STTPRCNT", (90, 171), DI_ITEM_OFFSETS);
 		DrawImage("STTPRCNT", (221, 171), DI_ITEM_OFFSETS);
 		
-		Inventory a1, a2;
-		int amt1;
-		[a1, a2, amt1] = GetCurrentAmmo();
-		DrawString(mHUDFont, FormatNumber(amt1, 3), (44, 171), DI_TEXT_ALIGN_RIGHT|DI_NOSHADOW);
+		Inventory a1 = GetCurrentAmmo();
+		if (a1 != null) DrawString(mHUDFont, FormatNumber(a1.Amount, 3), (44, 171), DI_TEXT_ALIGN_RIGHT|DI_NOSHADOW);
 		DrawString(mHUDFont, FormatNumber(CPlayer.health, 3), (90, 171), DI_TEXT_ALIGN_RIGHT|DI_NOSHADOW);
 		DrawString(mHUDFont, FormatNumber(GetArmorAmount(), 3), (221, 171), DI_TEXT_ALIGN_RIGHT|DI_NOSHADOW);
 
@@ -76,7 +74,7 @@ class DoomStatusBar : BaseStatusBar
 		else image = "";
 		DrawImage(image, (239, 191), DI_ITEM_OFFSETS);
 		
-		int maxamt;
+		int amt1, maxamt;
 		[amt1, maxamt] = GetAmount("Clip");
 		DrawString(mIndexFont, FormatNumber(amt1, 3), (288, 173), DI_TEXT_ALIGN_RIGHT);
 		DrawString(mIndexFont, FormatNumber(maxamt, 3), (314, 173), DI_TEXT_ALIGN_RIGHT);
@@ -100,12 +98,12 @@ class DoomStatusBar : BaseStatusBar
 		else
 		{
 			DrawImage("STARMS", (104, 168), DI_ITEM_OFFSETS);
-			DrawImage(CPlayer.HasWeaponsInSlot(2)? "STYSNUM2" : "STGNUM2", (111, 171), DI_ITEM_OFFSETS);
-			DrawImage(CPlayer.HasWeaponsInSlot(3)? "STYSNUM3" : "STGNUM3", (123, 171), DI_ITEM_OFFSETS);
-			DrawImage(CPlayer.HasWeaponsInSlot(4)? "STYSNUM4" : "STGNUM4", (135, 171), DI_ITEM_OFFSETS);
-			DrawImage(CPlayer.HasWeaponsInSlot(5)? "STYSNUM5" : "STGNUM5", (111, 181), DI_ITEM_OFFSETS);
-			DrawImage(CPlayer.HasWeaponsInSlot(6)? "STYSNUM6" : "STGNUM6", (123, 181), DI_ITEM_OFFSETS);
-			DrawImage(CPlayer.HasWeaponsInSlot(7)? "STYSNUM7" : "STGNUM7", (135, 181), DI_ITEM_OFFSETS);
+			DrawImage(CPlayer.HasWeaponsInSlot(2)? "STYSNUM2" : "STGNUM2", (111, 172), DI_ITEM_OFFSETS);
+			DrawImage(CPlayer.HasWeaponsInSlot(3)? "STYSNUM3" : "STGNUM3", (123, 172), DI_ITEM_OFFSETS);
+			DrawImage(CPlayer.HasWeaponsInSlot(4)? "STYSNUM4" : "STGNUM4", (135, 172), DI_ITEM_OFFSETS);
+			DrawImage(CPlayer.HasWeaponsInSlot(5)? "STYSNUM5" : "STGNUM5", (111, 182), DI_ITEM_OFFSETS);
+			DrawImage(CPlayer.HasWeaponsInSlot(6)? "STYSNUM6" : "STGNUM6", (123, 182), DI_ITEM_OFFSETS);
+			DrawImage(CPlayer.HasWeaponsInSlot(7)? "STYSNUM7" : "STGNUM7", (135, 182), DI_ITEM_OFFSETS);
 		}
 		
 		if (multiplayer)
@@ -141,7 +139,7 @@ class DoomStatusBar : BaseStatusBar
 		DrawString(mHUDFont, FormatNumber(CPlayer.health, 3), (44, -20));
 		
 		let armor = CPlayer.mo.FindInventory("BasicArmor");
-		if (armor != null)
+		if (armor != null && armor.Amount > 0)
 		{
 			DrawInventoryIcon(armor, (20, -22));
 			DrawString(mHUDFont, FormatNumber(armor.Amount, 3), (44, -40));

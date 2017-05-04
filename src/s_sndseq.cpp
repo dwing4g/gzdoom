@@ -1,13 +1,24 @@
-//**************************************************************************
-//**
-//** sn_sonix.c : Heretic 2 : Raven Software, Corp.
-//**
-//** $RCSfile: sn_sonix.c,v $
-//** $Revision: 1.17 $
-//** $Date: 95/10/05 18:25:44 $
-//** $Author: paul $
-//**
-//**************************************************************************
+//-----------------------------------------------------------------------------
+//
+// Copyright 1994-1996 Raven Software
+// Copyright 1999-2016 Randy Heit
+// Copyright 2002-2016 Christoph Oelckers
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/
+//
+//-----------------------------------------------------------------------------
+//
 
 #include <string.h>
 #include <stdio.h>
@@ -30,6 +41,7 @@
 #include "serializer.h"
 #include "d_player.h"
 #include "g_levellocals.h"
+#include "vm.h"
 
 // MACROS ------------------------------------------------------------------
 
@@ -880,7 +892,7 @@ DSeqNode *SN_StartSequence (AActor *actor, int sequence, seqtype_t type, int mod
 	}
 	if (TwiddleSeqNum (sequence, type))
 	{
-		return new DSeqActorNode (actor, sequence, modenum);
+		return Create<DSeqActorNode> (actor, sequence, modenum);
 	}
 	return NULL;
 }
@@ -903,7 +915,7 @@ DSeqNode *SN_StartSequence (sector_t *sector, int chan, int sequence, seqtype_t 
 	}
 	if (TwiddleSeqNum (sequence, type))
 	{
-		return new DSeqSectorNode (sector, chan, sequence, modenum);
+		return Create<DSeqSectorNode>(sector, chan, sequence, modenum);
 	}
 	return NULL;
 }
@@ -927,7 +939,7 @@ DSeqNode *SN_StartSequence (FPolyObj *poly, int sequence, seqtype_t type, int mo
 	}
 	if (TwiddleSeqNum (sequence, type))
 	{
-		return new DSeqPolyNode (poly, sequence, modenum);
+		return Create<DSeqPolyNode>(poly, sequence, modenum);
 	}
 	return NULL;
 }

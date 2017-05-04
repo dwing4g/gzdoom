@@ -198,9 +198,8 @@ struct VMVa_List
 //
 // [RH] Made screens more implementation-independant:
 //
-class DCanvas : public DObject
+class DCanvas
 {
-	DECLARE_ABSTRACT_CLASS (DCanvas, DObject)
 public:
 	DCanvas (int width, int height, bool bgra);
 	virtual ~DCanvas ();
@@ -317,7 +316,7 @@ private:
 
 class DSimpleCanvas : public DCanvas
 {
-	DECLARE_CLASS (DSimpleCanvas, DCanvas)
+	typedef DCanvas Super;
 public:
 	DSimpleCanvas (int width, int height, bool bgra);
 	~DSimpleCanvas ();
@@ -357,7 +356,7 @@ public:
 
 class DFrameBuffer : public DSimpleCanvas
 {
-	DECLARE_ABSTRACT_CLASS (DFrameBuffer, DSimpleCanvas)
+	typedef DSimpleCanvas Super;
 public:
 	DFrameBuffer (int width, int height, bool bgra);
 
@@ -413,9 +412,10 @@ public:
 	// avoid copying the software buffer to the screen.
 	// Returns true if hardware-accelerated 2D has been entered, false if not.
 	virtual bool Begin2D(bool copy3d);
+	void End2D() { isIn2D = false; }
 
 	// Returns true if Begin2D has been called and 2D drawing is now active
-	virtual bool HasBegun2D() { return IsLocked(); }
+	bool HasBegun2D() { return isIn2D; }
 
 	// DrawTexture calls after Begin2D use native textures.
 
@@ -463,6 +463,7 @@ protected:
 
 private:
 	uint32_t LastMS, LastSec, FrameCount, LastCount, LastTic;
+	bool isIn2D = false;
 };
 
 
@@ -533,6 +534,7 @@ void V_Init2 ();
 void V_Shutdown ();
 
 class FScanner;
+struct FScriptPosition;
 // Returns the closest color to the one desired. String
 // should be of the form "rr gg bb".
 int V_GetColorFromString (const uint32_t *palette, const char *colorstring, FScriptPosition *sc = nullptr);

@@ -1,25 +1,59 @@
-// Emacs style mode select	 -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id:$
+// Copyright 1993-1996 id Software
+// Copyright 1998-1998 Chi Hoang, Lee Killough, Jim Flynn, Rand Phares, Ty Halderman
+// Copyright 1999-2016 Randy Heit
+// Copyright 2002-2017 Christoph Oelckers
 //
-// Copyright (C) 1993-1996 by id Software, Inc.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-// $Log:$
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/
+//
+//-----------------------------------------------------------------------------
 //
 // DESCRIPTION:
 //		Sector utility functions.
 //
 //-----------------------------------------------------------------------------
+
+/* For code that originates from ZDoom the following applies:
+**
+**---------------------------------------------------------------------------
+**
+** Redistribution and use in source and binary forms, with or without
+** modification, are permitted provided that the following conditions
+** are met:
+**
+** 1. Redistributions of source code must retain the above copyright
+**    notice, this list of conditions and the following disclaimer.
+** 2. Redistributions in binary form must reproduce the above copyright
+**    notice, this list of conditions and the following disclaimer in the
+**    documentation and/or other materials provided with the distribution.
+** 3. The name of the author may not be used to endorse or promote products
+**    derived from this software without specific prior written permission.
+**
+** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+**---------------------------------------------------------------------------
+**
+*/
 
 #include "p_spec.h"
 #include "p_lnspec.h"
@@ -36,7 +70,7 @@
 #include "r_sky.h"
 #include "r_data/colormaps.h"
 #include "g_levellocals.h"
-#include "virtual.h"
+#include "vm.h"
 
 
 // [RH]
@@ -112,7 +146,7 @@ DEFINE_ACTION_FUNCTION(_Sector, FindLowestFloorSurrounding)
 	vertex_t *v;
 	double h = self->FindLowestFloorSurrounding(&v);
 	if (numret > 0) ret[0].SetFloat(h);
-	if (numret > 1) ret[1].SetPointer(v, ATAG_GENERIC);
+	if (numret > 1) ret[1].SetPointer(v);
 	return numret;
 }
 	
@@ -161,7 +195,7 @@ DEFINE_ACTION_FUNCTION(_Sector, FindHighestFloorSurrounding)
 	vertex_t *v;
 	double h = self->FindHighestFloorSurrounding(&v);
 	if (numret > 0) ret[0].SetFloat(h);
-	if (numret > 1) ret[1].SetPointer(v, ATAG_GENERIC);
+	if (numret > 1) ret[1].SetPointer(v);
 	return numret;
 }
 
@@ -224,7 +258,7 @@ DEFINE_ACTION_FUNCTION(_Sector, FindNextHighestFloor)
 	vertex_t *v;
 	double h = self->FindNextHighestFloor(&v);
 	if (numret > 0) ret[0].SetFloat(h);
-	if (numret > 1) ret[1].SetPointer(v, ATAG_GENERIC);
+	if (numret > 1) ret[1].SetPointer(v);
 	return numret;
 }
 
@@ -286,7 +320,7 @@ DEFINE_ACTION_FUNCTION(_Sector, FindNextLowestFloor)
 	vertex_t *v;
 	double h = self->FindNextLowestFloor(&v);
 	if (numret > 0) ret[0].SetFloat(h);
-	if (numret > 1) ret[1].SetPointer(v, ATAG_GENERIC);
+	if (numret > 1) ret[1].SetPointer(v);
 	return numret;
 }
 
@@ -348,7 +382,7 @@ DEFINE_ACTION_FUNCTION(_Sector, FindNextLowestCeiling)
 	vertex_t *v;
 	double h = self->FindNextLowestCeiling(&v);
 	if (numret > 0) ret[0].SetFloat(h);
-	if (numret > 1) ret[1].SetPointer(v, ATAG_GENERIC);
+	if (numret > 1) ret[1].SetPointer(v);
 	return numret;
 }
 
@@ -411,7 +445,7 @@ DEFINE_ACTION_FUNCTION(_Sector, FindNextHighestCeiling)
 	vertex_t *v;
 	double h = self->FindNextHighestCeiling(&v);
 	if (numret > 0) ret[0].SetFloat(h);
-	if (numret > 1) ret[1].SetPointer(v, ATAG_GENERIC);
+	if (numret > 1) ret[1].SetPointer(v);
 	return numret;
 }
 
@@ -459,7 +493,7 @@ DEFINE_ACTION_FUNCTION(_Sector, FindLowestCeilingSurrounding)
 	vertex_t *v;
 	double h = self->FindLowestCeilingSurrounding(&v);
 	if (numret > 0) ret[0].SetFloat(h);
-	if (numret > 1) ret[1].SetPointer(v, ATAG_GENERIC);
+	if (numret > 1) ret[1].SetPointer(v);
 	return numret;
 }
 
@@ -508,7 +542,7 @@ DEFINE_ACTION_FUNCTION(_Sector, FindHighestCeilingSurrounding)
 	vertex_t *v;
 	double h = self->FindHighestCeilingSurrounding(&v);
 	if (numret > 0) ret[0].SetFloat(h);
-	if (numret > 1) ret[1].SetPointer(v, ATAG_GENERIC);
+	if (numret > 1) ret[1].SetPointer(v);
 	return numret;
 }
 
@@ -744,7 +778,7 @@ DEFINE_ACTION_FUNCTION(_Sector, FindHighestFloorPoint)
 	vertex_t *v;
 	double h = self->FindHighestFloorPoint(&v);
 	if (numret > 0) ret[0].SetFloat(h);
-	if (numret > 1) ret[1].SetPointer(v, ATAG_GENERIC);
+	if (numret > 1) ret[1].SetPointer(v);
 	return numret;
 }
 
@@ -793,7 +827,7 @@ DEFINE_ACTION_FUNCTION(_Sector, FindLowestCeilingPoint)
 	vertex_t *v;
 	double h = self->FindLowestCeilingPoint(&v);
 	if (numret > 0) ret[0].SetFloat(h);
-	if (numret > 1) ret[1].SetPointer(v, ATAG_GENERIC);
+	if (numret > 1) ret[1].SetPointer(v);
 	return numret;
 }
 
@@ -1207,7 +1241,7 @@ DEFINE_ACTION_FUNCTION(_Sector, HighestCeilingAt)
 	sector_t *s;
 	double h = self->HighestCeilingAt(DVector2(x, y), &s);
 	if (numret > 0) ret[0].SetFloat(h);
-	if (numret > 1) ret[1].SetPointer(s, ATAG_GENERIC);
+	if (numret > 1) ret[1].SetPointer(s);
 	return numret;
 }
 
@@ -1242,7 +1276,7 @@ DEFINE_ACTION_FUNCTION(_Sector, LowestFloorAt)
 	sector_t *s;
 	double h = self->LowestFloorAt(DVector2(x, y), &s);
 	if (numret > 0) ret[0].SetFloat(h);
-	if (numret > 1) ret[1].SetPointer(s, ATAG_GENERIC);
+	if (numret > 1) ret[1].SetPointer(s);
 	return numret;
 }
 
@@ -1309,12 +1343,12 @@ DEFINE_ACTION_FUNCTION(_Sector, NextHighestCeilingAt)
 
 	if (numret > 2)
 	{
-		ret[2].SetPointer(resultff, ATAG_GENERIC);
+		ret[2].SetPointer(resultff);
 		numret = 3;
 	}
 	if (numret > 1)
 	{
-		ret[1].SetPointer(resultsec, ATAG_GENERIC);
+		ret[1].SetPointer(resultsec);
 	}
 	if (numret > 0)
 	{
@@ -1387,12 +1421,12 @@ DEFINE_ACTION_FUNCTION(_Sector, NextLowestFloorAt)
 
 	if (numret > 2)
 	{
-		ret[2].SetPointer(resultff, ATAG_GENERIC);
+		ret[2].SetPointer(resultff);
 		numret = 3;
 	}
 	if (numret > 1)
 	{
-		ret[1].SetPointer(resultsec, ATAG_GENERIC);
+		ret[1].SetPointer(resultsec);
 	}
 	if (numret > 0)
 	{
@@ -1514,7 +1548,7 @@ DEFINE_ACTION_FUNCTION(_Sector, NextLowestFloorAt)
 			 VMReturn ret;
 			 int didit;
 			 ret.IntAt(&didit);
-			 GlobalVMStack.Call(func, params, 3, &ret, 1, nullptr);
+			 VMCall(func, params, 3, &ret, 1);
 
 			 if (didit)
 			 {

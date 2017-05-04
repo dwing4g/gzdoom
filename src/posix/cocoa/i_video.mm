@@ -116,19 +116,35 @@
 
 DFrameBuffer *CreateGLSWFrameBuffer(int width, int height, bool bgra, bool fullscreen);
 
+int currentrenderer;
+
+CUSTOM_CVAR(Bool, vid_glswfb, true, CVAR_NOINITCALL | CVAR_GLOBALCONFIG | CVAR_NOINITCALL)
+{
+	Printf("This won't take effect until " GAMENAME " is restarted.\n");
+}
+
 EXTERN_CVAR(Bool, ticker   )
 EXTERN_CVAR(Bool, vid_vsync)
 EXTERN_CVAR(Bool, vid_hidpi)
 
-CUSTOM_CVAR(Bool, swtruecolor, true, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVAR_NOINITCALL)
+#if defined __ppc__ || defined __ppc64__
+static const bool TRUECOLOR_DEFAULT = false;
+#else // other than PowerPC
+static const bool TRUECOLOR_DEFAULT = true;
+#endif // PowerPC
+
+CUSTOM_CVAR(Bool, swtruecolor, TRUECOLOR_DEFAULT, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVAR_NOINITCALL)
 {
 	// Strictly speaking this doesn't require a mode switch, but it is the easiest
 	// way to force a CreateFramebuffer call without a lot of refactoring.
-	extern int NewWidth, NewHeight, NewBits, DisplayBits;
-	NewWidth      = screen->GetWidth();
-	NewHeight     = screen->GetHeight();
-	NewBits       = DisplayBits;
-	setmodeneeded = true;
+	if (currentrenderer == 0)
+	{
+		extern int NewWidth, NewHeight, NewBits, DisplayBits;
+		NewWidth      = screen->GetWidth();
+		NewHeight     = screen->GetHeight();
+		NewBits       = DisplayBits;
+		setmodeneeded = true;
+	}
 }
 
 CUSTOM_CVAR(Bool, fullscreen, false, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
@@ -146,14 +162,12 @@ CUSTOM_CVAR(Bool, vid_autoswitch, true, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVAR_
 	Printf("You must restart " GAMENAME " to apply graphics switching mode\n");
 }
 
-static int s_currentRenderer;
-
 CUSTOM_CVAR(Int, vid_renderer, 1, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVAR_NOINITCALL)
 {
 	// 0: Software renderer
 	// 1: OpenGL renderer
 
-	if (self != s_currentRenderer)
+	if (self != currentrenderer)
 	{
 		switch (self)
 		{
@@ -339,7 +353,7 @@ private:
 	PalEntry m_flashColor;
 	int      m_flashAmount;
 
-	bool     m_isUpdatePending;
+	bool     UpdatePending;
 
 	uint8_t* m_pixelBuffer;
 	GLuint   m_texture;
@@ -551,9 +565,12 @@ CocoaVideo::CocoaVideo()
 
 	// Create OpenGL pixel format
 
-	NSOpenGLPixelFormat* pixelFormat = CreatePixelFormat(OpenGLProfile::Core);
+	const OpenGLProfile defaultProfile = (1 == vid_renderer || vid_glswfb)
+		? OpenGLProfile::Core
+		: OpenGLProfile::Legacy;
+	NSOpenGLPixelFormat* pixelFormat = CreatePixelFormat(defaultProfile);
 
-	if (nil == pixelFormat)
+	if (nil == pixelFormat && OpenGLProfile::Core == defaultProfile)
 	{
 		pixelFormat = CreatePixelFormat(OpenGLProfile::Legacy);
 
@@ -632,7 +649,6 @@ DFrameBuffer* CocoaVideo::CreateFrameBuffer(const int width, const int height, c
 		}
 
 		old->GetFlash(flashColor, flashAmount);
-		old->ObjectFlags |= OF_YesReallyDelete;
 
 		if (old == screen)
 		{
@@ -644,14 +660,24 @@ DFrameBuffer* CocoaVideo::CreateFrameBuffer(const int width, const int height, c
 
 	DFrameBuffer* fb = NULL;
 
-	if (1 == s_currentRenderer)
+	if (1 == currentrenderer)
  	{
 		fb = new OpenGLFrameBuffer(NULL, width, height, 32, 60, fullscreen);
 	}
+	else if (vid_glswfb)
+	{
+		fb = CreateGLSWFrameBuffer(width, height, bgra, fullscreen);
+
+		if (!fb->IsValid())
+		{
+			delete fb;
+
+			fb = new CocoaFrameBuffer(width, height, bgra, fullscreen);
+		}
+	}
 	else
 	{
-		//fb = new CocoaFrameBuffer(width, height, bgra, fullscreen);
-		fb = CreateGLSWFrameBuffer(width, height, bgra, fullscreen);
+		fb = new CocoaFrameBuffer(width, height, bgra, fullscreen);
 	}
 
 	fb->SetFlash(flashColor, flashAmount);
@@ -881,7 +907,7 @@ CocoaFrameBuffer::CocoaFrameBuffer(int width, int height, bool bgra, bool fullsc
 , m_gamma(0.0f)
 , m_needGammaUpdate(false)
 , m_flashAmount(0)
-, m_isUpdatePending(false)
+, UpdatePending(false)
 , m_pixelBuffer(new uint8_t[width * height * BYTES_PER_PIXEL])
 , m_texture(0)
 {
@@ -889,7 +915,10 @@ CocoaFrameBuffer::CocoaFrameBuffer(int width, int height, bool bgra, bool fullsc
 
 	if (!isOpenGLInitialized)
 	{
-		ogl_LoadFunctions();
+		if (ogl_LoadFunctions() == ogl_LOAD_FAILED)
+		{
+			I_FatalError("Failed to load OpenGL functions.");
+		}
 		isOpenGLInitialized = true;
 	}
 
@@ -945,7 +974,7 @@ bool CocoaFrameBuffer::Lock(bool buffered)
 
 void CocoaFrameBuffer::Unlock()
 {
-	if (m_isUpdatePending && LockCount == 1)
+	if (UpdatePending && LockCount == 1)
 	{
 		Update();
 	}
@@ -962,7 +991,7 @@ void CocoaFrameBuffer::Update()
 	{
 		if (LockCount > 0)
 		{
-			m_isUpdatePending = true;
+			UpdatePending = true;
 			--LockCount;
 		}
 		return;
@@ -972,7 +1001,7 @@ void CocoaFrameBuffer::Update()
 
 	Buffer = NULL;
 	LockCount = 0;
-	m_isUpdatePending = false;
+	UpdatePending = false;
 
 	BlitCycles.Reset();
 	FlipCycles.Reset();
@@ -1146,8 +1175,8 @@ void CocoaFrameBuffer::Flip()
 
 SDLGLFB::SDLGLFB(void*, const int width, const int height, int, int, const bool fullscreen, bool bgra)
 : DFrameBuffer(width, height, bgra)
-, m_lock(-1)
-, m_isUpdatePending(false)
+, m_Lock(0)
+, UpdatePending(false)
 {
 	CGGammaValue gammaTable[GAMMA_TABLE_SIZE];
 	uint32_t actualChannelSize;
@@ -1176,7 +1205,7 @@ SDLGLFB::~SDLGLFB()
 
 bool SDLGLFB::Lock(bool buffered)
 {
-	m_lock++;
+	m_Lock++;
 
 	Buffer = MemBuffer;
 
@@ -1185,19 +1214,19 @@ bool SDLGLFB::Lock(bool buffered)
 
 void SDLGLFB::Unlock()
 {
-	if (m_isUpdatePending && 1 == m_lock)
+	if (UpdatePending && 1 == m_Lock)
 	{
 		Update();
 	}
-	else if (--m_lock <= 0)
+	else if (--m_Lock <= 0)
 	{
-		m_lock = 0;
+		m_Lock = 0;
 	}
 }
 
 bool SDLGLFB::IsLocked()
 {
-	return m_lock > 0;
+	return m_Lock > 0;
 }
 
 
@@ -1225,12 +1254,12 @@ void SDLGLFB::InitializeState()
 
 bool SDLGLFB::CanUpdate()
 {
-	if (m_lock != 1)
+	if (m_Lock != 1)
 	{
-		if (m_lock > 0)
+		if (m_Lock > 0)
 		{
-			m_isUpdatePending = true;
-			--m_lock;
+			UpdatePending = true;
+			--m_Lock;
 		}
 
 		return false;
@@ -1306,7 +1335,6 @@ void I_ShutdownGraphics()
 {
 	if (NULL != screen)
 	{
-		screen->ObjectFlags |= OF_YesReallyDelete;
 		delete screen;
 		screen = NULL;
 	}
@@ -1335,13 +1363,13 @@ static void I_DeleteRenderer()
 
 void I_CreateRenderer()
 {
-	s_currentRenderer = vid_renderer;
+	currentrenderer = vid_renderer;
 
 	if (NULL == Renderer)
 	{
 		extern FRenderer* gl_CreateInterface();
 
-		Renderer = 1 == s_currentRenderer
+		Renderer = 1 == currentrenderer
 			? gl_CreateInterface()
 			: new FSoftwareRenderer;
 		atterm(I_DeleteRenderer);

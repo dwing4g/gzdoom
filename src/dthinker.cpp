@@ -40,9 +40,10 @@
 #include "doomerrors.h"
 #include "serializer.h"
 #include "d_player.h"
-#include "virtual.h"
+#include "vm.h"
 
 
+static int ThinkCount;
 static cycle_t ThinkCycles;
 extern cycle_t BotSupportCycles;
 extern cycle_t ActionCycles;
@@ -68,7 +69,7 @@ void FThinkerList::AddTail(DThinker *thinker)
 	assert(!(thinker->ObjectFlags & OF_EuthanizeMe));
 	if (Sentinel == NULL)
 	{
-		Sentinel = new DThinker(DThinker::NO_LINK);
+		Sentinel = Create<DThinker>(DThinker::NO_LINK);
 		Sentinel->ObjectFlags |= OF_Sentinel;
 		Sentinel->NextThinker = Sentinel;
 		Sentinel->PrevThinker = Sentinel;
@@ -178,37 +179,41 @@ void DThinker::SerializeThinkers(FSerializer &arc, bool hubLoad)
 		{
 			for (i = 0; i <= MAX_STATNUM; i++)
 			{
+
 				if (arc.BeginArray(nullptr))
 				{
-					int size = arc.ArraySize();
-					for (int j = 0; j < size; j++)
+					if (!hubLoad || i != STAT_STATIC)	// do not load static thinkers in a hub transition because they'd just duplicate the active ones.
 					{
-						DThinker *thinker = nullptr;
-						arc(nullptr, thinker);
-						if (thinker != nullptr)
+						int size = arc.ArraySize();
+						for (int j = 0; j < size; j++)
 						{
-							// This may be a player stored in their ancillary list. Remove
-							// them first before inserting them into the new list.
-							if (thinker->NextThinker != nullptr)
+							DThinker *thinker = nullptr;
+							arc(nullptr, thinker);
+							if (thinker != nullptr)
 							{
-								thinker->Remove();
-							}
-							// Thinkers with the OF_JustSpawned flag set go in the FreshThinkers
-							// list. Anything else goes in the regular Thinkers list.
-							if (thinker->ObjectFlags & OF_EuthanizeMe)
-							{
-								// This thinker was destroyed during the loading process. Do
-								// not link it into any list.
-							}
-							else if (thinker->ObjectFlags & OF_JustSpawned)
-							{
-								FreshThinkers[i].AddTail(thinker);
-								thinker->PostSerialize();
-							}
-							else
-							{
-								Thinkers[i].AddTail(thinker);
-								thinker->PostSerialize();
+								// This may be a player stored in their ancillary list. Remove
+								// them first before inserting them into the new list.
+								if (thinker->NextThinker != nullptr)
+								{
+									thinker->Remove();
+								}
+								// Thinkers with the OF_JustSpawned flag set go in the FreshThinkers
+								// list. Anything else goes in the regular Thinkers list.
+								if (thinker->ObjectFlags & OF_EuthanizeMe)
+								{
+									// This thinker was destroyed during the loading process. Do
+									// not link it into any list.
+								}
+								else if (thinker->ObjectFlags & OF_JustSpawned)
+								{
+									FreshThinkers[i].AddTail(thinker);
+									thinker->PostSerialize();
+								}
+								else
+								{
+									Thinkers[i].AddTail(thinker);
+									thinker->PostSerialize();
+								}
 							}
 						}
 					}
@@ -314,7 +319,7 @@ void DThinker::CallPostBeginPlay()
 	{
 		// Without the type cast this picks the 'void *' assignment...
 		VMValue params[1] = { (DObject*)this };
-		GlobalVMStack.Call(func, params, 1, nullptr, 0, nullptr);
+		VMCall(func, params, 1, nullptr, 0);
 	}
 	else
 	{
@@ -462,6 +467,7 @@ void DThinker::RunThinkers ()
 {
 	int i, count;
 
+	ThinkCount = 0;
 	ThinkCycles.Reset();
 	BotSupportCycles.Reset();
 	ActionCycles.Reset();
@@ -525,6 +531,7 @@ int DThinker::TickThinkers (FThinkerList *list, FThinkerList *dest)
 
 		if (!(node->ObjectFlags & OF_EuthanizeMe))
 		{ // Only tick thinkers not scheduled for destruction
+			ThinkCount++;
 			node->CallTick();
 			node->ObjectFlags &= ~OF_JustSpawned;
 			GC::CheckGC();
@@ -557,7 +564,7 @@ void DThinker::CallTick()
 	{
 		// Without the type cast this picks the 'void *' assignment...
 		VMValue params[1] = { (DObject*)this };
-		GlobalVMStack.Call(func, params, 1, nullptr, 0, nullptr);
+		VMCall(func, params, 1, nullptr, 0);
 	}
 	else Tick();
 }
@@ -711,10 +718,6 @@ class DThinkerIterator : public DObject, public FThinkerIterator
 {
 	DECLARE_ABSTRACT_CLASS(DThinkerIterator, DObject)
 
-	DThinkerIterator()
-	{
-	}
-
 public:
 	DThinkerIterator(PClass *cls, int statnum = MAX_STATNUM + 1)
 		: FThinkerIterator(cls, statnum)
@@ -728,7 +731,7 @@ DEFINE_ACTION_FUNCTION(DThinkerIterator, Create)
 	PARAM_PROLOGUE;
 	PARAM_CLASS_DEF(type, DThinker);
 	PARAM_INT_DEF(statnum);
-	ACTION_RETURN_OBJECT(new DThinkerIterator(type, statnum));
+	ACTION_RETURN_OBJECT(Create<DThinkerIterator>(type, statnum));
 }
 
 DEFINE_ACTION_FUNCTION(DThinkerIterator, Next)
@@ -753,6 +756,6 @@ DEFINE_ACTION_FUNCTION(DThinkerIterator, Reinit)
 ADD_STAT (think)
 {
 	FString out;
-	out.Format ("Think time = %04.2f ms, Action = %04.2f ms", ThinkCycles.TimeMS(), ActionCycles.TimeMS());
+	out.Format ("Think time = %04.2f ms - %d thinkers, Action = %04.2f ms", ThinkCycles.TimeMS(), ThinkCount, ActionCycles.TimeMS());
 	return out;
 }

@@ -852,7 +852,7 @@ void CopyPlayer(player_t *dst, player_t *src, const char *name)
 	{
 		dst->userinfo.TransferFrom(uibackup);
 		// The player class must come from the save, so that the menu reflects the currently playing one.
-		dst->userinfo.PlayerClassChanged(src->mo->GetClass()->DisplayName); 
+		dst->userinfo.PlayerClassChanged(src->mo->GetInfo()->DisplayName); 
 	}
 
 	// Validate the skin
@@ -996,7 +996,7 @@ void G_SerializeLevel(FSerializer &arc, bool hubload)
 
 	// [ZZ] serialize events
 	E_SerializeEvents(arc);
-	DThinker::SerializeThinkers(arc, !hubload);
+	DThinker::SerializeThinkers(arc, hubload);
 	arc.Array("polyobjs", polyobjs, po_NumPolyobjs);
 	SerializeSubsectors(arc, "subsectors");
 	StatusBar->SerializeMessages(arc);

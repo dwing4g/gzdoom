@@ -32,6 +32,8 @@
 */
 
 #include "dobject.h"
+#include "vmintern.h"
+#include "types.h"
 #include "sc_man.h"
 #include "memarena.h"
 #include "zcc_parser.h"
@@ -591,7 +593,7 @@ static void PrintExprConstant(FLispString &out, ZCC_TreeNode *node)
 	{
 		out.AddName(ENamedName(enode->IntVal));
 	}
-	else if (enode->Type->IsKindOf(RUNTIME_CLASS(PInt)))
+	else if (enode->Type->isIntCompatible())
 	{
 		out.AddInt(enode->IntVal, static_cast<PInt *>(enode->Type)->Unsigned);
 	}

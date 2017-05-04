@@ -33,19 +33,6 @@
 //
 //---------------------------------------------------------------------------
 //
-// FraggleScript is from SMMU which is under the GPL. Technically, 
-// therefore, combining the FraggleScript code with the non-free 
-// ZDoom code is a violation of the GPL.
-//
-// As this may be a problem for you, I hereby grant an exception to my 
-// copyright on the SMMU source (including FraggleScript). You may use 
-// any code from SMMU in (G)ZDoom, provided that:
-//
-//    * For any binary release of the port, the source code is also made 
-//      available.
-//    * The copyright notice is kept on any file containing my code.
-//
-//
 
 #include "templates.h"
 #include "p_local.h"
@@ -363,7 +350,7 @@ static PClassActor * T_GetAmmo(const svalue_t &t)
 		p=DefAmmo[ammonum];
 	}
 	auto am = PClass::FindActor(p);
-	if (am == NULL || !am->IsKindOf(PClass::FindClass(NAME_Ammo)))
+	if (am == NULL || !am->IsDescendantOf(PClass::FindClass(NAME_Ammo)))
 	{
 		script_error("unknown ammo type : %s", p);
 		return NULL;
@@ -1873,7 +1860,7 @@ void FParser::SF_FadeLight(void)
 		FSectorTagIterator it(sectag);
 		while ((i = it.Next()) >= 0)
 		{
-			if (!level.sectors[i].lightingdata) new DLightLevel(&level.sectors[i],destlevel,speed);
+			if (!level.sectors[i].lightingdata) Create<DLightLevel>(&level.sectors[i],destlevel,speed);
 		}
 	}
 }
@@ -2436,7 +2423,7 @@ static void FS_GiveInventory (AActor *actor, const char * type, int amount)
 		type = "BasicArmorPickup";
 	}
 	auto info = PClass::FindActor (type);
-	if (info == NULL || !info->IsKindOf(RUNTIME_CLASS(AInventory)))
+	if (info == NULL || !info->IsDescendantOf(RUNTIME_CLASS(AInventory)))
 	{
 		Printf ("Unknown inventory item: %s\n", type);
 		return;
@@ -4036,7 +4023,7 @@ DRunningScript *FParser::SaveCurrentScript()
 	DFraggleThinker *th = DFraggleThinker::ActiveThinker;
 	if (th)
 	{
-		DRunningScript *runscr = new DRunningScript(Script->trigger, Script, Script->MakeIndex(Rover));
+		DRunningScript *runscr = Create<DRunningScript>(Script->trigger, Script, Script->MakeIndex(Rover));
 
 		// hook into chain at start
 		th->AddRunningScript(runscr);
@@ -4170,7 +4157,7 @@ void FParser::SF_StartScript()
 			script_error("script %i not defined\n", snum);
 		}
 		
-		DRunningScript *runscr = new DRunningScript(Script->trigger, script, 0);
+		DRunningScript *runscr = Create<DRunningScript>(Script->trigger, script, 0);
 		// hook into chain at start
 		th->AddRunningScript(runscr);
 	}

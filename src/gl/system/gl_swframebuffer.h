@@ -17,13 +17,11 @@ class FGLDebug;
 class OpenGLSWFrameBuffer : public Win32GLFrameBuffer
 {
 	typedef Win32GLFrameBuffer Super;
-	DECLARE_CLASS(OpenGLSWFrameBuffer, Win32GLFrameBuffer)
 #else
 #include "sdlglvideo.h"
 class OpenGLSWFrameBuffer : public SDLGLFB
 {
-//	typedef SDLGLFB Super;	//[C]commented, DECLARE_CLASS defines this in linux
-	DECLARE_CLASS(OpenGLSWFrameBuffer, SDLGLFB)
+	typedef SDLGLFB Super;	//[C]commented, DECLARE_CLASS defines this in linux
 #endif
 
 
@@ -33,7 +31,6 @@ public:
 	OpenGLSWFrameBuffer(void *hMonitor, int width, int height, int bits, int refreshHz, bool fullscreen, bool bgra);
 	~OpenGLSWFrameBuffer();
 
-	bool HasBegun2D() override { return In2D || IsLocked(); }
 	bool IsValid() override;
 	bool Lock(bool buffered) override;
 	void Unlock() override;
@@ -455,7 +452,9 @@ private:
 	int TrueHeight;
 	int PixelDoubling;
 	float Gamma;
+#ifdef _WIN32
 	bool UpdatePending;
+#endif // _WIN32
 	bool NeedPalUpdate;
 	bool NeedGammaUpdate;
 	LTRBRect BlendingRect;

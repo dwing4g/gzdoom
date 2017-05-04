@@ -47,6 +47,7 @@
 #include "doomstat.h"
 #include "templates.h"
 #include "gstrings.h"
+#include "vm.h"
 
 int ListGetInt(VMVa_List &tags);
 
@@ -453,5 +454,5 @@ DEFINE_ACTION_FUNCTION(FFont, BreakLines)
 
 	unsigned int count;
 	FBrokenLines *broken = V_BreakLines(self, maxwidth, text, true, &count);
-	ACTION_RETURN_OBJECT(new DBrokenLines(broken, count));
+	ACTION_RETURN_OBJECT(Create<DBrokenLines>(broken, count));
 }

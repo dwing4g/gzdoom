@@ -732,10 +732,6 @@ DIntermissionController::DIntermissionController(FIntermissionDescriptor *Desc, 
 	mScreen = NULL;
 	mFirst = true;
 	mGameState = state;
-
-	// If the intermission finishes straight away then cancel the wipe.
-	if(!NextPage())
-		wipegamestate = GS_FINALE;
 }
 
 bool DIntermissionController::NextPage ()
@@ -897,7 +893,14 @@ void F_StartIntermission(FIntermissionDescriptor *desc, bool deleteme, uint8_t s
 	if (state == FSTATE_InLevel) wipegamestate = GS_FINALE;	// don't wipe when within a level.
 	viewactive = false;
 	automapactive = false;
-	DIntermissionController::CurrentIntermission = new DIntermissionController(desc, deleteme, state);
+	DIntermissionController::CurrentIntermission = Create<DIntermissionController>(desc, deleteme, state);
+
+	// If the intermission finishes straight away then cancel the wipe.
+	if (!DIntermissionController::CurrentIntermission->NextPage())
+	{
+		wipegamestate = GS_FINALE;
+	}
+
 	GC::WriteBarrier(DIntermissionController::CurrentIntermission);
 }
 

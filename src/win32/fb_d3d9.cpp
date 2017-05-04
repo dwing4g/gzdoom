@@ -92,8 +92,6 @@
 
 // TYPES -------------------------------------------------------------------
 
-IMPLEMENT_CLASS(D3DFB, false, false)
-
 struct D3DFB::PackedTexture
 {
 	D3DFB::Atlas *Owner;
@@ -2557,7 +2555,7 @@ bool D3DPal::Update()
 
 bool D3DFB::Begin2D(bool copy3d)
 {
-	ClearClipRect();
+	Super::Begin2D(copy3d);
 	if (!Accel2D)
 	{
 		return false;

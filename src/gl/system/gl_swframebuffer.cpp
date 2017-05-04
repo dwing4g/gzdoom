@@ -113,8 +113,6 @@ DFrameBuffer *CreateGLSWFrameBuffer(int width, int height, bool bgra, bool fulls
 }
 #endif
 
-IMPLEMENT_CLASS(OpenGLSWFrameBuffer, false, false)
-
 const char *const OpenGLSWFrameBuffer::ShaderDefines[OpenGLSWFrameBuffer::NUM_SHADERS] =
 {
 	"#define ENORMALCOLOR", // NormalColor
@@ -194,9 +192,26 @@ OpenGLSWFrameBuffer::OpenGLSWFrameBuffer(void *hMonitor, int width, int height, 
 	static bool first = true;
 	if (first)
 	{
-		ogl_LoadFunctions();
+		if (ogl_LoadFunctions() == ogl_LOAD_FAILED)
+		{
+			Printf("OpenGL load failed. No OpenGL acceleration will be used.\n");
+			return;
+		}
+	}
+	
+	const char *glversion = (const char*)glGetString(GL_VERSION);
+	bool isGLES = (glversion && strlen(glversion) > 10 && memcmp(glversion, "OpenGL ES ", 10) == 0);
+	if (!isGLES && ogl_IsVersionGEQ(3, 0) == 0)
+	{
+		Printf("OpenGL acceleration requires at least OpenGL 3.0. No Acceleration will be used.\n");
+		return;
 	}
 	gl_LoadExtensions();
+	if (gl.legacyMode)
+	{
+		Printf("Legacy OpenGL path is active. No Acceleration will be used.\n");
+		return;
+	}
 	InitializeState();
 	if (first)
 	{
@@ -299,7 +314,7 @@ OpenGLSWFrameBuffer::HWPixelShader::~HWPixelShader()
 
 bool OpenGLSWFrameBuffer::CreateFrameBuffer(const FString &name, int width, int height, HWFrameBuffer **outFramebuffer)
 {
-	auto fb = std::make_unique<HWFrameBuffer>();
+	std::unique_ptr<HWFrameBuffer> fb(new HWFrameBuffer());
 	
 	GLint format = GL_RGBA16F;
 	if (gl.es) format = GL_RGB;
@@ -340,11 +355,14 @@ bool OpenGLSWFrameBuffer::CreateFrameBuffer(const FString &name, int width, int 
 
 bool OpenGLSWFrameBuffer::CreatePixelShader(FString vertexsrc, FString fragmentsrc, const FString &defines, HWPixelShader **outShader)
 {
-	auto shader = std::make_unique<HWPixelShader>();
+	std::unique_ptr<HWPixelShader> shader(new HWPixelShader());
 
 	shader->Program = glCreateProgram();
+	if (shader->Program == 0) { Printf("glCreateProgram failed. Disabling OpenGL hardware acceleration.\n"); return false; }
 	shader->VertexShader = glCreateShader(GL_VERTEX_SHADER);
+	if (shader->VertexShader == 0) { Printf("glCreateShader(GL_VERTEX_SHADER) failed. Disabling OpenGL hardware acceleration.\n"); return false; }
 	shader->FragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	if (shader->FragmentShader == 0) { Printf("glCreateShader(GL_FRAGMENT_SHADER) failed. Disabling OpenGL hardware acceleration.\n"); return false; }
 	
 	int maxGlslVersion = 330;
 	int shaderVersion = MIN((int)round(gl.glslversion * 10) * 10, maxGlslVersion);
@@ -423,7 +441,7 @@ bool OpenGLSWFrameBuffer::CreatePixelShader(FString vertexsrc, FString fragments
 
 bool OpenGLSWFrameBuffer::CreateVertexBuffer(int size, HWVertexBuffer **outVertexBuffer)
 {
-	auto obj = std::make_unique<HWVertexBuffer>();
+	std::unique_ptr<HWVertexBuffer> obj(new HWVertexBuffer());
 
 	obj->Size = size;
 
@@ -454,7 +472,7 @@ bool OpenGLSWFrameBuffer::CreateVertexBuffer(int size, HWVertexBuffer **outVerte
 
 bool OpenGLSWFrameBuffer::CreateIndexBuffer(int size, HWIndexBuffer **outIndexBuffer)
 {
-	auto obj = std::make_unique<HWIndexBuffer>();
+	std::unique_ptr<HWIndexBuffer> obj(new HWIndexBuffer());
 
 	obj->Size = size;
 
@@ -474,7 +492,7 @@ bool OpenGLSWFrameBuffer::CreateIndexBuffer(int size, HWIndexBuffer **outIndexBu
 
 bool OpenGLSWFrameBuffer::CreateTexture(const FString &name, int width, int height, int levels, int format, HWTexture **outTexture)
 {
-	auto obj = std::make_unique<HWTexture>();
+	std::unique_ptr<HWTexture> obj(new HWTexture());
 
 	obj->Format = format;
 
@@ -512,7 +530,7 @@ bool OpenGLSWFrameBuffer::CreateTexture(const FString &name, int width, int heig
 
 OpenGLSWFrameBuffer::HWTexture *OpenGLSWFrameBuffer::CopyCurrentScreen()
 {
-	auto obj = std::make_unique<HWTexture>();
+	std::unique_ptr<HWTexture> obj(new HWTexture());
 	obj->Format = GL_RGBA16F;
 
 	GLint oldBinding = 0;
@@ -591,7 +609,7 @@ void OpenGLSWFrameBuffer::DrawTriangleFans(int count, const FBVERTEX *vertices)
 
 	if (!StreamVertexBuffer)
 	{
-		StreamVertexBuffer = std::make_unique<HWVertexBuffer>();
+		StreamVertexBuffer.reset(new HWVertexBuffer());
 		glGenVertexArrays(1, (GLuint*)&StreamVertexBuffer->VertexArray);
 		glGenBuffers(1, (GLuint*)&StreamVertexBuffer->Buffer);
 		glBindVertexArray(StreamVertexBuffer->VertexArray);
@@ -628,7 +646,7 @@ void OpenGLSWFrameBuffer::DrawTriangleFans(int count, const BURNVERTEX *vertices
 
 	if (!StreamVertexBufferBurn)
 	{
-		StreamVertexBufferBurn = std::make_unique<HWVertexBuffer>();
+		StreamVertexBufferBurn.reset(new HWVertexBuffer());
 		glGenVertexArrays(1, (GLuint*)&StreamVertexBufferBurn->VertexArray);
 		glGenBuffers(1, (GLuint*)&StreamVertexBufferBurn->Buffer);
 		glBindVertexArray(StreamVertexBufferBurn->VertexArray);
@@ -659,7 +677,7 @@ void OpenGLSWFrameBuffer::DrawPoints(int count, const FBVERTEX *vertices)
 
 	if (!StreamVertexBuffer)
 	{
-		StreamVertexBuffer = std::make_unique<HWVertexBuffer>();
+		StreamVertexBuffer.reset(new HWVertexBuffer());
 		glGenVertexArrays(1, (GLuint*)&StreamVertexBuffer->VertexArray);
 		glGenBuffers(1, (GLuint*)&StreamVertexBuffer->Buffer);
 		glBindVertexArray(StreamVertexBuffer->VertexArray);
@@ -1095,7 +1113,7 @@ bool OpenGLSWFrameBuffer::IsValid()
 
 bool OpenGLSWFrameBuffer::Lock(bool buffered)
 {
-	if (LockCount++ > 0)
+	if (m_Lock++ > 0)
 	{
 		return false;
 	}
@@ -1130,16 +1148,16 @@ bool OpenGLSWFrameBuffer::Lock(bool buffered)
 
 void OpenGLSWFrameBuffer::Unlock()
 {
-	if (LockCount == 0)
+	if (m_Lock == 0)
 	{
 		return;
 	}
 
-	if (UpdatePending && LockCount == 1)
+	if (UpdatePending && m_Lock == 1)
 	{
 		Update();
 	}
-	else if (--LockCount == 0)
+	else if (--m_Lock == 0)
 	{
 		Buffer = nullptr;
 	}
@@ -1171,13 +1189,13 @@ void OpenGLSWFrameBuffer::Update()
 		return;
 	}
 
-	if (LockCount != 1)
+	if (m_Lock != 1)
 	{
 		I_FatalError("Framebuffer must have exactly 1 lock to be updated");
-		if (LockCount > 0)
+		if (m_Lock > 0)
 		{
 			UpdatePending = true;
-			--LockCount;
+			--m_Lock;
 		}
 		return;
 	}
@@ -1220,7 +1238,7 @@ void OpenGLSWFrameBuffer::Update()
 	BlitCycles.Clock();
 #endif
 
-	LockCount = 0;
+	m_Lock = 0;
 	Draw3DPart(In2D <= 1);
 	if (In2D == 0)
 	{
@@ -1276,7 +1294,7 @@ void OpenGLSWFrameBuffer::Flip()
 
 bool OpenGLSWFrameBuffer::PaintToWindow()
 {
-	if (LockCount != 0)
+	if (m_Lock != 0)
 	{
 		return false;
 	}
@@ -1662,7 +1680,7 @@ void OpenGLSWFrameBuffer::GetScreenshotBuffer(const uint8_t *&buffer, int &pitch
 
 void OpenGLSWFrameBuffer::ReleaseScreenshotBuffer()
 {
-	if (LockCount > 0)
+	if (m_Lock > 0)
 	{
 		Super::ReleaseScreenshotBuffer();
 	}
@@ -2410,7 +2428,7 @@ bool OpenGLSWFrameBuffer::OpenGLPal::Update()
 
 bool OpenGLSWFrameBuffer::Begin2D(bool copy3d)
 {
-	ClearClipRect();
+	Super::Begin2D(copy3d);
 	if (!Accel2D)
 	{
 		return false;
@@ -2493,7 +2511,7 @@ void OpenGLSWFrameBuffer::DoClear(int left, int top, int right, int bottom, int 
 {
 	if (In2D < 2)
 	{
-		Super::Clear(left, top, right, bottom, palcolor, color);
+		Super::DoClear(left, top, right, bottom, palcolor, color);
 		return;
 	}
 	if (!InScene)

@@ -1,5 +1,40 @@
+/*
+** scopebarrier.cpp
+**
+**---------------------------------------------------------------------------
+** Copyright 2017 ZZYZX
+** All rights reserved.
+**
+** Redistribution and use in source and binary forms, with or without
+** modification, are permitted provided that the following conditions
+** are met:
+**
+** 1. Redistributions of source code must retain the above copyright
+**    notice, this list of conditions and the following disclaimer.
+** 2. Redistributions in binary form must reproduce the above copyright
+**    notice, this list of conditions and the following disclaimer in the
+**    documentation and/or other materials provided with the distribution.
+** 3. The name of the author may not be used to endorse or promote products
+**    derived from this software without specific prior written permission.
+**
+** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+**---------------------------------------------------------------------------
+**
+*/
+
 #include "dobject.h"
 #include "scopebarrier.h"
+#include "types.h"
+#include "vmintern.h"
 
 
 // Note: the same object can't be both UI and Play. This is checked explicitly in the field construction and will cause esoteric errors here if found.
@@ -17,11 +52,11 @@ int FScopeBarrier::SideFromFlags(int flags)
 }
 
 // same as above, but from object flags
-int FScopeBarrier::SideFromObjectFlags(int flags)
+int FScopeBarrier::SideFromObjectFlags(EScopeFlags flags)
 {
-	if (flags & OF_UI)
+	if (flags & Scope_UI)
 		return Side_UI;
-	if (flags & OF_Play)
+	if (flags & Scope_Play)
 		return Side_Play;
 	return Side_PlainData;
 }
@@ -44,16 +79,16 @@ int FScopeBarrier::FlagsFromSide(int side)
 	}
 }
 
-int FScopeBarrier::ObjectFlagsFromSide(int side)
+EScopeFlags FScopeBarrier::ObjectFlagsFromSide(int side)
 {
 	switch (side)
 	{
 	case Side_Play:
-		return OF_Play;
+		return Scope_Play;
 	case Side_UI:
-		return OF_UI;
+		return Scope_UI;
 	default:
-		return 0;
+		return Scope_All;
 	}
 }
 
@@ -86,11 +121,12 @@ int FScopeBarrier::ChangeSideInFlags(int flags, int side)
 }
 
 // this modifies OF_ flags and sets the side properly.
-int FScopeBarrier::ChangeSideInObjectFlags(int flags, int side)
+EScopeFlags FScopeBarrier::ChangeSideInObjectFlags(EScopeFlags flags, int side)
 {
-	flags &= ~(OF_UI | OF_Play);
-	flags |= ObjectFlagsFromSide(side);
-	return flags;
+	int f = int(flags);
+	f &= ~(Scope_UI | Scope_Play);
+	f |= ObjectFlagsFromSide(side);
+	return (EScopeFlags)f;
 }
 
 FScopeBarrier::FScopeBarrier()
@@ -175,14 +211,14 @@ void FScopeBarrier::AddFlags(int flags1, int flags2, const char* name)
 // these are for vmexec.h
 void FScopeBarrier::ValidateNew(PClass* cls, int outerside)
 {
-	int innerside = FScopeBarrier::SideFromObjectFlags(cls->ObjectFlags);
+	int innerside = FScopeBarrier::SideFromObjectFlags(cls->VMType->ScopeFlags);
 	if ((outerside != innerside) && (innerside != FScopeBarrier::Side_PlainData)) // "cannot construct ui class ... from data context"
 		ThrowAbortException(X_OTHER, "Cannot construct %s class %s from %s context", FScopeBarrier::StringFromSide(innerside), cls->TypeName.GetChars(), FScopeBarrier::StringFromSide(outerside));
 }
 
 void FScopeBarrier::ValidateCall(PClass* selftype, VMFunction *calledfunc, int outerside)
 {
-	int innerside = FScopeBarrier::SideFromObjectFlags(selftype->ObjectFlags);
+	int innerside = FScopeBarrier::SideFromObjectFlags(selftype->VMType->ScopeFlags);
 	if ((outerside != innerside) && (innerside != FScopeBarrier::Side_PlainData))
 		ThrowAbortException(X_OTHER, "Cannot call %s function %s from %s context", FScopeBarrier::StringFromSide(innerside), calledfunc->PrintableName.GetChars(), FScopeBarrier::StringFromSide(outerside));
 }

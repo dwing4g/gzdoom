@@ -1,25 +1,60 @@
-﻿// Emacs style mode select	 -*- C++ -*- 
-//-----------------------------------------------------------------------------
+﻿//-----------------------------------------------------------------------------
 //
-// $Id:$
+// Copyright 1993-1996 id Software
+// Copyright 1994-1996 Raven Software
+// Copyright 1998-1998 Chi Hoang, Lee Killough, Jim Flynn, Rand Phares, Ty Halderman
+// Copyright 1999-2016 Randy Heit
+// Copyright 2002-2017 Christoph Oelckers
 //
-// Copyright (C) 1993-1996 by id Software, Inc.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-// $Log:$
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/
+//
+//-----------------------------------------------------------------------------
 //
 // DESCRIPTION:
 //		Moving object handling. Spawn functions.
 //
 //-----------------------------------------------------------------------------
+
+/* For code that originates from ZDoom the following applies:
+**
+**---------------------------------------------------------------------------
+**
+** Redistribution and use in source and binary forms, with or without
+** modification, are permitted provided that the following conditions
+** are met:
+**
+** 1. Redistributions of source code must retain the above copyright
+**    notice, this list of conditions and the following disclaimer.
+** 2. Redistributions in binary form must reproduce the above copyright
+**    notice, this list of conditions and the following disclaimer in the
+**    documentation and/or other materials provided with the distribution.
+** 3. The name of the author may not be used to endorse or promote products
+**    derived from this software without specific prior written permission.
+**
+** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+**---------------------------------------------------------------------------
+**
+*/
 
 // HEADER FILES ------------------------------------------------------------
 #include <float.h>
@@ -68,7 +103,7 @@
 #include "r_utility.h"
 #include "thingdef.h"
 #include "d_player.h"
-#include "virtual.h"
+#include "vm.h"
 #include "g_levellocals.h"
 #include "a_morph.h"
 #include "events.h"
@@ -152,9 +187,6 @@ AActor::~AActor ()
 	// Please avoid calling the destructor directly (or through delete)!
 	// Use Destroy() instead.
 }
-
-extern FFlagDef InternalActorFlagDefs[];
-extern FFlagDef ActorFlagDefs[];
 
 DEFINE_FIELD(AActor, snext)
 DEFINE_FIELD(AActor, player)
@@ -404,6 +436,7 @@ void AActor::Serialize(FSerializer &arc)
 		A("stamina", stamina)
 		("goal", goal)
 		A("waterlevel", waterlevel)
+		A("boomwaterlevel", boomwaterlevel)
 		A("minmissilechance", MinMissileChance)
 		A("spawnflags", SpawnFlags)
 		("inventory", Inventory)
@@ -632,8 +665,7 @@ bool AActor::SetState (FState *newstate, bool nofunction)
 		}
 		if (!(newstate->UseFlags & SUF_ACTOR))
 		{
-			auto so = FState::StaticFindStateOwner(newstate);
-			Printf(TEXTCOLOR_RED "State %s.%d in %s not flagged for use as an actor sprite\n", so->TypeName.GetChars(), int(newstate - so->OwnedStates), GetClass()->TypeName.GetChars());
+			Printf(TEXTCOLOR_RED "State %s in %s not flagged for use as an actor sprite\n", FState::StaticGetStateName(newstate).GetChars(), GetClass()->TypeName.GetChars());
 			state = nullptr;
 			Destroy();
 			return false;
@@ -842,7 +874,7 @@ void AActor::RemoveInventory(AInventory *item)
 				IFVIRTUALPTR(item, AInventory, DetachFromOwner)
 				{
 					VMValue params[1] = { item };
-					GlobalVMStack.Call(func, params, 1, nullptr, 0, nullptr);
+					VMCall(func, params, 1, nullptr, 0);
 				}
 
 				item->Owner = NULL;
@@ -1110,7 +1142,7 @@ AInventory *AActor::DropInventory (AInventory *item, int amt)
 	{
 		VMValue params[] = { (DObject*)item, amt };
 		VMReturn ret((void**)&drop);
-		GlobalVMStack.Call(func, params, countof(params), &ret, 1, nullptr);
+		VMCall(func, params, countof(params), &ret, 1);
 	}
 	if (drop == nullptr) return NULL;
 	drop->SetOrigin(PosPlusZ(10.), false);
@@ -1386,6 +1418,54 @@ DEFINE_ACTION_FUNCTION(AActor, ObtainInventory)
 
 //---------------------------------------------------------------------------
 //
+// FUNC P_GetRealMaxHealth
+//
+// Taken out of P_GiveBody so that the bot code can also use it to decide
+// whether to pick up an item or not.
+//
+//---------------------------------------------------------------------------
+
+int P_GetRealMaxHealth(APlayerPawn *actor, int max)
+{
+	// Max is 0 by default, preserving default behavior for P_GiveBody()
+	// calls while supporting health pickups.
+	auto player = actor->player;
+	if (max <= 0)
+	{
+		max = actor->GetMaxHealth(true);
+		// [MH] First step in predictable generic morph effects
+		if (player->morphTics)
+		{
+			if (player->MorphStyle & MORPH_FULLHEALTH)
+			{
+				if (!(player->MorphStyle & MORPH_ADDSTAMINA))
+				{
+					max -= actor->stamina + actor->BonusHealth;
+				}
+			}
+			else // old health behaviour
+			{
+				max = MAXMORPHHEALTH;
+				if (player->MorphStyle & MORPH_ADDSTAMINA)
+				{
+					max += actor->stamina + actor->BonusHealth;
+				}
+			}
+		}
+	}
+	else
+	{
+		// Bonus health should be added on top of the item's limit.
+		if (player->morphTics == 0 || (player->MorphStyle & MORPH_ADDSTAMINA))
+		{
+			max += actor->BonusHealth;
+		}
+	}
+	return max;
+}
+
+//---------------------------------------------------------------------------
+//
 // FUNC P_GiveBody
 //
 // Returns false if the body isn't needed at all.
@@ -1404,33 +1484,8 @@ bool P_GiveBody(AActor *actor, int num, int max)
 	num = clamp(num, -65536, 65536);	// prevent overflows for bad values
 	if (player != NULL)
 	{
-		// Max is 0 by default, preserving default behavior for P_GiveBody()
-		// calls while supporting health pickups.
-		if (max <= 0)
-		{
-			max = static_cast<APlayerPawn*>(actor)->GetMaxHealth(true);
-			// [MH] First step in predictable generic morph effects
-			if (player->morphTics)
-			{
-				if (player->MorphStyle & MORPH_FULLHEALTH)
-				{
-					if (!(player->MorphStyle & MORPH_ADDSTAMINA))
-					{
-						max -= player->mo->stamina + player->mo->BonusHealth;
-					}
-				}
-				else // old health behaviour
-				{
-					max = MAXMORPHHEALTH;
-					if (player->MorphStyle & MORPH_ADDSTAMINA)
-					{
-						max += player->mo->stamina + player->mo->BonusHealth;
-					}
-				}
-			}
-		}
-		// [RH] For Strife: A negative body sets you up with a percentage
-		// of your full health.
+		max = P_GetRealMaxHealth(player->mo, max);	// do not pass voodoo dolls in here.
+		// [RH] For Strife: A negative value sets you up with a percentage of your full health.
 		if (num < 0)
 		{
 			num = max * -num / 100;
@@ -1606,22 +1661,21 @@ bool AActor::IsVisibleToPlayer() const
 		(signed)(VisibleToTeam-1) != players[consoleplayer].userinfo.GetTeam() )
 		return false;
 
+	auto &vis = GetInfo()->VisibleToPlayerClass;
+	if (vis.Size() == 0) return true;	// early out for the most common case.
+
 	const player_t* pPlayer = players[consoleplayer].camera->player;
 
-	if (pPlayer && pPlayer->mo && GetClass()->VisibleToPlayerClass.Size() > 0)
+	if (pPlayer)
 	{
-		bool visible = false;
-		for(unsigned int i = 0;i < GetClass()->VisibleToPlayerClass.Size();++i)
+		for(auto cls : vis)
 		{
-			auto cls = GetClass()->VisibleToPlayerClass[i];
 			if (cls && pPlayer->mo->GetClass()->IsDescendantOf(cls))
 			{
-				visible = true;
-				break;
+				return true;
 			}
 		}
-		if (!visible)
-			return false;
+		return false;
 	}
 
 	// [BB] Passed all checks.
@@ -1683,7 +1737,7 @@ void AActor::CallTouch(AActor *toucher)
 	IFVIRTUAL(AActor, Touch)
 	{
 		VMValue params[2] = { (DObject*)this, toucher };
-		GlobalVMStack.Call(func, params, 2, nullptr, 0, nullptr);
+		VMCall(func, params, 2, nullptr, 0);
 	}
 	else Touch(toucher);
 }
@@ -3216,6 +3270,14 @@ void P_CheckFakeFloorTriggers (AActor *mo, double oldz, bool oldz_has_viewheight
 	}
 }
 
+DEFINE_ACTION_FUNCTION(AActor, CheckFakeFloorTriggers)
+{
+	PARAM_SELF_PROLOGUE(AActor);
+	PARAM_FLOAT(oldz);
+	PARAM_BOOL_DEF(oldz_has_viewh);
+	P_CheckFakeFloorTriggers(self, oldz, oldz_has_viewh);
+	return 0;
+}
 //===========================================================================
 //
 // PlayerLandedOnThing
@@ -3575,7 +3637,7 @@ int AActor::GetMissileDamage (int mask, int add)
 
 	result.IntAt(&amount);
 
-	if (GlobalVMStack.Call(DamageFunc, &param, 1, &result, 1) < 1)
+	if (VMCall(DamageFunc, &param, 1, &result, 1) < 1)
 	{ // No results
 		return 0;
 	}
@@ -3640,7 +3702,7 @@ bool AActor::CallSlam(AActor *thing)
 		VMReturn ret;
 		int retval;
 		ret.IntAt(&retval);
-		GlobalVMStack.Call(func, params, 2, &ret, 1, nullptr);
+		VMCall(func, params, 2, &ret, 1);
 		return !!retval;
 
 	}
@@ -3658,7 +3720,7 @@ int AActor::SpecialMissileHit (AActor *victim)
 		VMReturn ret;
 		int retval;
 		ret.IntAt(&retval);
-		GlobalVMStack.Call(func, params, 2, &ret, 1, nullptr);
+		VMCall(func, params, 2, &ret, 1);
 		return retval;
 	}
 	else return -1;
@@ -3718,7 +3780,7 @@ int AActor::AbsorbDamage(int damage, FName dmgtype)
 		IFVIRTUALPTR(item, AInventory, AbsorbDamage)
 		{
 			VMValue params[4] = { item, damage, dmgtype.GetIndex(), &damage };
-			GlobalVMStack.Call(func, params, 4, nullptr, 0, nullptr);
+			VMCall(func, params, 4, nullptr, 0);
 		}
 	}
 	return damage;
@@ -3738,7 +3800,7 @@ void AActor::AlterWeaponSprite(visstyle_t *vis)
 		IFVIRTUALPTR(items[i], AInventory, AlterWeaponSprite)
 		{
 			VMValue params[3] = { items[i], vis, &changed };
-			GlobalVMStack.Call(func, params, 3, nullptr, 0, nullptr);
+			VMCall(func, params, 3, nullptr, 0);
 		}
 	}
 }
@@ -3893,7 +3955,7 @@ PClassActor *AActor::GetBloodType(int type) const
 		VMValue params[] = { (DObject*)this, type };
 		PClassActor *res;
 		VMReturn ret((void**)&res);
-		GlobalVMStack.Call(func, params, countof(params), &ret, 1);
+		VMCall(func, params, countof(params), &ret, 1);
 		return res;
 	}
 	return nullptr;
@@ -4053,7 +4115,7 @@ void AActor::Tick ()
 			IFVIRTUALPTR(item, AInventory, DoEffect)
 			{
 				VMValue params[1] = { item };
-				GlobalVMStack.Call(func, params, 1, nullptr, 0, nullptr);
+				VMCall(func, params, 1, nullptr, 0);
 			}
 			item = item->Inventory;
 		}
@@ -5043,7 +5105,7 @@ PClassActor *ClassForSpawn(FName classname)
 	{
 		I_Error("Attempt to spawn actor of unknown type '%s'\n", classname.GetChars());
 	}
-	if (!cls->IsKindOf(RUNTIME_CLASS(PClassActor)))
+	if (!cls->IsDescendantOf(RUNTIME_CLASS(AActor)))
 	{
 		I_Error("Attempt to spawn non-actor of type '%s'\n", classname.GetChars());
 	}
@@ -5141,7 +5203,7 @@ void AActor::CallBeginPlay()
 	{
 		// Without the type cast this picks the 'void *' assignment...
 		VMValue params[1] = { (DObject*)this };
-		GlobalVMStack.Call(func, params, 1, nullptr, 0, nullptr);
+		VMCall(func, params, 1, nullptr, 0);
 	}
 	else BeginPlay();
 }
@@ -5232,7 +5294,7 @@ void AActor::CallActivate(AActor *activator)
 	{
 		// Without the type cast this picks the 'void *' assignment...
 		VMValue params[2] = { (DObject*)this, (DObject*)activator };
-		GlobalVMStack.Call(func, params, 2, nullptr, 0, nullptr);
+		VMCall(func, params, 2, nullptr, 0);
 	}
 	else Activate(activator);
 }
@@ -5278,7 +5340,7 @@ void AActor::CallDeactivate(AActor *activator)
 	{
 		// Without the type cast this picks the 'void *' assignment...
 		VMValue params[2] = { (DObject*)this, (DObject*)activator };
-		GlobalVMStack.Call(func, params, 2, nullptr, 0, nullptr);
+		VMCall(func, params, 2, nullptr, 0);
 	}
 	else Deactivate(activator);
 }
@@ -5584,7 +5646,7 @@ APlayerPawn *P_SpawnPlayer (FPlayerStart *mthing, int playernum, int flags)
 		IFVIRTUALPTR(p->mo, APlayerPawn, OnRespawn)
 		{
 			VMValue param = p->mo;
-			GlobalVMStack.Call(func, &param, 1, nullptr, 0);
+			VMCall(func, &param, 1, nullptr, 0);
 		}
 	}
 
@@ -5755,7 +5817,7 @@ AActor *P_SpawnMapThing (FMapThing *mthing, int position)
 		}
 
 		mask = G_SkillProperty(SKILLP_SpawnFilter);
-		if (!(mthing->SkillFilter & mask))
+		if (!(mthing->SkillFilter & mask) && !mentry->NoSkillFlags)
 		{
 			return NULL;
 		}
@@ -5865,7 +5927,7 @@ AActor *P_SpawnMapThing (FMapThing *mthing, int position)
 			Printf ("%s at (%.1f, %.1f) has no frames\n",
 					i->TypeName.GetChars(), mthing->pos.X, mthing->pos.Y);
 			i = PClass::FindActor("Unknown");
-			assert(i->IsKindOf(RUNTIME_CLASS(PClassActor)));
+			assert(i->IsDescendantOf(RUNTIME_CLASS(AActor)));
 		}
 
 	const AActor *info = GetDefaultByType (i);
@@ -7247,8 +7309,8 @@ DEFINE_ACTION_FUNCTION(AActor, SpawnPlayerMissile)
 	AActor *missileactor;
 	if (numparam == 2) angle = self->Angles.Yaw;
 	AActor *misl = P_SpawnPlayerMissile(self, x, y, z, type, angle, lt, &missileactor, nofreeaim, noautoaim, aimflags);
-	if (numret > 0) ret[0].SetPointer(misl, ATAG_OBJECT);
-	if (numret > 1) ret[1].SetPointer(missileactor, ATAG_OBJECT), numret = 2;
+	if (numret > 0) ret[0].SetObject(misl);
+	if (numret > 1) ret[1].SetObject(missileactor), numret = 2;
 	return numret;
 }
 
@@ -7457,7 +7519,7 @@ int AActor::CallDoSpecialDamage(AActor *target, int damage, FName damagetype)
 		VMReturn ret;
 		int retval;
 		ret.IntAt(&retval);
-		GlobalVMStack.Call(func, params, 4, &ret, 1, nullptr);
+		VMCall(func, params, 4, &ret, 1);
 		return retval;
 	}
 	else return DoSpecialDamage(target, damage, damagetype);
@@ -7522,7 +7584,7 @@ int AActor::CallTakeSpecialDamage(AActor *inflictor, AActor *source, int damage,
 		VMReturn ret;
 		int retval;
 		ret.IntAt(&retval);
-		GlobalVMStack.Call(func, params, 5, &ret, 1, nullptr);
+		VMCall(func, params, 5, &ret, 1);
 		return retval;
 	}
 	else return TakeSpecialDamage(inflictor, source, damage, damagetype);
@@ -7666,7 +7728,7 @@ int AActor::GetGibHealth() const
 		VMValue params[] = { (DObject*)this };
 		int h;
 		VMReturn ret(&h);
-		GlobalVMStack.Call(func, params, 1, &ret, 1);
+		VMCall(func, params, 1, &ret, 1);
 		return h;
 	}
 	return -SpawnHealth();
@@ -7686,13 +7748,13 @@ DEFINE_ACTION_FUNCTION(AActor, GetCameraHeight)
 
 FDropItem *AActor::GetDropItems() const
 {
-	return GetClass()->DropItems;
+	return GetInfo()->DropItems;
 }
 
 DEFINE_ACTION_FUNCTION(AActor, GetDropItems)
 {
 	PARAM_SELF_PROLOGUE(AActor);
-	ACTION_RETURN_OBJECT(self->GetDropItems());
+	ACTION_RETURN_POINTER(self->GetDropItems());
 }
 
 double AActor::GetGravity() const
@@ -7802,7 +7864,7 @@ int AActor::GetModifiedDamage(FName damagetype, int damage, bool passive)
 		IFVIRTUALPTR(inv, AInventory, ModifyDamage)
 		{
 			VMValue params[5] = { (DObject*)inv, damage, int(damagetype), &damage, passive };
-			GlobalVMStack.Call(func, params, 5, nullptr, 0, nullptr);
+			VMCall(func, params, 5, nullptr, 0);
 		}
 		inv = inv->Inventory;
 	}
@@ -7823,7 +7885,7 @@ int AActor::ApplyDamageFactor(FName damagetype, int damage) const
 	damage = int(damage * DamageFactor);
 	if (damage > 0)
 	{
-		damage = DamageTypeDefinition::ApplyMobjDamageFactor(damage, damagetype, GetClass()->DamageFactors);
+		damage = DamageTypeDefinition::ApplyMobjDamageFactor(damage, damagetype, &GetInfo()->DamageFactors);
 	}
 	return damage;
 }
@@ -7954,7 +8016,7 @@ DEFINE_ACTION_FUNCTION(DActorIterator, Create)
 	PARAM_PROLOGUE;
 	PARAM_INT(tid);
 	PARAM_CLASS_DEF(type, AActor);
-	ACTION_RETURN_OBJECT(new DActorIterator(type, tid));
+	ACTION_RETURN_OBJECT(Create<DActorIterator>(type, tid));
 }
 
 DEFINE_ACTION_FUNCTION(DActorIterator, Next)
@@ -8274,10 +8336,10 @@ DEFINE_ACTION_FUNCTION(AActor, ApplyDamageFactors)
 	PARAM_INT(damage);
 	PARAM_INT(defdamage);
 
-	DmgFactors *df = itemcls->DamageFactors;
-	if (df != nullptr && df->CountUsed() != 0)
+	DmgFactors &df = itemcls->ActorInfo()->DamageFactors;
+	if (df.Size() != 0)
 	{
-		ACTION_RETURN_INT(df->Apply(damagetype, damage));
+		ACTION_RETURN_INT(df.Apply(damagetype, damage));
 	}
 	else
 	{

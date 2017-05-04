@@ -31,10 +31,12 @@
 **
 */
 
-#include "gitinfo.h"
-
 #ifndef __VERSION_H__
 #define __VERSION_H__
+
+#ifdef _WIN32
+#include "gitinfo.h"
+#endif // _WIN32
 
 const char *GetGitDescription();
 const char *GetGitHash();
@@ -66,7 +68,7 @@ const char *GetVersionString();
 // Version stored in the ini's [LastRun] section.
 // Bump it if you made some configuration change that you want to
 // be able to migrate in FGameConfigFile::DoGlobalSetup().
-#define LASTRUNVERSION "214"
+#define LASTRUNVERSION "215"
 
 // Protocol version used in demos.
 // Bump it if you change existing DEM_ commands or add new ones.

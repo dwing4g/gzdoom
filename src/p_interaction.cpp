@@ -1,20 +1,24 @@
-// Emacs style mode select	 -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id:$
+// Copyright 1993-1996 id Software
+// Copyright 1994-1996 Raven Software
+// Copyright 1999-2016 Randy Heit
+// Copyright 2002-2016 Christoph Oelckers
 //
-// Copyright (C) 1993-1996 by id Software, Inc.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-// $Log:$
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/
+//
+//-----------------------------------------------------------------------------
 //
 // DESCRIPTION:
 //		Handling interactions (i.e., collisions).
@@ -58,7 +62,7 @@
 #include "d_net.h"
 #include "d_netinf.h"
 #include "a_morph.h"
-#include "virtual.h"
+#include "vm.h"
 #include "g_levellocals.h"
 #include "events.h"
 #include "actorinlines.h"
@@ -248,7 +252,7 @@ void ClientObituary (AActor *self, AActor *inflictor, AActor *attacker, int dmgf
 				VMValue params[] = { attacker, self, inflictor, mod.GetIndex(), !!(dmgflags & DMG_PLAYERATTACK) };
 				FString ret;
 				VMReturn rett(&ret);
-				GlobalVMStack.Call(func, params, countof(params), &rett, 1);
+				VMCall(func, params, countof(params), &rett, 1);
 				if (ret.IsNotEmpty()) message = ret;
 			}
 		}
@@ -326,7 +330,7 @@ void AActor::Die (AActor *source, AActor *inflictor, int dmgflags)
 		IFVIRTUALPTR(item, AInventory, OwnerDied)
 		{
 			VMValue params[1] = { item };
-			GlobalVMStack.Call(func, params, 1, nullptr, 0);
+			VMCall(func, params, 1, nullptr, 0);
 		}
 		item = next;
 	}
@@ -367,7 +371,7 @@ void AActor::Die (AActor *source, AActor *inflictor, int dmgflags)
 	{
 		VMValue params[] = { (DObject*)this };
 		VMReturn ret(&Height);
-		GlobalVMStack.Call(func, params, 1, &ret, 1);
+		VMCall(func, params, 1, &ret, 1);
 	}
 
 	// [RH] If the thing has a special, execute and remove it
@@ -408,7 +412,7 @@ void AActor::Die (AActor *source, AActor *inflictor, int dmgflags)
 					SexMessage (GStrings("SPREEKILLSELF"), buff,
 						player->userinfo.GetGender(), player->userinfo.GetName(),
 						player->userinfo.GetName());
-					StatusBar->AttachMessage (new DHUDMessageFadeOut (SmallFont, buff,
+					StatusBar->AttachMessage (Create<DHUDMessageFadeOut>(SmallFont, buff,
 							1.5f, 0.2f, 0, 0, CR_WHITE, 3.f, 0.5f), MAKE_ID('K','S','P','R'));
 				}
 			}
@@ -465,7 +469,7 @@ void AActor::Die (AActor *source, AActor *inflictor, int dmgflags)
 						{
 							SexMessage (GStrings("SPREEOVER"), buff, player->userinfo.GetGender(),
 								player->userinfo.GetName(), source->player->userinfo.GetName());
-							StatusBar->AttachMessage (new DHUDMessageFadeOut (SmallFont, buff,
+							StatusBar->AttachMessage (Create<DHUDMessageFadeOut> (SmallFont, buff,
 								1.5f, 0.2f, 0, 0, CR_WHITE, 3.f, 0.5f), MAKE_ID('K','S','P','R'));
 						}
 					}
@@ -475,7 +479,7 @@ void AActor::Die (AActor *source, AActor *inflictor, int dmgflags)
 						{
 							SexMessage (spreemsg, buff, player->userinfo.GetGender(),
 								player->userinfo.GetName(), source->player->userinfo.GetName());
-							StatusBar->AttachMessage (new DHUDMessageFadeOut (SmallFont, buff,
+							StatusBar->AttachMessage (Create<DHUDMessageFadeOut> (SmallFont, buff,
 								1.5f, 0.2f, 0, 0, CR_WHITE, 3.f, 0.5f), MAKE_ID('K','S','P','R'));
 						}
 					}
@@ -525,7 +529,7 @@ void AActor::Die (AActor *source, AActor *inflictor, int dmgflags)
 							{
 								SexMessage (multimsg, buff, player->userinfo.GetGender(),
 									player->userinfo.GetName(), source->player->userinfo.GetName());
-								StatusBar->AttachMessage (new DHUDMessageFadeOut (SmallFont, buff,
+								StatusBar->AttachMessage (Create<DHUDMessageFadeOut> (SmallFont, buff,
 									1.5f, 0.8f, 0, 0, CR_RED, 3.f, 0.5f), MAKE_ID('M','K','I','L'));
 							}
 						}
@@ -733,7 +737,7 @@ void AActor::CallDie(AActor *source, AActor *inflictor, int dmgflags)
 	IFVIRTUAL(AActor, Die)
 	{
 		VMValue params[4] = { (DObject*)this, source, inflictor, dmgflags };
-		GlobalVMStack.Call(func, params, 4, nullptr, 0, nullptr);
+		VMCall(func, params, 4, nullptr, 0);
 	}
 	else return Die(source, inflictor, dmgflags);
 }
@@ -916,7 +920,6 @@ static int DamageMobj (AActor *target, AActor *inflictor, AActor *source, int da
 	int temp;
 	int painchance = 0;
 	FState * woundstate = NULL;
-	PainChanceList * pc = NULL;
 	bool justhit = false;
 	bool plrDontThrust = false;
 	bool invulpain = false;
@@ -1123,20 +1126,27 @@ static int DamageMobj (AActor *target, AActor *inflictor, AActor *source, int da
 
 	{
 		int reflectdamage = 0;
+		bool reflecttype = false;
 		for (auto p = target->player->mo->Inventory; p != nullptr; p = p->Inventory)
 		{
 			// This picks the reflection item with the maximum efficiency for the given damage type.
 			if (p->IsKindOf(NAME_PowerReflection))
 			{
-				int mydamage = p->ApplyDamageFactor(mod, damage);
-				if (mydamage > reflectdamage) reflectdamage = mydamage;
+				double alwaysreflect = p->FloatVar(NAME_Strength);
+				int alwaysdamage = clamp(int(damage * alwaysreflect), 0, damage);
+				int mydamage = alwaysdamage + p->ApplyDamageFactor(mod, damage - alwaysdamage);
+				if (mydamage > reflectdamage)
+				{
+					reflectdamage = mydamage;
+					reflecttype = p->BoolVar(NAME_ReflectType);
+				}
 			}
 		}
 
 		if (reflectdamage > 0)
 		{
 			// use the reflect item's damage factors to get the final value here.
-			P_DamageMobj(source, nullptr, target, reflectdamage, NAME_Reflection );
+			P_DamageMobj(source, nullptr, target, reflectdamage, reflecttype? mod : NAME_Reflection );
 
 			// Reset means of death flag.
 			MeansOfDeath = mod;
@@ -1422,7 +1432,7 @@ static int DamageMobj (AActor *target, AActor *inflictor, AActor *source, int da
 				{
 					VMValue params[] = { source, target, draindmg, mod.GetIndex() };
 					VMReturn ret(&draindmg);
-					GlobalVMStack.Call(func, params, countof(params), &ret, 1);
+					VMCall(func, params, countof(params), &ret, 1);
 				}
 				if (P_GiveBody(source, draindmg))
 				{
@@ -1500,14 +1510,13 @@ fakepain: //Needed so we can skip the rest of the above, but still obey the orig
 	if (!(target->flags5 & MF5_NOPAIN) && (inflictor == NULL || !(inflictor->flags5 & MF5_PAINLESS)) &&
 		(target->player != NULL || !G_SkillProperty(SKILLP_NoPain)) && !(target->flags & MF_SKULLFLY))
 	{
-		pc = target->GetClass()->PainChances;
 		painchance = target->PainChance;
-		if (pc != NULL)
+		for (auto & pc : target->GetInfo()->PainChances)
 		{
-			int *ppc = pc->CheckKey(mod);
-			if (ppc != NULL)
+			if (pc.first == mod)
 			{
-				painchance = *ppc;
+				painchance = pc.second;
+				break;
 			}
 		}
 
@@ -1620,7 +1629,7 @@ int P_DamageMobj(AActor *target, AActor *inflictor, AActor *source, int damage, 
 		VMReturn ret;
 		int retval;
 		ret.IntAt(&retval);
-		GlobalVMStack.Call(func, params, 7, &ret, 1, nullptr);
+		VMCall(func, params, 7, &ret, 1);
 		return retval;
 	}
 	else
@@ -1772,7 +1781,7 @@ bool AActor::CallOkayToSwitchTarget(AActor *other)
 		VMValue params[] = { (DObject*)this, other };
 		int retv;
 		VMReturn ret(&retv);
-		GlobalVMStack.Call(func, params, 2, &ret, 1);
+		VMCall(func, params, 2, &ret, 1);
 		return !!retv;
 	}
 	return OkayToSwitchTarget(other);

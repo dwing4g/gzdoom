@@ -323,10 +323,17 @@ class BaseStatusBar native ui
 	native void DrawTexture(TextureID texture, Vector2 pos, int flags = 0, double Alpha = 1., Vector2 box = (-1, -1), Vector2 scale = (1, 1));
 	native void DrawImage(String texture, Vector2 pos, int flags = 0, double Alpha = 1., Vector2 box = (-1, -1), Vector2 scale = (1, 1));
 	native void DrawString(HUDFont font, String string, Vector2 pos, int flags = 0, int translation = Font.CR_UNTRANSLATED, double Alpha = 1., int wrapwidth = -1, int linespacing = 4);
+	native double, double, double, double TransformRect(double x, double y, double w, double h, int flags = 0);
 	native void Fill(Color col, double x, double y, double w, double h, int flags = 0);
 	native static String FormatNumber(int number, int minsize = 0, int maxsize = 0, int format = 0, String prefix = "");
 	native double, double, double, double StatusbarToRealCoords(double x, double y=0, double w=0, double h=0);
 	native int GetTopOfStatusBar();
+	native void SetClipRect(double x, double y, double w, double h, int flags = 0);
+	
+	void ClearClipRect()
+	{
+		screen.ClearClipRect();
+	}
 	
 	//============================================================================
 	//
@@ -446,7 +453,7 @@ class BaseStatusBar native ui
 	int, int GetAmount(class<Inventory> item)
 	{
 		let it = CPlayer.mo.FindInventory(item);
-		int ret1 = it? it.Amount : GetDefaultByType(item).Amount;
+		int ret1 = it? it.Amount : 0;
 		int ret2 = it? it.MaxAmount : GetDefaultByType(item).MaxAmount;
 		return ret1, ret2;
 	}
@@ -574,7 +581,7 @@ class BaseStatusBar native ui
 	//
 	//============================================================================
 
-	bool CheckDiplayName(String displayname)
+	bool CheckDisplayName(String displayname)
 	{
 		if (CPlayer == null) return false;
 		return displayname == PlayerPawn.GetPrintableDisplayName(CPlayer.mo.GetClass());
@@ -762,14 +769,14 @@ class BaseStatusBar native ui
 			// Draw item count
 			if (am_showitems)
 			{
-				DrawString(mSmallFont, String.Format("%s\34%c %d/%d", Stringtable.Localize("$AM_ITEMS"), crdefault+65, level.found_items, level.total_items), (1, y), 0, highlight);
+				DrawString(mSmallFont, String.Format("%s\34%c %d/%d", Stringtable.Localize("$AM_ITEMS"), crdefault+65, level.found_items, level.total_items), (textdist, y), 0, highlight);
 			}
 		}
 
 		String mapname = level.FormatMapName(crdefault);
-		BrokenLines lines = SmallFont.BreakLines(mapname, SCREENWIDTH / scale.X);
+		BrokenLines lines = SmallFont.BreakLines(mapname, int(SCREENWIDTH / scale.X));
 		int numlines = lines.Count();
-		int finalwidth = SmallFont.StringWidth(lines.StringAt(numlines-1)) * scale.X;
+		int finalwidth = int(SmallFont.StringWidth(lines.StringAt(numlines-1)) * scale.X);
 		
 		// calculate the top of the statusbar including any protrusion and transform it from status bar to screen space.
 		double tmp, hres;
@@ -806,18 +813,22 @@ class BaseStatusBar native ui
 		// that can obey AltHUD rules - which this cannot.
 		Vector2 pos = (-20, POWERUPICONSIZE * 5 / 4);
 		double maxpos = screen.GetWidth() / 2;
-		for (let item = CPlayer.mo.Inv; item != NULL; item = item.Inv)
+		for (let iitem = CPlayer.mo.Inv; iitem != NULL; iitem = iitem.Inv)
 		{
-			let icon = item.GetPowerupIcon();
-			if (icon.IsValid())
+			let item = Powerup(iitem);
+			if (item != null)
 			{
-				// Each icon gets a 32x32 block.
-				DrawTexture(icon, pos, DI_SCREEN_RIGHT_TOP, 1.0, (POWERUPICONSIZE, POWERUPICONSIZE));
-				pos.x -= POWERUPICONSIZE;
-				if (pos.x < -maxpos)
+				let icon = item.GetPowerupIcon();
+				if (icon.IsValid() && !item.IsBlinking())
 				{
-					pos.x = -20;
-					pos.y += POWERUPICONSIZE * 3 / 2;
+					// Each icon gets a 32x32 block.
+					DrawTexture(icon, pos, DI_SCREEN_RIGHT_TOP, 1.0, (POWERUPICONSIZE, POWERUPICONSIZE));
+					pos.x -= POWERUPICONSIZE;
+					if (pos.x < -maxpos)
+					{
+						pos.x = -20;
+						pos.y += POWERUPICONSIZE * 3 / 2;
+					}
 				}
 			}
 		}
@@ -962,7 +973,7 @@ class BaseStatusBar native ui
 	//
 	//============================================================================
 
-	void DrawBar(String ongfx, String offgfx, double curval, double maxval, Vector2 position, int border, int vertical, int flags = 0, double alpha = 1.)
+	void DrawBar(String ongfx, String offgfx, double curval, double maxval, Vector2 position, int border, int vertical, int flags = 0)
 	{
 		let ontex = TexMan.CheckForTexture(ongfx, TexMan.TYPE_MiscPatch);
 		if (!ontex.IsValid()) return;
@@ -971,7 +982,7 @@ class BaseStatusBar native ui
 		Vector2 texsize = TexMan.GetScaledSize(ontex);
 		[position, flags] = AdjustPosition(position, flags, texsize.X, texsize.Y);
 		
-		double value = clamp(curval / maxval, 0, 1);
+		double value = (maxval != 0) ? clamp(curval / maxval, 0, 1) : 0;
 		if(border != 0) value = 1. - value; //invert since the new drawing method requires drawing the bg on the fg.
 		
 		
@@ -984,13 +995,17 @@ class BaseStatusBar native ui
 		double sizeOfImage = (horizontal ? texsize.X - border*2 : texsize.Y - border*2);
 		Clip[(!horizontal) | ((!reverse)<<1)] = sizeOfImage - sizeOfImage *value;
 		
+		// preserve the active clipping rectangle
+		int cx, cy, cw, ch;
+		[cx, cy, cw, ch] = screen.GetClipRect();
+
 		if(border != 0)
 		{
 			for(int i = 0; i < 4; i++) Clip[i] += border;
 
 			//Draw the whole foreground
 			DrawTexture(ontex, position, flags | DI_ITEM_LEFT_TOP);
-			// SetClip
+			SetClipRect(position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3], flags);
 		}
 		
 		if (offtex.IsValid() && TexMan.GetScaledSize(offtex) == texsize) DrawTexture(offtex, position, flags | DI_ITEM_LEFT_TOP);
@@ -998,10 +1013,11 @@ class BaseStatusBar native ui
 		
 		if (border == 0) 
 		{
-			// SetClip
+			SetClipRect(position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3], flags);
 			DrawTexture(ontex, position, flags | DI_ITEM_LEFT_TOP);
 		}
-		// UnsetClip
+		// restore the previous clipping rectangle
+		screen.SetClipRect(cx, cy, cw, ch);
 	}
 	
 	//============================================================================

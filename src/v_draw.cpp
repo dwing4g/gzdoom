@@ -62,8 +62,9 @@
 #include "r_data/colormaps.h"
 #include "g_levellocals.h"
 #include "textures.h"
+#include "vm.h"
 
-CUSTOM_CVAR(Int, uiscale, 2, CVAR_ARCHIVE | CVAR_NOINITCALL)
+CUSTOM_CVAR(Int, uiscale, 0, CVAR_ARCHIVE | CVAR_NOINITCALL)
 {
 	if (self < 0)
 	{
@@ -82,9 +83,9 @@ int GetUIScale(int altval)
 	if (altval > 0) scaleval = altval;
 	else if (uiscale == 0)
 	{
-		// Default should try to scale to 640x480
-		int vscale = screen->GetHeight() / 640;
-		int hscale = screen->GetWidth() / 480;
+		// Default should try to scale to 640x400
+		int vscale = screen->GetHeight() / 400;
+		int hscale = screen->GetWidth() / 640;
 		scaleval = clamp(vscale, 1, hscale);
 	}
 	else scaleval = uiscale;
@@ -185,9 +186,27 @@ void DCanvas::DrawTextureParms(FTexture *img, DrawParms &parms)
 void DCanvas::SetClipRect(int x, int y, int w, int h)
 {
 	clipleft = clamp(x, 0, GetWidth());
-	clipwidth = clamp(w, 0, GetWidth() - x);
+	clipwidth = clamp(w, -1, GetWidth() - x);
 	cliptop = clamp(y, 0, GetHeight());
-	clipwidth = clamp(w, 0, GetHeight() - y);
+	clipheight = clamp(h, -1, GetHeight() - y);
+}
+
+DEFINE_ACTION_FUNCTION(_Screen, SetClipRect)
+{
+	PARAM_PROLOGUE;
+	PARAM_INT(x);
+	PARAM_INT(y);
+	PARAM_INT(w);
+	PARAM_INT(h);
+	screen->SetClipRect(x, y, w, h);
+	return 0;
+}
+
+DEFINE_ACTION_FUNCTION(_Screen, ClearClipRect)
+{
+	PARAM_PROLOGUE;
+	screen->ClearClipRect();
+	return 0;
 }
 
 void DCanvas::GetClipRect(int *x, int *y, int *w, int *h)
@@ -197,6 +216,19 @@ void DCanvas::GetClipRect(int *x, int *y, int *w, int *h)
 	if (w) *w = clipwidth;
 	if (h) *h = clipheight;
 }
+
+DEFINE_ACTION_FUNCTION(_Screen, GetClipRect)
+{
+	PARAM_PROLOGUE;
+	int x, y, w, h;
+	screen->GetClipRect(&x, &y, &w, &h);
+	if (numret > 0) ret[0].SetInt(x);
+	if (numret > 1) ret[1].SetInt(y);
+	if (numret > 2) ret[2].SetInt(w);
+	if (numret > 3) ret[3].SetInt(h);
+	return MIN(numret, 4);
+}
+
 
 bool DCanvas::SetTextureParms(DrawParms *parms, FTexture *img, double xx, double yy) const
 {
@@ -746,7 +778,7 @@ bool DCanvas::ParseDrawTextureTags(FTexture *img, double x, double y, uint32_t t
 		if (parms->lclip < clipleft) parms->lclip = clipleft;
 		if (parms->rclip > clipleft + clipwidth) parms->rclip = clipleft + clipwidth;
 		if (parms->uclip < cliptop) parms->uclip = cliptop;
-		if (parms->dclip < cliptop + clipheight) parms->uclip = cliptop + clipheight;
+		if (parms->dclip > cliptop + clipheight) parms->dclip = cliptop + clipheight;
 	}
 
 	if (parms->uclip >= parms->dclip || parms->lclip >= parms->rclip)

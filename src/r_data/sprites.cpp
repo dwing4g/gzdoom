@@ -1,3 +1,25 @@
+//-----------------------------------------------------------------------------
+//
+// Copyright 1993-1996 id Software
+// Copyright 1999-2016 Randy Heit
+// Copyright 2005-2016 Christoph Oelckers
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/
+//
+//-----------------------------------------------------------------------------
+//
+
 
 #include "doomtype.h"
 #include "w_wad.h"
@@ -14,6 +36,7 @@
 #include "r_data/sprites.h"
 #include "r_data/voxels.h"
 #include "textures/textures.h"
+#include "vm.h"
 
 void gl_InitModels();
 
@@ -41,7 +64,7 @@ PalEntry		OtherGameSkinPalette[256];
 //
 //===========================================================================
 
-FTextureID spritedef_t::GetSpriteFrame(int frame, int rot, DAngle ang, bool *mirror)
+FTextureID spritedef_t::GetSpriteFrame(int frame, int rot, DAngle ang, bool *mirror, bool flipagain)
 {
 	if ((unsigned)frame >= numframes)
 	{
@@ -54,9 +77,17 @@ FTextureID spritedef_t::GetSpriteFrame(int frame, int rot, DAngle ang, bool *mir
 		spriteframe_t *sprframe = &SpriteFrames[spriteframes + frame];
 		if (rot == -1)
 		{
-			if (sprframe->Texture[0] == sprframe->Texture[1])
+			if ((sprframe->Texture[0] == sprframe->Texture[1]) && flipagain)
+			{
+				rot = (360.0 - ang + 45.0 / 2 * 9).BAMs() >> 28;
+			}
+			else if (sprframe->Texture[0] == sprframe->Texture[1])
 			{
 				rot = (ang + 45.0 / 2 * 9).BAMs() >> 28;
+			}
+			else if (flipagain)
+			{
+				rot = (360.0 - ang + (45.0 / 2 * 9 - 180.0 / 16)).BAMs() >> 28;
 			}
 			else
 			{

@@ -42,6 +42,7 @@
 #include "i_system.h"
 #include "v_video.h"
 #include "g_level.h"
+#include "vm.h"
 
 gameinfo_t gameinfo;
 
@@ -352,8 +353,8 @@ void FMapInfoParser::ParseGameInfo()
 		GAMEINFOKEY_STRINGARRAY(PrecachedClasses, "precacheclasses", 0, false)
 		GAMEINFOKEY_STRINGARRAY(PrecachedTextures, "precachetextures", 0, false)
 		GAMEINFOKEY_SOUNDARRAY(PrecachedSounds, "precachesounds", 0, false)
-		GAMEINFOKEY_STRINGARRAY(EventHandlers, "addeventhandlers", 0, true)
-		GAMEINFOKEY_STRINGARRAY(EventHandlers, "eventhandlers", 0, false)
+		GAMEINFOKEY_STRINGARRAY(EventHandlers, "addeventhandlers", 0, false)
+		GAMEINFOKEY_STRINGARRAY(EventHandlers, "eventhandlers", 0, true)
 		GAMEINFOKEY_STRING(PauseSign, "pausesign")
 		GAMEINFOKEY_STRING(quitSound, "quitSound")
 		GAMEINFOKEY_STRING(BorderFlat, "borderFlat")
@@ -370,6 +371,7 @@ void FMapInfoParser::ParseGameInfo()
 		GAMEINFOKEY_STRING_STAMPED(statusbarclass, "statusbarclass", statusbarclassfile)
 		GAMEINFOKEY_MUSIC(intermissionMusic, intermissionOrder, "intermissionMusic")
 		GAMEINFOKEY_STRING(CursorPic, "CursorPic")
+		GAMEINFOKEY_STRING(MessageBoxClass, "MessageBoxClass")
 		GAMEINFOKEY_BOOL(noloopfinalemusic, "noloopfinalemusic")
 		GAMEINFOKEY_BOOL(drawreadthis, "drawreadthis")
 		GAMEINFOKEY_BOOL(swapmenu, "swapmenu")

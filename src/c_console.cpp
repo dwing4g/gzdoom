@@ -68,6 +68,7 @@
 #include "gstrings.h"
 #include "c_consolebuffer.h"
 #include "g_levellocals.h"
+#include "vm.h"
 
 FString FStringFormat(VM_ARGS); // extern from thingdef_data.cpp
 
@@ -1808,7 +1809,6 @@ static const char bar2[] = TEXTCOLOR_RED "\n\35\36\36\36\36\36\36\36\36\36\36\36
 						  "\36\36\36\36\36\36\36\36\36\36\36\36\37" TEXTCOLOR_GREEN "\n";
 static const char bar3[] = TEXTCOLOR_RED "\n\35\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36"
 						  "\36\36\36\36\36\36\36\36\36\36\36\36\37" TEXTCOLOR_NORMAL "\n";
-static const char logbar[] = "\n<------------------------------->\n";
 
 void C_MidPrint (FFont *font, const char *msg)
 {
@@ -1821,7 +1821,7 @@ void C_MidPrint (FFont *font, const char *msg)
 		AddToConsole (-1, msg);
 		AddToConsole (-1, bar3);
 
-		StatusBar->AttachMessage (new DHUDMessage (font, msg, 1.5f, 0.375f, 0, 0,
+		StatusBar->AttachMessage (Create<DHUDMessage>(font, msg, 1.5f, 0.375f, 0, 0,
 			(EColorRange)PrintColors[PRINTLEVELS], con_midtime), MAKE_ID('C','N','T','R'));
 	}
 	else
@@ -1838,7 +1838,7 @@ void C_MidPrintBold (FFont *font, const char *msg)
 		AddToConsole (-1, msg);
 		AddToConsole (-1, bar3);
 
-		StatusBar->AttachMessage (new DHUDMessage (font, msg, 1.5f, 0.375f, 0, 0,
+		StatusBar->AttachMessage (Create<DHUDMessage> (font, msg, 1.5f, 0.375f, 0, 0,
 			(EColorRange)PrintColors[PRINTLEVELS+1], con_midtime), MAKE_ID('C','N','T','R'));
 	}
 	else

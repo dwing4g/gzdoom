@@ -36,12 +36,17 @@
 #include "dobject.h"
 #include "v_text.h"
 #include "stats.h"
+#include "c_dispatch.h"
 #include "templates.h"
+#include "vmintern.h"
+#include "types.h"
 
 cycle_t VMCycles[10];
 int VMCalls[10];
 
+#if 0
 IMPLEMENT_CLASS(VMException, false, false)
+#endif
 
 TArray<VMFunction *> VMFunction::AllFunctions;
 
@@ -97,7 +102,7 @@ void VMScriptFunction::Alloc(int numops, int numkonstd, int numkonstf, int numko
 						 numkonstd * sizeof(int) +
 						 numkonstf * sizeof(double) +
 						 numkonsts * sizeof(FString) +
-						 numkonsta * (sizeof(FVoidObj) + 1) +
+						 numkonsta * sizeof(FVoidObj) +
 						 numlinenumbers * sizeof(FStatementInfo));
 	Code = (VMOP *)mem;
 	mem = (void *)((VMOP *)mem + numops);
@@ -273,9 +278,7 @@ VMFrameStack::~VMFrameStack()
 
 VMFrame *VMFrameStack::AllocFrame(VMScriptFunction *func)
 {
-	int size = VMFrame::FrameSize(func->NumRegD, func->NumRegF, func->NumRegS, func->NumRegA,
-		func->MaxParam, func->ExtraSpace);
-	VMFrame *frame = Alloc(size);
+	VMFrame *frame = Alloc(func->StackSize);
 	frame->Func = func;
 	frame->NumRegD = func->NumRegD;
 	frame->NumRegF = func->NumRegF;
@@ -425,9 +428,8 @@ VMFrame *VMFrameStack::PopFrame()
 //
 //===========================================================================
 
-int VMFrameStack::Call(VMFunction *func, VMValue *params, int numparams, VMReturn *results, int numresults, VMException **trap)
+int VMCall(VMFunction *func, VMValue *params, int numparams, VMReturn *results, int numresults/*, VMException **trap*/)
 {
-	assert(this == &GlobalVMStack);	// why would anyone even want to create a local stack?
 	bool allocated = false;
 	try
 	{	
@@ -454,16 +456,18 @@ int VMFrameStack::Call(VMFunction *func, VMValue *params, int numparams, VMRetur
 			{
 				VMCycles[0].Clock();
 				VMCalls[0]++;
-				AllocFrame(static_cast<VMScriptFunction *>(func));
+				auto &stack = GlobalVMStack;
+				stack.AllocFrame(static_cast<VMScriptFunction *>(func));
 				allocated = true;
-				VMFillParams(params, TopFrame(), numparams);
-				int numret = VMExec(this, code, results, numresults);
-				PopFrame();
+				VMFillParams(params, stack.TopFrame(), numparams);
+				int numret = VMExec(&stack, code, results, numresults);
+				stack.PopFrame();
 				VMCycles[0].Unclock();
 				return numret;
 			}
 		}
 	}
+#if 0
 	catch (VMException *exception)
 	{
 		if (allocated)
@@ -477,11 +481,12 @@ int VMFrameStack::Call(VMFunction *func, VMValue *params, int numparams, VMRetur
 		}
 		throw;
 	}
+#endif
 	catch (...)
 	{
 		if (allocated)
 		{
-			PopFrame();
+			GlobalVMStack.PopFrame();
 		}
 		throw;
 	}
@@ -578,10 +583,12 @@ void NullParam(const char *varname)
 	ThrowAbortException(X_READ_NIL, "In function parameter %s", varname);
 }
 
+#if 0
 void ThrowVMException(VMException *x)
 {
 	throw x;
 }
+#endif
 
 
 ADD_STAT(VM)
@@ -601,3 +608,32 @@ ADD_STAT(VM)
 	VMCalls[0] = 0;
 	return FStringf("VM time in last 10 tics: %f ms, %d calls, peak = %f ms", added, addedc, peak);
 }
+
+//-----------------------------------------------------------------------------
+//
+//
+//
+//-----------------------------------------------------------------------------
+CCMD(vmengine)
+{
+	if (argv.argc() == 2)
+	{
+		if (stricmp(argv[1], "default") == 0)
+		{
+			VMSelectEngine(VMEngine_Default);
+			return;
+		}
+		else if (stricmp(argv[1], "checked") == 0)
+		{
+			VMSelectEngine(VMEngine_Checked);
+			return;
+		}
+		else if (stricmp(argv[1], "unchecked") == 0)
+		{
+			VMSelectEngine(VMEngine_Unchecked);
+			return;
+		}
+	}
+	Printf("Usage: vmengine <default|checked|unchecked>\n");
+}
+

@@ -1853,6 +1853,7 @@ HUDMNU_HEXENFLASHES				= "Hexen weapon flashes";
 HUDMNU_POISONFLASHES			= "Poison damage flashes";
 HUDMNU_ICEFLASHES				= "Ice death flashes";
 HUDMNU_HAZARDFLASHES			= "Poison Buildup flashes";
+HUDMNU_SCALEOPT					= "Scaling Options";
 
 // Scaling options
 SCALEMNU_TITLE					= "Scaling Options";
@@ -1863,6 +1864,9 @@ SCALEMNU_STATBAR				= "Status bar";
 SCALEMNU_HUD					= "Fullscreen HUD";
 SCALEMNU_ALTHUD					= "Alternative HUD";
 SCALEMNU_HUDASPECT				= "HUD preserves aspect ratio";
+SCALEMNU_USEUI					= "Use default scale";
+SCALEMNU_USEFS					= "Scale to fullscreen";
+SCALEMNU_ADAPT					= "Adapt to screen size";
 
 // AltHUD Options
 ALTHUDMNU_TITLE					= "Alternative HUD";
@@ -2124,22 +2128,10 @@ SNDMNU_UNDERWATERREVERB	= "Underwater reverb";
 SNDMNU_RANDOMIZEPITCHES	= "Randomize pitches";
 SNDMNU_CHANNELS			= "Sound channels";
 SNDMNU_BACKEND			= "Sound backend";
-SNDMNU_FMOD				= "FMOD options";
 SNDMNU_OPENAL			= "OpenAL options";
 SNDMNU_RESTART			= "Restart sound";
 SNDMNU_ADVANCED			= "Advanced options";
 SNDMNU_MODREPLAYER		= "Module replayer options";
-
-// Fmod Options
-FMODMNU_TITLE			= "FMOD OPTIONS";
-FMODMNU_WATERCUTOFF		= "Underwater cutoff";
-FMODMNU_OUTPUTSYSTEM	= "Output system";
-FMODMNU_OUTPUTFORMAT	= "Output format";
-FMODMNU_SPEAKERMODE		= "Speaker mode";
-FMODMNU_RESAMPLER		= "Resampler";
-FMODMNU_HRTFFILTER		= "HRTF filter";
-FMODMNU_BUFFERSIZE		= "Buffer size";
-FMODMNU_BUFFERCOUNT		= "Buffer count";
 
 // OpenAL Options
 OPENALMNU_TITLE				= "OPENAL OPTIONS";
@@ -2149,6 +2141,7 @@ OPENALMNU_ENABLEEFX			= "Enable EFX";
 // Advanced Sound Options
 ADVSNDMNU_TITLE				= "ADVANCED SOUND OPTIONS";
 ADVSNDMNU_SAMPLERATE		= "Sample rate";
+ADVSNDMNU_HRTF				= "HRTF";
 ADVSNDMNU_OPLSYNTHESIS		= "OPL Synthesis";
 ADVSNDMNU_OPLNUMCHIPS		= "Number of emulated OPL chips";
 ADVSNDMNU_OPLFULLPAN		= "Full MIDI stereo panning";
@@ -2169,6 +2162,7 @@ ADVSNDMNU_TIMIDITYCHORUS	= "Chorus";
 ADVSNDMNU_TIMIDITYVOLUME	= "Relative volume";
 ADVSNDMNU_WILDMIDI			= "WildMidi";
 ADVSNDMNU_WILDMIDICONFIG	= "WildMidi config file";
+ADVSNDMNU_SELCONFIG			= "Select configuration";
 
 // Module Replayer Options
 MODMNU_TITLE			= "MODULE REPLAYER OPTIONS";
@@ -2227,6 +2221,7 @@ JOYMNU_NOAXES = "No configurable axes";
 // Option Values
 OPTVAL_OFF					= "Off";
 OPTVAL_ON					= "On";
+OPTVAL_AUTO					= "Auto";
 OPTVAL_MALE					= "Male";
 OPTVAL_FEMALE				= "Female";
 OPTVAL_OTHER				= "Other";
@@ -2424,7 +2419,6 @@ OPTSTR_5POINT1				= "5.1 speakers";
 OPTSTR_7POINT1				= "7.1 speakers";
 OPTSTR_NOINTERPOLATION		= "No interpolation";
 OPTSTR_SPLINE				= "Spline";
-OPTSTR_FMOD					= "FMOD Ex";
 OPTSTR_OPENAL				= "OpenAL";
 
 
@@ -2677,7 +2671,7 @@ GLTEXMNU_SORTDRAWLIST 	= "Sort draw lists by texture";
 
 // Dynamic Light Options
 GLLIGHTMNU_TITLE 			= "DYNAMIC LIGHTS";
-GLLIGHTMNU_LIGHTSENABLED 	= "Dynamic Lights enabled";
+GLLIGHTMNU_LIGHTSENABLED 	= "Dynamic Lights (OpenGL)";
 GLLIGHTMNU_LIGHTDEFS		= "Enable light definitions";
 GLLIGHTMNU_CLIPLIGHTS 		= "Clip lights";
 GLLIGHTMNU_LIGHTSPRITES 	= "Lights affect sprites";
@@ -2811,5 +2805,14 @@ TCMNU_TRUECOLOR				= "True color output";
 TCMNU_MINFILTER				= "Linear filter when downscaling";
 TCMNU_MAGFILTER				= "Linear filter when upscaling";
 TCMNU_MIPMAP					= "Use mipmapped textures";
-TCMNU_DYNLIGHTS				= "Dynamic lights";
+TCMNU_DYNLIGHTS				= "Dynamic lights (Software)";
 
+// SVE strings:
+
+TAG_TALISMANRED = "Red Talisman";
+TAG_TALISMANGREEN = "Green Talisman";
+TAG_TALISMANBLUE = "Blue Talisman";
+MSG_TALISMANRED = "You have a feeling that it wasn't to be touched...";
+MSG_TALISMANGREEN = "Whatever it is, it doesn't belong in this world...";
+MSG_TALISMANBLUE = "It must do something...";
+MSG_TALISMANPOWER = "You have super strength!";

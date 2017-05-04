@@ -84,14 +84,16 @@
 #include "r_utility.h"
 #include "p_spec.h"
 #include "serializer.h"
-#include "virtual.h"
+#include "vm.h"
 #include "events.h"
+#include "dobjgc.h"
 
 #include "gi.h"
 
 #include "g_hub.h"
 #include "g_levellocals.h"
 #include "actorinlines.h"
+#include "vm.h"
 
 #include <string.h>
 
@@ -180,11 +182,14 @@ CCMD (map)
 	}
 	if (argv.argc() > 1)
 	{
+		const char *mapname = argv[1];
+		if (!strcmp(mapname, "*")) mapname = level.MapName.GetChars();
+
 		try
 		{
-			if (!P_CheckMapData(argv[1]))
+			if (!P_CheckMapData(mapname))
 			{
-				Printf ("No map %s\n", argv[1]);
+				Printf ("No map %s\n", mapname);
 			}
 			else
 			{
@@ -198,7 +203,7 @@ CCMD (map)
 					deathmatch = true;
 					multiplayernext = true;
 				}
-				G_DeferedInitNew (argv[1]);
+				G_DeferedInitNew (mapname);
 			}
 		}
 		catch(CRecoverableError &error)
@@ -227,11 +232,14 @@ CCMD(recordmap)
 	}
 	if (argv.argc() > 2)
 	{
+		const char *mapname = argv[2];
+		if (!strcmp(mapname, "*")) mapname = level.MapName.GetChars();
+
 		try
 		{
-			if (!P_CheckMapData(argv[2]))
+			if (!P_CheckMapData(mapname))
 			{
-				Printf("No map %s\n", argv[2]);
+				Printf("No map %s\n", mapname);
 			}
 			else
 			{
@@ -245,10 +253,10 @@ CCMD(recordmap)
 					deathmatch = true;
 					multiplayernext = true;
 				}
-				G_DeferedInitNew(argv[2]);
+				G_DeferedInitNew(mapname);
 				gameaction = ga_recordgame;
 				newdemoname = argv[1];
-				newdemomap = argv[2];
+				newdemomap = mapname;
 			}
 		}
 		catch (CRecoverableError &error)
@@ -1018,7 +1026,7 @@ void G_DoLoadLevel (int position, bool autosave)
 	level.starttime = gametic;
 
 	G_UnSnapshotLevel (!savegamerestore);	// [RH] Restore the state of the level.
-	G_FinishTravel ();
+	int pnumerr = G_FinishTravel ();
 	// For each player, if they are viewing through a player, make sure it is themselves.
 	for (int ii = 0; ii < MAXPLAYERS; ++ii)
 	{
@@ -1058,7 +1066,11 @@ void G_DoLoadLevel (int position, bool autosave)
 	// [RH] Always save the game when entering a new level.
 	if (autosave && !savegamerestore && disableautosave < 1)
 	{
-		DAutosaver GCCNOWARN *dummy = new DAutosaver;
+		DAutosaver GCCNOWARN *dummy = Create<DAutosaver>();
+	}
+	if (pnumerr > 0)
+	{
+		I_Error("no start for player %d found.", pnumerr);
 	}
 }
 
@@ -1223,13 +1235,14 @@ void G_StartTravel ()
 //
 //==========================================================================
 
-void G_FinishTravel ()
+int G_FinishTravel ()
 {
 	TThinkerIterator<APlayerPawn> it (STAT_TRAVELLING);
 	APlayerPawn *pawn, *pawndup, *oldpawn, *next;
 	AInventory *inv;
 	FPlayerStart *start;
 	int pnum;
+	int failnum = 0;
 
 	// 
 	APlayerPawn* pawns[MAXPLAYERS];
@@ -1256,8 +1269,7 @@ void G_FinishTravel ()
 			else
 			{
 				// Could not find a start for this player at all. This really should never happen but if it does, let's better abort.
-				DThinker::DestroyThinkersInList(STAT_TRAVELLING);
-				I_Error ("No player %d start to travel to!\n", pnum + 1);
+				if (failnum == 0) failnum = pnum + 1;
 			}
 		}
 		oldpawn = pawndup;
@@ -1285,7 +1297,7 @@ void G_FinishTravel ()
 			pawn->Floorclip = pawndup->Floorclip;
 			pawn->waterlevel = pawndup->waterlevel;
 		}
-		else
+		else if (failnum == 0)	// In the failure case this may run into some undefined data.
 		{
 			P_FindFloorCeiling(pawn);
 		}
@@ -1318,8 +1330,7 @@ void G_FinishTravel ()
 			IFVIRTUALPTR(inv, AInventory, Travelled)
 			{
 				VMValue params[1] = { inv };
-				VMFrameStack stack;
-				GlobalVMStack.Call(func, params, 1, nullptr, 0, nullptr);
+				VMCall(func, params, 1, nullptr, 0);
 			}
 		}
 		if (ib_compatflags & BCOMPATF_RESETPLAYERSPEED)
@@ -1336,6 +1347,7 @@ void G_FinishTravel ()
 	// Since this list is excluded from regular thinker cleaning, anything that may survive through here
 	// will endlessly multiply and severely break the following savegames or just simply crash on broken pointers.
 	DThinker::DestroyThinkersInList(STAT_TRAVELLING);
+	return failnum;
 }
  
 //==========================================================================
@@ -1438,6 +1450,13 @@ bool FLevelLocals::IsJumpingAllowed() const
 	return !(flags & LEVEL_JUMP_NO);
 }
 
+DEFINE_ACTION_FUNCTION(FLevelLocals, IsJumpingAllowed)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FLevelLocals);
+	ACTION_RETURN_BOOL(self->IsJumpingAllowed());
+}
+
+
 //==========================================================================
 //
 //
@@ -1450,6 +1469,12 @@ bool FLevelLocals::IsCrouchingAllowed() const
 	if (dmflags & DF_YES_CROUCH)
 		return true;
 	return !(flags & LEVEL_CROUCH_NO);
+}
+
+DEFINE_ACTION_FUNCTION(FLevelLocals, IsCrouchingAllowed)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FLevelLocals);
+	ACTION_RETURN_BOOL(self->IsCrouchingAllowed());
 }
 
 //==========================================================================
@@ -1465,6 +1490,13 @@ bool FLevelLocals::IsFreelookAllowed() const
 		return true;
 	return !(flags & LEVEL_FREELOOK_NO);
 }
+
+DEFINE_ACTION_FUNCTION(FLevelLocals, IsFreelookAllowed)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FLevelLocals);
+	ACTION_RETURN_BOOL(self->IsFreelookAllowed());
+}
+
 
 //==========================================================================
 //
@@ -1920,6 +1952,7 @@ DEFINE_FIELD_BIT(FLevelLocals, flags2, missilesactivateimpact, LEVEL2_MISSILESAC
 DEFINE_FIELD_BIT(FLevelLocals, flags2, monsterfallingdamage, LEVEL2_MONSTERFALLINGDAMAGE)
 DEFINE_FIELD_BIT(FLevelLocals, flags2, checkswitchrange, LEVEL2_CHECKSWITCHRANGE)
 DEFINE_FIELD_BIT(FLevelLocals, flags2, polygrind, LEVEL2_POLYGRIND)
+DEFINE_FIELD_BIT(FLevelLocals, flags2, allowrespawn, LEVEL2_ALLOWRESPAWN)
 DEFINE_FIELD_BIT(FLevelLocals, flags2, nomonsters, LEVEL2_NOMONSTERS)
 DEFINE_FIELD_BIT(FLevelLocals, flags2, frozen, LEVEL2_FROZEN)
 DEFINE_FIELD_BIT(FLevelLocals, flags2, infinite_flight, LEVEL2_INFINITE_FLIGHT)
