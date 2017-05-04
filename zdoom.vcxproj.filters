@@ -200,9 +200,6 @@
     <ClCompile Include="src\dobjtype.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\doomdef.cpp">
-      <Filter>!Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\doomstat.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
@@ -321,9 +318,6 @@
       <Filter>!Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\p_acs.cpp">
-      <Filter>!Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\p_buildmap.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\p_ceiling.cpp">
@@ -458,9 +452,6 @@
     <ClCompile Include="src\sc_man.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\skins.cpp">
-      <Filter>!Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\SkylineBinPack.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
@@ -589,9 +580,6 @@
     </ClCompile>
     <ClCompile Include="src\intermission\intermission_parse.cpp">
       <Filter>intermission</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sound\fmodsound.cpp">
-      <Filter>Audio Files</Filter>
     </ClCompile>
     <ClCompile Include="src\sound\i_music.cpp">
       <Filter>Audio Files</Filter>
@@ -1250,12 +1238,6 @@
     <ClCompile Include="src\sound\oplsynth\fmopl.cpp">
       <Filter>Audio Files\oplsynth</Filter>
     </ClCompile>
-    <ClCompile Include="src\sound\oplsynth\mlopl.cpp">
-      <Filter>Audio Files\oplsynth</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sound\oplsynth\mlopl_io.cpp">
-      <Filter>Audio Files\oplsynth</Filter>
-    </ClCompile>
     <ClCompile Include="src\sound\oplsynth\nukedopl3.cpp">
       <Filter>Audio Files\oplsynth</Filter>
     </ClCompile>
@@ -1385,6 +1367,18 @@
     <ClCompile Include="src\textures\shadertexture.cpp">
       <Filter>Render Data\Textures</Filter>
     </ClCompile>
+    <ClCompile Include="src\scripting\types.cpp">
+      <Filter>scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\musicformats\music_libsndfile.cpp">
+      <Filter>Audio Files\musicformats</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\oplsynth\musicblock.cpp">
+      <Filter>Audio Files\oplsynth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sound\oplsynth\oplio.cpp">
+      <Filter>Audio Files\oplsynth</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\sc_man_scanner.h">
@@ -1409,9 +1403,6 @@
       <Filter>!Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\b_bot.H">
-      <Filter>!Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\basicinlines.h">
       <Filter>!Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\basictypes.h">
@@ -1465,9 +1456,6 @@
     <ClInclude Include="src\d_protocol.h">
       <Filter>!Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\d_ticcmd.h">
-      <Filter>!Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\decallib.h">
       <Filter>!Header Files</Filter>
     </ClInclude>
@@ -1501,13 +1489,7 @@
     <ClInclude Include="src\edata.h">
       <Filter>!Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\f_finale.h">
-      <Filter>!Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\f_wipe.h">
-      <Filter>!Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\farchive.h">
       <Filter>!Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\files.h">
@@ -1528,9 +1510,6 @@
     <ClInclude Include="src\gametype.h">
       <Filter>!Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\gccinlines.h">
-      <Filter>!Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\gi.h">
       <Filter>!Header Files</Filter>
     </ClInclude>
@@ -1544,9 +1523,6 @@
       <Filter>!Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\i_cd.h">
-      <Filter>!Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\i_movie.h">
       <Filter>!Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\i_net.h">
@@ -1601,9 +1577,6 @@
       <Filter>!Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\memarena.h">
-      <Filter>!Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\mscinlines.h">
       <Filter>!Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\mus2midi.h">
@@ -1717,9 +1690,6 @@
     <ClInclude Include="src\strnatcmp.h">
       <Filter>!Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Tables.h">
-      <Filter>!Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\tarray.h">
       <Filter>!Header Files</Filter>
     </ClInclude>
@@ -1799,12 +1769,6 @@
       <Filter>win32</Filter>
     </ClInclude>
     <ClInclude Include="src\sound\efx.h">
-      <Filter>Audio Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\sound\fmod_wrap.h">
-      <Filter>Audio Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\sound\fmodsound.h">
       <Filter>Audio Files</Filter>
     </ClInclude>
     <ClInclude Include="src\sound\i_music.h">

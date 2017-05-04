@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -26,7 +26,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -37,13 +37,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -490,6 +490,7 @@
     <ClCompile Include="src\scripting\thingdef.cpp" />
     <ClCompile Include="src\scripting\thingdef_data.cpp" />
     <ClCompile Include="src\scripting\thingdef_properties.cpp" />
+    <ClCompile Include="src\scripting\types.cpp" />
     <ClCompile Include="src\scripting\vm\vmexec.cpp" />
     <ClCompile Include="src\scripting\vm\vmframe.cpp" />
     <ClCompile Include="src\scripting\zscript\ast.cpp" />
@@ -510,6 +511,7 @@
     <ClCompile Include="src\sound\musicformats\music_dumb.cpp" />
     <ClCompile Include="src\sound\musicformats\music_gme.cpp" />
     <ClCompile Include="src\sound\musicformats\music_hmi_midiout.cpp" />
+    <ClCompile Include="src\sound\musicformats\music_libsndfile.cpp" />
     <ClCompile Include="src\sound\musicformats\music_midistream.cpp" />
     <ClCompile Include="src\sound\musicformats\music_mus_midiout.cpp" />
     <ClCompile Include="src\sound\musicformats\music_opl.cpp" />
@@ -518,10 +520,10 @@
     <ClCompile Include="src\sound\musicformats\music_xmi_midiout.cpp" />
     <ClCompile Include="src\sound\oplsynth\dosbox\opl.cpp" />
     <ClCompile Include="src\sound\oplsynth\fmopl.cpp" />
-    <ClCompile Include="src\sound\oplsynth\mlopl.cpp" />
-    <ClCompile Include="src\sound\oplsynth\mlopl_io.cpp" />
+    <ClCompile Include="src\sound\oplsynth\musicblock.cpp" />
     <ClCompile Include="src\sound\oplsynth\nukedopl3.cpp" />
     <ClCompile Include="src\sound\oplsynth\OPL3.cpp" />
+    <ClCompile Include="src\sound\oplsynth\oplio.cpp" />
     <ClCompile Include="src\sound\oplsynth\opl_mus_player.cpp" />
     <ClCompile Include="src\sound\timidity\common.cpp" />
     <ClCompile Include="src\sound\timidity\instrum.cpp" />
@@ -575,7 +577,6 @@
     <ClCompile Include="src\dobject.cpp" />
     <ClCompile Include="src\dobjgc.cpp" />
     <ClCompile Include="src\dobjtype.cpp" />
-    <ClCompile Include="src\doomdef.cpp" />
     <ClCompile Include="src\doomstat.cpp" />
     <ClCompile Include="src\dsectoreffect.cpp" />
     <ClCompile Include="src\dthinker.cpp" />
@@ -616,7 +617,6 @@
     <ClCompile Include="src\p_3dfloors.cpp" />
     <ClCompile Include="src\p_3dmidtex.cpp" />
     <ClCompile Include="src\p_acs.cpp" />
-    <ClCompile Include="src\p_buildmap.cpp" />
     <ClCompile Include="src\p_ceiling.cpp" />
     <ClCompile Include="src\p_conversation.cpp" />
     <ClCompile Include="src\p_doors.cpp" />
@@ -661,7 +661,6 @@
     <ClCompile Include="src\s_sndseq.cpp" />
     <ClCompile Include="src\s_sound.cpp" />
     <ClCompile Include="src\sc_man.cpp" />
-    <ClCompile Include="src\skins.cpp" />
     <ClCompile Include="src\SkylineBinPack.cpp" />
     <ClCompile Include="src\st_stuff.cpp" />
     <ClCompile Include="src\statistics.cpp" />
@@ -705,7 +704,6 @@
     <ClCompile Include="src\win32\win32video.cpp" />
     <ClCompile Include="src\intermission\intermission.cpp" />
     <ClCompile Include="src\intermission\intermission_parse.cpp" />
-    <ClCompile Include="src\sound\fmodsound.cpp" />
     <ClCompile Include="src\sound\i_music.cpp" />
     <ClCompile Include="src\sound\i_sound.cpp" />
     <ClCompile Include="src\sound\music_midi_base.cpp" />
@@ -785,7 +783,6 @@
     <ClInclude Include="src\announcer.h" />
     <ClInclude Include="src\autosegs.h" />
     <ClInclude Include="src\b_bot.H" />
-    <ClInclude Include="src\basicinlines.h" />
     <ClInclude Include="src\basictypes.h" />
     <ClInclude Include="src\c_bind.h" />
     <ClInclude Include="src\c_console.h" />
@@ -803,7 +800,6 @@
     <ClInclude Include="src\d_netinf.h" />
     <ClInclude Include="src\d_player.h" />
     <ClInclude Include="src\d_protocol.h" />
-    <ClInclude Include="src\d_ticcmd.h" />
     <ClInclude Include="src\decallib.h" />
     <ClInclude Include="src\dobject.h" />
     <ClInclude Include="src\dobjtype.h" />
@@ -815,22 +811,18 @@
     <ClInclude Include="src\dsectoreffect.h" />
     <ClInclude Include="src\dthinker.h" />
     <ClInclude Include="src\edata.h" />
-    <ClInclude Include="src\f_finale.h" />
     <ClInclude Include="src\f_wipe.h" />
-    <ClInclude Include="src\farchive.h" />
     <ClInclude Include="src\files.h" />
     <ClInclude Include="src\g_game.h" />
     <ClInclude Include="src\g_hub.h" />
     <ClInclude Include="src\g_level.h" />
     <ClInclude Include="src\gameconfigfile.h" />
     <ClInclude Include="src\gametype.h" />
-    <ClInclude Include="src\gccinlines.h" />
     <ClInclude Include="src\gi.h" />
     <ClInclude Include="src\gstrings.h" />
     <ClInclude Include="src\GuillotineBinPack.h" />
     <ClInclude Include="src\hu_stuff.h" />
     <ClInclude Include="src\i_cd.h" />
-    <ClInclude Include="src\i_movie.h" />
     <ClInclude Include="src\i_net.h" />
     <ClInclude Include="src\i_video.h" />
     <ClInclude Include="src\Info.h" />
@@ -849,7 +841,6 @@
     <ClInclude Include="src\m_swap.h" />
     <ClInclude Include="src\md5.h" />
     <ClInclude Include="src\memarena.h" />
-    <ClInclude Include="src\mscinlines.h" />
     <ClInclude Include="src\mus2midi.h" />
     <ClInclude Include="src\name.h" />
     <ClInclude Include="src\namedef.h" />
@@ -887,7 +878,6 @@
     <ClInclude Include="src\stats.h" />
     <ClInclude Include="src\stringtable.h" />
     <ClInclude Include="src\strnatcmp.h" />
-    <ClInclude Include="src\Tables.h" />
     <ClInclude Include="src\tarray.h" />
     <ClInclude Include="src\teaminfo.h" />
     <ClInclude Include="src\tempfiles.h" />
@@ -915,8 +905,6 @@
     <ClInclude Include="src\win32\resource.h" />
     <ClInclude Include="src\win32\win32iface.h" />
     <ClInclude Include="src\sound\efx.h" />
-    <ClInclude Include="src\sound\fmod_wrap.h" />
-    <ClInclude Include="src\sound\fmodsound.h" />
     <ClInclude Include="src\sound\i_music.h" />
     <ClInclude Include="src\sound\i_musicinterns.h" />
     <ClInclude Include="src\sound\i_sound.h" />
