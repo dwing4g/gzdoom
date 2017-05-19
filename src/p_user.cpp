@@ -2105,7 +2105,7 @@ void P_FallingDamage (AActor *actor)
 		}
 		if (vel >= 63)
 		{ // automatic death
-			damage = 1000000;
+			damage = TELEFRAG_DAMAGE;
 		}
 		else
 		{
@@ -2126,7 +2126,7 @@ void P_FallingDamage (AActor *actor)
 		}
 		if (vel >= 84)
 		{ // automatic death
-			damage = 1000000;
+			damage = TELEFRAG_DAMAGE;
 		}
 		else
 		{
@@ -2156,9 +2156,10 @@ void P_FallingDamage (AActor *actor)
 	{
 		S_Sound (actor, CHAN_AUTO, "*land", 1, ATTN_NORM);
 		P_NoiseAlert (actor, actor, true);
-		if (damage == 1000000 && (actor->player->cheats & (CF_GODMODE | CF_BUDDHA)))
+		if (damage >= TELEFRAG_DAMAGE && ((actor->player->cheats & (CF_GODMODE | CF_BUDDHA) ||
+			(actor->FindInventory(PClass::FindActor(NAME_PowerBuddha), true) != nullptr))))
 		{
-			damage = 999;
+			damage = TELEFRAG_DAMAGE - 1;
 		}
 	}
 	P_DamageMobj (actor, NULL, NULL, damage, NAME_Falling);

@@ -71,6 +71,10 @@
 
 #include "swrenderer/scene/r_light.h"
 
+#ifndef NO_SSE
+#include <immintrin.h>
+#endif
+
 CVAR(Int, gl_showpacks, 0, 0)
 #ifndef WIN32 // Defined in fb_d3d9 for Windows
 CVAR(Bool, vid_hwaalines, true, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
@@ -88,6 +92,7 @@ EXTERN_CVAR(Float, Gamma)
 EXTERN_CVAR(Bool, vid_vsync)
 EXTERN_CVAR(Float, transsouls)
 EXTERN_CVAR(Int, vid_refreshrate)
+EXTERN_CVAR(Bool, gl_legacy_mode)
 
 CVAR(Int, vid_max_width, 0, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
 CVAR(Int, vid_max_height, 0, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
@@ -201,6 +206,13 @@ OpenGLSWFrameBuffer::OpenGLSWFrameBuffer(void *hMonitor, int width, int height, 
 	
 	const char *glversion = (const char*)glGetString(GL_VERSION);
 	bool isGLES = (glversion && strlen(glversion) > 10 && memcmp(glversion, "OpenGL ES ", 10) == 0);
+
+	// GL 3.0 is mostly broken on MESA drivers which really are the only relevant case here that doesn't fulfill the requirements based on version number alone.
+#ifdef _WIN32
+	gl_legacy_mode = !ogl_IsVersionGEQ(3, 0);
+#else
+	gl_legacy_mode = !ogl_IsVersionGEQ(3, 1);
+#endif
 	if (!isGLES && ogl_IsVersionGEQ(3, 0) == 0)
 	{
 		Printf("OpenGL acceleration requires at least OpenGL 3.0. No Acceleration will be used.\n");
@@ -2383,6 +2395,41 @@ bool OpenGLSWFrameBuffer::OpenGLPal::Update()
 	// See explanation in UploadPalette() for skipat rationale.
 	skipat = MIN(numEntries, DoColorSkip ? 256 - 8 : 256);
 
+#ifndef NO_SSE
+	// Manual SSE vectorized version here to workaround a bug in GCC's auto-vectorizer
+
+	int sse_count = skipat / 4 * 4;
+	for (i = 0; i < sse_count; i += 4)
+	{
+		_mm_storeu_si128((__m128i*)(&buff[i]), _mm_loadu_si128((__m128i*)(&pal[i])));
+	}
+	switch (skipat - i)
+	{
+	// fall through is intentional
+	case 3: buff[i] = pal[i].d; i++;
+	case 2: buff[i] = pal[i].d; i++;
+	case 1: buff[i] = pal[i].d; i++;
+	default: i++;
+	}
+	sse_count = numEntries / 4 * 4;
+	__m128i alphamask = _mm_set1_epi32(0xff000000);
+	while (i < sse_count)
+	{
+		__m128i lastcolor = _mm_loadu_si128((__m128i*)(&pal[i - 1]));
+		__m128i color = _mm_loadu_si128((__m128i*)(&pal[i]));
+		_mm_storeu_si128((__m128i*)(&buff[i]), _mm_or_si128(_mm_and_si128(alphamask, color), _mm_andnot_si128(alphamask, lastcolor)));
+		i += 4;
+	}
+	switch (numEntries - i)
+	{
+	// fall through is intentional
+	case 3: buff[i] = ColorARGB(pal[i].a, pal[i - 1].r, pal[i - 1].g, pal[i - 1].b); i++;
+	case 2: buff[i] = ColorARGB(pal[i].a, pal[i - 1].r, pal[i - 1].g, pal[i - 1].b); i++;
+	case 1: buff[i] = ColorARGB(pal[i].a, pal[i - 1].r, pal[i - 1].g, pal[i - 1].b); i++;
+	default: break;
+	}
+
+#else
 	for (i = 0; i < skipat; ++i)
 	{
 		buff[i] = ColorARGB(pal[i].a, pal[i].r, pal[i].g, pal[i].b);
@@ -2391,6 +2438,7 @@ bool OpenGLSWFrameBuffer::OpenGLPal::Update()
 	{
 		buff[i] = ColorARGB(pal[i].a, pal[i - 1].r, pal[i - 1].g, pal[i - 1].b);
 	}
+#endif
 	if (numEntries > 1)
 	{
 		i = numEntries - 1;
@@ -2544,7 +2592,7 @@ void OpenGLSWFrameBuffer::DoDim(PalEntry color, float amount, int x1, int y1, in
 	}
 	if (In2D < 2)
 	{
-		Super::Dim(color, amount, x1, y1, w, h);
+		Super::DoDim(color, amount, x1, y1, w, h);
 		return;
 	}
 	if (!InScene)
