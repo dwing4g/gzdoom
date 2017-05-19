@@ -497,7 +497,6 @@
     <ClCompile Include="src\scripting\zscript\zcc_compile.cpp" />
     <ClCompile Include="src\scripting\zscript\zcc_parser.cpp" />
     <ClCompile Include="src\serializer.cpp" />
-    <ClCompile Include="src\sound\mididevices\music_audiotoolbox_mididevice.cpp" />
     <ClCompile Include="src\sound\mididevices\music_fluidsynth_mididevice.cpp" />
     <ClCompile Include="src\sound\mididevices\music_opldumper_mididevice.cpp" />
     <ClCompile Include="src\sound\mididevices\music_opl_mididevice.cpp" />
