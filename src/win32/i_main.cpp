@@ -81,6 +81,7 @@
 #include "doomstat.h"
 #include "r_utility.h"
 #include "g_levellocals.h"
+#include "s_sound.h"
 
 #include "stats.h"
 #include "st_start.h"
@@ -820,6 +821,13 @@ void ShowErrorPane(const char *text)
 	}
 }
 
+void PeekThreadedErrorPane()
+{
+	// Allow SendMessage from another thread to call its message handler so that it can display the crash dialog
+	MSG msg;
+	PeekMessage(&msg, 0, 0, 0, PM_NOREMOVE);
+}
+
 //==========================================================================
 //
 // DoMain
@@ -1060,6 +1068,7 @@ void DoMain (HINSTANCE hInstance)
 	{
 		I_ShutdownGraphics ();
 		RestoreConView ();
+		S_StopMusic(true);
 		I_FlushBufferedConsoleStuff();
 		if (error.GetMessage ())
 		{
