@@ -390,10 +390,8 @@ namespace swrenderer
 
 	void RenderOpaquePass::AddPolyobjs(subsector_t *sub)
 	{
-		if (sub->BSP == nullptr || sub->BSP->bDirty)
-		{
-			sub->BuildPolyBSP();
-		}
+		Thread->PreparePolyObject(sub);
+
 		if (sub->BSP->Nodes.Size() == 0)
 		{
 			RenderSubsector(&sub->BSP->Subsectors[0]);
@@ -779,11 +777,17 @@ namespace swrenderer
 
 	void RenderOpaquePass::RenderScene()
 	{
+		if (Thread->MainThread)
+			WallCycles.Clock();
+
 		SeenSpriteSectors.clear();
 		SeenActors.clear();
 
 		InSubsector = nullptr;
 		RenderBSPNode(level.HeadNode());	// The head node is the last node output.
+
+		if (Thread->MainThread)
+			WallCycles.Unclock();
 	}
 
 	//
@@ -1007,7 +1011,7 @@ namespace swrenderer
 				DAngle sprangle = thing->GetSpriteAngle((sprite.pos - viewpoint.Pos).Angle(), viewpoint.TicFrac);
 				bool flipX;
 
-				FTextureID tex = sprdef->GetSpriteFrame(thing->frame, -1, sprangle, &flipX, !!(thing->flags7 & MF7_SPRITEFLIP));
+				FTextureID tex = sprdef->GetSpriteFrame(thing->frame, -1, sprangle, &flipX, !!(thing->renderflags & RF_SPRITEFLIP));
 				if (tex.isValid())
 				{
 					if (flipX)

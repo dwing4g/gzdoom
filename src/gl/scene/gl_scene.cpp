@@ -83,7 +83,7 @@ CVAR(Bool, gl_sort_textures, false, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
 EXTERN_CVAR (Bool, cl_capfps)
 EXTERN_CVAR (Bool, r_deathcamera)
 EXTERN_CVAR (Float, underwater_fade_scalar)
-
+EXTERN_CVAR (Float, r_visibility)
 
 extern bool NoInterpolateView;
 
@@ -785,6 +785,8 @@ sector_t * GLSceneDrawer::RenderViewpoint (AActor * camera, GL_IRECT * bounds, f
 	R_SetupFrame (r_viewpoint, r_viewwindow, camera);
 	SetViewArea();
 
+	GLRenderer->mGlobVis = R_GetGlobVis(r_viewwindow, r_visibility);
+
 	// We have to scale the pitch to account for the pixel stretching, because the playsim doesn't know about this and treats it as 1:1.
 	double radPitch = r_viewpoint.Angles.Pitch.Normalized180().Radians();
 	double angx = cos(radPitch);
@@ -819,6 +821,8 @@ sector_t * GLSceneDrawer::RenderViewpoint (AActor * camera, GL_IRECT * bounds, f
 	stereo3dMode.SetUp();
 	for (int eye_ix = 0; eye_ix < stereo3dMode.eye_count(); ++eye_ix)
 	{
+		if (eye_ix > 0)
+			SetFixedColormap(camera->player); // reiterate color map for each eye, so night vision goggles work in both eyes
 		const s3d::EyePose * eye = stereo3dMode.getEyePose(eye_ix);
 		eye->SetUp();
 		GLRenderer->SetOutputViewport(bounds);

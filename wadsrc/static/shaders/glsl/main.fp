@@ -103,34 +103,31 @@ vec4 getTexel(vec2 st)
 //===========================================================================
 float R_DoomLightingEquation(float light)
 {
-	// Calculated from r_visibility. It differs between walls, floor and sprites.
-	//
-	// Wall: globVis = r_WallVisibility
-	// Floor: r_FloorVisibility / abs(plane.Zat0 - ViewPos.Z)
-	// Sprite: same as wall
-	// All are calculated in R_SetVisibility and seem to be decided by the
-	// aspect ratio amongst other things.
-	//
-	// 1706 is the value for walls on 1080p 16:9 displays.
-	float globVis = 1706.0;
-
-	/* L is the integer light level used in the game */
+	// L is the integer light level used in the game
 	float L = light * 255.0;
 
-	/* z is the depth in view/eye space, positive going into the screen */
-	float z = pixelpos.w;
+	// z is the depth in view/eye space, positive going into the screen
+	float z;
+	if ((uPalLightLevels >> 8) == 2)
+	{
+		z = distance(pixelpos.xyz, uCameraPos.xyz);
+	}
+	else 
+	{
+		z = pixelpos.w;
+	}
 
-	/* The zdoom light equation */
-	float vis = globVis / z;
-	float shade = 64.0 - (L + 12.0) * 32.0/128.0;
+	// The zdoom light equation
+	float vis = min(uGlobVis / z, 24.0 / 32.0);
+	float shade = 2.0 - (L + 12.0) / 128.0;
 	float lightscale;
-	if (uPalLightLevels != 0)
-		lightscale = clamp(float(int(shade - min(24.0, vis))) / 32.0, 0.0, 31.0/32.0);
+	if ((uPalLightLevels & 0xff) != 0)
+		lightscale = float(-int(-(shade - vis) * 32.0)) / 32.0;
 	else
-		lightscale = clamp((shade - min(24.0, vis)) / 32.0, 0.0, 31.0/32.0);
+		lightscale = shade - vis;
 
 	// Result is the normalized colormap index (0 bright .. 1 dark)
-	return lightscale;
+	return clamp(lightscale, 0.0, 31.0 / 32.0);
 }
 
 //===========================================================================
