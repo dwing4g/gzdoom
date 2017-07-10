@@ -422,7 +422,6 @@
     <ClCompile Include="src\gl\system\gl_swwipe.cpp" />
     <ClCompile Include="src\gl\system\gl_threads.cpp" />
     <ClCompile Include="src\gl\system\gl_wipe.cpp" />
-    <ClCompile Include="src\gl\textures\gl_bitmap.cpp" />
     <ClCompile Include="src\gl\textures\gl_hirestex.cpp" />
     <ClCompile Include="src\gl\textures\gl_hqresize.cpp" />
     <ClCompile Include="src\gl\textures\gl_hwtexture.cpp" />
@@ -477,6 +476,7 @@
     <ClCompile Include="src\p_pusher.cpp" />
     <ClCompile Include="src\p_scroll.cpp" />
     <ClCompile Include="src\p_secnodes.cpp" />
+    <ClCompile Include="src\r_data\r_vanillatrans.cpp" />
     <ClCompile Include="src\scripting\backend\codegen.cpp" />
     <ClCompile Include="src\scripting\backend\dynarrays.cpp" />
     <ClCompile Include="src\scripting\backend\scopebarrier.cpp" />

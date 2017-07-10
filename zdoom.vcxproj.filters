@@ -929,9 +929,6 @@
     <ClCompile Include="src\gl\system\gl_wipe.cpp">
       <Filter>gl</Filter>
     </ClCompile>
-    <ClCompile Include="src\gl\textures\gl_bitmap.cpp">
-      <Filter>gl</Filter>
-    </ClCompile>
     <ClCompile Include="src\gl\textures\gl_hirestex.cpp">
       <Filter>gl</Filter>
     </ClCompile>
@@ -1375,6 +1372,9 @@
     </ClCompile>
     <ClCompile Include="src\sound\oplsynth\oplio.cpp">
       <Filter>Audio Files\oplsynth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\r_data\r_vanillatrans.cpp">
+      <Filter>Render Data\Resource Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
