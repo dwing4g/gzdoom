@@ -398,6 +398,7 @@
     <ClCompile Include="src\gl\shaders\gl_colormapshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_fxaashader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_lensshader.cpp" />
+    <ClCompile Include="src\gl\shaders\gl_postprocessshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_present3dRowshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_presentshader.cpp" />
     <ClCompile Include="src\gl\shaders\gl_shader.cpp" />
