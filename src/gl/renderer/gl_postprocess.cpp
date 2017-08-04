@@ -65,6 +65,7 @@
 #include "gl/shaders/gl_postprocessshader.h"
 #include "gl/renderer/gl_2ddrawer.h"
 #include "gl/stereo3d/gl_stereo3d.h"
+#include "r_videoscale.h"
 
 //==========================================================================
 //
@@ -854,8 +855,16 @@ void FGLRenderer::DrawPresentTexture(const GL_IRECT &box, bool applyGamma)
 	glViewport(box.left, box.top, box.width, box.height);
 
 	glActiveTexture(GL_TEXTURE0);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	if (ViewportLinearScale())
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
+	else
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	}
 
 	mPresentShader->Bind();
 	mPresentShader->InputTexture.Set(0);

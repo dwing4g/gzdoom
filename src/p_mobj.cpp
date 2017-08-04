@@ -352,6 +352,8 @@ DEFINE_FIELD(AActor, StealthAlpha)
 DEFINE_FIELD(AActor, WoundHealth)
 DEFINE_FIELD(AActor, BloodColor)
 DEFINE_FIELD(AActor, BloodTranslation)
+DEFINE_FIELD(AActor, RenderHidden)
+DEFINE_FIELD(AActor, RenderRequired)
 
 //==========================================================================
 //
@@ -526,8 +528,9 @@ void AActor::Serialize(FSerializer &arc)
 		A("woundhealth", WoundHealth)
 		A("rdfactor", RadiusDamageFactor)
 		A("selfdamagefactor", SelfDamageFactor)
-		A("stealthalpha", StealthAlpha);
-
+		A("stealthalpha", StealthAlpha)
+		A("renderhidden", RenderHidden)
+		A("renderrequired", RenderRequired);
 }
 
 #undef A
@@ -8328,7 +8331,7 @@ DEFINE_ACTION_FUNCTION(AActor, AccuracyFactor)
 DEFINE_ACTION_FUNCTION(AActor, CountsAsKill)
 {
 	PARAM_SELF_PROLOGUE(AActor);
-	ACTION_RETURN_FLOAT(self->CountsAsKill());
+	ACTION_RETURN_BOOL(self->CountsAsKill());
 }
 
 DEFINE_ACTION_FUNCTION(AActor, IsZeroDamage)
