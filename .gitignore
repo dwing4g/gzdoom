@@ -57,3 +57,4 @@
 /src/r_drawersasm.obj
 /src/r_drawersasm.o
 .vs
+*.log

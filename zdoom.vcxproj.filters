@@ -1379,6 +1379,9 @@
     <ClCompile Include="src\gl\shaders\gl_postprocessshader.cpp">
       <Filter>gl</Filter>
     </ClCompile>
+    <ClCompile Include="src\r_videoscale.cpp">
+      <Filter>!Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\sc_man_scanner.h">

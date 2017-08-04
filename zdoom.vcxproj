@@ -478,6 +478,7 @@
     <ClCompile Include="src\p_scroll.cpp" />
     <ClCompile Include="src\p_secnodes.cpp" />
     <ClCompile Include="src\r_data\r_vanillatrans.cpp" />
+    <ClCompile Include="src\r_videoscale.cpp" />
     <ClCompile Include="src\scripting\backend\codegen.cpp" />
     <ClCompile Include="src\scripting\backend\dynarrays.cpp" />
     <ClCompile Include="src\scripting\backend\scopebarrier.cpp" />
