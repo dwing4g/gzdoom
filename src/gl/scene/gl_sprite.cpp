@@ -328,7 +328,10 @@ void GLSprite::Draw(int pass)
 	{
 		if (gl_lights && GLRenderer->mLightCount && mDrawer->FixedColormap == CM_DEFAULT && !fullbright)
 		{
-			gl_SetDynSpriteLight(gl_light_sprites ? actor : NULL, gl_light_particles ? particle : NULL);
+			if (modelframe && !particle)
+				gl_SetDynModelLight(gl_light_sprites ? actor : NULL, false);
+			else
+				gl_SetDynSpriteLight(gl_light_sprites ? actor : NULL, gl_light_particles ? particle : NULL);
 		}
 		sector_t *cursec = actor ? actor->Sector : particle ? particle->subsector->sector : nullptr;
 		if (cursec != nullptr)
@@ -682,7 +685,7 @@ void GLSprite::Process(AActor* thing, sector_t * sector, int thruportal)
 
 	// check renderrequired vs ~r_rendercaps, if anything matches we don't support that feature,
 	// check renderhidden vs r_rendercaps, if anything matches we do support that feature and should hide it.
-	if (!r_debug_disable_vis_filter && (!!(thing->RenderRequired & ~r_renderercaps)) ||
+	if ((!r_debug_disable_vis_filter && !!(thing->RenderRequired & ~r_renderercaps)) ||
 		(!!(thing->RenderHidden & r_renderercaps)))
 		return;
 

@@ -30,68 +30,74 @@
 #include "polyrenderer/poly_renderer.h"
 #include "r_sky.h"
 #include "polyrenderer/scene/poly_light.h"
+#include "p_lnspec.h"
 
 EXTERN_CVAR(Int, r_3dfloors)
 
-void RenderPolyPlane::RenderPlanes(const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, PolyCull &cull, subsector_t *sub, uint32_t ceilingSubsectorDepth, uint32_t floorSubsectorDepth, uint32_t stencilValue, double skyCeilingHeight, double skyFloorHeight, std::vector<std::unique_ptr<PolyDrawSectorPortal>> &sectorPortals)
+void RenderPolyPlane::Render3DPlanes(const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, subsector_t *sub, uint32_t stencilValue)
 {
-	RenderPolyPlane plane;
+	if (!r_3dfloors || sub->sector->CenterFloor() == sub->sector->CenterCeiling())
+		return;
 
-	if (r_3dfloors)
+	const auto &viewpoint = PolyRenderer::Instance()->Viewpoint;
+
+	auto frontsector = sub->sector;
+	auto &ffloors = frontsector->e->XFloor.ffloors;
+
+	// 3D floor floors
+	for (int i = 0; i < (int)ffloors.Size(); i++)
 	{
-		const auto &viewpoint = PolyRenderer::Instance()->Viewpoint;
+		F3DFloor *fakeFloor = ffloors[i];
+		if (!(fakeFloor->flags & FF_EXISTS)) continue;
+		if (!fakeFloor->model) continue;
+		//if (!(fakeFloor->flags & FF_NOSHADE) || (fakeFloor->flags & (FF_RENDERPLANES | FF_RENDERSIDES)))
+		//	R_3D_AddHeight(fakeFloor->top.plane, frontsector);
+		if (!(fakeFloor->flags & FF_RENDERPLANES)) continue;
+		if (fakeFloor->alpha == 0) continue;
+		if (fakeFloor->flags & FF_THISINSIDE && fakeFloor->flags & FF_INVERTSECTOR) continue;
+		//fakeFloor->alpha
 
-		auto frontsector = sub->sector;
-		auto &ffloors = frontsector->e->XFloor.ffloors;
-
-		// 3D floor floors
-		for (int i = 0; i < (int)ffloors.Size(); i++)
+		double fakeHeight = fakeFloor->top.plane->ZatPoint(frontsector->centerspot);
+		if (fakeFloor->bottom.plane->isSlope() || (fakeHeight < viewpoint.Pos.Z && fakeHeight > frontsector->floorplane.ZatPoint(frontsector->centerspot)))
 		{
-			F3DFloor *fakeFloor = ffloors[i];
-			if (!(fakeFloor->flags & FF_EXISTS)) continue;
-			if (!fakeFloor->model) continue;
-			if (fakeFloor->bottom.plane->isSlope()) continue;
-			//if (!(fakeFloor->flags & FF_NOSHADE) || (fakeFloor->flags & (FF_RENDERPLANES | FF_RENDERSIDES)))
-			//	R_3D_AddHeight(fakeFloor->top.plane, frontsector);
-			if (!(fakeFloor->flags & FF_RENDERPLANES)) continue;
-			if (fakeFloor->alpha == 0) continue;
-			if (fakeFloor->flags & FF_THISINSIDE && fakeFloor->flags & FF_INVERTSECTOR) continue;
-			//fakeFloor->alpha
-
-			double fakeHeight = fakeFloor->top.plane->ZatPoint(frontsector->centerspot);
-			if (fakeHeight < viewpoint.Pos.Z && fakeHeight > frontsector->floorplane.ZatPoint(frontsector->centerspot))
-			{
-				plane.Render3DFloor(worldToClip, clipPlane, sub, floorSubsectorDepth, stencilValue, false, fakeFloor);
-			}
-		}
-
-		// 3D floor ceilings
-		for (int i = 0; i < (int)ffloors.Size(); i++)
-		{
-			F3DFloor *fakeFloor = ffloors[i];
-			if (!(fakeFloor->flags & FF_EXISTS)) continue;
-			if (!fakeFloor->model) continue;
-			if (fakeFloor->top.plane->isSlope()) continue;
-			//if (!(fakeFloor->flags & FF_NOSHADE) || (fakeFloor->flags & (FF_RENDERPLANES | FF_RENDERSIDES)))
-			//	R_3D_AddHeight(fakeFloor->bottom.plane, frontsector);
-			if (!(fakeFloor->flags & FF_RENDERPLANES)) continue;
-			if (fakeFloor->alpha == 0) continue;
-			if (!(fakeFloor->flags & FF_THISINSIDE) && (fakeFloor->flags & (FF_SWIMMABLE | FF_INVERTSECTOR)) == (FF_SWIMMABLE | FF_INVERTSECTOR)) continue;
-			//fakeFloor->alpha
-
-			double fakeHeight = fakeFloor->bottom.plane->ZatPoint(frontsector->centerspot);
-			if (fakeHeight > viewpoint.Pos.Z && fakeHeight < frontsector->ceilingplane.ZatPoint(frontsector->centerspot))
-			{
-				plane.Render3DFloor(worldToClip, clipPlane, sub, ceilingSubsectorDepth, stencilValue, true, fakeFloor);
-			}
+			RenderPolyPlane plane;
+			plane.Render3DFloor(worldToClip, clipPlane, sub, stencilValue, false, fakeFloor);
 		}
 	}
 
-	plane.Render(worldToClip, clipPlane, cull, sub, ceilingSubsectorDepth, stencilValue, true, skyCeilingHeight, sectorPortals);
-	plane.Render(worldToClip, clipPlane, cull, sub, floorSubsectorDepth, stencilValue, false, skyFloorHeight, sectorPortals);
+	// 3D floor ceilings
+	for (int i = 0; i < (int)ffloors.Size(); i++)
+	{
+		F3DFloor *fakeFloor = ffloors[i];
+		if (!(fakeFloor->flags & FF_EXISTS)) continue;
+		if (!fakeFloor->model) continue;
+		//if (!(fakeFloor->flags & FF_NOSHADE) || (fakeFloor->flags & (FF_RENDERPLANES | FF_RENDERSIDES)))
+		//	R_3D_AddHeight(fakeFloor->bottom.plane, frontsector);
+		if (!(fakeFloor->flags & FF_RENDERPLANES)) continue;
+		if (fakeFloor->alpha == 0) continue;
+		if (!(fakeFloor->flags & FF_THISINSIDE) && (fakeFloor->flags & (FF_SWIMMABLE | FF_INVERTSECTOR)) == (FF_SWIMMABLE | FF_INVERTSECTOR)) continue;
+		//fakeFloor->alpha
+
+		double fakeHeight = fakeFloor->bottom.plane->ZatPoint(frontsector->centerspot);
+		if (fakeFloor->bottom.plane->isSlope() || (fakeHeight > viewpoint.Pos.Z && fakeHeight < frontsector->ceilingplane.ZatPoint(frontsector->centerspot)))
+		{
+			RenderPolyPlane plane;
+			plane.Render3DFloor(worldToClip, clipPlane, sub, stencilValue, true, fakeFloor);
+		}
+	}
 }
 
-void RenderPolyPlane::Render3DFloor(const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, subsector_t *sub, uint32_t subsectorDepth, uint32_t stencilValue, bool ceiling, F3DFloor *fakeFloor)
+void RenderPolyPlane::RenderPlanes(const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, PolyCull &cull, subsector_t *sub, uint32_t stencilValue, double skyCeilingHeight, double skyFloorHeight, std::vector<std::unique_ptr<PolyDrawSectorPortal>> &sectorPortals)
+{
+	if (sub->sector->CenterFloor() == sub->sector->CenterCeiling())
+		return;
+
+	RenderPolyPlane plane;
+	plane.Render(worldToClip, clipPlane, cull, sub, stencilValue, true, skyCeilingHeight, sectorPortals);
+	plane.Render(worldToClip, clipPlane, cull, sub, stencilValue, false, skyFloorHeight, sectorPortals);
+}
+
+void RenderPolyPlane::Render3DFloor(const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, subsector_t *sub, uint32_t stencilValue, bool ceiling, F3DFloor *fakeFloor)
 {
 	FTextureID picnum = ceiling ? *fakeFloor->bottom.texture : *fakeFloor->top.texture;
 	FTexture *tex = TexMan(picnum);
@@ -108,6 +114,9 @@ void RenderPolyPlane::Render3DFloor(const TriMatrix &worldToClip, const PolyClip
 		//basecolormap = light->extra_colormap;
 		lightlevel = *light->p_lightlevel;
 	}
+
+	int actualextralight = foggy ? 0 : PolyRenderer::Instance()->Viewpoint.extralight << 4;
+	lightlevel = clamp(lightlevel + actualextralight, 0, 255);
 
 	UVTransform xform(ceiling ? fakeFloor->top.model->planes[sector_t::ceiling].xform : fakeFloor->top.model->planes[sector_t::floor].xform, tex);
 
@@ -131,7 +140,6 @@ void RenderPolyPlane::Render3DFloor(const TriMatrix &worldToClip, const PolyClip
 
 	PolyDrawArgs args;
 	args.SetLight(GetColorTable(sub->sector->Colormap), lightlevel, PolyRenderer::Instance()->Light.WallGlobVis(foggy), false);
-	args.SetSubsectorDepth(subsectorDepth);
 	args.SetTransform(&worldToClip);
 	args.SetStyle(TriBlendMode::TextureOpaque);
 	args.SetFaceCullCCW(true);
@@ -142,7 +150,7 @@ void RenderPolyPlane::Render3DFloor(const TriMatrix &worldToClip, const PolyClip
 	args.DrawArray(vertices, sub->numlines, PolyDrawMode::TriangleFan);
 }
 
-void RenderPolyPlane::Render(const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, PolyCull &cull, subsector_t *sub, uint32_t subsectorDepth, uint32_t stencilValue, bool ceiling, double skyHeight, std::vector<std::unique_ptr<PolyDrawSectorPortal>> &sectorPortals)
+void RenderPolyPlane::Render(const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, PolyCull &cull, subsector_t *sub, uint32_t stencilValue, bool ceiling, double skyHeight, std::vector<std::unique_ptr<PolyDrawSectorPortal>> &sectorPortals)
 {
 	const auto &viewpoint = PolyRenderer::Instance()->Viewpoint;
 	bool foggy = false;
@@ -300,9 +308,13 @@ void RenderPolyPlane::Render(const TriMatrix &worldToClip, const PolyClipPlane &
 		}
 	}
 
+	int lightlevel = frontsector->lightlevel;
+	int actualextralight = foggy ? 0 : PolyRenderer::Instance()->Viewpoint.extralight << 4;
+	lightlevel = clamp(lightlevel + actualextralight, 0, 255);
+
 	PolyDrawArgs args;
-	args.SetLight(GetColorTable(frontsector->Colormap, frontsector->SpecialColors[ceiling]), frontsector->lightlevel, PolyRenderer::Instance()->Light.WallGlobVis(foggy), false);
-	args.SetSubsectorDepth(isSky ? RenderPolyScene::SkySubsectorDepth : subsectorDepth);
+	args.SetLight(GetColorTable(frontsector->Colormap, frontsector->SpecialColors[ceiling]), lightlevel, PolyRenderer::Instance()->Light.WallGlobVis(foggy), false);
+	//args.SetSubsectorDepth(isSky ? RenderPolyScene::SkySubsectorDepth : subsectorDepth);
 	args.SetTransform(&worldToClip);
 	args.SetFaceCullCCW(ccw);
 	args.SetStencilTestValue(stencilValue);
@@ -320,7 +332,7 @@ void RenderPolyPlane::Render(const TriMatrix &worldToClip, const PolyClipPlane &
 		if (portal)
 		{
 			args.SetWriteStencil(true, polyportal->StencilValue);
-			polyportal->Shape.push_back({ vertices, (int)sub->numlines, ccw, subsectorDepth });
+			polyportal->Shape.push_back({ vertices, (int)sub->numlines, ccw });
 		}
 		else
 		{
@@ -328,7 +340,7 @@ void RenderPolyPlane::Render(const TriMatrix &worldToClip, const PolyClipPlane &
 		}
 
 		args.SetWriteColor(false);
-		args.SetWriteSubsectorDepth(false);
+		args.SetWriteDepth(false);
 		args.DrawArray(vertices, sub->numlines, PolyDrawMode::TriangleFan);
 
 		for (uint32_t i = 0; i < sub->numlines; i++)
@@ -377,6 +389,12 @@ void RenderPolyPlane::Render(const TriMatrix &worldToClip, const PolyClipPlane &
 					continue;
 				}
 			}
+			else if (portal && line->linedef && line->linedef->special == Line_Horizon)
+			{
+				// Not entirely correct as this closes the line horizon rather than allowing the floor to continue to infinity
+				skyBottomz1 = frontsector->floorplane.ZatPoint(line->v1);
+				skyBottomz2 = frontsector->floorplane.ZatPoint(line->v2);
+			}
 
 			if (ceiling)
 			{
@@ -397,7 +415,7 @@ void RenderPolyPlane::Render(const TriMatrix &worldToClip, const PolyClipPlane &
 			
 			if (portal)
 			{
-				polyportal->Shape.push_back({ wallvert, 4, ccw, subsectorDepth });
+				polyportal->Shape.push_back({ wallvert, 4, ccw });
 			}
 		}
 	}

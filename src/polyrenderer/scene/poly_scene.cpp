@@ -167,19 +167,20 @@ void RenderPolyScene::RenderSubsector(subsector_t *sub, uint32_t ceilingSubsecto
 		{
 			RenderPolyNode(&sub->BSP->Nodes.Last(), subsectorDepth, frontsector);
 		}
+
+		RenderPolyPlane::Render3DPlanes(WorldToClip, PortalPlane, sub, StencilValue);
+		RenderPolyPlane::RenderPlanes(WorldToClip, PortalPlane, Cull, sub, StencilValue, Cull.MaxCeilingHeight, Cull.MinFloorHeight, SectorPortals);
 	}
 	else
 	{
+		RenderPolyPlane::Render3DPlanes(WorldToClip, PortalPlane, sub, StencilValue);
+		RenderPolyPlane::RenderPlanes(WorldToClip, PortalPlane, Cull, sub, StencilValue, Cull.MaxCeilingHeight, Cull.MinFloorHeight, SectorPortals);
+
 		for (uint32_t i = 0; i < sub->numlines; i++)
 		{
 			seg_t *line = &sub->firstline[i];
 			RenderLine(sub, line, frontsector, subsectorDepth);
 		}
-	}
-
-	if (sub->sector->CenterFloor() != sub->sector->CenterCeiling())
-	{
-		RenderPolyPlane::RenderPlanes(WorldToClip, PortalPlane, Cull, sub, ceilingSubsectorDepth, floorSubsectorDepth, StencilValue, Cull.MaxCeilingHeight, Cull.MinFloorHeight, SectorPortals);
 	}
 
 	if (mainBSP)
@@ -338,13 +339,14 @@ void RenderPolyScene::RenderLine(subsector_t *sub, seg_t *line, sector_t *fronts
 	}
 
 	// Render 3D floor sides
-	if (line->backsector && frontsector->e && line->backsector->e->XFloor.ffloors.Size())
+	if (line->sidedef && line->backsector && line->backsector->e && line->backsector->e->XFloor.ffloors.Size())
 	{
 		for (unsigned int i = 0; i < line->backsector->e->XFloor.ffloors.Size(); i++)
 		{
 			F3DFloor *fakeFloor = line->backsector->e->XFloor.ffloors[i];
 			if (!(fakeFloor->flags & FF_EXISTS)) continue;
 			if (!(fakeFloor->flags & FF_RENDERPLANES)) continue;
+			if (fakeFloor->flags & FF_SWIMMABLE) continue;
 			if (!fakeFloor->model) continue;
 			RenderPolyWall::Render3DFloorLine(WorldToClip, PortalPlane, Cull, line, frontsector, subsectorDepth, StencilValue, fakeFloor, TranslucentObjects);
 		}
@@ -384,7 +386,6 @@ void RenderPolyScene::RenderPortals(int portalDepth)
 			for (const auto &verts : portal->Shape)
 			{
 				args.SetFaceCullCCW(verts.Ccw);
-				args.SetSubsectorDepth(verts.SubsectorDepth);
 				args.DrawArray(verts.Vertices, verts.Count, PolyDrawMode::TriangleFan);
 			}
 		}
@@ -396,7 +397,6 @@ void RenderPolyScene::RenderPortals(int portalDepth)
 			for (const auto &verts : portal->Shape)
 			{
 				args.SetFaceCullCCW(verts.Ccw);
-				args.SetSubsectorDepth(verts.SubsectorDepth);
 				args.DrawArray(verts.Vertices, verts.Count, PolyDrawMode::TriangleFan);
 			}
 		}
@@ -420,7 +420,6 @@ void RenderPolyScene::RenderTranslucent(int portalDepth)
 			for (const auto &verts : portal->Shape)
 			{
 				args.SetFaceCullCCW(verts.Ccw);
-				args.SetSubsectorDepth(verts.SubsectorDepth);
 				args.SetWriteColor(false);
 				args.DrawArray(verts.Vertices, verts.Count, PolyDrawMode::TriangleFan);
 			}
@@ -439,7 +438,6 @@ void RenderPolyScene::RenderTranslucent(int portalDepth)
 			for (const auto &verts : portal->Shape)
 			{
 				args.SetFaceCullCCW(verts.Ccw);
-				args.SetSubsectorDepth(verts.SubsectorDepth);
 				args.SetWriteColor(false);
 				args.DrawArray(verts.Vertices, verts.Count, PolyDrawMode::TriangleFan);
 			}
@@ -467,7 +465,7 @@ void RenderPolyScene::RenderTranslucent(int portalDepth)
 		if (obj->particle)
 		{
 			RenderPolyParticle spr;
-			spr.Render(WorldToClip, PortalPlane, obj->particle, obj->sub, obj->subsectorDepth, StencilValue + 1);
+			spr.Render(WorldToClip, PortalPlane, obj->particle, obj->sub, StencilValue + 1);
 		}
 		else if (!obj->thing)
 		{
@@ -476,12 +474,12 @@ void RenderPolyScene::RenderTranslucent(int portalDepth)
 		else if ((obj->thing->renderflags & RF_SPRITETYPEMASK) == RF_WALLSPRITE)
 		{
 			RenderPolyWallSprite wallspr;
-			wallspr.Render(WorldToClip, PortalPlane, obj->thing, obj->sub, obj->subsectorDepth, StencilValue + 1);
+			wallspr.Render(WorldToClip, PortalPlane, obj->thing, obj->sub, StencilValue + 1);
 		}
 		else
 		{
 			RenderPolySprite spr;
-			spr.Render(WorldToClip, PortalPlane, obj->thing, obj->sub, obj->subsectorDepth, StencilValue + 1, obj->SpriteLeft, obj->SpriteRight);
+			spr.Render(WorldToClip, PortalPlane, obj->thing, obj->sub, StencilValue + 1, obj->SpriteLeft, obj->SpriteRight);
 		}
 	}
 }
