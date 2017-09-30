@@ -1,5 +1,5 @@
 /*
-**  Handling drawing a plane (ceiling, floor)
+**  Polygon Doom software renderer
 **  Copyright (c) 2016 Magnus Norddahl
 **
 **  This software is provided 'as-is', without any express or implied
@@ -25,30 +25,96 @@
 #include "polyrenderer/drawers/poly_triangle.h"
 
 class PolyDrawSectorPortal;
-class PolyCull;
+
+class PolyPlaneUVTransform
+{
+public:
+	PolyPlaneUVTransform(const FTransform &transform, FTexture *tex);
+
+	TriVertex GetVertex(vertex_t *v1, double height) const
+	{
+		TriVertex v;
+		v.x = (float)v1->fX();
+		v.y = (float)v1->fY();
+		v.z = (float)height;
+		v.w = 1.0f;
+		v.u = GetU(v.x, v.y);
+		v.v = GetV(v.x, v.y);
+		return v;
+	}
+
+private:
+	float GetU(float x, float y) const { return (xOffs + x * cosine - y * sine) * xscale; }
+	float GetV(float x, float y) const { return (yOffs - x * sine - y * cosine) * yscale; }
+
+	float xscale;
+	float yscale;
+	float cosine;
+	float sine;
+	float xOffs, yOffs;
+};
+
+enum class HeightSecLocation
+{
+	Above, // Above control sector ceiling (A)
+	Between, // Between control sector ceiling and floor (B)
+	Below // Below control sector floor (C)
+};
 
 class RenderPolyPlane
 {
 public:
-	static void RenderPlanes(const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, PolyCull &cull, subsector_t *sub, uint32_t stencilValue, double skyCeilingHeight, double skyFloorHeight, std::vector<std::unique_ptr<PolyDrawSectorPortal>> &sectorPortals);
-	static void Render3DPlanes(const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, subsector_t *sub, uint32_t stencilValue);
+	static void RenderPlanes(PolyRenderThread *thread, const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, subsector_t *sub, uint32_t stencilValue, double skyCeilingHeight, double skyFloorHeight, std::vector<std::unique_ptr<PolyDrawSectorPortal>> &sectorPortals);
 
 private:
-	struct UVTransform
+	void Render(PolyRenderThread *thread, const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, subsector_t *sub, uint32_t stencilValue, bool ceiling, double skyHeight, std::vector<std::unique_ptr<PolyDrawSectorPortal>> &sectorPortals);
+
+	void RenderPortal(PolyRenderThread *thread, const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, subsector_t *sub, uint32_t stencilValue, bool ceiling, double skyHeight, FSectorPortal *portal, std::vector<std::unique_ptr<PolyDrawSectorPortal>> &sectorPortals);
+	void RenderNormal(PolyRenderThread *thread, const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, subsector_t *sub, uint32_t stencilValue, bool ceiling, double skyHeight);
+
+	void RenderSkyWalls(PolyRenderThread *thread, PolyDrawArgs &args, subsector_t *sub, PolyDrawSectorPortal *polyportal, bool ceiling, double skyHeight);
+
+	void SetLightLevel(PolyRenderThread *thread, PolyDrawArgs &args, subsector_t *sub, bool ceiling);
+	void SetDynLights(PolyRenderThread *thread, PolyDrawArgs &args, subsector_t *sub, bool ceiling);
+
+	FTextureID GetPlaneTexture(subsector_t *sub, bool ceiling);
+	PolyPlaneUVTransform GetPlaneTransform(subsector_t *sub, bool ceiling, FTexture *texture);
+	const secplane_t &GetSecPlane(subsector_t *sub, bool ceiling);
+
+	sector_t *GetHeightSec(subsector_t *sub, bool ceiling);
+	HeightSecLocation GetHeightSecLocation(sector_t *controlsector);
+
+	TriVertex *CreatePlaneVertices(PolyRenderThread *thread, subsector_t *sub, const PolyPlaneUVTransform &transform, const secplane_t &plane);
+	TriVertex *CreateSkyPlaneVertices(PolyRenderThread *thread, subsector_t *sub, double skyHeight);
+
+	static TriVertex GetSkyVertex(vertex_t *v, double height) { return { (float)v->fX(), (float)v->fY(), (float)height, 1.0f, 0.0f, 0.0f }; }
+};
+
+class Render3DFloorPlane
+{
+public:
+	static void RenderPlanes(PolyRenderThread *thread, const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, subsector_t *sub, uint32_t stencilValue, uint32_t subsectorDepth, std::vector<PolyTranslucentObject *> &translucentObjects);
+
+	void Render(PolyRenderThread *thread, const TriMatrix &worldToClip, const PolyClipPlane &clipPlane);
+
+	subsector_t *sub = nullptr;
+	uint32_t stencilValue = 0;
+	bool ceiling = false;
+	F3DFloor *fakeFloor = nullptr;
+	bool Masked = false;
+	bool Additive = false;
+	double Alpha = 1.0;
+};
+
+class PolyTranslucent3DFloorPlane : public PolyTranslucentObject
+{
+public:
+	PolyTranslucent3DFloorPlane(Render3DFloorPlane plane, uint32_t subsectorDepth) : PolyTranslucentObject(subsectorDepth, 1e7), plane(plane) { }
+
+	void Render(PolyRenderThread *thread, const TriMatrix &worldToClip, const PolyClipPlane &portalPlane) override
 	{
-		UVTransform(const FTransform &transform, FTexture *tex);
+		plane.Render(thread, worldToClip, portalPlane);
+	}
 
-		float GetU(float x, float y) const;
-		float GetV(float x, float y) const;
-
-		float xscale;
-		float yscale;
-		float cosine;
-		float sine;
-		float xOffs, yOffs;
-	};
-
-	void Render3DFloor(const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, subsector_t *sub, uint32_t stencilValue, bool ceiling, F3DFloor *fakefloor);
-	void Render(const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, PolyCull &cull, subsector_t *sub, uint32_t stencilValue, bool ceiling, double skyHeight, std::vector<std::unique_ptr<PolyDrawSectorPortal>> &sectorPortals);
-	TriVertex PlaneVertex(vertex_t *v1, double height, const UVTransform &transform);
+	Render3DFloorPlane plane;
 };

@@ -1,5 +1,5 @@
 /*
-**  Projected triangle drawer
+**  Polygon Doom software renderer
 **  Copyright (c) 2016 Magnus Norddahl
 **
 **  This software is provided 'as-is', without any express or implied
@@ -231,7 +231,7 @@ public:
 		int fuzzpos = (ScreenTriangle::FuzzStart + destX * 123 + destY) % FUZZTABLE;
 
 		// Calculate gradients
-		const TriVertex &v1 = *args->v1;
+		const ShadedTriVertex &v1 = *args->v1;
 		ScreenTriangleStepVariables gradientX = args->gradientX;
 		ScreenTriangleStepVariables gradientY = args->gradientY;
 		ScreenTriangleStepVariables blockPosY;

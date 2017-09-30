@@ -399,19 +399,19 @@ CUSTOM_CVAR (Int, dmflags, 0, CVAR_SERVERINFO)
 	// If nofov is set, force everybody to the arbitrator's FOV.
 	if ((self & DF_NO_FOV) && consoleplayer == Net_Arbitrator)
 	{
-		uint8_t fov;
+		float fov;
 
 		Net_WriteByte (DEM_FOV);
 
 		// If the game is started with DF_NO_FOV set, the arbitrator's
 		// DesiredFOV will not be set when this callback is run, so
 		// be sure not to transmit a 0 FOV.
-		fov = (uint8_t)players[consoleplayer].DesiredFOV;
+		fov = players[consoleplayer].DesiredFOV;
 		if (fov == 0)
 		{
 			fov = 90;
 		}
-		Net_WriteByte (fov);
+		Net_WriteFloat (fov);
 	}
 }
 
@@ -1992,9 +1992,9 @@ static FString CheckGameInfo(TArray<FString> & pwads)
 
 static void SetMapxxFlag()
 {
-	int lump_name = Wads.CheckNumForName("MAP01", ns_global, FWadCollection::IWAD_FILENUM);
-	int lump_wad = Wads.CheckNumForFullName("maps/map01.wad", FWadCollection::IWAD_FILENUM);
-	int lump_map = Wads.CheckNumForFullName("maps/map01.map", FWadCollection::IWAD_FILENUM);
+	int lump_name = Wads.CheckNumForName("MAP01", ns_global, Wads.GetIwadNum());
+	int lump_wad = Wads.CheckNumForFullName("maps/map01.wad", Wads.GetIwadNum());
+	int lump_map = Wads.CheckNumForFullName("maps/map01.map", Wads.GetIwadNum());
 
 	if (lump_name >= 0 || lump_wad >= 0 || lump_map >= 0) gameinfo.flags |= GI_MAPxx;
 }
@@ -2352,6 +2352,8 @@ void D_DoomMain (void)
 	}
 	FString basewad = wad;
 
+	FString optionalwad = BaseFileSearch(OPTIONALWAD, NULL, true);
+
 	iwad_man = new FIWadManager(basewad);
 
 	// Now that we have the IWADINFO, initialize the autoload ini sections.
@@ -2384,7 +2386,7 @@ void D_DoomMain (void)
 		{
 			iwad_man = new FIWadManager(basewad);
 		}
-		const FIWADInfo *iwad_info = iwad_man->FindIWAD(allwads, iwad, basewad);
+		const FIWADInfo *iwad_info = iwad_man->FindIWAD(allwads, iwad, basewad, optionalwad);
 		gameinfo.gametype = iwad_info->gametype;
 		gameinfo.flags = iwad_info->flags;
 		gameinfo.ConfigName = iwad_info->Configname;

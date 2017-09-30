@@ -1,5 +1,5 @@
 /*
-**  Handling drawing a sprite
+**  Polygon Doom software renderer
 **  Copyright (c) 2016 Magnus Norddahl
 **
 **  This software is provided 'as-is', without any express or implied
@@ -28,6 +28,7 @@
 #include "poly_sprite.h"
 #include "polyrenderer/poly_renderer.h"
 #include "polyrenderer/scene/poly_light.h"
+#include "polyrenderer/poly_renderthread.h"
 #include "r_data/r_vanillatrans.h"
 #include "actorinlines.h"
 
@@ -71,7 +72,7 @@ bool RenderPolySprite::GetLine(AActor *thing, DVector2 &left, DVector2 &right)
 	return true;
 }
 
-void RenderPolySprite::Render(const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, AActor *thing, subsector_t *sub, uint32_t stencilValue, float t1, float t2)
+void RenderPolySprite::Render(PolyRenderThread *thread, const TriMatrix &worldToClip, const PolyClipPlane &clipPlane, AActor *thing, subsector_t *sub, uint32_t stencilValue, float t1, float t2)
 {
 	DVector2 line[2];
 	if (!GetLine(thing, line[0], line[1]))
@@ -116,7 +117,7 @@ void RenderPolySprite::Render(const TriMatrix &worldToClip, const PolyClipPlane 
 	// Rumor has it that AlterWeaponSprite needs to be called with visstyle passed in somewhere around here..
 	//R_SetColorMapLight(visstyle.BaseColormap, 0, visstyle.ColormapNum << FRACBITS);
 
-	TriVertex *vertices = PolyRenderer::Instance()->FrameMemory.AllocMemory<TriVertex>(4);
+	TriVertex *vertices = thread->FrameMemory->AllocMemory<TriVertex>(4);
 
 	bool foggy = false;
 	int actualextralight = foggy ? 0 : viewpoint.extralight << 4;
@@ -153,6 +154,7 @@ void RenderPolySprite::Render(const TriMatrix &worldToClip, const PolyClipPlane 
 	int lightlevel = fullbrightSprite ? 255 : thing->Sector->lightlevel + actualextralight;
 
 	PolyDrawArgs args;
+	SetDynlight(thing, args);
 	args.SetLight(GetColorTable(sub->sector->Colormap, sub->sector->SpecialColors[sector_t::sprites], true), lightlevel, PolyRenderer::Instance()->Light.SpriteGlobVis(foggy), fullbrightSprite);
 	args.SetTransform(&worldToClip);
 	args.SetFaceCullCCW(true);
@@ -166,7 +168,7 @@ void RenderPolySprite::Render(const TriMatrix &worldToClip, const PolyClipPlane 
 	args.SetDepthTest(true);
 	args.SetWriteDepth(false);
 	args.SetWriteStencil(false);
-	args.DrawArray(vertices, 4, PolyDrawMode::TriangleFan);
+	args.DrawArray(thread, vertices, 4, PolyDrawMode::TriangleFan);
 }
 
 double RenderPolySprite::GetSpriteFloorZ(AActor *thing, const DVector2 &thingpos)
@@ -366,4 +368,59 @@ FTexture *RenderPolySprite::GetSpriteTexture(AActor *thing, /*out*/ bool &flipX)
 			return TexMan[tex];
 		}
 	}
+}
+
+void RenderPolySprite::SetDynlight(AActor *thing, PolyDrawArgs &args)
+{
+	bool fullbrightSprite = ((thing->renderflags & RF_FULLBRIGHT) || (thing->flags5 & MF5_BRIGHT));
+	if (fullbrightSprite)
+	{
+		args.SetDynLightColor(0);
+		return;
+	}
+
+	float lit_red = 0;
+	float lit_green = 0;
+	float lit_blue = 0;
+	auto node = thing->Sector->lighthead;
+	while (node != nullptr)
+	{
+		ADynamicLight *light = node->lightsource;
+		if (light->visibletoplayer && !(light->flags2&MF2_DORMANT) && (!(light->lightflags&LF_DONTLIGHTSELF) || light->target != thing) && !(light->lightflags&LF_DONTLIGHTACTORS))
+		{
+			float lx = (float)(light->X() - thing->X());
+			float ly = (float)(light->Y() - thing->Y());
+			float lz = (float)(light->Z() - thing->Center());
+			float LdotL = lx * lx + ly * ly + lz * lz;
+			float radius = node->lightsource->GetRadius();
+			if (radius * radius >= LdotL)
+			{
+				float distance = sqrt(LdotL);
+				float attenuation = 1.0f - distance / radius;
+				if (attenuation > 0.0f)
+				{						
+					float red = light->GetRed() * (1.0f / 255.0f);
+					float green = light->GetGreen() * (1.0f / 255.0f);
+					float blue = light->GetBlue() * (1.0f / 255.0f);
+					/*if (light->IsSubtractive())
+					{
+						float bright = FVector3(lr, lg, lb).Length();
+						FVector3 lightColor(lr, lg, lb);
+						red = (bright - lr) * -1;
+						green = (bright - lg) * -1;
+						blue = (bright - lb) * -1;
+					}*/
+						
+					lit_red += red * attenuation;
+					lit_green += green * attenuation;
+					lit_blue += blue * attenuation;
+				}
+			}
+		}
+		node = node->nextLight;
+	}
+	lit_red = clamp(lit_red * 255.0f, 0.0f, 255.0f);
+	lit_green = clamp(lit_green * 255.0f, 0.0f, 255.0f);
+	lit_blue = clamp(lit_blue * 255.0f, 0.0f, 255.0f);
+	args.SetDynLightColor((((uint32_t)lit_red) << 16) | (((uint32_t)lit_green) << 8) | ((uint32_t)lit_blue));
 }

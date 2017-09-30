@@ -202,7 +202,7 @@ FxLocalVariableDeclaration *FCompileContext::FindLocalVariable(FName name)
 
 static PContainerType *FindContainerType(FName name, FCompileContext &ctx)
 {
-	auto sym = ctx.Class->Symbols.FindSymbol(name, true);
+	auto sym = ctx.Class != nullptr? ctx.Class->Symbols.FindSymbol(name, true) : nullptr;
 	if (sym == nullptr) sym = ctx.CurGlobals->Symbols.FindSymbol(name, true);
 	if (sym && sym->IsKindOf(RUNTIME_CLASS(PSymbolType)))
 	{
@@ -3302,6 +3302,7 @@ FxExpression *FxPow::Resolve(FCompileContext& ctx)
 		right = (new FxFloatCast(right))->Resolve(ctx);
 		ABORT(right);
 	}
+	ValueType = TypeFloat64;
 	if (left->isConstant() && right->isConstant())
 	{
 		double v1 = static_cast<FxConstant *>(left)->GetValue().GetFloat();
@@ -6462,6 +6463,12 @@ FxExpression *FxMemberIdentifier::Resolve(FCompileContext& ctx)
 						return nullptr;
 					}
 				}
+			}
+			else
+			{
+				ScriptPosition.Message(MSG_ERROR, "%s is not a member of %s", Identifier.GetChars(), ccls->TypeName.GetChars());
+				delete this;
+				return nullptr;
 			}
 		}
 	}
