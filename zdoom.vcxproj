@@ -111,7 +111,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>src\g_inventory;src\scripting;src\scripting\zscript;src\scripting\vm;src\zscript;src\win32;src\sound;src\sound\oplsynth;src\textures;src\thingdef;src;zlib;src\g_shared;src\g_statusbar;jpeg-6b;game-music-emu;gdtoa;bzip2;lzma\C;dxsdk;openal;openal;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\g_inventory;src\scripting;src\scripting\zscript;src\scripting\vm;src\zscript;src\win32;src\sound;src\sound\oplsynth;src\sound\thirdparty;src\textures;src\thingdef;src;zlib;src\g_shared;src\g_statusbar;jpeg-6b;game-music-emu;gdtoa;bzip2;lzma\C;dxsdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_WINDOWS;HAVE_STRUPR;HAVE_FILELENGTH;NO_VA_COPY;BACKPATCH;HAVE_FLUIDSYNTH;DYN_FLUIDSYNTH;HAVE_MMX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -245,7 +245,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>src\g_inventory;src\scripting;src\scripting\zscript;src\scripting\vm;src\zscript;src\win32;src\sound;src\textures;src\thingdef;src;zlib;src\g_shared;src\g_statusbar;jpeg-6b;game-music-emu;gdtoa;bzip2;lzma\C;dxsdk;openal;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\g_inventory;src\scripting;src\scripting\zscript;src\scripting\vm;src\zscript;src\win32;src\sound;src\sound\thirdparty;src\textures;src\thingdef;src;zlib;src\g_shared;src\g_statusbar;jpeg-6b;game-music-emu;gdtoa;bzip2;lzma\C;dxsdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WIN32;_WINDOWS;_CRTDBG_MAP_ALLOC;HAVE_STRUPR;HAVE_FILELENGTH;NO_VA_COPY;BACKPATCH;HAVE_FLUIDSYNTH;DYN_FLUIDSYNTH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
