@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF0}</ProjectGuid>
-    <RootNamespace>wadsrc_lights</RootNamespace>
+    <ProjectGuid>{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF1}</ProjectGuid>
+    <RootNamespace>wadsrc_extra</RootNamespace>
     <Keyword>MakeFileProj</Keyword>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -82,33 +82,33 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <PostBuildEvent>
-      <Message>Checking lights.pk3...</Message>
-      <Command>"$(SolutionDir)tools\zipdir\zipdir.exe" -ud "$(ProjectDir)lights.pk3" "$(ProjectDir)static"
-copy "$(ProjectDir)lights.pk3" "$(SolutionDir)bin\lights.pk3"
+      <Message>Checking zd_extra.pk3...</Message>
+      <Command>"$(SolutionDir)tools\zipdir\zipdir.exe" -ud "$(ProjectDir)zd_extra.pk3" "$(ProjectDir)static"
+copy "$(ProjectDir)zd_extra.pk3" "$(SolutionDir)bin\zd_extra.pk3"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <PostBuildEvent>
-      <Message>Checking lights.pk3...</Message>
-      <Command>"$(SolutionDir)tools\zipdir\zipdir.exe" -ud "$(ProjectDir)lights.pk3" "$(ProjectDir)static"
-copy "$(ProjectDir)lights.pk3" "$(SolutionDir)bin\lights.pk3"
+      <Message>Checking zd_extra.pk3...</Message>
+      <Command>"$(SolutionDir)tools\zipdir\zipdir.exe" -ud "$(ProjectDir)zd_extra.pk3" "$(ProjectDir)static"
+copy "$(ProjectDir)zd_extra.pk3" "$(SolutionDir)bin\zd_extra.pk3"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <PostBuildEvent>
-      <Message>Checking lights.pk3...</Message>
-      <Command>"$(SolutionDir)tools\zipdir\zipdir.exe" -ud "$(ProjectDir)lights.pk3" "$(ProjectDir)static"
-copy "$(ProjectDir)lights.pk3" "$(SolutionDir)bin\lights.pk3"
+      <Message>Checking zd_extra.pk3...</Message>
+      <Command>"$(SolutionDir)tools\zipdir\zipdir.exe" -ud "$(ProjectDir)zd_extra.pk3" "$(ProjectDir)static"
+copy "$(ProjectDir)zd_extra.pk3" "$(SolutionDir)bin\zd_extra.pk3"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <PostBuildEvent>
-      <Message>Checking lights.pk3...</Message>
-      <Command>"$(SolutionDir)tools\zipdir\zipdir.exe" -ud "$(ProjectDir)lights.pk3" "$(ProjectDir)static"
-copy "$(ProjectDir)lights.pk3" "$(SolutionDir)bin\lights.pk3"
+      <Message>Checking zd_extra.pk3...</Message>
+      <Command>"$(SolutionDir)tools\zipdir\zipdir.exe" -ud "$(ProjectDir)zd_extra.pk3" "$(ProjectDir)static"
+copy "$(ProjectDir)zd_extra.pk3" "$(SolutionDir)bin\zd_extra.pk3"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

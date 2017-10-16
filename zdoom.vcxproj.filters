@@ -1382,6 +1382,9 @@
     <ClCompile Include="src\r_videoscale.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\sound\sndfile_decoder.cpp">
+      <Filter>Audio Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\sc_man_scanner.h">
@@ -1839,6 +1842,9 @@
     </ClInclude>
     <ClInclude Include="src\math\mconf.h">
       <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sound\sndfile_decoder.h">
+      <Filter>Audio Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

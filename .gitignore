@@ -4,12 +4,6 @@
 *.pdb
 *.ilk
 *.aps
-*.sdf
-*.opensdf
-*.db
-*.opendb
-*.exe
-*.pk3
 /fmodapi*/
 /Release
 /wadsrc_wad
@@ -58,4 +52,10 @@
 /src/r_drawersasm.obj
 /src/r_drawersasm.o
 .vs
-*.log
+*.sdf
+*.opensdf
+*.db
+*.opendb
+*.pk3
+bin/*.exe
+bin/*.sf2

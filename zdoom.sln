@@ -1,11 +1,13 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zdoom", "zdoom.vcxproj", "{8049475B-5C87-46F9-9358-635218A4EF18}"
 	ProjectSection(ProjectDependencies) = postProject
+		{24A19C02-F041-4AB0-A1A1-02E1E88EDBD3} = {24A19C02-F041-4AB0-A1A1-02E1E88EDBD3}
 		{DFD69F81-7E6D-498F-BCDD-D3F6580D36B2} = {DFD69F81-7E6D-498F-BCDD-D3F6580D36B2}
 		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF0} = {CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF0}
+		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF1} = {CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF1}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib\zlib.vcxproj", "{F9D9E7D4-E1A2-4866-9E85-B1B14137EE63}"
@@ -37,6 +39,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wadsrc_bm", "wadsrc_bm\wadsrc_bm.vcxproj", "{DFD69F81-7E6D-498F-BCDD-D3F6580D36B2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wadsrc_lights", "wadsrc_lights\wadsrc_lights.vcxproj", "{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wadsrc_extra", "wadsrc_extra\wadsrc_extra.vcxproj", "{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -174,8 +178,19 @@ Global
 		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF0}.Release|Win32.Build.0 = Release|Win32
 		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF0}.Release|x64.ActiveCfg = Release|x64
 		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF0}.Release|x64.Build.0 = Release|x64
+		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF1}.Debug|Win32.Build.0 = Debug|Win32
+		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF1}.Debug|x64.ActiveCfg = Debug|x64
+		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF1}.Debug|x64.Build.0 = Debug|x64
+		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF1}.Release|Win32.ActiveCfg = Release|Win32
+		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF1}.Release|Win32.Build.0 = Release|Win32
+		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF1}.Release|x64.ActiveCfg = Release|x64
+		{CD7814B4-62F2-4FB2-BE90-C2B2D45A4BF1}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {891E74A2-E494-4F0E-91FA-C397F56201A4}
 	EndGlobalSection
 EndGlobal
