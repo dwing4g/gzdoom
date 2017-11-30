@@ -473,9 +473,6 @@
     <ClCompile Include="src\teaminfo.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\tempfiles.cpp">
-      <Filter>!Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\v_blend.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
@@ -782,9 +779,6 @@
     <ClCompile Include="src\gl\data\gl_data.cpp">
       <Filter>gl</Filter>
     </ClCompile>
-    <ClCompile Include="src\gl\data\gl_matrix.cpp">
-      <Filter>gl</Filter>
-    </ClCompile>
     <ClCompile Include="src\gl\data\gl_portaldata.cpp">
       <Filter>gl</Filter>
     </ClCompile>
@@ -819,15 +813,6 @@
       <Filter>gl</Filter>
     </ClCompile>
     <ClCompile Include="src\gl\models\gl_models.cpp">
-      <Filter>gl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gl\models\gl_models_md2.cpp">
-      <Filter>gl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gl\models\gl_models_md3.cpp">
-      <Filter>gl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gl\models\gl_voxels.cpp">
       <Filter>gl</Filter>
     </ClCompile>
     <ClCompile Include="src\gl\renderer\gl_lightdata.cpp">
@@ -1385,6 +1370,30 @@
     <ClCompile Include="src\sound\sndfile_decoder.cpp">
       <Filter>Audio Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\i_time.cpp">
+      <Filter>!Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tmpfileplus.c">
+      <Filter>!Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\umapinfo.cpp">
+      <Filter>!Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\r_data\models\models.cpp">
+      <Filter>Render Data\Resource Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\r_data\models\models_md2.cpp">
+      <Filter>Render Data\Resource Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\r_data\models\models_md3.cpp">
+      <Filter>Render Data\Resource Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\r_data\models\models_voxel.cpp">
+      <Filter>Render Data\Resource Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\r_data\matrix.cpp">
+      <Filter>Render Data\Resource Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\sc_man_scanner.h">
@@ -1702,9 +1711,6 @@
     <ClInclude Include="src\teaminfo.h">
       <Filter>!Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\tempfiles.h">
-      <Filter>!Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\templates.h">
       <Filter>!Header Files</Filter>
     </ClInclude>
@@ -1845,6 +1851,21 @@
     </ClInclude>
     <ClInclude Include="src\sound\sndfile_decoder.h">
       <Filter>Audio Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\i_time.h">
+      <Filter>!Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tmpfileplus.h">
+      <Filter>!Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\r_data\models\models.h">
+      <Filter>Render Data\Resource Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\r_data\models\tab_anorms.h">
+      <Filter>Render Data\Resource Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\r_data\matrix.h">
+      <Filter>Render Data\Resource Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

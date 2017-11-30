@@ -346,7 +346,6 @@
     <ClCompile Include="src\events.cpp" />
     <ClCompile Include="src\gl\compatibility\gl_20.cpp" />
     <ClCompile Include="src\gl\data\gl_data.cpp" />
-    <ClCompile Include="src\gl\data\gl_matrix.cpp" />
     <ClCompile Include="src\gl\data\gl_portaldata.cpp" />
     <ClCompile Include="src\gl\data\gl_setup.cpp" />
     <ClCompile Include="src\gl\data\gl_vertexbuffer.cpp" />
@@ -364,9 +363,6 @@
     <ClCompile Include="src\gl\hqnx_asm\hq4x_asm.cpp" />
     <ClCompile Include="src\gl\hqnx_asm\hqnx_asm_Image.cpp" />
     <ClCompile Include="src\gl\models\gl_models.cpp" />
-    <ClCompile Include="src\gl\models\gl_models_md2.cpp" />
-    <ClCompile Include="src\gl\models\gl_models_md3.cpp" />
-    <ClCompile Include="src\gl\models\gl_voxels.cpp" />
     <ClCompile Include="src\gl\renderer\gl_2ddrawer.cpp" />
     <ClCompile Include="src\gl\renderer\gl_lightdata.cpp" />
     <ClCompile Include="src\gl\renderer\gl_postprocess.cpp" />
@@ -454,6 +450,7 @@
     <ClCompile Include="src\g_statusbar\sbar_mugshot.cpp" />
     <ClCompile Include="src\g_statusbar\shared_sbar.cpp" />
     <ClCompile Include="src\i_module.cpp" />
+    <ClCompile Include="src\i_time.cpp" />
     <ClCompile Include="src\math\asin.c" />
     <ClCompile Include="src\math\atan.c" />
     <ClCompile Include="src\math\const.c" />
@@ -477,6 +474,11 @@
     <ClCompile Include="src\p_pusher.cpp" />
     <ClCompile Include="src\p_scroll.cpp" />
     <ClCompile Include="src\p_secnodes.cpp" />
+    <ClCompile Include="src\r_data\matrix.cpp" />
+    <ClCompile Include="src\r_data\models\models.cpp" />
+    <ClCompile Include="src\r_data\models\models_md2.cpp" />
+    <ClCompile Include="src\r_data\models\models_md3.cpp" />
+    <ClCompile Include="src\r_data\models\models_voxel.cpp" />
     <ClCompile Include="src\r_data\r_vanillatrans.cpp" />
     <ClCompile Include="src\r_videoscale.cpp" />
     <ClCompile Include="src\scripting\backend\codegen.cpp" />
@@ -545,6 +547,8 @@
     <ClCompile Include="src\textures\backdroptexture.cpp" />
     <ClCompile Include="src\textures\shadertexture.cpp" />
     <ClCompile Include="src\textures\skyboxtexture.cpp" />
+    <ClCompile Include="src\tmpfileplus.c" />
+    <ClCompile Include="src\umapinfo.cpp" />
     <ClCompile Include="src\win32\critsec.cpp" />
     <ClCompile Include="src\win32\i_specialpaths.cpp" />
     <ClCompile Include="src\win32\win32gliface.cpp" />
@@ -670,7 +674,6 @@
     <ClCompile Include="src\stringtable.cpp" />
     <ClCompile Include="src\strnatcmp.c" />
     <ClCompile Include="src\teaminfo.cpp" />
-    <ClCompile Include="src\tempfiles.cpp" />
     <ClCompile Include="src\v_blend.cpp" />
     <ClCompile Include="src\v_collection.cpp" />
     <ClCompile Include="src\v_draw.cpp" />
@@ -776,7 +779,11 @@
     <ClCompile Include="src\portal.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\i_time.h" />
     <ClInclude Include="src\math\mconf.h" />
+    <ClInclude Include="src\r_data\matrix.h" />
+    <ClInclude Include="src\r_data\models\models.h" />
+    <ClInclude Include="src\r_data\models\tab_anorms.h" />
     <ClInclude Include="src\sc_man_scanner.h" />
     <ClInclude Include="src\actionspecials.h" />
     <ClInclude Include="src\actor.h" />
@@ -883,8 +890,8 @@
     <ClInclude Include="src\strnatcmp.h" />
     <ClInclude Include="src\tarray.h" />
     <ClInclude Include="src\teaminfo.h" />
-    <ClInclude Include="src\tempfiles.h" />
     <ClInclude Include="src\templates.h" />
+    <ClInclude Include="src\tmpfileplus.h" />
     <ClInclude Include="src\v_collection.h" />
     <ClInclude Include="src\v_font.h" />
     <ClInclude Include="src\v_palette.h" />
