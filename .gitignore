@@ -52,6 +52,9 @@
 /src/r_drawersasm.obj
 /src/r_drawersasm.o
 .vs
+/src/gl/unused
+/mapfiles_release/*.map
+
 *.sdf
 *.opensdf
 *.db

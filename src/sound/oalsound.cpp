@@ -32,13 +32,6 @@
 **
 */
 
-#ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#else
-#include <dlfcn.h>
-#endif
-
 #include <functional>
 #include <memory>
 #include <chrono>
@@ -57,7 +50,6 @@
 #include "i_module.h"
 #include "i_music.h"
 #include "i_musicinterns.h"
-#include "tempfiles.h"
 #include "cmdlib.h"
 
 FModule OpenALModule{"OpenAL"};
