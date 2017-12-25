@@ -781,7 +781,7 @@ void D_Display ()
 
 
 	{
-		screen->FrameTime = I_msTime();
+		screen->FrameTime = I_msTimeFS();
 		TexMan.UpdateAnimations(screen->FrameTime);
 		R_UpdateSky(screen->FrameTime);
 		switch (gamestate)
@@ -797,7 +797,13 @@ void D_Display ()
 		case GS_LEVEL:
 		case GS_TITLELEVEL:
 			if (!gametic)
+			{
+				if (!screen->HasBegun2D())
+				{
+					screen->Begin2D(false);
+				}
 				break;
+			}
 
 			if (StatusBar != NULL)
 			{
@@ -1946,13 +1952,11 @@ static FString CheckGameInfo(TArray<FString> & pwads)
 		const char *filename = pwads[i];
 
 		// Does this exist? If so, is it a directory?
-		struct stat info;
-		if (stat(pwads[i], &info) != 0)
+		if (!DirEntryExists(pwads[i], &isdir))
 		{
 			Printf(TEXTCOLOR_RED "Could not stat %s\n", filename);
 			continue;
 		}
-		isdir = (info.st_mode & S_IFDIR) != 0;
 
 		if (!isdir)
 		{

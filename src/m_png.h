@@ -46,7 +46,7 @@ class FileWriter;
 // This function writes the PNG signature and the IHDR, gAMA, PLTE, and IDAT
 // chunks.
 bool M_CreatePNG (FileWriter *file, const uint8_t *buffer, const PalEntry *pal,
-				  ESSType color_type, int width, int height, int pitch);
+				  ESSType color_type, int width, int height, int pitch, float gamma);
 
 // Creates a grayscale 1x1 PNG file. Used for savegames without savepics.
 bool M_CreateDummyPNG (FileWriter *file);
@@ -90,7 +90,6 @@ struct PNGHandle
 // each chunk is not done. If it is valid, you get a PNGHandle to pass to
 // the following functions.
 PNGHandle *M_VerifyPNG (FileReader *file, bool takereader = false);
-PNGHandle *M_VerifyPNG (FILE *file);
 
 // Finds a chunk in a PNG file. The file pointer will be positioned at the
 // beginning of the chunk data, and its length will be returned. A return

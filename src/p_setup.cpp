@@ -3627,7 +3627,7 @@ void P_SetupLevel (const char *lumpname, int position)
 	bool buildmap;
 	const int *oldvertextable = NULL;
 
-	level.ShaderStartTime = I_msTime(); // indicate to the shader system that the level just started
+	level.ShaderStartTime = I_msTimeFS(); // indicate to the shader system that the level just started
 
 	// This is motivated as follows:
 
@@ -3815,8 +3815,6 @@ void P_SetupLevel (const char *lumpname, int position)
 				P_LoadThings (map);
 			else
 				P_LoadThings2 (map);	// [RH] Load Hexen-style things
-
-			SetCompatibilityParams();
 		}
 		else
 		{
@@ -3824,6 +3822,8 @@ void P_SetupLevel (const char *lumpname, int position)
 			P_ParseTextMap(map, missingtex);
 			times[0].Unclock();
 		}
+
+		SetCompatibilityParams();
 
 		times[6].Clock();
 		P_LoopSidedefs (true);

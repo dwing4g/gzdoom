@@ -132,7 +132,7 @@ CVAR(Float, png_gamma, 0.f, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
 //==========================================================================
 
 bool M_CreatePNG (FileWriter *file, const uint8_t *buffer, const PalEntry *palette,
-				  ESSType color_type, int width, int height, int pitch)
+				  ESSType color_type, int width, int height, int pitch, float gamma)
 {
 	uint8_t work[8 +				// signature
 			  12+2*4+5 +		// IHDR
@@ -157,7 +157,7 @@ bool M_CreatePNG (FileWriter *file, const uint8_t *buffer, const PalEntry *palet
 	MakeChunk (ihdr, MAKE_ID('I','H','D','R'), 2*4+5);
 
 	// Assume a display exponent of 2.2 (100000/2.2 ~= 45454.5)
-	*gama = BigLong (int (45454.5f * (png_gamma == 0.f ? Gamma : png_gamma)));
+	*gama = BigLong (int (45454.5f * (png_gamma == 0.f ? gamma : png_gamma)));
 	MakeChunk (gama, MAKE_ID('g','A','M','A'), 4);
 
 	if (color_type == SS_PAL)
@@ -383,18 +383,22 @@ PNGHandle *M_VerifyPNG (FileReader *filer, bool takereader)
 
 	if (filer->Read(&data, 8) != 8)
 	{
+		if (takereader) delete filer;
 		return NULL;
 	}
 	if (data[0] != MAKE_ID(137,'P','N','G') || data[1] != MAKE_ID(13,10,26,10))
 	{ // Does not have PNG signature
+		if (takereader) delete filer;
 		return NULL;
 	}
 	if (filer->Read (&data, 8) != 8)
 	{
+		if (takereader) delete filer;
 		return NULL;
 	}
 	if (data[1] != MAKE_ID('I','H','D','R'))
 	{ // IHDR must be the first chunk
+		if (takereader) delete filer;
 		return NULL;
 	}
 
@@ -450,12 +454,6 @@ PNGHandle *M_VerifyPNG (FileReader *filer, bool takereader)
 
 	delete png;
 	return NULL;
-}
-
-PNGHandle *M_VerifyPNG(FILE *file)
-{
-	FileReader *fr = new FileReader(file);
-	return M_VerifyPNG(fr, true);
 }
 
 //==========================================================================
