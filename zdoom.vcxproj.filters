@@ -1373,9 +1373,6 @@
     <ClCompile Include="src\i_time.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\tmpfileplus.c">
-      <Filter>!Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\umapinfo.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
@@ -1393,6 +1390,9 @@
     </ClCompile>
     <ClCompile Include="src\r_data\matrix.cpp">
       <Filter>Render Data\Resource Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tmpfileplus.cpp">
+      <Filter>!Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
