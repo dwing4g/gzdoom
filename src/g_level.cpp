@@ -1481,6 +1481,8 @@ void G_InitLevelLocals ()
 	level.outsidefogdensity = info->outsidefogdensity;
 	level.skyfog = info->skyfog;
 
+	level.pixelstretch = info->pixelstretch;
+
 	compatflags.Callback();
 	compatflags2.Callback();
 
@@ -1994,6 +1996,7 @@ DEFINE_FIELD(FLevelLocals, teamdamage)
 DEFINE_FIELD(FLevelLocals, fogdensity)
 DEFINE_FIELD(FLevelLocals, outsidefogdensity)
 DEFINE_FIELD(FLevelLocals, skyfog)
+DEFINE_FIELD(FLevelLocals, pixelstretch)
 DEFINE_FIELD_BIT(FLevelLocals, flags, noinventorybar, LEVEL_NOINVENTORYBAR)
 DEFINE_FIELD_BIT(FLevelLocals, flags, monsterstelefrag, LEVEL_MONSTERSTELEFRAG)
 DEFINE_FIELD_BIT(FLevelLocals, flags, actownspecial, LEVEL_ACTOWNSPECIAL)
