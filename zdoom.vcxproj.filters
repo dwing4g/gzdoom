@@ -515,9 +515,6 @@
     <ClCompile Include="src\zzautozend.cpp">
       <Filter>!Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\win32\eaxedit.cpp">
-      <Filter>win32</Filter>
-    </ClCompile>
     <ClCompile Include="src\win32\fb_d3d9.cpp">
       <Filter>win32</Filter>
     </ClCompile>
@@ -1866,6 +1863,9 @@
     </ClInclude>
     <ClInclude Include="src\r_data\matrix.h">
       <Filter>Render Data\Resource Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\p_linetracedata.h">
+      <Filter>!Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

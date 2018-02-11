@@ -688,7 +688,6 @@
     <ClCompile Include="src\zstrformat.cpp" />
     <ClCompile Include="src\zstring.cpp" />
     <ClCompile Include="src\zzautozend.cpp" />
-    <ClCompile Include="src\win32\eaxedit.cpp" />
     <ClCompile Include="src\win32\fb_d3d9.cpp" />
     <ClCompile Include="src\win32\fb_d3d9_wipe.cpp" />
     <ClCompile Include="src\win32\fb_ddraw.cpp" />
@@ -781,6 +780,7 @@
   <ItemGroup>
     <ClInclude Include="src\i_time.h" />
     <ClInclude Include="src\math\mconf.h" />
+    <ClInclude Include="src\p_linetracedata.h" />
     <ClInclude Include="src\r_data\matrix.h" />
     <ClInclude Include="src\r_data\models\models.h" />
     <ClInclude Include="src\r_data\models\tab_anorms.h" />
