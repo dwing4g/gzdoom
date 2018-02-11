@@ -58,6 +58,7 @@
 #include "vm.h"
 #include "events.h"
 #include "gl/renderer/gl_renderer.h" // for menu blur
+#include "scripting/types.h"
 
 //
 // Todo: Move these elsewhere
@@ -735,7 +736,11 @@ void M_Ticker (void)
 	if (CurrentMenu != nullptr && menuactive != MENU_Off) 
 	{
 		CurrentMenu->CallTicker();
+	}
 
+	// Check again because menu could be closed from Ticker()
+	if (CurrentMenu != nullptr && menuactive != MENU_Off)
+	{
 		for (int i = 0; i < NUM_MKEYS; ++i)
 		{
 			if (MenuButtons[i].bDown)
@@ -1176,6 +1181,8 @@ DMenuItemBase * CreateOptionMenuItemCommand(const char *label, FName cmd, bool c
 	VMValue params[] = { p, &namestr, cmd.GetIndex(), centered };
 	auto f = dyn_cast<PFunction>(c->FindSymbol("Init", false));
 	VMCall(f->Variants[0].Implementation, params, countof(params), nullptr, 0);
+	auto unsafe = dyn_cast<PField>(c->FindSymbol("mUnsafe", false));
+	unsafe->Type->SetValue(reinterpret_cast<uint8_t*>(p) + unsafe->Offset, 0);
 	return (DMenuItemBase*)p;
 }
 

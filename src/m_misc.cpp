@@ -315,7 +315,7 @@ void M_SaveDefaultsFinal ()
 	GameConfig = NULL;
 }
 
-CCMD (writeini)
+UNSAFE_CCMD (writeini)
 {
 	const char *filename = (argv.argc() == 1) ? NULL : argv[1];
 	if (!M_SaveDefaults (filename))
@@ -673,7 +673,7 @@ void M_ScreenShot (const char *filename)
 	}
 }
 
-CCMD (screenshot)
+UNSAFE_CCMD (screenshot)
 {
 	if (argv.argc() == 1)
 		G_ScreenShot (NULL);

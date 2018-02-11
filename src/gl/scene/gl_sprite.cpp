@@ -73,7 +73,7 @@ CVAR(Bool, gl_billboard_particles, true, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
 CVAR(Int, gl_enhanced_nv_stealth, 3, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
 CUSTOM_CVAR(Int, gl_fuzztype, 0, CVAR_ARCHIVE)
 {
-	if (self < 0 || self > 7) self = 0;
+	if (self < 0 || self > 8) self = 0;
 }
 
 EXTERN_CVAR (Float, transsouls)
@@ -987,9 +987,8 @@ void GLSprite::Process(AActor* thing, sector_t * sector, int thruportal)
 		RenderStyle.CheckFuzz();
 		if (RenderStyle.BlendOp == STYLEOP_Fuzz)
 		{
-			if (gl_fuzztype != 0 && !gl.legacyMode)
+			if (gl_fuzztype != 0 && !gl.legacyMode && !(RenderStyle.Flags & STYLEF_InvertSource))
 			{
-				// Todo: implement shader selection here
 				RenderStyle = LegacyRenderStyles[STYLE_Translucent];
 				OverrideShader = gl_fuzztype + 4;
 				trans = 0.99f;	// trans may not be 1 here

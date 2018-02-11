@@ -809,11 +809,13 @@ bool FMultiBlockLinesIterator::GoUp(double x, double y)
 	{
 		if (!cursector->PortalBlocksMovement(sector_t::ceiling))
 		{
-			startIteratorForGroup(cursector->GetOppositePortalGroup(sector_t::ceiling));
-			portalflags = FFCF_NOFLOOR;
-			return true;
+			if (startIteratorForGroup(cursector->GetOppositePortalGroup(sector_t::ceiling)))
+			{
+				portalflags = FFCF_NOFLOOR;
+				return true;
+			}
 		}
-		else continueup = false;
+		continueup = false;
 	}
 	return false;
 }
@@ -830,11 +832,13 @@ bool FMultiBlockLinesIterator::GoDown(double x, double y)
 	{
 		if (!cursector->PortalBlocksMovement(sector_t::floor))
 		{
-			startIteratorForGroup(cursector->GetOppositePortalGroup(sector_t::floor));
-			portalflags = FFCF_NOCEILING;
-			return true;
+			if (startIteratorForGroup(cursector->GetOppositePortalGroup(sector_t::floor)))
+			{
+				portalflags = FFCF_NOCEILING;
+				return true;
+			}
 		}
-		else continuedown = false;
+		continuedown = false;
 	}
 	return false;
 }
@@ -906,14 +910,19 @@ bool FMultiBlockLinesIterator::Next(FMultiBlockLinesIterator::CheckResult *item)
 //
 //===========================================================================
 
-void FMultiBlockLinesIterator::startIteratorForGroup(int group)
+bool FMultiBlockLinesIterator::startIteratorForGroup(int group)
 {
 	offset = Displacements.getOffset(basegroup, group);
 	offset.X += checkpoint.X;
 	offset.Y += checkpoint.Y;
 	cursector = group == startsector->PortalGroup ? startsector : P_PointInSector(offset);
+	// If we ended up in a different group, 
+	// presumably because the spot to be checked is too far outside the actual portal group,
+	// the search needs to abort.
+	if (cursector->PortalGroup != group) return false;
 	bbox.setBox(offset.X, offset.Y, checkpoint.Z);
 	blockIterator.init(bbox);
+	return true;
 }
 
 //===========================================================================
@@ -1275,20 +1284,21 @@ void FMultiBlockThingsIterator::Reset()
 //
 //===========================================================================
 
-class DBlockThingsIterator : public DObject, public FMultiBlockThingsIterator
+class DBlockThingsIterator : public DObject
 {
 	DECLARE_ABSTRACT_CLASS(DBlockThingsIterator, DObject);
 	FPortalGroupArray check;
+	FMultiBlockThingsIterator iterator;
 public:
 	FMultiBlockThingsIterator::CheckResult cres;
 
 	bool Next()
 	{
-		return FMultiBlockThingsIterator::Next(&cres);
+		return iterator.Next(&cres);
 	}
 
 	DBlockThingsIterator(AActor *origin, double checkradius = -1, bool ignorerestricted = false)
-		: FMultiBlockThingsIterator(check, origin, checkradius, ignorerestricted)
+		: iterator(check, origin, checkradius, ignorerestricted)
 	{
 		cres.thing = nullptr;
 		cres.Position.Zero();
@@ -1296,7 +1306,7 @@ public:
 	}
 
 	DBlockThingsIterator(double checkx, double checky, double checkz, double checkh, double checkradius, bool ignorerestricted, sector_t *newsec)
-		: FMultiBlockThingsIterator(check, checkx, checky, checkz, checkh, checkradius, ignorerestricted, newsec)
+		: iterator(check, checkx, checky, checkz, checkh, checkradius, ignorerestricted, newsec)
 	{
 		cres.thing = nullptr;
 		cres.Position.Zero();

@@ -224,7 +224,7 @@ CCMD (map)
 //
 //==========================================================================
 
-CCMD(recordmap)
+UNSAFE_CCMD(recordmap)
 {
 	if (netgame)
 	{
@@ -277,7 +277,7 @@ CCMD(recordmap)
 //
 //==========================================================================
 
-CCMD (open)
+UNSAFE_CCMD (open)
 {
 	if (netgame)
 	{
@@ -648,7 +648,8 @@ void G_ChangeLevel(const char *levelname, int position, int flags, int nextSkill
 
 			// If this is co-op, respawn any dead players now so they can
 			// keep their inventory on the next map.
-			if ((multiplayer || level.flags2 & LEVEL2_ALLOWRESPAWN || sv_singleplayerrespawn) && !deathmatch && player->playerstate == PST_DEAD)
+			if ((multiplayer || level.flags2 & LEVEL2_ALLOWRESPAWN || sv_singleplayerrespawn || !!G_SkillProperty(SKILLP_PlayerRespawn))
+				&& !deathmatch && player->playerstate == PST_DEAD)
 			{
 				// Copied from the end of P_DeathThink [[
 				player->cls = NULL;		// Force a new class if the player is using a random class
@@ -1957,6 +1958,52 @@ DEFINE_ACTION_FUNCTION(FLevelLocals, SetInterMusic)
 //==========================================================================
 //
 //
+//==========================================================================
+
+template <typename T>
+inline T VecDiff(const T& v1, const T& v2)
+{
+	T result = v2 - v1;
+
+	if (level.subsectors.Size() > 0)
+	{
+		const sector_t *const sec1 = P_PointInSector(v1);
+		const sector_t *const sec2 = P_PointInSector(v2);
+
+		if (nullptr != sec1 && nullptr != sec2)
+		{
+			result += Displacements.getOffset(sec2->PortalGroup, sec1->PortalGroup);
+		}
+	}
+
+	return result;
+}
+
+DEFINE_ACTION_FUNCTION(FLevelLocals, Vec2Diff)
+{
+	PARAM_PROLOGUE;
+	PARAM_FLOAT(x1);
+	PARAM_FLOAT(y1);
+	PARAM_FLOAT(x2);
+	PARAM_FLOAT(y2);
+	ACTION_RETURN_VEC2(VecDiff(DVector2(x1, y1), DVector2(x2, y2)));
+}
+
+DEFINE_ACTION_FUNCTION(FLevelLocals, Vec3Diff)
+{
+	PARAM_PROLOGUE;
+	PARAM_FLOAT(x1);
+	PARAM_FLOAT(y1);
+	PARAM_FLOAT(z1);
+	PARAM_FLOAT(x2);
+	PARAM_FLOAT(y2);
+	PARAM_FLOAT(z2);
+	ACTION_RETURN_VEC3(VecDiff(DVector3(x1, y1, z1), DVector3(x2, y2, z2)));
+}
+
+//==========================================================================
+//
+//
 //
 //==========================================================================
 DEFINE_GLOBAL(level);
@@ -1982,6 +2029,10 @@ DEFINE_FIELD(FLevelLocals, F1Pic)
 DEFINE_FIELD(FLevelLocals, maptype)
 DEFINE_FIELD(FLevelLocals, Music)
 DEFINE_FIELD(FLevelLocals, musicorder)
+DEFINE_FIELD(FLevelLocals, skytexture1)
+DEFINE_FIELD(FLevelLocals, skytexture2)
+DEFINE_FIELD(FLevelLocals, skyspeed1)
+DEFINE_FIELD(FLevelLocals, skyspeed2)
 DEFINE_FIELD(FLevelLocals, total_secrets)
 DEFINE_FIELD(FLevelLocals, found_secrets)
 DEFINE_FIELD(FLevelLocals, total_items)
@@ -2047,3 +2098,19 @@ CCMD(skyfog)
 	}
 }
 
+
+//==========================================================================
+//
+// ZScript counterpart to ACS ChangeSky, uses TextureIDs
+//
+//==========================================================================
+DEFINE_ACTION_FUNCTION(FLevelLocals, ChangeSky)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FLevelLocals);
+	PARAM_INT(sky1);
+	PARAM_INT(sky2);
+	sky1texture = self->skytexture1 = FSetTextureID(sky1);
+	sky2texture = self->skytexture2 = FSetTextureID(sky2);
+	R_InitSkyMap();
+	return 0;
+}

@@ -2138,7 +2138,7 @@ static void AddAutoloadFiles(const char *autoname)
 		D_AddDirectory (allwads, file);
 
 #ifdef __unix__
-		file = NicePath("~/" GAME_DIR "/skins");
+		file = NicePath("$HOME/" GAME_DIR "/skins");
 		D_AddDirectory (allwads, file);
 #endif	
 
@@ -2821,7 +2821,7 @@ void D_DoomMain (void)
 //
 //==========================================================================
 
-CCMD(restart)
+UNSAFE_CCMD(restart)
 {
 	// remove command line args that would get in the way during restart
 	Args->RemoveArgs("-iwad");
