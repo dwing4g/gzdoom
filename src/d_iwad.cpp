@@ -243,7 +243,7 @@ void FIWadManager::ParseIWadInfo(const char *fn, const char *data, int datasize,
 
 FIWadManager::FIWadManager(const char *fn)
 {
-	FResourceFile *resfile = FResourceFile::OpenResourceFile(fn, NULL, true);
+	FResourceFile *resfile = FResourceFile::OpenResourceFile(fn, true);
 	if (resfile != NULL)
 	{
 		uint32_t cnt = resfile->LumpCount();
@@ -276,7 +276,7 @@ FIWadManager::FIWadManager(const char *fn)
 
 int FIWadManager::ScanIWAD (const char *iwad)
 {
-	FResourceFile *iwadfile = FResourceFile::OpenResourceFile(iwad, NULL, true);
+	FResourceFile *iwadfile = FResourceFile::OpenResourceFile(iwad, true);
 
 	mLumpsFound.Resize(mIWadInfos.Size());
 
@@ -332,7 +332,7 @@ int FIWadManager::ScanIWAD (const char *iwad)
 
 int FIWadManager::CheckIWADInfo(const char *fn)
 {
-	FResourceFile *resfile = FResourceFile::OpenResourceFile(fn, NULL, true);
+	FResourceFile *resfile = FResourceFile::OpenResourceFile(fn, true);
 	if (resfile != NULL)
 	{
 		uint32_t cnt = resfile->LumpCount();
@@ -348,13 +348,16 @@ int FIWadManager::CheckIWADInfo(const char *fn)
 					FIWADInfo result;
 					ParseIWadInfo(resfile->Filename, (const char*)lmp->CacheLump(), lmp->LumpSize, &result);
 					delete resfile;
-					for (auto &wadinf : mIWadInfos)
+
+					for (unsigned i = 0, count = mIWadInfos.Size(); i < count; ++i)
 					{
-						if (wadinf.Name == result.Name)
+						if (mIWadInfos[i].Name == result.Name)
 						{
-							return -1;	// do not show the same one twice.
+							return i;
 						}
 					}
+
+					mOrderNames.Push(result.Name);
 					return mIWadInfos.Push(result);
 				}
 				catch (CRecoverableError &err)
@@ -434,7 +437,7 @@ void FIWadManager::AddIWADCandidates(const char *dir)
 				if (p != nullptr)
 				{
 					// special IWAD extension.
-					if (!stricmp(p, ".iwad") || !stricmp(p, ".ipk3") || !stricmp(p, "ipk7"))
+					if (!stricmp(p, ".iwad") || !stricmp(p, ".ipk3") || !stricmp(p, ".ipk7"))
 					{
 						mFoundWads.Push(FFoundWadInfo{ slasheddir + FindName, "", -1 });
 					}
@@ -468,7 +471,7 @@ void FIWadManager::ValidateIWADs()
 	{
 		int index;
 		auto x = strrchr(p.mFullPath, '.');
-		if (x != nullptr && (!stricmp(x, ".iwad") || !stricmp(x, ".ipk3") || !stricmp(x, "ipk7")))
+		if (x != nullptr && (!stricmp(x, ".iwad") || !stricmp(x, ".ipk3") || !stricmp(x, ".ipk7")))
 		{
 			index = CheckIWADInfo(p.mFullPath);
 		}
@@ -519,27 +522,38 @@ int FIWadManager::IdentifyVersion (TArray<FString> &wadfiles, const char *iwad, 
 
 	if (iwadparm)
 	{
-		// Check if the given IWAD has an absolute path, in which case the search path will be ignored.
-		custwad = iwadparm;
-		FixPathSeperator(custwad);
-		DefaultExtension(custwad, ".wad");
-		bool isAbsolute = (custwad[0] == '/');
+		const char* const extensions[] = { ".wad", ".pk3", ".iwad", ".ipk3", ".ipk7" };
+
+		for (auto ext : extensions)
+		{
+			// Check if the given IWAD has an absolute path, in which case the search path will be ignored.
+			custwad = iwadparm;
+			FixPathSeperator(custwad);
+			DefaultExtension(custwad, ext);
+			bool isAbsolute = (custwad[0] == '/');
 #ifdef WINDOWS
-		isAbsolute |= (custwad.Len() >= 2 && custwad[1] == ':');
+			isAbsolute |= (custwad.Len() >= 2 && custwad[1] == ':');
 #endif
-		if (isAbsolute)
-		{
-			if (FileExists(custwad)) mFoundWads.Push({ custwad, "", -1 });
-		}
-		else
-		{
-			for (auto &dir : mSearchPaths)
+			if (isAbsolute)
 			{
-				FStringf fullpath("%s/%s", dir.GetChars(), custwad.GetChars());
-				if (FileExists(fullpath))
+				if (FileExists(custwad)) mFoundWads.Push({ custwad, "", -1 });
+			}
+			else
+			{
+				for (auto &dir : mSearchPaths)
 				{
-					mFoundWads.Push({ fullpath, "", -1 });
+					FStringf fullpath("%s/%s", dir.GetChars(), custwad.GetChars());
+					if (FileExists(fullpath))
+					{
+						mFoundWads.Push({ fullpath, "", -1 });
+					}
 				}
+			}
+
+			if (mFoundWads.Size() != numFoundWads)
+			{
+				// Found IWAD with guessed extension
+				break;
 			}
 		}
 	}

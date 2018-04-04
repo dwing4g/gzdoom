@@ -138,6 +138,7 @@ CVAR (Color, am_lockedcolor,		0x007800,	CVAR_ARCHIVE);
 CVAR (Color, am_intralevelcolor,	0x0000ff,	CVAR_ARCHIVE);
 CVAR (Color, am_interlevelcolor,	0xff0000,	CVAR_ARCHIVE);
 CVAR (Color, am_secretsectorcolor,	0xff00ff,	CVAR_ARCHIVE);
+CVAR (Color, am_unexploredsecretcolor,	0xff00ff,	CVAR_ARCHIVE);
 CVAR (Color, am_thingcolor_friend,	0xfcfcfc,	CVAR_ARCHIVE);
 CVAR (Color, am_thingcolor_monster,	0xfcfcfc,	CVAR_ARCHIVE);
 CVAR (Color, am_thingcolor_ncmonster,	0xfcfcfc,	CVAR_ARCHIVE);
@@ -158,6 +159,7 @@ CVAR (Color, am_ovunseencolor,		0x00226e,	CVAR_ARCHIVE);
 CVAR (Color, am_ovtelecolor,		0xffff00,	CVAR_ARCHIVE);
 CVAR (Color, am_ovinterlevelcolor,	0xffff00,	CVAR_ARCHIVE);
 CVAR (Color, am_ovsecretsectorcolor,0x00ffff,	CVAR_ARCHIVE);
+CVAR (Color, am_ovunexploredsecretcolor,0x00ffff,	CVAR_ARCHIVE);
 CVAR (Color, am_ovthingcolor,		0xe88800,	CVAR_ARCHIVE);
 CVAR (Color, am_ovthingcolor_friend,	0xe88800,	CVAR_ARCHIVE);
 CVAR (Color, am_ovthingcolor_monster,	0xe88800,	CVAR_ARCHIVE);
@@ -230,6 +232,7 @@ static const char *ColorNames[] = {
 		"IntraTeleportColor", 
 		"InterTeleportColor",
 		"SecretSectorColor",
+		"UnexploredSecretColor",
 		"PortalColor",
 		"AlmostBackgroundColor",
 		NULL
@@ -261,6 +264,7 @@ struct AMColorset
 		IntraTeleportColor, 
 		InterTeleportColor,
 		SecretSectorColor,
+		UnexploredSecretColor,
 		PortalColor,
 		AlmostBackgroundColor,
 		AM_NUM_COLORS
@@ -362,6 +366,7 @@ static FColorCVar *cv_standard[] = {
 	&am_intralevelcolor,
 	&am_interlevelcolor,
 	&am_secretsectorcolor,
+	&am_unexploredsecretcolor,
 	&am_portalcolor
 };
 
@@ -388,6 +393,7 @@ static FColorCVar *cv_overlay[] = {
 	&am_ovtelecolor,
 	&am_ovinterlevelcolor,
 	&am_ovsecretsectorcolor,
+	&am_ovunexploredsecretcolor,
 	&am_ovportalcolor
 };
 
@@ -430,6 +436,7 @@ static unsigned char DoomColors[]= {
 	NOT_USED,		// intrateleport
 	NOT_USED,		// interteleport
 	NOT_USED,		// secretsector
+	NOT_USED,		// unexploredsecretsector
 	0x10,0x10,0x10,	// almostbackground
 	0x40,0x40,0x40	// portal
 };
@@ -457,6 +464,7 @@ static unsigned char StrifeColors[]= {
 	NOT_USED,		// intrateleport
 	NOT_USED,		// interteleport
 	NOT_USED,		// secretsector
+	NOT_USED,		// unexploredsecretsector
 	0x10,0x10,0x10,	// almostbackground
 	0x40,0x40,0x40	// portal
 };
@@ -484,6 +492,7 @@ static unsigned char RavenColors[]= {
 	NOT_USED,		// intrateleport
 	NOT_USED,		// interteleport
 	NOT_USED,		// secretsector
+	NOT_USED,		// unexploredsecretsector
 	0x10,0x10,0x10,	// almostbackground
 	0x50,0x50,0x50	// portal
 };
@@ -943,7 +952,7 @@ void AM_StaticInit()
 	for (int i = 0; i < 10; i++)
 	{
 		mysnprintf (namebuf, countof(namebuf), "AMMNUM%d", i);
-		marknums[i] = TexMan.CheckForTexture (namebuf, FTexture::TEX_MiscPatch);
+		marknums[i] = TexMan.CheckForTexture (namebuf, ETextureType::MiscPatch);
 	}
 	markpointnum = 0;
 	mapback.SetInvalid();
@@ -1347,11 +1356,11 @@ void AM_LevelInit ()
 {
 	if (level.info->MapBackground.Len() == 0)
 	{
-		mapback = TexMan.CheckForTexture("AUTOPAGE", FTexture::TEX_MiscPatch);
+		mapback = TexMan.CheckForTexture("AUTOPAGE", ETextureType::MiscPatch);
 	}
 	else
 	{
-		mapback = TexMan.CheckForTexture(level.info->MapBackground, FTexture::TEX_MiscPatch);
+		mapback = TexMan.CheckForTexture(level.info->MapBackground, ETextureType::MiscPatch);
 	}
 
 	AM_clearMarks();
@@ -2186,7 +2195,7 @@ void AM_drawSubsectors()
 
 		// Draw the polygon.
 		FTexture *pic = TexMan(maptex);
-		if (pic != NULL && pic->UseType != FTexture::TEX_Null)
+		if (pic != NULL && pic->UseType != ETextureType::Null)
 		{
 			screen->FillSimplePoly(TexMan(maptex),
 				&points[0], points.Size(),
@@ -2209,7 +2218,7 @@ void AM_drawSubsectors()
 //
 //=============================================================================
 
-static bool AM_CheckSecret(line_t *line)
+static int AM_CheckSecret(line_t *line)
 {
 	if (AMColors.isValid(AMColors.SecretSectorColor))
 	{
@@ -2217,20 +2226,20 @@ static bool AM_CheckSecret(line_t *line)
 		{
 			if (line->frontsector->wasSecret())
 			{
-				if (am_map_secrets!=0 && !line->frontsector->isSecret()) return true;
-				if (am_map_secrets==2 && !(line->flags & ML_SECRET)) return true;
+				if (am_map_secrets!=0 && !line->frontsector->isSecret()) return 1;
+				if (am_map_secrets==2 && !(line->flags & ML_SECRET)) return 2;
 			}
 		}
 		if (line->backsector != NULL)
 		{
 			if (line->backsector->wasSecret())
 			{
-				if (am_map_secrets!=0 && !line->backsector->isSecret()) return true;
-				if (am_map_secrets==2 && !(line->flags & ML_SECRET)) return true;
+				if (am_map_secrets!=0 && !line->backsector->isSecret()) return 1;
+				if (am_map_secrets==2 && !(line->flags & ML_SECRET)) return 2;
 			}
 		}
 	}
-	return false;
+	return 0;
 }
 
 
@@ -2584,10 +2593,14 @@ void AM_drawWalls (bool allmap)
 				{
 					AM_drawMline(&l, AMColors.PortalColor);
 				}
-				else if (AM_CheckSecret(&line))
+				else if (AM_CheckSecret(&line) == 1)
 				{
 					// map secret sectors like Boom
 					AM_drawMline(&l, AMColors.SecretSectorColor);
+				}
+				else if (AM_CheckSecret(&line) == 2)
+				{
+					AM_drawMline(&l, AMColors.UnexploredSecretColor);
 				}
 				else if (line.flags & ML_SECRET)
 				{ // secret door
@@ -3056,7 +3069,7 @@ void AM_drawThings ()
 static void DrawMarker (FTexture *tex, double x, double y, int yadjust,
 	INTBOOL flip, double xscale, double yscale, int translation, double alpha, uint32_t fillcolor, FRenderStyle renderstyle)
 {
-	if (tex == NULL || tex->UseType == FTexture::TEX_Null)
+	if (tex == NULL || tex->UseType == ETextureType::Null)
 	{
 		return;
 	}
@@ -3075,7 +3088,7 @@ static void DrawMarker (FTexture *tex, double x, double y, int yadjust,
 		DTA_TranslationIndex, translation,
 		DTA_Alpha, alpha,
 		DTA_FillColor, fillcolor,
-		DTA_RenderStyle, uint32_t(renderstyle),
+		DTA_RenderStyle, renderstyle.AsDWORD,
 		TAG_DONE);
 }
 

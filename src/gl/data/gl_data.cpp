@@ -68,7 +68,7 @@ CUSTOM_CVAR(Bool, gl_notexturefill, false, 0)
 
 
 void gl_CreateSections();
-void AddAutoBrightmaps();
+void AddAutoMaterials();
 
 //-----------------------------------------------------------------------------
 //
@@ -92,7 +92,7 @@ void AdjustSpriteOffsets()
 			char str[9];
 			Wads.GetLumpName(str, i);
 			str[8] = 0;
-			FTextureID texid = TexMan.CheckForTexture(str, FTexture::TEX_Sprite, 0);
+			FTextureID texid = TexMan.CheckForTexture(str, ETextureType::Sprite, 0);
 			if (texid.isValid() && Wads.GetLumpFile(TexMan[texid]->SourceLump) > Wads.GetIwadNum())
 			{
 				// This texture has been replaced by some PWAD.
@@ -114,7 +114,7 @@ void AdjustSpriteOffsets()
 			int x,y;
 			bool iwadonly = false;
 			bool forced = false;
-			FTextureID texno = TexMan.CheckForTexture(sc.String, FTexture::TEX_Sprite);
+			FTextureID texno = TexMan.CheckForTexture(sc.String, ETextureType::Sprite);
 			sc.MustGetStringName(",");
 			sc.MustGetNumber();
 			x=sc.Number;
@@ -364,7 +364,7 @@ void gl_RecalcVertexHeights(vertex_t * v)
 void gl_InitData()
 {
 	AdjustSpriteOffsets();
-	AddAutoBrightmaps();
+	AddAutoMaterials();
 }
 
 //==========================================================================

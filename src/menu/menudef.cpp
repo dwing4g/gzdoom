@@ -55,6 +55,7 @@
 #include "types.h"
 #include "gameconfigfile.h"
 #include "m_argv.h"
+#include "i_soundfont.h"
 
 
 
@@ -160,7 +161,7 @@ void DeinitMenus()
 
 static FTextureID GetMenuTexture(const char* const name)
 {
-	const FTextureID texture = TexMan.CheckForTexture(name, FTexture::TEX_MiscPatch);
+	const FTextureID texture = TexMan.CheckForTexture(name, ETextureType::MiscPatch);
 
 	if (!texture.Exists() && mustPrintErrors)
 	{
@@ -416,7 +417,7 @@ static void ParseListMenuBody(FScanner &sc, DListMenuDescriptor *desc)
 						}
 						else if (args[i] == TypeTextureID)
 						{
-							auto f = TexMan.CheckForTexture(sc.String, FTexture::TEX_MiscPatch);
+							auto f = TexMan.CheckForTexture(sc.String, ETextureType::MiscPatch);
 							if (!f.Exists())
 							{
 								sc.ScriptMessage("Unknown texture %s", sc.String);
@@ -1380,94 +1381,65 @@ static void InitCrosshairsList()
 // Initialize the music configuration submenus
 //
 //=============================================================================
+extern "C"
+{
+	extern int adl_getBanksCount();
+	extern const char *const *adl_getBankNames();
+}
+
 static void InitMusicMenus()
 {
 	DMenuDescriptor **advmenu = MenuDescriptors.CheckKey("AdvSoundOptions");
-	DMenuDescriptor **gusmenu = MenuDescriptors.CheckKey("GusConfigMenu");
-	DMenuDescriptor **timiditymenu = MenuDescriptors.CheckKey("TimidityExeMenu");
-	DMenuDescriptor **wildmidimenu = MenuDescriptors.CheckKey("WildMidiConfigMenu");
-	DMenuDescriptor **timiditycfgmenu = MenuDescriptors.CheckKey("TimidityConfigMenu");
-	DMenuDescriptor **fluidmenu = MenuDescriptors.CheckKey("FluidPatchsetMenu");
+	auto soundfonts = sfmanager.GetList();
+	std::tuple<const char *, int, const char *> sfmenus[] = { std::make_tuple("GusConfigMenu", SF_SF2 | SF_GUS, "midi_config"), 
+																std::make_tuple("WildMidiConfigMenu", SF_GUS, "wildmidi_config"), 
+																std::make_tuple("TimidityConfigMenu", SF_SF2 | SF_GUS, "timidity_config"), 
+																std::make_tuple("FluidPatchsetMenu", SF_SF2, "fluid_patchset") };
 
-	const char *key, *value;
-	if (GameConfig->SetSection("SoundFonts"))
+	for (auto &p : sfmenus)
 	{
-		while (GameConfig->NextInSection(key, value))
+		DMenuDescriptor **menu = MenuDescriptors.CheckKey(std::get<0>(p));
+
+		if (menu != nullptr)
 		{
-			if (FileExists(value))
+			if (soundfonts.Size() > 0)
 			{
-				if (fluidmenu != nullptr)
+				for (auto &entry : soundfonts)
 				{
-					auto it = CreateOptionMenuItemCommand(key, FStringf("fluid_patchset %s", NicePath(value).GetChars()), true);
-					static_cast<DOptionMenuDescriptor*>(*fluidmenu)->mItems.Push(it);
+					if (entry.type & std::get<1>(p))
+					{
+						FString display = entry.mName;
+						display.ReplaceChars("_", ' ');
+						auto it = CreateOptionMenuItemCommand(display, FStringf("%s \"%s\"", std::get<2>(p), entry.mName.GetChars()), true);
+						static_cast<DOptionMenuDescriptor*>(*menu)->mItems.Push(it);
+					}
 				}
+			}
+			else if (advmenu != nullptr)
+			{
+				// Remove the item for this submenu
+				auto d = static_cast<DOptionMenuDescriptor*>(*advmenu);
+				auto it = d->GetItem(std::get<0>(p));
+				if (it != nullptr) d->mItems.Delete(d->mItems.Find(it));
 			}
 		}
 	}
-	else if (advmenu != nullptr)
+
+	DMenuDescriptor **menu = MenuDescriptors.CheckKey("ADLBankMenu");
+
+	if (menu != nullptr)
 	{
-		// Remove the item for this submenu
-		auto d = static_cast<DOptionMenuDescriptor*>(*advmenu);
-		auto it = d->GetItem("FluidPatchsetMenu");
-		if (it != nullptr) d->mItems.Delete(d->mItems.Find(it));
-	}
-	if (GameConfig->SetSection("PatchSets"))
-	{
-		while (GameConfig->NextInSection(key, value))
+		int adl_banks_count = adl_getBanksCount();
+		if (adl_banks_count > 0)
 		{
-			if (FileExists(value))
+			const char *const *adl_bank_names = adl_getBankNames();
+			for (int i=0; i < adl_banks_count; i++)
 			{
-				if (gusmenu != nullptr)
-				{
-					auto it = CreateOptionMenuItemCommand(key, FStringf("midi_config %s", NicePath(value).GetChars()), true);
-					static_cast<DOptionMenuDescriptor*>(*gusmenu)->mItems.Push(it);
-				}
-				if (wildmidimenu != nullptr)
-				{
-					auto it = CreateOptionMenuItemCommand(key, FStringf("wildmidi_config %s", NicePath(value).GetChars()), true);
-					static_cast<DOptionMenuDescriptor*>(*wildmidimenu)->mItems.Push(it);
-				}
-				if (timiditycfgmenu != nullptr)
-				{
-					auto it = CreateOptionMenuItemCommand(key, FStringf("timidity_config \"%s\"", NicePath(value).GetChars()), true);
-					static_cast<DOptionMenuDescriptor*>(*timiditycfgmenu)->mItems.Push(it);
-				}
+				auto it = CreateOptionMenuItemCommand(adl_bank_names[i], FStringf("adl_bank %d", i), true);
+				static_cast<DOptionMenuDescriptor*>(*menu)->mItems.Push(it);
 			}
 		}
 	}
-	else if (advmenu != nullptr)
-	{
-		// Remove the item for this submenu
-		auto d = static_cast<DOptionMenuDescriptor*>(*advmenu);
-		auto it = d->GetItem("GusConfigMenu");
-		if (it != nullptr) d->mItems.Delete(d->mItems.Find(it));
-		it = d->GetItem("WildMidiConfigMenu");
-		if (it != nullptr) d->mItems.Delete(d->mItems.Find(it));
-		it = d->GetItem("TimidityConfigMenu");
-		if (it != nullptr) d->mItems.Delete(d->mItems.Find(it));
-	}
-#ifdef _WIN32	// Different Timidity paths only make sense if they can be stored in arbitrary paths with local configs (i.e. not if things are done the Linux way)
-	if (GameConfig->SetSection("TimidityExes"))
-	{
-		while (GameConfig->NextInSection(key, value))
-		{
-			if (FileExists(value))
-			{
-				if (timiditymenu != nullptr)
-				{
-					auto it = CreateOptionMenuItemCommand(key, FStringf("timidity_exe %s", NicePath(value).GetChars()), true);
-					static_cast<DOptionMenuDescriptor*>(*timiditymenu)->mItems.Push(it);
-				}
-			}
-		}
-	}
-	else
-	{
-		auto d = static_cast<DOptionMenuDescriptor*>(*advmenu);
-		auto it = d->GetItem("TimidityExeMenu");
-		if (it != nullptr) d->mItems.Delete(d->mItems.Find(it));
-	}
-#endif
 }
 
 //=============================================================================

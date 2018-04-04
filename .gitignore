@@ -54,6 +54,7 @@
 .vs
 /src/gl/unused
 /mapfiles_release/*.map
+.DS_Store
 
 *.sdf
 *.opensdf

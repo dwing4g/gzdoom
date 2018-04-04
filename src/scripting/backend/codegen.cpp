@@ -924,11 +924,11 @@ void FxBoolCast::EmitCompare(VMFunctionBuilder *build, bool invert, TArray<size_
 //
 //==========================================================================
 
-FxIntCast::FxIntCast(FxExpression *x, bool nowarn, bool explicitly)
+FxIntCast::FxIntCast(FxExpression *x, bool nowarn, bool explicitly, bool isunsigned)
 : FxExpression(EFX_IntCast, x->ScriptPosition)
 {
 	basex=x;
-	ValueType = TypeSInt32;
+	ValueType = isunsigned ? TypeUInt32 : TypeSInt32;
 	NoWarn = nowarn;
 	Explicit = explicitly;
 }
@@ -1632,7 +1632,7 @@ FxExpression *FxTypeCast::Resolve(FCompileContext &ctx)
 	else if (ValueType->isInt())
 	{
 		// This is only for casting to actual ints. Subtypes representing an int will be handled elsewhere.
-		FxExpression *x = new FxIntCast(basex, NoWarn, Explicit);
+		FxExpression *x = new FxIntCast(basex, NoWarn, Explicit, static_cast<PInt*>(ValueType)->Unsigned);
 		x = x->Resolve(ctx);
 		basex = nullptr;
 		delete this;
@@ -2304,6 +2304,7 @@ ExpEmit FxPreIncrDecr::Emit(VMFunctionBuilder *build)
 	}
 
 	pointer.Free(build);
+	value.Target = false;	// This is for 'unrequesting' the address of a register variable. If not done here, passing a preincrement expression to a function will generate bad code.
 	return value;
 }
 
@@ -5945,7 +5946,7 @@ FxRandomSeed::~FxRandomSeed()
 FxExpression *FxRandomSeed::Resolve(FCompileContext &ctx)
 {
 	CHECKRESOLVED();
-	RESOLVE(seed, ctx);
+	SAFE_RESOLVE(seed, ctx);
 	return this;
 };
 
@@ -7406,7 +7407,16 @@ ExpEmit FxArrayElement::Emit(VMFunctionBuilder *build)
 	
 	if (arrayispointer)
 	{
-		arraytype = static_cast<PArray*>(Array->ValueType->toPointer()->PointedType);
+		auto ptr = Array->ValueType->toPointer();
+		if (ptr != nullptr)
+		{
+			arraytype = static_cast<PArray*>(ptr->PointedType);
+		}
+		else
+		{
+			ScriptPosition.Message(MSG_ERROR, "Internal error when generating code for array access");
+			return ExpEmit();
+		}
 	}
 	else
 	{
@@ -7758,6 +7768,8 @@ FxExpression *FxFunctionCall::Resolve(FCompileContext& ctx)
 	}
 	else
 	{
+		// This alias is needed because Actor has a Teleport function.
+		if (MethodName == NAME_TeleportSpecial) MethodName = NAME_Teleport;
 		special = P_FindLineSpecial(MethodName.GetChars(), &min, &max);
 	}
 	if (special != 0 && min >= 0)

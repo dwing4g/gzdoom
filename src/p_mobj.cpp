@@ -8127,6 +8127,20 @@ DEFINE_ACTION_FUNCTION(AActor, absangle)	// should this be global?
 	ACTION_RETURN_FLOAT(absangle(DAngle(a1), DAngle(a2)).Degrees);
 }
 
+DEFINE_ACTION_FUNCTION(AActor, Distance2DSquared)
+{
+	PARAM_SELF_PROLOGUE(AActor);
+	PARAM_OBJECT_NOT_NULL(other, AActor);
+	ACTION_RETURN_FLOAT(self->Distance2DSquared(other));
+}
+
+DEFINE_ACTION_FUNCTION(AActor, Distance3DSquared)
+{
+	PARAM_SELF_PROLOGUE(AActor);
+	PARAM_OBJECT_NOT_NULL(other, AActor);
+	ACTION_RETURN_FLOAT(self->Distance3DSquared(other));
+}
+
 DEFINE_ACTION_FUNCTION(AActor, Distance2D)
 {
 	PARAM_SELF_PROLOGUE(AActor);
@@ -8303,15 +8317,15 @@ DEFINE_ACTION_FUNCTION(AActor, Vec2To)
 {
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_OBJECT_NOT_NULL(t, AActor)
-		ACTION_RETURN_VEC2(self->Vec2To(t));
+	ACTION_RETURN_VEC2(self->Vec2To(t));
 }
 
 DEFINE_ACTION_FUNCTION(AActor, Vec3Angle)
 {
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_FLOAT(length)
-		PARAM_ANGLE(angle);
-	PARAM_FLOAT(z);
+	PARAM_ANGLE(angle);
+	PARAM_FLOAT_DEF(z);
 	PARAM_BOOL_DEF(absolute);
 	ACTION_RETURN_VEC3(self->Vec3Angle(length, angle, z, absolute));
 }
@@ -8502,5 +8516,7 @@ void PrintMiscActorInfo(AActor *query)
 			query->Speed, query->Vel.X, query->Vel.Y, query->Vel.Z, query->Vel.Length());
 		Printf("Scale: x:%f, y:%f\n", query->Scale.X, query->Scale.Y);
 		Printf("FriendlySeeBlocks: %d\n", query->friendlyseeblocks);
+		Printf("Target: %s\n", query->target ? query->target->GetClass()->TypeName.GetChars() : "-");
+		Printf("Last enemy: %s\n", query->lastenemy ? query->lastenemy->GetClass()->TypeName.GetChars() : "-");
 	}
 }

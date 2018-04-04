@@ -37,6 +37,7 @@
 #define RAPIDJSON_HAS_CXX11_RANGE_FOR 1
 #define RAPIDJSON_PARSE_DEFAULT_FLAGS kParseFullPrecisionFlag
 
+#include <zlib.h>
 #include "rapidjson/rapidjson.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/prettywriter.h"
@@ -1530,7 +1531,7 @@ FSerializer &Serialize(FSerializer &arc, const char *key, FTextureID &value, FTe
 			arc.WriteKey(key);
 			arc.w->StartArray();
 			arc.w->String(name);
-			arc.w->Int(pic->UseType);
+			arc.w->Int(static_cast<int>(pic->UseType));
 			arc.w->EndArray();
 		}
 	}
@@ -1546,7 +1547,7 @@ FSerializer &Serialize(FSerializer &arc, const char *key, FTextureID &value, FTe
 				assert(nameval.IsString() && typeval.IsInt());
 				if (nameval.IsString() && typeval.IsInt())
 				{
-					value = TexMan.GetTexture(UnicodeToString(nameval.GetString()), typeval.GetInt());
+					value = TexMan.GetTexture(UnicodeToString(nameval.GetString()), static_cast<ETextureType>(typeval.GetInt()));
 				}
 				else
 				{

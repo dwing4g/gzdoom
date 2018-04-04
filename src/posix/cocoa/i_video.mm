@@ -55,6 +55,7 @@
 #include "v_text.h"
 #include "v_video.h"
 #include "version.h"
+#include "videomodes.h"
 
 #include "gl/system/gl_system.h"
 #include "gl/data/gl_vertexbuffer.h"
@@ -112,13 +113,7 @@ EXTERN_CVAR(Bool, ticker   )
 EXTERN_CVAR(Bool, vid_vsync)
 EXTERN_CVAR(Bool, vid_hidpi)
 
-#if defined __ppc__ || defined __ppc64__
-static const bool TRUECOLOR_DEFAULT = false;
-#else // other than PowerPC
-static const bool TRUECOLOR_DEFAULT = true;
-#endif // PowerPC
-
-CUSTOM_CVAR(Bool, swtruecolor, TRUECOLOR_DEFAULT, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVAR_NOINITCALL)
+CUSTOM_CVAR(Bool, swtruecolor, true, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVAR_NOINITCALL)
 {
 	// Strictly speaking this doesn't require a mode switch, but it is the easiest
 	// way to force a CreateFramebuffer call without a lot of refactoring.
@@ -407,80 +402,6 @@ extern id appCtrl;
 
 namespace
 {
-
-const struct
-{
-	uint16_t width;
-	uint16_t height;
-}
-VideoModes[] =
-{
-	{  320,  200 },
-	{  320,  240 },
-	{  400,  225 },	// 16:9
-	{  400,  300 },
-	{  480,  270 },	// 16:9
-	{  480,  360 },
-	{  512,  288 },	// 16:9
-	{  512,  384 },
-	{  640,  360 },	// 16:9
-	{  640,  400 },
-	{  640,  480 },
-	{  720,  480 },	// 16:10
-	{  720,  540 },
-	{  800,  450 },	// 16:9
-	{  800,  480 },
-	{  800,  500 },	// 16:10
-	{  800,  600 },
-	{  848,  480 },	// 16:9
-	{  960,  600 },	// 16:10
-	{  960,  720 },
-	{ 1024,  576 },	// 16:9
-	{ 1024,  600 },	// 17:10
-	{ 1024,  640 },	// 16:10
-	{ 1024,  768 },
-	{ 1088,  612 },	// 16:9
-	{ 1152,  648 },	// 16:9
-	{ 1152,  720 },	// 16:10
-	{ 1152,  864 },
-	{ 1280,  540 }, // 21:9
-	{ 1280,  720 },	// 16:9
-	{ 1280,  854 },
-	{ 1280,  800 },	// 16:10
-	{ 1280,  960 },
-	{ 1280, 1024 },	// 5:4
-	{ 1360,  768 },	// 16:9
-	{ 1366,  768 },
-	{ 1400,  787 },	// 16:9
-	{ 1400,  875 },	// 16:10
-	{ 1400, 1050 },
-	{ 1440,  900 },
-	{ 1440,  960 },
-	{ 1440, 1080 },
-	{ 1600,  900 },	// 16:9
-	{ 1600, 1000 },	// 16:10
-	{ 1600, 1200 },
-	{ 1680, 1050 },	// 16:10
-	{ 1920, 1080 },
-	{ 1920, 1200 },
-	{ 2048, 1152 }, // 16:9, iMac Retina 4K 21.5", HiDPI off
-	{ 2048, 1536 },
-	{ 2304, 1440 }, // 16:10, MacBook Retina 12"
-	{ 2560, 1080 }, // 21:9
-	{ 2560, 1440 },
-	{ 2560, 1600 },
-	{ 2560, 2048 },
-	{ 2880, 1800 }, // 16:10, MacBook Pro Retina 15"
-	{ 3200, 1800 },
-	{ 3440, 1440 }, // 21:9
-	{ 3840, 2160 },
-	{ 3840, 2400 },
-	{ 4096, 2160 },
-	{ 4096, 2304 }, // 16:9, iMac Retina 4K 21.5"
-	{ 5120, 2160 }, // 21:9
-	{ 5120, 2880 }  // 16:9, iMac Retina 5K 27"
-};
-
 
 cycle_t BlitCycles;
 cycle_t FlipCycles;
@@ -892,7 +813,6 @@ CocoaFrameBuffer::CocoaFrameBuffer(int width, int height, bool bgra, bool fullsc
 
 	glGenTextures(1, &m_texture);
 	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, m_texture);
-	glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, GL_TRUE);
 
 	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -1103,16 +1023,8 @@ void CocoaFrameBuffer::Flip()
 		rbOpts.dirty = false;
 	}
 
-#ifdef __LITTLE_ENDIAN__
-	static const GLenum format = GL_RGBA;
-#else // __BIG_ENDIAN__
-	static const GLenum format = GL_ABGR_EXT;
-#endif // __LITTLE_ENDIAN__
-
-	if (IsBgra())
-		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA8, Width, Height, 0, GL_BGRA, GL_UNSIGNED_BYTE, m_pixelBuffer);
-	else
-		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA8, Width, Height, 0, format, GL_UNSIGNED_BYTE, m_pixelBuffer);
+	const GLenum format = IsBgra() ? GL_BGRA : GL_RGBA;
+	glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA8, Width, Height, 0, format, GL_UNSIGNED_BYTE, m_pixelBuffer);
 
 	glBegin(GL_QUADS);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -1477,7 +1389,7 @@ bool I_SetCursor(FTexture* cursorpic)
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	NSCursor* cursor = nil;
 
-	if (NULL != cursorpic && FTexture::TEX_Null != cursorpic->UseType)
+	if (NULL != cursorpic && ETextureType::Null != cursorpic->UseType)
 	{
 		// Create bitmap image representation
 

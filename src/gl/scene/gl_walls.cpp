@@ -822,7 +822,7 @@ void GLWall::DoMidTexture(seg_t * seg, bool drawfogboundary,
 		//
 		//
 		FTexture * tex = TexMan(seg->sidedef->GetTexture(side_t::top));
-		if (!tex || tex->UseType==FTexture::TEX_Null)
+		if (!tex || tex->UseType==ETextureType::Null)
 		{
 			if (front->GetTexture(sector_t::ceiling) == skyflatnum &&
 				back->GetTexture(sector_t::ceiling) == skyflatnum)
@@ -858,7 +858,7 @@ void GLWall::DoMidTexture(seg_t * seg, bool drawfogboundary,
 		//
 		//
 		tex = TexMan(seg->sidedef->GetTexture(side_t::bottom));
-		if (!tex || tex->UseType==FTexture::TEX_Null)
+		if (!tex || tex->UseType==ETextureType::Null)
 		{
 			// texture is missing - use the lower plane
 			bottomleft = MIN(bfh1,ffh1);
@@ -1060,8 +1060,8 @@ void GLWall::DoMidTexture(seg_t * seg, bool drawfogboundary,
 				// Draw the stuff
 				//
 				//
-				if (realfront->e->XFloor.lightlist.Size()==0 || mDrawer->FixedColormap) split.PutWall(translucent);
-				else split.SplitWall(realfront, translucent);
+				if (front->e->XFloor.lightlist.Size()==0 || mDrawer->FixedColormap) split.PutWall(translucent);
+				else split.SplitWall(front, translucent);
 
 				t=1;
 			}
@@ -1074,8 +1074,8 @@ void GLWall::DoMidTexture(seg_t * seg, bool drawfogboundary,
 			// Draw the stuff without splitting
 			//
 			//
-			if (realfront->e->XFloor.lightlist.Size()==0 || mDrawer->FixedColormap) PutWall(translucent);
-			else SplitWall(realfront, translucent);
+			if (front->e->XFloor.lightlist.Size()==0 || mDrawer->FixedColormap) PutWall(translucent);
+			else SplitWall(front, translucent);
 		}
 		alpha=1.0f;
 	}
@@ -1437,7 +1437,7 @@ void GLWall::Process(seg_t *seg, sector_t * frontsector, sector_t * backsector)
 	sector_t * segback;
 
 #ifdef _DEBUG
-	if (seg->linedef->Index() == 1)
+	if (seg->linedef->Index() == 10)
 	{
 		int a = 0;
 	}

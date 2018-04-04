@@ -1060,7 +1060,7 @@ CCMD(changesky)
 	sky1name = argv[1];
 	if (sky1name[0] != 0)
 	{
-		FTextureID newsky = TexMan.GetTexture(sky1name, FTexture::TEX_Wall, FTextureManager::TEXMAN_Overridable | FTextureManager::TEXMAN_ReturnFirst);
+		FTextureID newsky = TexMan.GetTexture(sky1name, ETextureType::Wall, FTextureManager::TEXMAN_Overridable | FTextureManager::TEXMAN_ReturnFirst);
 		if (newsky.Exists())
 		{
 			sky1texture = level.skytexture1 = newsky;
@@ -1224,7 +1224,7 @@ CCMD(secret)
 	int lumpno=Wads.CheckNumForName("SECRETS");
 	if (lumpno < 0) return;
 
-	FWadLump lump = Wads.OpenLumpNum(lumpno);
+	auto lump = Wads.OpenLumpReader(lumpno);
 	FString maphdr;
 	maphdr.Format("[%s]", mapname);
 

@@ -540,7 +540,7 @@ DEFINE_PROPERTY(skip_super, 0, Actor)
 	if (info->Size != actorclass->Size)
 	{
 		bag.ScriptPosition.Message(MSG_OPTERROR,
-			"'skip_super' is only allowed in subclasses of AActor with no additional fields and will be ignored in type %s.", info->TypeName.GetChars());
+			"'skip_super' is only allowed in subclasses of Actor with no additional fields and will be ignored in type %s.", info->TypeName.GetChars());
 		return;
 	}
 	if (bag.StateSet)
@@ -552,6 +552,7 @@ DEFINE_PROPERTY(skip_super, 0, Actor)
 
 	*defaults = *GetDefault<AActor>();
 	ResetBaggage (&bag, RUNTIME_CLASS(AActor));
+	static_cast<PClassActor*>(bag.Info)->ActorInfo()->SkipSuperSet = true;	// ZScript processes the states later so this property must be flagged for later handling.
 }
 
 //==========================================================================
@@ -760,6 +761,7 @@ DEFINE_PROPERTY(translation, L, Actor)
 	else 
 	{
 		FRemapTable CurrentTranslation;
+		bool success = true;
 
 		CurrentTranslation.MakeIdentity();
 		for(int i = 1; i < PROP_PARM_COUNT; i++)
@@ -773,10 +775,15 @@ DEFINE_PROPERTY(translation, L, Actor)
 			}
 			else
 			{
-				CurrentTranslation.AddToTranslation(str);
+				// parse all ranges to get a complete list of errors, if more than one range fails.
+				success |= CurrentTranslation.AddToTranslation(str);
 			}
 		}
 		defaults->Translation = CurrentTranslation.StoreTranslation (TRANSLATION_Decorate);
+		if (!success)
+		{
+			bag.ScriptPosition.Message(MSG_WARNING, "Failed to parse translation");
+		}
 	}
 }
 
@@ -1140,7 +1147,7 @@ static void SetIcon(FTextureID &icon, Baggage &bag, const char *i)
 	}
 	else
 	{
-		icon = TexMan.CheckForTexture(i, FTexture::TEX_MiscPatch);
+		icon = TexMan.CheckForTexture(i, ETextureType::MiscPatch);
 		if (!icon.isValid())
 		{
 			// Don't print warnings if the item is for another game or if this is a shareware IWAD. 
@@ -1602,7 +1609,7 @@ DEFINE_CLASS_PROPERTY_PREFIX(player, sidemove, F_f, PlayerPawn)
 DEFINE_CLASS_PROPERTY_PREFIX(player, scoreicon, S, PlayerPawn)
 {
 	PROP_STRING_PARM(z, 0);
-	defaults->ScoreIcon = TexMan.CheckForTexture(z, FTexture::TEX_MiscPatch);
+	defaults->ScoreIcon = TexMan.CheckForTexture(z, ETextureType::MiscPatch);
 	if (!defaults->ScoreIcon.isValid())
 	{
 		bag.ScriptPosition.Message(MSG_WARNING,
