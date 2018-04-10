@@ -112,7 +112,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalIncludeDirectories>src\g_inventory;src\scripting;src\scripting\zscript;src\scripting\vm;src\zscript;src\win32;src\sound;src\sound\oplsynth;src\sound\thirdparty;src\textures;src\thingdef;src;zlib;src\g_shared;src\g_statusbar;jpeg-6b;game-music-emu;gdtoa;bzip2;lzma\C;dxsdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_WINDOWS;HAVE_STRUPR;HAVE_FILELENGTH;NO_VA_COPY;BACKPATCH;HAVE_FLUIDSYNTH;DYN_FLUIDSYNTH;HAVE_SNDFILE;DYN_SNDFILE;HAVE_MMX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_WINDOWS;HAVE_STRUPR;HAVE_FILELENGTH;NO_VA_COPY;BACKPATCH;HAVE_FLUIDSYNTH;DYN_FLUIDSYNTH;HAVE_SNDFILE;DYN_SNDFILE;HAVE_MMX;ADLMIDI_DISABLE_MIDI_SEQUENCER;OPNMIDI_DISABLE_MIDI_SEQUENCER;OPNMIDI_USE_LEGACY_EMULATOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -187,7 +187,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <AdditionalIncludeDirectories>src\g_inventory;src\scripting;src\scripting\zscript;src\scripting\vm;src\zscript;src\win32;src\sound;src\sound\oplsynth;src\sound\thirdparty;src\textures;src\thingdef;src;zlib;src\g_shared;src\g_statusbar;jpeg-6b;game-music-emu;gdtoa;bzip2;lzma\C;dxsdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_WINDOWS;HAVE_STRUPR;HAVE_FILELENGTH;NO_VA_COPY;BACKPATCH;HAVE_FLUIDSYNTH;DYN_FLUIDSYNTH;HAVE_SNDFILE;DYN_SNDFILE;HAVE_MMX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WIN32;_WINDOWS;HAVE_STRUPR;HAVE_FILELENGTH;NO_VA_COPY;BACKPATCH;HAVE_FLUIDSYNTH;DYN_FLUIDSYNTH;HAVE_SNDFILE;DYN_SNDFILE;HAVE_MMX;ADLMIDI_DISABLE_MIDI_SEQUENCER;OPNMIDI_DISABLE_MIDI_SEQUENCER;OPNMIDI_USE_LEGACY_EMULATOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -343,7 +343,10 @@
   <ItemGroup>
     <ClCompile Include="src\cycler.cpp" />
     <ClCompile Include="src\c_functions.cpp" />
+    <ClCompile Include="src\d_stats.cpp" />
+    <ClCompile Include="src\empty.cpp" />
     <ClCompile Include="src\events.cpp" />
+    <ClCompile Include="src\files_decompress.cpp" />
     <ClCompile Include="src\gl\compatibility\gl_20.cpp" />
     <ClCompile Include="src\gl\data\gl_data.cpp" />
     <ClCompile Include="src\gl\data\gl_portaldata.cpp" />
@@ -469,6 +472,7 @@
     <ClCompile Include="src\math\sqrt.c" />
     <ClCompile Include="src\math\tan.c" />
     <ClCompile Include="src\math\tanh.c" />
+    <ClCompile Include="src\mus2midi.cpp" />
     <ClCompile Include="src\polyrenderer\poly_all.cpp" />
     <ClCompile Include="src\p_actionfunctions.cpp" />
     <ClCompile Include="src\p_pusher.cpp" />
@@ -501,26 +505,42 @@
     <ClCompile Include="src\scripting\zscript\zcc_compile.cpp" />
     <ClCompile Include="src\scripting\zscript\zcc_parser.cpp" />
     <ClCompile Include="src\serializer.cpp" />
+    <ClCompile Include="src\skins.cpp" />
+    <ClCompile Include="src\sound\adlmidi\adldata.cpp" />
+    <ClCompile Include="src\sound\adlmidi\adlmidi.cpp" />
+    <ClCompile Include="src\sound\adlmidi\adlmidi_load.cpp" />
+    <ClCompile Include="src\sound\adlmidi\adlmidi_midiplay.cpp" />
+    <ClCompile Include="src\sound\adlmidi\adlmidi_opl3.cpp" />
+    <ClCompile Include="src\sound\adlmidi\adlmidi_private.cpp" />
+    <ClCompile Include="src\sound\adlmidi\dbopl.cpp" />
+    <ClCompile Include="src\sound\adlmidi\nukedopl3.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release/adlmidi_nukedopl3.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\sound\i_soundfont.cpp" />
+    <ClCompile Include="src\sound\mididevices\music_adlmidi_mididevice.cpp" />
     <ClCompile Include="src\sound\mididevices\music_fluidsynth_mididevice.cpp" />
     <ClCompile Include="src\sound\mididevices\music_opldumper_mididevice.cpp" />
     <ClCompile Include="src\sound\mididevices\music_opl_mididevice.cpp" />
-    <ClCompile Include="src\sound\mididevices\music_pseudo_mididevice.cpp" />
+    <ClCompile Include="src\sound\mididevices\music_opnmidi_mididevice.cpp" />
     <ClCompile Include="src\sound\mididevices\music_softsynth_mididevice.cpp" />
     <ClCompile Include="src\sound\mididevices\music_timiditypp_mididevice.cpp" />
     <ClCompile Include="src\sound\mididevices\music_timidity_mididevice.cpp" />
+    <ClCompile Include="src\sound\mididevices\music_wavewriter_mididevice.cpp" />
     <ClCompile Include="src\sound\mididevices\music_wildmidi_mididevice.cpp" />
     <ClCompile Include="src\sound\mididevices\music_win_mididevice.cpp" />
+    <ClCompile Include="src\sound\midisources\midisource.cpp" />
+    <ClCompile Include="src\sound\midisources\midisource_hmi.cpp" />
+    <ClCompile Include="src\sound\midisources\midisource_mus.cpp" />
+    <ClCompile Include="src\sound\midisources\midisource_smf.cpp" />
+    <ClCompile Include="src\sound\midisources\midisource_xmi.cpp" />
+    <ClCompile Include="src\sound\mpg123_decoder.cpp" />
     <ClCompile Include="src\sound\musicformats\music_cd.cpp" />
     <ClCompile Include="src\sound\musicformats\music_dumb.cpp" />
     <ClCompile Include="src\sound\musicformats\music_gme.cpp" />
-    <ClCompile Include="src\sound\musicformats\music_hmi_midiout.cpp" />
     <ClCompile Include="src\sound\musicformats\music_libsndfile.cpp" />
     <ClCompile Include="src\sound\musicformats\music_midistream.cpp" />
-    <ClCompile Include="src\sound\musicformats\music_mus_midiout.cpp" />
     <ClCompile Include="src\sound\musicformats\music_opl.cpp" />
-    <ClCompile Include="src\sound\musicformats\music_smf_midiout.cpp" />
     <ClCompile Include="src\sound\musicformats\music_stream.cpp" />
-    <ClCompile Include="src\sound\musicformats\music_xmi_midiout.cpp" />
     <ClCompile Include="src\sound\oplsynth\dosbox\opl.cpp" />
     <ClCompile Include="src\sound\oplsynth\fmopl.cpp" />
     <ClCompile Include="src\sound\oplsynth\musicblock.cpp" />
@@ -528,7 +548,48 @@
     <ClCompile Include="src\sound\oplsynth\OPL3.cpp" />
     <ClCompile Include="src\sound\oplsynth\oplio.cpp" />
     <ClCompile Include="src\sound\oplsynth\opl_mus_player.cpp" />
+    <ClCompile Include="src\sound\opnmidi\opnmidi.cpp" />
+    <ClCompile Include="src\sound\opnmidi\opnmidi_load.cpp" />
+    <ClCompile Include="src\sound\opnmidi\opnmidi_midiplay.cpp" />
+    <ClCompile Include="src\sound\opnmidi\opnmidi_opn2.cpp" />
+    <ClCompile Include="src\sound\opnmidi\opnmidi_private.cpp" />
+    <ClCompile Include="src\sound\opnmidi\Ym2612_ChipEmu.cpp" />
     <ClCompile Include="src\sound\sndfile_decoder.cpp" />
+    <ClCompile Include="src\sound\timiditypp\common.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release/timiditypp_common.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\sound\timiditypp\configfile.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release/timiditypp_configfile.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\sound\timiditypp\effect.cpp" />
+    <ClCompile Include="src\sound\timiditypp\fft4g.cpp" />
+    <ClCompile Include="src\sound\timiditypp\filter.cpp" />
+    <ClCompile Include="src\sound\timiditypp\freq.cpp" />
+    <ClCompile Include="src\sound\timiditypp\instrum.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release/timiditypp_instrum.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\sound\timiditypp\mblock.cpp" />
+    <ClCompile Include="src\sound\timiditypp\mix.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release/timiditypp_mix.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\sound\timiditypp\playmidi.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release/timiditypp_playmidi.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\sound\timiditypp\quantity.cpp" />
+    <ClCompile Include="src\sound\timiditypp\readmidic.cpp" />
+    <ClCompile Include="src\sound\timiditypp\recache.cpp" />
+    <ClCompile Include="src\sound\timiditypp\resample.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release/timiditypp_resample.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\sound\timiditypp\reverb.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release/timiditypp_reverb.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\sound\timiditypp\sbkconv.cpp" />
+    <ClCompile Include="src\sound\timiditypp\sffile.cpp" />
+    <ClCompile Include="src\sound\timiditypp\sfitem.cpp" />
+    <ClCompile Include="src\sound\timiditypp\smplfile.cpp" />
+    <ClCompile Include="src\sound\timiditypp\sndfont.cpp" />
+    <ClCompile Include="src\sound\timiditypp\tables.cpp" />
     <ClCompile Include="src\sound\timidity\common.cpp" />
     <ClCompile Include="src\sound\timidity\instrum.cpp" />
     <ClCompile Include="src\sound\timidity\instrum_dls.cpp" />
@@ -545,9 +606,10 @@
     <ClCompile Include="src\sound\wildmidi\wm_error.cpp" />
     <ClCompile Include="src\swrenderer\r_all.cpp" />
     <ClCompile Include="src\textures\backdroptexture.cpp" />
+    <ClCompile Include="src\textures\md5check.cpp" />
     <ClCompile Include="src\textures\shadertexture.cpp" />
     <ClCompile Include="src\textures\skyboxtexture.cpp" />
-    <ClCompile Include="src\tmpfileplus.cpp" />
+    <ClCompile Include="src\textures\worldtexture.cpp" />
     <ClCompile Include="src\umapinfo.cpp" />
     <ClCompile Include="src\win32\critsec.cpp" />
     <ClCompile Include="src\win32\i_specialpaths.cpp" />
@@ -659,7 +721,6 @@
     <ClCompile Include="src\p_user.cpp" />
     <ClCompile Include="src\p_xlat.cpp" />
     <ClCompile Include="src\parsecontext.cpp" />
-    <ClCompile Include="src\pathexpander.cpp" />
     <ClCompile Include="src\po_man.cpp" />
     <ClCompile Include="src\s_advsound.cpp" />
     <ClCompile Include="src\s_environment.cpp" />
@@ -778,12 +839,32 @@
     <ClCompile Include="src\portal.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\actorinlines.h" />
+    <ClInclude Include="src\critsec.h" />
+    <ClInclude Include="src\cycler.h" />
+    <ClInclude Include="src\c_consolebuffer.h" />
+    <ClInclude Include="src\c_functions.h" />
+    <ClInclude Include="src\dobjgc.h" />
+    <ClInclude Include="src\errors.h" />
+    <ClInclude Include="src\events.h" />
+    <ClInclude Include="src\gitinfo.h" />
+    <ClInclude Include="src\g_input.h" />
+    <ClInclude Include="src\g_levellocals.h" />
+    <ClInclude Include="src\g_pch.h" />
+    <ClInclude Include="src\g_pch2.h" />
+    <ClInclude Include="src\i_module.h" />
     <ClInclude Include="src\i_time.h" />
     <ClInclude Include="src\math\mconf.h" />
+    <ClInclude Include="src\parallel_for.h" />
+    <ClInclude Include="src\p_blockmap.h" />
+    <ClInclude Include="src\p_checkposition.h" />
     <ClInclude Include="src\p_linetracedata.h" />
+    <ClInclude Include="src\p_maputl.h" />
+    <ClInclude Include="src\p_udmf.h" />
     <ClInclude Include="src\r_data\matrix.h" />
     <ClInclude Include="src\r_data\models\models.h" />
     <ClInclude Include="src\r_data\models\tab_anorms.h" />
+    <ClInclude Include="src\r_videoscale.h" />
     <ClInclude Include="src\sc_man_scanner.h" />
     <ClInclude Include="src\actionspecials.h" />
     <ClInclude Include="src\actor.h" />
@@ -874,7 +955,65 @@
     <ClInclude Include="src\pathexpander.h" />
     <ClInclude Include="src\po_man.h" />
     <ClInclude Include="src\Rect.h" />
+    <ClInclude Include="src\serializer.h" />
+    <ClInclude Include="src\sound\adlmidi\adldata.hh" />
+    <ClInclude Include="src\sound\adlmidi\adlmidi.h" />
+    <ClInclude Include="src\sound\adlmidi\adlmidi.hpp" />
+    <ClInclude Include="src\sound\adlmidi\adlmidi_private.hpp" />
+    <ClInclude Include="src\sound\adlmidi\dbopl.h" />
+    <ClInclude Include="src\sound\adlmidi\fraction.hpp" />
+    <ClInclude Include="src\sound\adlmidi\nukedopl3.h" />
+    <ClInclude Include="src\sound\midisources\midisource.h" />
+    <ClInclude Include="src\sound\oplsynth\dosbox\opl.h" />
+    <ClInclude Include="src\sound\oplsynth\genmidi.h" />
+    <ClInclude Include="src\sound\oplsynth\musicblock.h" />
+    <ClInclude Include="src\sound\oplsynth\nukedopl3.h" />
+    <ClInclude Include="src\sound\oplsynth\opl.h" />
+    <ClInclude Include="src\sound\oplsynth\oplio.h" />
+    <ClInclude Include="src\sound\oplsynth\opl_mus_player.h" />
+    <ClInclude Include="src\sound\opnmidi\fraction.hpp" />
+    <ClInclude Include="src\sound\opnmidi\opnbank.h" />
+    <ClInclude Include="src\sound\opnmidi\opnmidi.h" />
+    <ClInclude Include="src\sound\opnmidi\opnmidi_private.hpp" />
+    <ClInclude Include="src\sound\opnmidi\Ym2612_ChipEmu.h" />
     <ClInclude Include="src\sound\sndfile_decoder.h" />
+    <ClInclude Include="src\sound\thirdparty\al.h" />
+    <ClInclude Include="src\sound\thirdparty\alc.h" />
+    <ClInclude Include="src\sound\thirdparty\alext.h" />
+    <ClInclude Include="src\sound\thirdparty\mpg123.h" />
+    <ClInclude Include="src\sound\thirdparty\sndfile.h" />
+    <ClInclude Include="src\sound\timiditypp\common.h" />
+    <ClInclude Include="src\sound\timiditypp\controls.h" />
+    <ClInclude Include="src\sound\timiditypp\effect.h" />
+    <ClInclude Include="src\sound\timiditypp\fft4g.h" />
+    <ClInclude Include="src\sound\timiditypp\filter.h" />
+    <ClInclude Include="src\sound\timiditypp\freq.h" />
+    <ClInclude Include="src\sound\timiditypp\instrum.h" />
+    <ClInclude Include="src\sound\timiditypp\mblock.h" />
+    <ClInclude Include="src\sound\timiditypp\mix.h" />
+    <ClInclude Include="src\sound\timiditypp\optcode.h" />
+    <ClInclude Include="src\sound\timiditypp\playmidi.h" />
+    <ClInclude Include="src\sound\timiditypp\quantity.h" />
+    <ClInclude Include="src\sound\timiditypp\recache.h" />
+    <ClInclude Include="src\sound\timiditypp\resample.h" />
+    <ClInclude Include="src\sound\timiditypp\reverb.h" />
+    <ClInclude Include="src\sound\timiditypp\sffile.h" />
+    <ClInclude Include="src\sound\timiditypp\sfitem.h" />
+    <ClInclude Include="src\sound\timiditypp\sflayer.h" />
+    <ClInclude Include="src\sound\timiditypp\sysdep.h" />
+    <ClInclude Include="src\sound\timiditypp\tables.h" />
+    <ClInclude Include="src\sound\timiditypp\timidity.h" />
+    <ClInclude Include="src\sound\timidity\dls1.h" />
+    <ClInclude Include="src\sound\timidity\dls2.h" />
+    <ClInclude Include="src\sound\timidity\gf1patch.h" />
+    <ClInclude Include="src\sound\timidity\sf2.h" />
+    <ClInclude Include="src\sound\timidity\timidity.h" />
+    <ClInclude Include="src\sound\wildmidi\common.h" />
+    <ClInclude Include="src\sound\wildmidi\file_io.h" />
+    <ClInclude Include="src\sound\wildmidi\gus_pat.h" />
+    <ClInclude Include="src\sound\wildmidi\reverb.h" />
+    <ClInclude Include="src\sound\wildmidi\wildmidi_lib.h" />
+    <ClInclude Include="src\sound\wildmidi\wm_error.h" />
     <ClInclude Include="src\s_playlist.h" />
     <ClInclude Include="src\s_sndseq.h" />
     <ClInclude Include="src\s_sound.h" />
@@ -888,10 +1027,15 @@
     <ClInclude Include="src\stats.h" />
     <ClInclude Include="src\stringtable.h" />
     <ClInclude Include="src\strnatcmp.h" />
+    <ClInclude Include="src\tagitem.h" />
     <ClInclude Include="src\tarray.h" />
     <ClInclude Include="src\teaminfo.h" />
     <ClInclude Include="src\templates.h" />
+    <ClInclude Include="src\textures\skyboxtexture.h" />
+    <ClInclude Include="src\textures\warpbuffer.h" />
+    <ClInclude Include="src\tflags.h" />
     <ClInclude Include="src\tmpfileplus.h" />
+    <ClInclude Include="src\version.h" />
     <ClInclude Include="src\v_collection.h" />
     <ClInclude Include="src\v_font.h" />
     <ClInclude Include="src\v_palette.h" />
