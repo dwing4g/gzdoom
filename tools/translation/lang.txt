@@ -1,0 +1,6600 @@
+; Miscellaneous
+
+> PRESSKEY
+Press a key.
+何かキーを押せ
+
+> SECRETMESSAGE
+A secret is revealed!
+シークレットを解き明かした!
+
+> D_DEVSTR
+"""Useless mode ON.
+"""
+このモードは使わないでおけ
+
+> QUITMSG
+"""Are you sure you want to
+quit this great game?"""
+"""本当にこの素晴らしい運命を
+終わらせるのですね?"""
+
+> LOADNET
+; In some languages, it may make more sense to translate “Press a key” as “Press any key.”
+"""You can't do load while in a net game!
+
+Press a key."""
+"""オンラインプレイでは ロードできない!
+
+何かキーを押せ
+"""
+
+> QLOADNET
+"""You can't quickload during a netgame!
+
+Press a key."""
+"""オンラインプレイでは ロードできない!
+
+何かキーを押せ"""
+
+> QSAVESPOT
+"""You haven't picked a quicksave slot yet!
+
+Press a key."""
+"""オンラインプレイでは セーブできない!
+
+何かキーを押せ"""
+
+> NEWGAME
+"""You can't start a new game
+while in a network game.
+
+Press a key."""
+"""オンラインプレイでは勝手にニューゲームは
+始められない!
+
+何かキーを押せ"""
+
+> NIGHTMARE
+"""Are you sure? This skill level
+isn't even remotely fair.
+
+Press Y or N."""
+"""本気か? このスキルは
+マトモな状態ではないぞ。
+
+Y か N で答えろ"""
+
+> SWSTRING
+"""This is the shareware version of Doom.
+
+You need to order the entire trilogy.
+
+Press a key."""
+"""これは体験版だ。
+わかったら本体を買え。
+
+キーを押せば戻るぞ。"""
+
+> NETEND
+"""You can't end a netgame!
+
+Press a key."""
+"""オンラインプレイでは勝手に終了できない!
+
+何かキーを押せ"""
+
+> ENDGAME
+"""Are you sure you want to end the game?
+
+Press Y or N."""
+"""本当にゲームを中断するのか?
+
+Y か N で答えろ"""
+
+> RAVENQUITMSG
+Are you sure you want to quit?
+本当に終了するのか?
+
+> SWSTRING heretic
+Only available in the registered version
+製品版でのみ可能だ。
+
+> DOSY
+(Press Y to quit)
+(Y で終了)
+
+; Quit messages
+
+> QUITMSG1
+"""Please don't leave, there's more
+demons to toast!"""
+"""離れないでくれ!
+まだ獲物が残っているんだ!"""
+
+> QUITMSG2
+"""Let's beat it -- this is turning
+into a bloodbath!"""
+"""まだ物足りないだろう?
+早く戻って皆殺しにしろ!"""
+
+> QUITMSG3
+"""I wouldn't leave if I were you.
+DOS is much worse."""
+"""俺がお前だったらここは離れない。
+デスクトップなぞ最悪だ。"""
+
+> QUITMSG4
+"""You're trying to say you like DOS
+better than me, right?"""
+"""貴方はこちらよりも
+デスクトップの方が好みらしいな?"""
+
+> QUITMSG5
+"""Don't leave yet -- there's a
+demon around that corner!"""
+"""待ってくれ!まだあそこの角に
+デーモンが残っているんだ!"""
+
+> QUITMSG6
+"""Ya know, next time you come in here
+I'm gonna toast ya."""
+"""わかったよ。
+今度戻ってきたら一杯奢るよ。"""
+
+> QUITMSG7
+Go ahead and leave. see if I care.
+置いて行っちゃうんだ。勝手にしろ。
+
+> QUITMSG8
+; More info here.
+"""You want to quit?
+Then, thou hast lost an eighth!"""
+"""終了したい?ならば、
+汝は8分の1を失うぞ!"""
+
+> QUITMSG9
+; A “dimensional shambler” is a creature appearing in the works of H. P. Lovecraft.
+"""Don't go now, there's a 
+dimensional shambler waiting
+at the DOS prompt!"""
+"""まだやめたらダメだ、
+あの空鬼がデスクトップには
+待ち構えているんだぞ!"""
+
+> QUITMSG10
+"""Get outta here and go back
+to your boring programs."""
+"""早く出ていって、いつものつまらない
+プログラムに戻るんだな。"""
+
+> QUITMSG11
+"""If I were your boss, I'd 
+deathmatch ya in a minute!"""
+"""もし私が君の上司なら、すぐにでも
+デスマッチを始める所だぞ!"""
+
+> QUITMSG12
+"""Look, bud. you leave now
+and you forfeit your body count!"""
+"""おいおい待てよ、今やめたら
+殺したデーモンの数を数えられないぞ!"""
+
+> QUITMSG13
+"""Just leave. when you come
+back, I'll be waiting with a bat."""
+"""帰ればいいさ、
+君が戻ってきたときには、
+私はバットを持って待ってるから"""
+
+> QUITMSG14
+"""You're lucky I don't smack
+you for thinking about leaving."""
+"""やめることについて考えたのに、
+私に殴られないなんて、
+君はラッキーだな"""
+
+> QUITMSG15
+"""Where are you going?!
+What about the rebellion?"""
+"""どこに行く気だ?!
+反抗するつもりか?"""
+
+> QUITMSG16
+"""Carnage interruptus...
+What a tease!"""
+"""大虐殺は寸止めされた...
+何という意地悪なやつだ!"""
+
+> QUITMSG17
+"""But you're the hope
+-- my only chance!!"""
+"""それでもお前を信じている
+-- 唯一の希望なんだ!!"""
+
+> QUITMSG18
+Nobody walks out on Blackbird.
+ブラックバードに気付かれず抜け出せるのか。
+
+> QUITMSG19
+I thought you were different...
+私は あなたは特別だと思っていた...
+
+> QUITMSG20
+Fine! just kill and run!
+いいぞ! ゲリラ戦の時間だ!
+
+> QUITMSG21
+"""You can quit...
+but you can't hide..."""
+"""終わる事は出来る...
+しかし隠れることは出来ない..."""
+
+> QUITMSG22
+"""Whaaa, what's the matter?
+Mommy says dinnertime?"""
+"""はあぁ、どうしたんだい?
+ママに晩飯へ呼ばれたのかよ?"""
+
+> QUITMSG23
+"""Don't quit now, there are still
+flemoids on the loose!"""
+"""まだやめないでくれ、
+にげだしたフレモイドたちが
+のこっているんだから!"""
+
+> QUITMSG24
+"""Don't give up -- the flemoids will
+get the upper hand!"""
+"""あきらめてはダメだ、
+フレモイドたちの しょうりに
+なってしまうぞ!"""
+
+> QUITMSG25
+"""Don't leave now.
+We need your help!"""
+"""まだかえらないでくれ。
+われわれには きみのたすけが
+ひつようだ!"""
+
+> QUITMSG26
+"""I hope you're just taking a
+break for Chex(R) party mix."""
+"""チェックス(R)パーティミックスを
+たべるためにおやすみかな?"""
+
+> QUITMSG27
+"""Don't quit now!
+We need your help!"""
+"""まだやめないでくれ!
+われわれには きみのたすけが
+ひつようだ!"""
+
+> QUITMSG28
+"""Don't abandon the
+Intergalactic Federation of Cereals!"""
+"""ぎんがシリアルれんぽう を
+みすてないでくれ!"""
+
+> QUITMSG29
+"""The real Chex(R) Warrior
+wouldn't give up so fast!"""
+"""しんのチェックス(R)せんしは
+そんなにすぐあきらめはしないぞ!"""
+
+; Pickups
+
+> TXT_DEFAULTPICKUPMSG
+You got a pickup
+何か拾った
+
+; Locks
+
+> PD_ANY
+Any key will open this door
+いずれかのキーで開けることができる。
+
+> PD_ANYOBJ
+Any key will activate this object
+いずれかのキーで起動させることができる。
+
+> PD_ALL3
+You need all three keys to open this door
+3つのキー全てが無ければ開かない。
+
+> PD_ALL3O
+You need all three keys to activate this object
+3つのキー全てが必要だ。
+
+> PD_ALL6
+You need all six keys to open this door
+6つ全てのキーが無ければ開かない。
+
+> PD_ALL6O
+You need all six keys to activate this object
+6つ全てのキーが必要だ。
+
+> PD_ALLKEYS
+You need all the keys
+全てのキーが必要だ。
+
+; Chat
+
+> HUSTR_MSGU
+[Message unsent]
+[メッセージ未送信]
+
+> HUSTR_TALKTOSELF1
+You mumble to yourself
+ネタにならない呟きだ
+
+> HUSTR_TALKTOSELF2
+Who's there?
+誰かいるか?
+
+> HUSTR_TALKTOSELF3
+You scare yourself
+"""怯えているな
+"""
+
+> HUSTR_TALKTOSELF4
+You start to rave
+イカレ始めた
+
+> HUSTR_TALKTOSELF5
+You've lost it...
+我を失った...
+
+> HUSTR_MESSAGESENT
+[Message Sent]
+[メッセージ送信]
+
+; Cheats
+
+> STSTR_MUS
+Music Change
+music変更
+
+> STSTR_NOMUS
+Impossible Selection
+その変更は不可能だ
+
+> STSTR_DQDON
+Degreelessness Mode ON
+無敵モード: オン
+
+> STSTR_DQDOFF
+Degreelessness Mode OFF
+無敵モード: オフ
+
+> STSTR_DQD2ON
+Ultimate Degreelessness Mode ON
+究極無敵モード: オン
+
+> STSTR_DQD2OFF
+Ultimate Degreelessness Mode OFF
+究極無敵モード: オフ
+
+> STSTR_KFAADDED
+Very Happy Ammo Added
+とても満足する武器弾薬を受け取った
+
+> STSTR_FAADDED
+Ammo (no keys) Added
+武器弾薬(鍵なし)を受け取った
+
+> STSTR_NCON
+No Clipping Mode ON
+壁抜けモード: オン
+
+> STSTR_NCOFF
+No Clipping Mode OFF
+壁抜けモード: オフ
+
+> STSTR_NC2ON
+No Clipping Mode 2 ON
+壁抜けモード2: オン
+
+> STSTR_NC2OFF
+No Clipping Mode 2 OFF
+壁抜けモード2: オフ
+
+> STSTR_BEHOLD
+; “inVuln”: Invulnerability sphere\n“Str”: Berserk\n“Inviso”: Blur sphere\n“Rad”: Radiation-shielding suit\n“Allmap”: Computer area map\n“Lite-amp”: Light-amplification visor
+inVuln, Str, Inviso, Rad, Allmap, or Lite-amp
+v,i,s,a,r,l の何れかを選べ
+
+> STSTR_BEHOLDX
+Power-up Toggled
+パワーアップ 適用
+
+> STSTR_CHOPPERS
+; Printed when entering the idchoppers cheat, which gives the player a chainsaw
+... doesn't suck - GM
+...わるかぁねえぞ --gm
+
+> STSTR_CLEV
+Changing Level...
+場所を変更...
+
+> TXT_BUDDHAON
+Buddha mode ON
+ブッダモード: オン
+
+> TXT_BUDDHAOFF
+Buddha mode OFF
+ブッダモード: オフ
+
+> TXT_BUDDHA2ON
+Ultimate Buddha Mode ON
+究極ブッダモード: オン
+
+> TXT_BUDDHA2OFF
+Ultimate Buddha Mode OFF
+究極ブッダモード: オフ
+
+> TXT_CHEATPOWERON
+Power on
+パワー オン
+
+> TXT_CHEATPOWEROFF
+Power off
+パワー オフ
+
+> TXT_CHEATHEALTH
+Full health
+ヘルス全回復
+
+> TXT_CHEATKEYS
+All keys
+キー全部
+
+> TXT_CHEATSOUNDON
+Sound debug on
+サウンドデバッグ オン
+
+> TXT_CHEATSOUNDOFF
+Sound debug off
+サウンドデバッグ オフ
+
+> TXT_CHEATIDDQD
+Trying to cheat, eh? Now you die!
+その名を唱えたな? 褒美に死をやろう!
+
+> TXT_CHEATIDKFA
+Cheater - you don't deserve weapons
+不届き者め、貴様が偉業を成すはずがない
+
+> TXT_CHEATTICKERON
+Ticker on
+ティッカー オン
+
+> TXT_CHEATTICKEROFF
+Ticker off
+ティッカー オフ
+
+> TXT_CHEATARTIFACTS3
+You got it
+それを渡そう。
+
+> TXT_MIDASTOUCH
+You got the Midas Touch, baby
+ミダス王の様だな、ベイビー
+
+> TXT_GOTSTUFF
+You got the stuff!
+スタッフを手に入れた!
+
+> TXT_FREEZEON
+Freeze mode on
+フリーズモード オン
+
+> TXT_FREEZEOFF
+Freeze mode off
+フリーズモード オフ
+
+> TXT_STRANGE
+You feel strange...
+これは奇妙な感じだな...
+
+> TXT_STRANGER
+You feel even stranger.
+これはかなり奇妙だ。
+
+> TXT_NOTSTRANGE
+You feel like yourself again.
+自分自身の様に感じている。
+
+> TXT_LEADBOOTSON
+Lead boots on
+足枷 オン
+
+> TXT_LEADBOOTSOFF
+Lead boots off
+足枷 オフ
+
+> TXT_LIGHTER
+You feel lighter
+体が軽くなった
+
+> TXT_GRAVITY
+Gravity weighs you down
+重力に従った
+
+> TXT_NOTARGET_ON
+No Target ON
+ノーターゲット オン
+
+> TXT_NOTARGET_OFF
+No Target OFF
+ノーターゲット オフ
+
+> TXT_ANUBIS_ON
+"Quake with fear!"
+恐れおののけ!
+
+> TXT_ANUBIS_OFF
+No more Ogre Armor
+オーガアーマーはもう嫌
+
+> TXT_CHASECAM_ON
+chasecam ON
+チェイスカメラ オン
+
+> TXT_CHASECAM_OFF
+chasecam OFF
+チェイスカメラ オフ
+
+> TXT_BADDIE_KILLED
+1 baddie killed
+1 体 殺した
+
+> TXT_BADDIES_KILLED
+%d baddies killed
+%d 体 殺した
+
+> TXT_MONSTER_KILLED
+1 monster killed
+1 匹 殺した
+
+> TXT_MONSTERS_KILLED
+%d monsters killed
+%d 匹 殺した
+
+> TXT_NO_RESURRECT
+Unable to resurrect. Player is no longer connected to its body.
+復活できない。プレイヤーはこの体に宿っていない。
+
+> TXT_ALL_ARTIFACTS
+All Artifacts!
+全アーティファクト!
+
+> TXT_WHAT_KILL
+What do you want to kill outside of a game?
+ゲーム外で何を殺す気だ?
+
+> TXT_NOT_FROZEN
+Frozen player properties turned off
+凍ったプレイヤーのプロパティを無効化
+
+; Automap
+
+> AMSTR_FOLLOWOFF
+Follow Mode OFF
+追従モード: オフ
+
+> AMSTR_FOLLOWON
+Follow Mode ON
+追従モード: オン
+
+> AMSTR_GRIDON
+Grid ON
+グリッド: オン
+
+> AMSTR_GRIDOFF
+Grid OFF
+グリッド: オフ
+
+> AMSTR_TEXON
+Texture Mode ON
+テクスチャーモード: オン
+
+> AMSTR_TEXOFF
+Texture Mode OFF
+テクスチャーモード: オフ
+
+> AMSTR_MARKEDSPOT
+Marked Spot
+目標をマークした
+
+> AMSTR_MARKSCLEARED
+All Marks Cleared
+全目標を解除した
+
+; Multiplayer
+
+> TXT_FRAGLIMIT
+Fraglimit hit.
+フラグリミット!
+
+> TXT_TIMELIMIT
+Timelimit hit.
+ゲームセット!
+
+> SPREEKILLSELF
+%o was looking good until %g killed %hself!
+%o は自滅するまでなかなか良かったぞ!
+
+> SPREEOVER
+%o's killing spree was ended by %k
+%k が %o の快進撃を断ち切った!
+
+> SPREE5
+%k is on a killing spree!
+%k が連続キル!
+
+> SPREE10
+%k is on a rampage!
+%k が大暴れだ!
+
+> SPREE15
+%k is dominating!
+%k が圧倒している!
+
+> SPREE20
+%k is unstoppable!
+%k が止まらない!
+
+> SPREE25
+%k is Godlike!
+%k が神の様だ!
+
+> MULTI2
+Double kill!
+ダブルキル!
+
+> MULTI3
+Multi kill!
+マルチキル!
+
+> MULTI4
+Ultra kill!
+ウルトラキル!
+
+> MULTI5
+Monster kill!
+モンスターキル!
+
+; Scoreboard
+
+> SCORE_BONUS
+Bonus
+ボーナス
+
+> SCORE_COLOR
+Color
+色
+
+> SCORE_SECRET
+Secret
+シークレット
+
+> SCORE_NAME
+Name
+名前
+
+> SCORE_DELAY
+Delay (ms)
+ping
+
+> SCORE_FRAGS
+Frags
+フラグ
+
+> SCORE_DEATHS
+Deaths
+デス
+
+> SCORE_OTHER
+Other
+その他
+
+> SCORE_MISSED
+Missed
+ミス
+
+> SCORE_TOTAL
+Total
+合計
+
+> SCORE_LVLTIME
+Level Time
+時間
+
+; Level Summary
+
+> TXT_IMKILLS
+Kills
+キル
+
+> TXT_IMITEMS
+Items
+アイテム
+
+> TXT_IMSECRETS
+Secrets
+シークレット
+
+> TXT_IMTIME
+Time
+経過時間
+
+> TXT_IMPAR
+Par
+最速時間
+
+> WI_FINISHED
+Finished
+攻略
+
+> WI_ENTERING
+Entering
+突入開始
+
+> WI_ENTERING heretic hexen
+Now entering:
+突入中:
+
+; HUD
+
+> AM_MONSTERS
+Monsters:
+奴等:
+
+> AM_SECRETS
+Secrets:
+隠場:
+
+> AM_ITEMS
+Items:
+物資:
+
+; Obituaries
+
+> OB_SUICIDE
+%o suicides.
+%o は自殺した。
+
+> OB_FALLING
+%o fell too far.
+%o はあまりにも高い所から転落した。
+
+> OB_CRUSH
+%o was squished.
+%o は潰された。
+
+> OB_EXIT
+%o tried to leave.
+%o は逃げようとした。
+
+> OB_WATER
+%o can't swim.
+%o は泳げなかった。
+
+> OB_SLIME
+%o mutated.
+%o は変異した。
+
+> OB_LAVA
+%o melted.
+%o は溶かされた。
+
+> OB_BARREL
+%o went boom.
+%o は爆発で吹き飛ばされた。
+
+> OB_SPLASH
+%o stood in the wrong spot.
+%o はいけない場所に立っていた。
+
+> OB_R_SPLASH
+%o should have stood back.
+%o は後ろへ引くべきだった。
+
+> OB_ROCKET
+%o should have stood back.
+%o は後ろへ引くべきだった。
+
+> OB_KILLEDSELF
+%o killed %hself.
+%o は自滅した。
+
+> OB_VOODOO
+%o was killed by the power of voodoo.
+%o はブードゥー人形で殺された。
+
+> OB_MPTELEFRAG
+%o was telefragged by %k.
+%o は %k にテレフラグされた。
+
+> OB_MONTELEFRAG
+%o was telefragged.
+%o はテレフラグされた。
+
+> OB_DEFAULT
+%o died.
+%o は死亡した。
+
+> OB_MPDEFAULT
+%o was killed by %k.
+%o は %k によって殺された。
+
+> OB_FRIENDLY1
+%k mows down a teammate.
+%k は仲間を無慈悲に殺した。
+
+> OB_FRIENDLY2
+; English was changed to remove problematic pronoun referencing the killer
+%k seems to need glasses.
+%k には眼鏡が必要なようだ。
+
+> OB_FRIENDLY3
+%k gets a frag for the other team.
+%k は敵チームに得点を入れた。
+
+> OB_FRIENDLY4
+%k loses another friend.
+%k はまた友達を失った。
+
+; Pickup
+
+> GOTARMOR
+Picked up the armor.
+アーマーを身に着けた。
+
+> GOTMEGA
+Picked up the MegaArmor!
+メガアーマーを身に着けた!
+
+> GOTHTHBONUS
+Picked up a health bonus.
+ヘルスボーナスを拾った。
+
+> GOTARMBONUS
+Picked up an armor bonus.
+アーマーボーナスを拾った。
+
+> GOTSTIM
+Picked up a stimpack.
+スティムパックを拾った。
+
+> GOTMEDINEED
+Picked up a medikit that you REALLY need!
+本当に必要なメディキットを手に入れた!
+
+> GOTMEDIKIT
+Picked up a medikit.
+メディキットを拾った。
+
+> GOTSUPER
+Supercharge!
+スーパーチャージ!
+
+> GOTBLUECARD
+Picked up a blue keycard.
+ブルー キーカードを手に入れた。
+
+> GOTYELWCARD
+Picked up a yellow keycard.
+イエローキーカードを手に入れた。
+
+> GOTREDCARD
+Picked up a red keycard.
+レッド キーカードを手に入れた。
+
+> GOTBLUESKUL
+Picked up a blue skull key.
+ブルー スカルキーを手に入れた。
+
+> GOTYELWSKUL
+Picked up a yellow skull key.
+イエロースカルキーを手に入れた。
+
+> GOTREDSKUL
+Picked up a red skull key.
+レッド スカルキーを手に入れた。
+
+> GOTINVUL
+Invulnerability!
+不死身だ!
+
+> GOTBERSERK
+Berserk!
+バーサーク!
+
+> GOTINVIS
+Partial Invisibility
+半透明化スフィア
+
+> GOTSUIT
+Radiation Shielding Suit
+放射線防護服 
+
+> GOTMAP
+Computer Area Map
+コンピューターエリアマップ
+
+> GOTVISOR
+Light Amplification Visor
+"""暗視バイザー
+"""
+
+> GOTMSPHERE
+MegaSphere!
+メガスフィアー!
+
+> GOTCLIP
+Picked up a clip.
+弾倉を拾った。
+
+> GOTCLIPBOX
+Picked up a box of bullets.
+弾薬箱を拾った。
+
+> GOTROCKET
+Picked up a rocket.
+ロケットを拾った。
+
+> GOTROCKBOX
+Picked up a box of rockets.
+ロケット箱を拾った。
+
+> GOTCELL
+Picked up an energy cell.
+エネルギーセルを拾った。
+
+> GOTCELLBOX
+Picked up an energy cell pack.
+エネルギーセルパックを拾った。
+
+> GOTSHELLS
+Picked up 4 shotgun shells.
+4発の散弾を拾った。
+
+> GOTSHELLBOX
+Picked up a box of shotgun shells.
+散弾箱を拾った。
+
+> GOTBACKPACK
+Picked up a backpack full of ammo!
+弾薬の入ったバックパックを手に入れた!
+
+> GOTBFG9000
+You got the BFG9000! Oh, yes.
+BFG9000を手に入れた!やったぜ。
+
+> GOTCHAINGUN
+You got the chaingun!
+チェーンガンを手に入れた!
+
+> GOTCHAINSAW
+A chainsaw! Find some meat!
+チェーンソウだ!肉を寄越せ!
+
+> GOTLAUNCHER
+You got the rocket launcher!
+ロケットランチャーを手に入れた!
+
+> GOTPLASMA
+You got the plasma gun!
+プラズマライフルを手に入れた!
+
+> GOTSHOTGUN
+You got the shotgun!
+ショットガンを手に入れた!
+
+> GOTSHOTGUN2
+You got the super shotgun!
+スーパーショットガンを手に入れた!
+
+> PICKUP_PISTOL_DROPPED
+Picked up a pistol.
+ピストルを拾った。
+
+> BETA_BONUS1
+You pick up a demonic dagger.
+デモニックダガーを拾った。
+
+> BETA_BONUS2
+You pick up a skullchest.
+スカルチェストを拾った。
+
+> BETA_BONUS3
+You pick up an evil sceptre.
+エビルセプターを拾った。
+
+> BETA_BONUS4
+You pick up an unholy bible.
+アンホーリーバイブルを拾った。
+
+; Locks
+
+> PD_BLUEO
+You need a blue key to activate this object
+この装置には ブルーキーが必要だ。
+
+> PD_REDO
+You need a red key to activate this object
+この装置には レッドキーが必要だ。
+
+> PD_YELLOWO
+You need a yellow key to activate this object
+この装置にはイエローキーが必要だ。
+
+> PD_BLUEK
+You need a blue key to open this door
+このドアには ブルーキーが必要だ。
+
+> PD_REDK
+You need a red key to open this door
+このドアには レッドキーが必要だ。
+
+> PD_YELLOWK
+You need a yellow key to open this door
+このドアには イエローキー が必要だ。
+
+> PD_BLUECO
+You need a blue card to activate this object
+この装置には ブルーカード が必要だ。
+
+> PD_REDCO
+You need a red card to activate this object
+この装置には レッドカード が必要だ。
+
+> PD_YELLOWCO
+You need a yellow card to activate this object
+この装置には イエローカード が必要だ。
+
+> PD_BLUESO
+You need a blue skull to activate this object
+この装置には ブルースカル が必要だ。
+
+> PD_REDSO
+You need a red skull to activate this object
+この装置には レッドスカル が必要だ。
+
+> PD_YELLOWSO
+You need a yellow skull to activate this object
+この装置には イエロースカル が必要だ。
+
+> PD_BLUEC
+You need a blue card to open this door
+このドアには ブルーカード が必要だ。
+
+> PD_REDC
+You need a red card to open this door
+このドアには レッドカード が必要だ。
+
+> PD_YELLOWC
+You need a yellow card to open this door
+このドアには イエローカード が必要だ。
+
+> PD_BLUES
+You need a blue skull to open this door
+このドアには ブルースカル が必要だ。
+
+> PD_REDS
+You need a red skull to open this door
+このドアには レッドスカル が必要だ。
+
+> PD_YELLOWS
+You need a yellow skull to open this door
+このドアには イエロースカル が必要だ。
+
+; Cast call names
+
+> CC_ZOMBIE
+Zombieman
+ゾンビ兵
+
+> CC_SHOTGUN
+; a.k.a. (former human) sergeant
+Shotgun Guy
+ショットガンゾンビ
+
+> CC_HEAVY
+; a.k.a. former commando
+Heavy Weapon Dude
+ヘビーウェポンゾンビ
+
+> CC_IMP
+Imp
+インプ
+
+> CC_DEMON
+Demon
+デーモン
+
+> CC_LOST
+Lost Soul
+ロストソウル
+
+> CC_CACO
+Cacodemon
+カコデーモン
+
+> CC_HELL
+Hell Knight
+ヘルナイト
+
+> CC_BARON
+Baron of Hell
+バロンオブヘル
+
+> CC_ARACH
+Arachnotron
+アラクノトロン
+
+> CC_PAIN
+Pain Elemental
+ペインエレメンタル
+
+> CC_REVEN
+Revenant
+レバナント
+
+> CC_MANCU
+Mancubus
+マンキュバス
+
+> CC_ARCH
+Arch-Vile
+アーチバイル
+
+> CC_SPIDER
+The Spider Mastermind
+スパイダーマスターマインド
+
+> CC_CYBER
+The Cyberdemon
+サイバーデーモン
+
+> CC_HERO
+Our Hero
+我らのヒーロー
+
+; Actor tag names
+
+> FN_SHOTGUN
+Sergeant
+ゾンビ軍曹
+
+> FN_HEAVY
+Chaingunner
+チェーンガンゾンビ
+
+> FN_SPECTRE
+Spectre
+スペクトル
+
+> FN_SPIDER
+Spider Mastermind
+スパイダーマスターマインド
+
+> FN_CYBER
+Cyberdemon
+サイバーデーモン
+
+> FN_WOLFSS
+Nazi
+ナチ兵
+
+> FN_DOG
+Dog
+犬
+
+> TAG_FIST
+Brass Knuckles
+ナックルダスター
+
+> TAG_CHAINSAW
+Chainsaw
+チェーンソウ
+
+> TAG_PISTOL
+Pistol
+ピストル
+
+> TAG_SHOTGUN
+Shotgun
+ショットガン
+
+> TAG_SUPERSHOTGUN
+Super Shotgun
+スーパーショットガン
+
+> TAG_CHAINGUN
+Chaingun
+チェーンガン
+
+> TAG_ROCKETLAUNCHER
+Rocket Launcher
+ロケットランチャー
+
+> TAG_PLASMARIFLE
+Plasma Rifle
+プラズマライフル
+
+> TAG_BFG9000
+BFG 9000
+
+> AMMO_CLIP
+Bullets
+銃弾
+
+> AMMO_SHELLS
+Shotgun Shells
+散弾シェル
+
+> AMMO_ROCKETS
+Rockets
+ロケット弾
+
+> AMMO_CELLS
+Energy Cells
+エネルギーセル
+
+; Obituaries
+
+> OB_STEALTHBABY
+%o thought %g saw an arachnotron.
+%o がアラクノトロンを見た気がした。
+
+> OB_STEALTHVILE
+%o thought %g saw an archvile.
+%o がアーチバイルを見た気がした。
+
+> OB_STEALTHBARON
+%o thought %g saw a Baron of Hell.
+%o がバロンを見た気がした。
+
+> OB_STEALTHCACO
+%o thought %g saw a cacodemon.
+%o がカコデーモンを見た気がした。
+
+> OB_STEALTHCHAINGUY
+%o thought %g saw a chaingunner.
+%o がチェインガンナーを見た気がした。
+
+> OB_STEALTHDEMON
+%o thought %g saw a demon.
+%o がデーモンを見た気がした。
+
+> OB_STEALTHKNIGHT
+%o thought %g saw a Hell Knight.
+%o がヘルナイトを見た気がした。
+
+> OB_STEALTHIMP
+%o thought %g saw an imp.
+%o がインプを見た気がした。
+
+> OB_STEALTHFATSO
+%o thought %g saw a mancubus.
+%o がマンキュバスを見た気がした。
+
+> OB_STEALTHUNDEAD
+%o thought %g saw a revenant.
+%o がレバナントを見た気がした。
+
+> OB_STEALTHSHOTGUNGUY
+%o thought %g saw a sergeant.
+%o が軍曹を見た気がした。
+
+> OB_STEALTHZOMBIE
+%o thought %g saw a zombieman.
+%o がゾンビ兵を見た気がした。
+
+> OB_UNDEADHIT
+%o was punched by a revenant.
+%o はレバナントに殴られた。
+
+> OB_IMPHIT
+%o was slashed by an imp.
+%o はインプに切り裂かれた。
+
+> OB_CACOHIT
+%o got too close to a cacodemon.
+%o はカコデーモンに近づきすぎた。
+
+> OB_DEMONHIT
+%o was bit by a demon.
+%o はデーモンに噛まれた。
+
+> OB_SPECTREHIT
+%o was eaten by a spectre.
+%o はスペクトルに喰われた。
+
+> OB_BARONHIT
+%o was ripped open by a Baron of Hell.
+%o はバロンオブヘルに体を抉じ開けられた。
+
+> OB_KNIGHTHIT
+%o was gutted by a Hell Knight.
+%o はヘルナイトに内臓を抉られた。
+
+> OB_ZOMBIE
+%o was killed by a zombieman.
+%o はゾンビ兵に殺された。
+
+> OB_SHOTGUY
+%o was shot by a sergeant.
+%o はゾンビ軍曹に撃たれた。
+
+> OB_VILE
+%o was incinerated by an archvile.
+%o はアーチバイルに焼き尽くされた。
+
+> OB_UNDEAD
+%o couldn't evade a revenant's fireball.
+%o はレバナントのファイアボールを回避できなかった。
+
+> OB_FATSO
+%o was squashed by a mancubus.
+%o はマンキュバスに潰された。
+
+> OB_CHAINGUY
+%o was perforated by a chaingunner.
+%o はチェインガンナーに蜂の巣にされた。
+
+> OB_SKULL
+%o was spooked by a lost soul.
+%o はロストソウルにビビらされた。
+
+> OB_IMP
+%o was burned by an imp.
+%o はインプに焼かれた。
+
+> OB_CACO
+%o was smitten by a cacodemon.
+%o はカコデーモンに裁きを受けた。
+
+> OB_BARON
+%o was bruised by a Baron of Hell.
+%o はバロンオブヘルに痛めつけられた。
+
+> OB_KNIGHT
+%o was splayed by a Hell Knight.
+%o はヘルナイトにバラ撒かれた。
+
+> OB_SPIDER
+%o stood in awe of the spider demon.
+%o はスパイダーデーモンに恐れをなした。
+
+> OB_BABY
+%o let an arachnotron get %h.
+%o が アラクノトロンに討ち取られた。
+
+> OB_CYBORG
+%o was splattered by a cyberdemon.
+%o はサイバーデーモンにバラバラにされた。
+
+> OB_WOLFSS
+%o met a Nazi.
+%o はナチ兵と遭遇した。
+
+> OB_DOG
+%o was mauled by a dog.
+%o は犬に引き裂かれた。
+
+> OB_MPFIST
+%o chewed on %k's fist.
+%o は %k の拳を顔面に受けた。
+
+> OB_MPCHAINSAW
+%o was mowed over by %k's chainsaw.
+%o は %k のチェーンソーで刈り取られた。
+
+> OB_MPPISTOL
+%o was tickled by %k's pea shooter.
+%o は %k の豆鉄砲でくすぐられた。
+
+> OB_MPSHOTGUN
+%o chewed on %k's boomstick.
+%o は %k のブームスティックを顔面に受けた。
+
+> OB_MPSSHOTGUN
+%o was splattered by %k's super shotgun.
+%o は %k のスーパーショットガンでバラバラにされた。
+
+> OB_MPCHAINGUN
+%o was mowed down by %k's chaingun.
+%o は %k のチェーンガンで蜂の巣にされた。
+
+> OB_MPROCKET
+%o rode %k's rocket.
+%o は %k のロケットに乗ってしまった。
+
+> OB_MPR_SPLASH
+%o almost dodged %k's rocket.
+%o は %k のロケットをあと少しで避けられそうだった。
+
+> OB_MPPLASMARIFLE
+%o was melted by %k's plasma gun.
+%o は %k のプラズマガンに溶かされた。
+
+> OB_MPBFG_BOOM
+%o was splintered by %k's BFG.
+%o は %k のBFGで木っ端微塵にされた。
+
+> OB_MPBFG_SPLASH
+%o couldn't hide from %k's BFG.
+%o は %k のBFGから隠れることはできなかった。
+
+> OB_RAILGUN
+%o was railed by %k.
+%o は %k のレールガンで死亡した。
+
+> OB_MPBFG_MBF
+%o was burned by %k's BFG.
+%o は %k のBFGで焼き殺された。
+
+; Heretic
+
+; Pickup 
+
+> TXT_GOTBLUEKEY
+Blue Key
+青の鍵
+
+> TXT_GOTYELLOWKEY
+Yellow Key
+黄の鍵
+
+> TXT_GOTGREENKEY
+Green Key
+緑の鍵
+
+> TXT_ARTIHEALTH
+Quartz Flask
+石英フラスコ
+
+> TXT_ARTIFLY
+Wings of Wrath
+レイスの翼
+
+> TXT_ARTIINVULNERABILITY
+Ring of Invincibility
+不死の指輪
+
+> TXT_ARTITOMEOFPOWER
+Tome of Power
+力の術書
+
+> TXT_ARTIINVISIBILITY
+Shadowsphere
+闇の球体
+
+> TXT_ARTIEGG
+Morph Ovum
+変貌の卵子
+
+> TXT_ARTISUPERHEALTH
+Mystic Urn
+神秘の骨壷
+
+> TXT_ARTITORCH
+Torch
+松明
+
+> TXT_ARTIFIREBOMB
+Time Bomb of the Ancients
+古代の時限爆薬
+
+> TXT_ARTITELEPORT
+Chaos Device
+カオスデバイス
+
+> TXT_ITEMHEALTH
+Crystal Vial
+水晶瓶
+
+> TXT_ITEMBAGOFHOLDING
+Bag of Holding
+持ち物袋
+
+> TXT_ITEMSHIELD1
+Silver Shield
+銀の盾
+
+> TXT_ITEMSHIELD2
+Enchanted Shield
+魔法の盾
+
+> TXT_ITEMSUPERMAP
+Map Scroll
+地図の巻物
+
+> TXT_AMMOGOLDWAND1
+Wand Crystal
+ワンドクリスタル
+
+> TXT_AMMOGOLDWAND2
+Crystal Geode
+晶洞石
+
+> TXT_AMMOMACE1
+Mace Spheres
+メイス球弾
+
+> TXT_AMMOMACE2
+Pile of Mace Spheres
+メイス球弾の固まり
+
+> TXT_AMMOCROSSBOW1
+Ethereal Arrows
+イセリアルの矢
+
+> TXT_AMMOCROSSBOW2
+Quiver of Ethereal Arrows
+イセリアルの矢筒
+
+> TXT_AMMOBLASTER1
+Claw Orb
+クローオーブ
+
+> TXT_AMMOBLASTER2
+Energy Orb
+エネルギーオーブ
+
+> TXT_AMMOSKULLROD1
+Lesser Runes
+レッサールーン
+
+> TXT_AMMOSKULLROD2
+Greater Runes
+グレータールーン
+
+> TXT_AMMOPHOENIXROD1
+Flame Orb
+フレイムオーブ
+
+> TXT_AMMOPHOENIXROD2
+Inferno Orb
+インフェルノオーブ
+
+> TXT_WPNGOLDWAND
+Gold Wand
+ゴールドワンド
+
+> TXT_WPNMACE
+Firemace
+ファイアメイス
+
+> TXT_WPNCROSSBOW
+Ethereal Crossbow
+イセリアルクロスボウ
+
+> TXT_WPNBLASTER
+Dragon Claw
+ドラゴンクロー
+
+> TXT_WPNSKULLROD
+Hellstaff
+ヘルスタッフ
+
+> TXT_WPNPHOENIXROD
+Phoenix Rod
+フェニックスロッド
+
+> TXT_WPNGAUNTLETS
+Gauntlets of the Necromancer
+ネクロマンサーの篭手
+
+; Locks
+
+> TXT_NEEDBLUEKEY
+You need a blue key to open this door
+開くには 青の鍵が必要だ
+
+> TXT_NEEDGREENKEY
+You need a green key to open this door
+開くには 緑の鍵が必要だ
+
+> TXT_NEEDYELLOWKEY
+You need a yellow key to open this door
+開くには 黄の鍵が必要だ
+
+; Actor tag names
+
+> FN_CHICKEN
+Chicken
+鶏
+
+> FN_BEAST
+; Wordplay: werewolf
+Weredragon
+ウェア ドラゴン
+
+> FN_CLINK
+; Wordplay: sabre-tooth
+Sabreclaw
+サーベルクロー
+
+> FN_DSPARIL
+D'Sparil
+デ'スパリル
+
+> FN_HERETICIMP
+Gargoyle
+ガーゴイル
+
+> FN_IRONLICH
+Ironlich
+アイアンリッチ
+
+> FN_BONEKNIGHT
+Undead Warrior
+アンデット兵
+
+> FN_MINOTAUR
+Maulotaur
+マウロタウロス
+
+> FN_MUMMY
+Golem
+ゴーレム
+
+> FN_MUMMYLEADER
+Nitrogolem
+ニトロゴーレム
+
+> FN_SNAKE
+Ophidian
+オフィディアン
+
+> FN_WIZARD
+Wizard
+ウィザード
+
+> AMMO_GOLDWAND
+Wand Crystals
+ワンド クリスタル
+
+> AMMO_CROSSBOW
+Ethereal Arrows
+イセリアルの矢
+
+> AMMO_BLASTER
+Claw Orbs
+クロー オーブ
+
+> AMMO_MACE
+Mace Spheres
+メイス スフィア
+
+> AMMO_SKULLROD
+Hellstaff Runes
+ヘルスタッフ ルーン
+
+> AMMO_PHOENIXROD
+Flame Orbs
+フレイム オーブ
+
+> TAG_STAFF
+Staff
+杖
+
+> TAG_GOLDWAND
+Elven Wand
+エルフのワンド
+
+; Obituaries
+
+> OB_CHICKEN
+%o was pecked to death.
+%o はくちばしで突かれ死んだ。
+
+> OB_BEAST
+%o was charred by a weredragon.
+%o はウェアドラゴンに黒焦げにされた。
+
+> OB_CLINK
+%o was slashed by a sabreclaw.
+%o はサーベルクローに切り裂かれた。
+
+> OB_DSPARIL1
+%o was scalded by D'Sparil's serpent.
+%o はデ'スパリルのサーペントに火傷を負わされた。
+
+> OB_DSPARIL1HIT
+%o was chewed up by D'Sparil's serpent.
+%o はデ'スパリルのサーペントに噛み砕かれた。
+
+> OB_DSPARIL2
+%o was no match for D'Sparil.
+%o はデ'スパリルには全く歯が立たなかった。
+
+> OB_DSPARIL2HIT
+%o was smacked down by D'Sparil.
+%o はデ'スパリルに打ち負かされた。
+
+> OB_HERETICIMP
+%o was scarred by a gargoyle.
+%o はガーゴイルに傷を負わされた。
+
+> OB_HERETICIMPHIT
+%o was hacked by a gargoyle.
+%o はガーゴイルに切り刻まれた。
+
+> OB_IRONLICH
+%o was devastated by an ironlich.
+%o はアイアンリッチに吹き飛ばされた。
+
+> OB_IRONLICHHIT
+%o got up-close and personal with an ironlich.
+%o はアイアンリッチと密接に関わった。
+
+> OB_BONEKNIGHT
+%o was axed by an undead warrior.
+%o はアンデッド兵の斧でやられた。
+
+> OB_BONEKNIGHTHIT
+%o was slain by an undead warrior.
+%o はアンデッド兵の手で葬られた。
+
+> OB_MINOTAUR
+%o was blasted into cinders by a Maulotaur.
+%o はマウロタウロスに燃やされ炭化した。
+
+> OB_MINOTAURHIT
+%o was pulped by a Maulotaur.
+%o はマウロタウロスにグシャグシャにされた。
+
+> OB_MUMMY
+%o was smashed by a golem.
+%o はゴーレムに叩きのめされた。
+
+> OB_MUMMYLEADER
+%o was shrieked to death by a nitrogolem.
+%o はニトロゴーレムに脅かされた。
+
+> OB_SNAKE
+%o was rattled by an ophidian.
+%o はオフィディアンに動揺した。
+
+> OB_WIZARD
+%o was cursed by a wizard.
+%o はウィザードに呪われた。
+
+> OB_WIZARDHIT
+%o was palpated by a wizard.
+%o はウィザードに触診されてしまった。
+
+> OB_MPSTAFF
+%o got staffed by %k.
+%o は %k の棒でぶん殴られた。
+
+> OB_MPGAUNTLETS
+%o got a shock from %k's gauntlets.
+%o は %k の篭手からショックを受けた。
+
+> OB_MPGOLDWAND
+%o waved goodbye to %k's elven wand.
+%o は %k のエルフのワンドに別れの挨拶をした。
+
+> OB_MPCROSSBOW
+%o was pegged by %k's ethereal crossbow.
+%o は %k のイセリアルクロスボウで釘付けにされた。
+
+> OB_MPBLASTER
+%o was blasted a new one by %k's dragon claw.
+%o は %k のドラゴンクローで発破体験した。
+
+> OB_MPSKULLROD
+%o got sent down under by %k's hellstaff.
+%o は %k のヘルスタッフで冥界に送られた。
+
+> OB_MPPHOENIXROD
+%o was scorched to cinders by %k's phoenix rod.
+%o は %k のフェニックスロッドで焼かれた。
+
+> OB_MPMACE
+%o was bounced by %k's firemace.
+%o は %k のファイアメイスで飛ばされた。
+
+> OB_MPPSTAFF
+%o got clapped by %k's charged staff.
+%o は %k の魔力を帯びた棒で暖かく迎えられた。
+
+> OB_MPPGAUNTLETS
+%o was bled dry by %k's gauntlets.
+%o は %k の篭手で血を絞り取られた。
+
+> OB_MPPGOLDWAND
+%o was assaulted by %k's elven wand.
+%o は %k のエルフのワンドで襲われた。
+
+> OB_MPPCROSSBOW
+%o was shafted by %k's ethereal crossbow.
+%o は %k のイセリアルクロスボウで押された。
+
+> OB_MPPBLASTER
+%o was ripped apart by %k's dragon claw.
+%o は %k のドラゴンの鉤爪でバラバラに引き裂かれた。
+
+> OB_MPPSKULLROD
+%k poured the hellstaff on %o.
+%o は %k にヘルスタッフを %p 注ぎ込まれた。
+
+> OB_MPPPHOENIXROD
+%o was burned down by %k's phoenix staff.
+%o は %k のフェニックスロッドで焼き滅ぼされた。
+
+> OB_MPPMACE
+%o was squished by %k's giant mace sphere.
+%o は %k の巨大なメイススフィアで潰された。
+
+; Hexen
+
+; Pickup
+
+> TXT_MANA_1
+Blue Mana
+青マナ
+
+> TXT_MANA_2
+Green Mana
+緑マナ
+
+> TXT_MANA_BOTH
+Combined Mana
+複合マナ
+
+> TXT_KEY_STEEL
+Steel Key
+鋼の鍵
+
+> TXT_KEY_CAVE
+Cave Key
+洞窟の鍵
+
+> TXT_KEY_AXE
+Axe Key
+斧の鍵
+
+> TXT_KEY_FIRE
+Fire Key
+炎の鍵
+
+> TXT_KEY_EMERALD
+Emerald Key
+翠玉の鍵
+
+> TXT_KEY_DUNGEON
+Dungeon Key
+迷宮の鍵
+
+> TXT_KEY_SILVER
+Silver Key
+銀の鍵
+
+> TXT_KEY_RUSTED
+Rusted Key
+錆びた鍵
+
+> TXT_KEY_HORN
+Horn Key
+角の鍵
+
+> TXT_KEY_SWAMP
+Swamp Key
+沼の鍵
+
+> TXT_KEY_CASTLE
+Castle Key
+城の鍵
+
+> TXT_ARTIINVULNERABILITY2
+Icon of the Defender
+守護者の像
+
+> TXT_ARTISUMMON
+Dark Servant
+闇の従者
+
+> TXT_ARTIEGG2
+Porkalator
+ポークレイター
+
+> TXT_ARTIPOISONBAG
+Flechette
+フレチェット
+
+> TXT_ARTITELEPORTOTHER
+Banishment Device
+追放のデバイス
+
+> TXT_ARTISPEED
+Boots of Speed
+素早さの靴
+
+> TXT_ARTIBOOSTMANA
+Krater of Might
+魔力の盃
+
+> TXT_ARTIBOOSTARMOR
+Dragonskin Bracers
+竜皮の小手
+
+> TXT_ARTIBLASTRADIUS
+Disc of Repulsion
+反発の円盤
+
+> TXT_ARTIHEALINGRADIUS
+Mystic Ambit Incant
+魅知国の秘法
+
+> TXT_ARTIPUZZSKULL
+Yorick's Skull
+ヨリックの髑髏
+
+> TXT_ARTIPUZZGEMBIG
+Heart of D'sparil
+デ'スパリルの心
+
+> TXT_ARTIPUZZGEMRED
+Ruby Planet
+ルビーの宝石
+
+> TXT_ARTIPUZZGEMGREEN1
+Emerald Planet
+エメラルドの宝石
+
+> TXT_ARTIPUZZGEMGREEN2
+Emerald Planet
+エメラルドの宝石
+
+> TXT_ARTIPUZZGEMBLUE1
+Sapphire Planet
+サファイアの宝石
+
+> TXT_ARTIPUZZGEMBLUE2
+Sapphire Planet
+サファイアの宝石
+
+> TXT_ARTIPUZZBOOK1
+Daemon Codex
+デーモンの写本
+
+> TXT_ARTIPUZZBOOK2
+Liber Oscura
+オスキュラ公文書
+
+> TXT_ARTIPUZZSKULL2
+Flame Mask
+炎の仮面
+
+> TXT_ARTIPUZZFWEAPON
+Glaive Seal
+グレイブシール
+
+> TXT_ARTIPUZZCWEAPON
+Holy Relic
+聖遺物
+
+> TXT_ARTIPUZZMWEAPON
+Sigil of the Magus
+メイガスの印章
+
+> TXT_ARTIPUZZGEAR
+Clock Gear
+時計の歯車
+
+> TXT_USEPUZZLEFAILED
+You Cannot Use This Here
+ここでは使用できない
+
+> TXT_ARMOR1
+Mesh Armor
+鎖帷子
+
+> TXT_ARMOR2
+Falcon Shield
+鷹の盾
+
+> TXT_ARMOR3
+Platinum Helmet
+白金の兜
+
+> TXT_ARMOR4
+Amulet of Warding
+回避の護符
+
+> TXT_WEAPON_F2
+Timon's Axe
+タイモンの斧
+
+> TXT_WEAPON_F3
+Hammer of Retribution
+報復の金槌
+
+> TXT_WEAPON_F4
+Quietus Assembled
+組み立てた 死滅の剣
+
+> TXT_WEAPON_C2
+Serpent Staff
+蛇の杖
+
+> TXT_WEAPON_C3
+Firestorm
+ファイアストーム
+
+> TXT_WEAPON_C4
+Wraithverge Assembled
+組み立てた レイスバージ
+
+> TXT_WEAPON_M2
+Frost Shards
+フロスト シャード
+
+> TXT_WEAPON_M3
+Arc of Death
+死の円弧
+
+> TXT_WEAPON_M4
+Bloodscourge Assembled
+組み立てた 天罰
+
+> TXT_WEAPONPIECE
+A weapon piece! This is your lucky day!
+武器の一片! 今日は吉日だ!
+
+> TXT_QUIETUS_PIECE
+Segment of Quietus
+死滅の剣の切片
+
+> TXT_WRAITHVERGE_PIECE
+Segment of Wraithverge
+レイスバージの切片
+
+> TXT_BLOODSCOURGE_PIECE
+Segment of Bloodscourge
+天罰の切片
+
+; Locks
+
+> TXT_NEED_KEY_STEEL
+You need the Steel Key
+鋼の鍵が必要だ
+
+> TXT_NEED_KEY_CAVE
+You need the Cave Key
+洞窟の鍵が必要だ
+
+> TXT_NEED_KEY_AXE
+You need the Axe Key
+斧の鍵が必要だ
+
+> TXT_NEED_KEY_FIRE
+You need the Fire Key
+炎の鍵が必要だ
+
+> TXT_NEED_KEY_EMERALD
+You need the Emerald Key
+翠玉の鍵が必要だ
+
+> TXT_NEED_KEY_DUNGEON
+You need the Dungeon Key
+迷宮の鍵が必要だ
+
+> TXT_NEED_KEY_SILVER
+You need the Silver Key
+銀の鍵が必要だ
+
+> TXT_NEED_KEY_RUSTED
+You need the Rusted Key
+錆びた鍵が必要だ
+
+> TXT_NEED_KEY_HORN
+You need the Horn Key
+角の鍵が必要だ
+
+> TXT_NEED_KEY_SWAMP
+You need the Swamp Key
+沼の鍵が必要だ
+
+> TXT_NEED_KEY_CASTLE
+You need the Castle Key
+城の鍵が必要だ
+
+; Actor tag names
+
+> FN_FIREDEMON
+Afrit
+アフリート
+
+> FN_DEMON1
+Serpent
+サーペント
+
+> FN_ETTIN
+Ettin
+エティン
+
+> FN_CENTAUR
+Centaur
+ケンタウロス
+
+> FN_SLAUGHTAUR
+Slaughtaur
+スロアタウル
+
+> FN_BISHOP
+Bishop
+ビショップ
+
+> FN_ICEGUY
+Wendigo
+ウェンディゴ
+
+> FN_SERPENT
+Stalker
+ストーカー
+
+> FN_WRAITH
+Reiver
+レイバー
+
+> FN_DRAGON
+Death Wyvern
+デス ワイバーン
+
+> FN_KORAX
+Korax
+唯一神コラックス
+
+> FN_FBOSS
+Zedek
+ゼデク
+
+> FN_MBOSS
+Menelkir
+メネルキル
+
+> FN_CBOSS
+Traductus
+トラダクタス
+
+> FN_HERESIARCH
+Heresiarch
+ヘレシアーク
+
+> AMMO_MANA1
+Blue Mana
+ブルーマナ
+
+> AMMO_MANA2
+Green Mana
+グリーンマナ
+
+> TAG_CWEAPMACE
+Mace of Contrition
+懺悔のメイス
+
+> TAG_CWEAPSTAFF
+Serpent Staff
+蛇の杖
+
+> TAG_CWEAPFLAME
+Firestorm
+ファイアストーム
+
+> TAG_CWEAPWRAITHVERGE
+Wraithverge
+レイスバージ
+
+> TAG_FWEAPFIST
+Spiked Gauntlets
+スパイク ガントレット
+
+> TAG_FWEAPAXE
+Timon's Axe
+タイモンの斧
+
+> TAG_FWEAPHAMMER
+Hammer of Retribution
+報復の金槌
+
+> TAG_FWEAPQUIETUS
+Quietus
+死滅の剣
+
+> TAG_MWEAPWAND
+Sapphire Wand
+サファイア ワンド
+
+> TAG_MWEAPFROST
+Frost Shards
+フロスト シャード
+
+> TAG_MWEAPLIGHTNING
+Arcs of Death
+死の円弧
+
+> TAG_MWEAPBLOODSCOURGE
+Bloodscourge
+天罰
+
+> TAG_ARTIBLASTRADIUS
+Disc of Repulsion
+反発の円盤
+
+> TAG_ARTIBOOSTARMOR
+Dragonskin Bracers
+竜皮の小手
+
+> TAG_ARTIBOOSTMANA
+Krater of Might
+魔力の盃
+
+> TAG_ARTIPOISONBAG
+Flechette
+フレシェット
+
+> TAG_ARTIPOISONBAG1
+Poison Cloud Flechette
+毒ガス フレシェット
+
+> TAG_ARTIPOISONBAG2
+Timebomb Flechette
+時限爆弾フレシェット
+
+> TAG_ARTIPOISONBAG3
+Grenade Flechette
+グレネードフレシェット
+
+> TAG_ARTIHEALINGRADIUS
+Mystic Ambit Incant
+魅知国の秘法
+
+> TAG_ARTIDEFENDER
+Icon of the Defender
+守護者の像
+
+> TAG_ARTIPORK
+Porkalator
+ポークレイター
+
+> TAG_ARTISPEED
+Boots of Speed
+素早さの靴
+
+> TAG_ARTISUMMON
+Dark Servant
+闇の従者
+
+> TAG_ARTITELEPORTOTHER
+Banishment Device
+追放のデバイス
+
+> TAG_ARTIPUZZSKULL
+Yorick's Skull
+ヨリックの髑髏
+
+> TAG_ARTIPUZZGEMBIG
+Heart of D'Sparil
+デ'スパリルの心
+
+> TAG_ARTIPUZZGEMRED
+Ruby Planet
+ルビーの宝石
+
+> TAG_ARTIPUZZGEMGREEN1
+Emerald Planet (1)
+エメラルドの宝石1
+
+> TAG_ARTIPUZZGEMGREEN2
+Emerald Planet (2)
+エメラルドの宝石2
+
+> TAG_ARTIPUZZGEMBLUE1
+Sapphire Planet (1)
+サファイアの宝石1
+
+> TAG_ARTIPUZZGEMBLUE2
+Sapphire Planet (2)
+サファイアの宝石2
+
+> TAG_ARTIPUZZBOOK1
+Daemon Codex
+デーモンの写本
+
+> TAG_ARTIPUZZBOOK2
+Liber Oscura
+オスキュラ公文書
+
+> TAG_ARTIPUZZSKULL2
+Flame Mask
+炎の仮面
+
+> TAG_ARTIPUZZFWEAPON
+Glaive Seal
+グレイブシール
+
+> TAG_ARTIPUZZCWEAPON
+Holy Relic
+聖遺物
+
+> TAG_ARTIPUZZMWEAPON
+Sigil of the Magus
+メイガスの印章
+
+> TAG_ARTIPUZZGEAR1
+Iron gear
+鉄の歯車
+
+> TAG_ARTIPUZZGEAR2
+Brass gear
+真鍮のギア
+
+> TAG_ARTIPUZZGEAR3
+Brass and iron gear
+鉄と真鍮のギア
+
+> TAG_ARTIPUZZGEAR4
+Silver and brass gear
+銀と真鍮のギア
+
+; Obituaries
+
+> OB_FIREDEMON
+%o tasted an Afrit's fire.
+%o はアフリートの炎を味わった。
+
+> OB_DEMON1
+%o was scalded by a Serpent.
+%o はサーペントに火傷を負わされた。
+
+> OB_DEMON2
+%o was poisoned by a Serpent.
+%o はサーペントの毒にやられた。
+
+> OB_ETTIN
+%o was mashed by an Ettin.
+%o はエティンに潰された。
+
+> OB_CENTAUR
+%o was cut up by a Centaur.
+%o はケンタウロスに切り刻まれた。
+
+> OB_SLAUGHTAURHIT
+%o was cut up by a Slaughtaur.
+%o はスロアタウルに切り刻まれた。
+
+> OB_SLAUGHTAUR
+%o was struck down by a Slaughtaur's fireball.
+%o はスロアタウルの火玉に倒された。
+
+> OB_BISHOP
+%o succumbed to a Bishop's dark power.
+%o はビショップの闇の力に屈した。
+
+> OB_ICEGUY
+%o was frozen solid by a Wendigo.
+%o はウェンディゴによって固められた。
+
+> OB_SERPENTHIT
+%o was mauled by a Stalker.
+%o はストーカーに引っ掻かれた。
+
+> OB_SERPENT
+%o was melted by a Stalker.
+%o はストーカーに溶かされた。
+
+> OB_WRAITH
+%o was charred by a Reiver.
+%o はレイバーに黒焦げにされた。
+
+> OB_WRAITHHIT
+%o had %p life stolen by a Reiver.
+%o はレイバーに命を %p盗まれた。
+
+> OB_DRAGON
+%o was incinerated by the Death Wyvern.
+%o はダークワイバーンに焼却された。
+
+> OB_KORAX
+%o was swept from the board by Korax.
+%o は唯一神の怒りに触れた。
+
+> OB_FBOSS
+%o was slain by Zedek.
+%o はゼデクに討ち取られた。
+
+> OB_MBOSS
+%o couldn't absorb Menelkir's Mana.
+%o はメネルキルのマナを吸収できなかった。
+
+> OB_CBOSS
+%o was baptized by Traductus.
+%o はトラダクタスの洗礼を受けた。
+
+> OB_HERESIARCH
+%o had %p bones rolled by the Heresiarch.
+%o はヘレシアークに骨を %p本 撒き散らされた。
+
+> OB_MPFWEAPFIST
+%o was beaten to a pulp by %k's bare fists.
+%o は %k に素手でボコボコにされた。
+
+> OB_MPFWEAPAXE
+%o got the axe from %k.
+%o は %k から斧を受けた。
+
+> OB_MPFWEAPHAMMERM
+%o had %p head caved in by %k's hammer.
+%o は %k のハンマーで頭に空洞を開けられた。
+
+> OB_MPFWEAPHAMMERR
+%o's soul was forged anew by %k's hammer.
+%o の魂は %k のハンマーで一から鍛え直された。
+
+> OB_MPFWEAPQUIETUS
+%o was silenced by %k's mighty Quietus.
+%o は %k の強靭なクワイエタスで静かにされた。
+
+> OB_MPCWEAPMACE
+%o got a mace to the face from %k.
+%o は自らの顔に %k のメイスを受けた。
+
+> OB_MPCWEAPSTAFFM
+%o was bitten by %k's serpent staff.
+%o は %k の蛇の杖に噛まれた。
+
+> OB_MPCWEAPSTAFFR
+%o choked on %k's serpent staff.
+%o は %k の蛇の杖に息の根を止められた。
+
+> OB_MPCWEAPFLAME
+%o was lit up by %k's flames.
+%o は %k によって炎を灯された。
+
+> OB_MPCWEAPWRAITHVERGE
+%o was cleansed by %k's Wraithverge.
+%o は %k のレイスバージによって浄化された。
+
+> OB_MPMWEAPWAND
+%o took one too many sapphire beams from %k.
+%o は %k から多量のサファイアビームを受け取った。
+
+> OB_MPMWEAPFROST
+%o was turned into a frosty fellow by %k.
+%o は %k によって冷ややかな輩になった。
+
+> OB_MPMWEAPLIGHTNING
+%o received a shocking revelation from %k.
+%o は %k から衝撃的な啓示を受けた。
+
+> OB_MPMWEAPBLOODSCOURGE
+%o was wiped off the face of the universe by %k's Bloodscourge.
+%o は %k の天罰によりこの世から一掃された。
+
+; Strife
+
+; Pickups
+
+> TXT_METALARMOR
+You picked up the Metal Armor.
+メタルアーマー 入手。
+
+> TXT_LEATHERARMOR
+You picked up the Leather Armor.
+レザーアーマー 入手。
+
+> TXT_MEDPATCH
+You picked up the Med patch.
+医薬パッチ 入手。
+
+> TXT_MEDICALKIT
+You picked up the Medical kit.
+医療用キット 入手。
+
+> TXT_SURGERYKIT
+You picked up the Surgery Kit.
+手術キット 入手。
+
+> TXT_STRIFEMAP
+You picked up the map.
+マップ 取得。
+
+> TXT_BELDINSRING
+You picked up the ring.
+指輪 取得。
+
+> TXT_OFFERINGCHALICE
+You picked up the Offering Chalice.
+寄贈された聖杯 取得。
+
+> TXT_EAR
+You picked up the ear.
+耳 取得。
+
+> TXT_BROKENCOUPLING
+You picked up the broken power coupling.
+壊れたパワーカップリング 取得。
+
+> TXT_SHADOWARMOR
+You picked up the Shadow armor.
+シャドウアーマー 入手。
+
+> TXT_ENVSUIT
+You picked up the Environmental Suit.
+耐環境スーツ 入手。
+
+> TXT_GUARDUNIFORM
+You picked up the Guard Uniform.
+守衛の制服 入手。
+
+> TXT_OFFICERSUNIFORM
+You picked up the Officer's Uniform.
+士官の制服 入手。
+
+> TXT_FTHROWERPARTS
+You picked up the flame thrower parts.
+火炎放射器の部品 入手。
+
+> TXT_REPORT
+You picked up the report.
+報告書 取得。
+
+> TXT_INFO
+You picked up the info.
+情報 取得。
+
+> TXT_TARGETER
+You picked up the Targeter.
+照準器 入手。
+
+> TXT_COMMUNICATOR
+You picked up the Communicator.
+コミュニケーター 取得。
+
+> TXT_COIN
+You picked up the coin.
+コイン 入手。
+
+> TXT_XGOLD
+You picked up %d gold.
+%d ゴールド 入手。
+
+> TXT_BEACON
+You picked up the Teleporter Beacon.
+テレポータービーコン 取得。
+
+> TXT_DEGNINORE
+You picked up the Degnin Ore.
+デグニン鉱石 取得。
+
+> TXT_SCANNER
+You picked up the scanner.
+スキャナー 入手。
+
+> TXT_NEEDMAP
+"""The scanner won't work without a map!
+"""
+マップが無ければ スキャナーは機能しない!
+
+> TXT_PRISONPASS
+You picked up the Prison pass.
+刑務所の許可証 取得。
+
+> TXT_STRIFECROSSBOW
+You picked up the crossbow.
+クロスボウ 入手。
+
+> TXT_ASSAULTGUN
+You picked up the assault gun.
+アサルトガン 入手。
+
+> TXT_MMLAUNCHER
+You picked up the mini missile launcher.
+ミニミサイル ランチャー入手。
+
+> TXT_FLAMER
+You picked up the flame thrower.
+火炎放射器 入手。
+
+> TXT_MAULER
+You picked up the mauler.
+マウラー 入手。
+
+> TXT_GLAUNCHER
+You picked up the Grenade launcher.
+グレネードランチャー 入手。
+
+> TXT_SIGIL
+You picked up the SIGIL.
+シジル 取得。
+
+> TXT_BASEKEY
+You picked up the Base Key.
+基地のキー 取得。
+
+> TXT_GOVSKEY
+You picked up the Govs Key.
+政府のキー 取得。
+
+> TXT_PASSCARD
+You picked up the Passcard.
+パスカード 取得。
+
+> TXT_IDBADGE
+You picked up the ID Badge.
+IDバッジ 取得。
+
+> TXT_PRISONKEY
+You picked up the Prison Key.
+刑務所のキー 取得。
+
+> TXT_SEVEREDHAND
+You picked up the Severed Hand.
+切り取った手 取得。
+
+> TXT_POWER1KEY
+You picked up the Power1 Key.
+パワー1キー 取得。
+
+> TXT_POWER2KEY
+You picked up the Power2 Key.
+パワー2キー 取得。
+
+> TXT_POWER3KEY
+You picked up the Power3 Key.
+パワー3キー 取得。
+
+> TXT_GOLDKEY
+You picked up the Gold Key.
+ゴールドキー 取得。
+
+> TXT_IDCARD
+You picked up the ID Card.
+IDカード 取得。
+
+> TXT_SILVERKEY
+You picked up the Silver Key.
+シルバーキー 取得。
+
+> TXT_ORACLEKEY
+You picked up the Oracle Key.
+オラクルキー 取得。
+
+> TXT_MILITARYID
+You picked up the Military ID.
+ミリタリーID 取得。
+
+> TXT_ORDERKEY
+You picked up the Order Key.
+オーダーキー 取得。
+
+> TXT_WAREHOUSEKEY
+You picked up the Warehouse Key.
+倉庫のキー 取得。
+
+> TXT_BRASSKEY
+You picked up the Brass Key.
+ブラスキー 取得。
+
+> TXT_REDCRYSTAL
+You picked up the Red Crystal Key.
+赤水晶のキー 取得。
+
+> TXT_BLUECRYSTAL
+You picked up the Blue Crystal Key.
+青水晶のキー 取得。
+
+> TXT_CHAPELKEY
+You picked up the Chapel Key.
+チャペルキー 取得。
+
+> TXT_CATACOMBKEY
+You picked up the Catacomb Key.
+カタコンベキー 取得。
+
+> TXT_SECURITYKEY
+You picked up the Security Key.
+警備のキー 取得。
+
+> TXT_COREKEY
+You picked up the Core Key.
+コアキー 取得。
+
+> TXT_MAULERKEY
+You picked up the Mauler Key.
+マウラーキー 取得。
+
+> TXT_FACTORYKEY
+You picked up the Factory Key.
+工場のキー 取得。
+
+> TXT_MINEKEY
+You picked up the Mine Key.
+鉱山のキー 取得。
+
+> TXT_NEWKEY5
+You picked up the New Key5.
+ニューキー5 取得。
+
+> TXT_ORACLEPASS
+You picked up the Oracle Pass.
+オラクルパス 取得。
+
+> TXT_HEGRENADES
+You picked up the HE-Grenade Rounds.
+HEグレネード弾 入手。
+
+> TXT_PHGRENADES
+You picked up the Phosphorus-Grenade Rounds.
+白リングレネード弾 入手。
+
+> TXT_CLIPOFBULLETS
+You picked up the clip of bullets.
+銃弾倉 入手。
+
+> TXT_BOXOFBULLETS
+You picked up the box of bullets.
+弾薬箱 入手。
+
+> TXT_MINIMISSILES
+You picked up the mini missiles.
+ミニミサイル 入手。
+
+> TXT_CRATEOFMISSILES
+You picked up the crate of missiles.
+ミサイルの箱 入手。
+
+> TXT_ENERGYPOD
+You picked up the energy pod.
+エネルギーポット 入手。
+
+> TXT_ENERGYPACK
+You picked up the energy pack.
+エネルギーパック 入手。
+
+> TXT_POISONBOLTS
+You picked up the poison bolts.
+ポイズンボルト 入手。
+
+> TXT_ELECTRICBOLTS
+You picked up the electric bolts.
+エレクトリックボルト 入手。
+
+> TXT_AMMOSATCHEL
+You picked up the ammo satchel.
+弾薬鞄 入手。
+
+> MSG_TALISMANRED
+You have a feeling that it wasn't to be touched...
+己の勘が 触れてはならない物だと訴えている...
+
+> MSG_TALISMANGREEN
+Whatever it is, it doesn't belong in this world...
+何であろうと、この世には属さない物だ...
+
+> MSG_TALISMANBLUE
+It must do something...
+何かを成し遂げなければならない...
+
+> MSG_TALISMANPOWER
+You have super strength!
+豪剛なる力を得た!
+
+; Locks
+
+> TXT_NEEDKEY
+You don't have the key
+キーを持っていない
+
+> TXT_NEED_PASSCARD
+You need a passcard
+パスカード が必要だ
+
+> TXT_NEED_PASSCARD_DOOR
+You need a pass card key to open this door
+このドアには パスカード が必要だ
+
+> TXT_NEED_IDCARD
+You need an ID card
+IDカード が必要だ
+
+> TXT_NEED_PRISONKEY
+You don't have the key to the prison
+刑務所のキーを持っていない
+
+> TXT_NEED_HANDPRINT
+Hand print not on file
+手形認証が一致しません
+
+> TXT_NEED_GOLDKEY
+You need the Gold Key
+ゴールドキーが必要だ
+
+> TXT_NEED_IDBADGE
+You need an ID Badge
+IDバッジが必要だ
+
+> TXT_NEED_IDBADGE_DOOR
+You need an ID Badge to open this door
+このドアには IDバッジ が必要だ
+
+> TXT_NEED_SILVERKEY
+You need the Silver Key
+シルバーキーが必要だ
+
+> TXT_NEED_BRASSKEY
+You need the Brass Key
+ブラスキーが必要だ
+
+> TXT_NEED_REDCRYSTAL
+You need the Red Crystal
+赤水晶のキーが必要だ
+
+> TXT_NEED_BLUECRYSTAL
+You need the Blue Crystal
+青水晶のキーが必要だ
+
+> TXT_RETAIL_ONLY
+This area is only available in the retail version of Strife
+このエリアは Strifeの製品版でのみ利用可能です
+
+> TXT_DOES_NOT_WORK
+That doesn't seem to work
+それは作動していない
+
+> TXT_NEED_CHALICE
+You need the chalice!
+聖杯が必要だ!
+
+> TXT_NEED_OPASS
+You need the Oracle Pass!
+オラクルパスが必要だ!
+
+; Actor tags
+
+> TAG_PUNCHDAGGER
+Dagger
+ダガー
+
+> TAG_STRIFECROSSBOW1
+; Crossbow with electric bolts
+Crossbow
+クロスボウ
+
+> TAG_STRIFECROSSBOW2
+; Crossbow with poison bolts
+Crossbow
+クロスボウ
+
+> TAG_ASSAULTGUN
+Assault Gun
+アサルトガン
+
+> TAG_MMLAUNCHER
+Mini Missile Launcher
+ミニミサイルランチャー
+
+> TAG_FLAMER
+Flame Thrower
+火炎放射器
+
+> TAG_MAULER1
+Mauler
+マウラー
+
+> TAG_MAULER2
+Mauler
+マウラー
+
+> TAG_GLAUNCHER1
+; High-explosive grenade launcher
+Grenade Launcher
+グレネードランチャー
+
+> TAG_GLAUNCHER2
+; White phosphorous grenade launcher 
+Grenade Launcher
+グレネードランチャー
+
+> TAG_SIGIL
+Sigil
+シジル
+
+> TAG_COIN
+Coin
+コイン
+
+> TAG_MEDPATCH
+Med patch
+医薬パッチ
+
+> TAG_MEDICALKIT
+Medical kit
+医療キット
+
+> TAG_SURGERYKIT
+Surgery Kit
+手術キット
+
+> TAG_BELDINSRING
+Ring
+指輪
+
+> TAG_OFFERINGCHALICE
+Offering Chalice
+寄贈された聖杯
+
+> TAG_EAR
+Ear
+耳
+
+> TAG_BROKENCOUPLING
+Broken Power Coupling
+壊れたパワーカップリング
+
+> TAG_SHADOWARMOR
+Shadow Armor
+シャドウアーマー
+
+> TAG_ENVSUIT
+Environmental Suit
+耐環境スーツ
+
+> TAG_GUARDUNIFORM
+Guard Uniform
+ガードの制服
+
+> TAG_OFFICERSUNIFORM
+Officer's Uniform
+士官の制服
+
+> TAG_FTHROWERPARTS
+Flame Thrower Parts
+火炎放射器の部品
+
+> TAG_REPORT
+Report
+報告書
+
+> TAG_INFO
+Info
+情報
+
+> TAG_TARGETER
+Targeter
+照準器
+
+> TAG_COMMUNICATOR
+Communicator
+コミュニケーター
+
+> TAG_DEGNINORE
+Degnin Ore
+デグニン鉱石
+
+> TAG_GUNTRAINING
+Accuracy
+精度
+
+> TAG_HEALTHTRAINING
+Toughness
+タフネス
+
+> TAG_SCANNER
+Scanner
+スキャナー
+
+> TAG_PRISONPASS
+Prison Pass
+刑務所の許可証
+
+> TAG_ALARM
+Alarm
+警報
+
+> TAG_AMMOFILLUP
+Ammo
+弾薬
+
+> TAG_HEALTHFILLUP
+Health
+体力
+
+> TAG_TELEPORTERBEACON
+Teleporter Beacon
+テレポータービーコン
+
+> TAG_METALARMOR
+Metal Armor
+メタルアーマー
+
+> TAG_LEATHER
+Leather Armor
+レザーアーマー
+
+> TAG_HEGRENADES
+HE-Grenade Rounds
+HEグレネード弾
+
+> TAG_PHGRENADES
+Phosphorus-Grenade Rounds
+白リングレネード弾
+
+> TAG_CLIPOFBULLETS
+Clip of Bullets
+弾丸のクリップ
+
+> TAG_BOXOFBULLETS
+Ammo
+弾薬箱
+
+> TAG_MINIMISSILES
+Mini Missiles
+ミニミサイル
+
+> TAG_CRATEOFMISSILES
+Crate of Missiles
+ミサイルの箱
+
+> TAG_ENERGYPOD
+Energy Pod
+エネルギーポット
+
+> TAG_ENERGYPACK
+Energy Pack
+エネルギーパック
+
+> TAG_POISONBOLTS
+Poison Bolts
+ポイズンボルト
+
+> TAG_ELECTRICBOLTS
+Electric Bolts
+エレクトリックボルト
+
+> TAG_AMMOSATCHEL
+Ammo Satchel
+弾薬鞄
+
+> TAG_BASEKEY
+Base Key
+
+> TAG_GOVSKEY
+Govs Key
+
+> TAG_PASSCARD
+Passcard
+
+> TAG_IDBADGE
+ID Badge
+
+> TAG_PRISONKEY
+Prison Key
+
+> TAG_SEVEREDHAND
+Severed Hand
+
+> TAG_POWER1KEY
+Power1 Key
+
+> TAG_POWER2KEY
+Power2 Key
+
+> TAG_POWER3KEY
+Power3 Key
+
+> TAG_GOLDKEY
+Gold Key
+
+> TAG_IDCARD
+ID Card
+
+> TAG_SILVERKEY
+Silver Key
+
+> TAG_ORACLEKEY
+Oracle Key
+
+> TAG_MILITARYID
+Military ID
+
+> TAG_ORDERKEY
+Order Key
+
+> TAG_WAREHOUSEKEY
+Warehouse Key
+
+> TAG_BRASSKEY
+Brass Key
+
+> TAG_REDCRYSTALKEY
+Red Crystal Key
+
+> TAG_BLUECRYSTALKEY
+Blue Crystal Key
+
+> TAG_CHAPELKEY
+Chapel Key
+
+> TAG_CATACOMBKEY
+Catacomb Key
+
+> TAG_SECURITYKEY
+Security Key
+
+> TAG_COREKEY
+Core Key
+
+> TAG_MAULERKEY
+Mauler Key
+
+> TAG_FACTORYKEY
+Factory Key
+
+> TAG_MINEKEY
+Mine Key
+
+> TAG_NEWKEY5
+New Key5
+
+> TAG_ORACLEPASS
+Oracle Pass
+
+> TAG_10GOLD
+10 gold
+10ゴールド
+
+> TAG_25GOLD
+25 gold
+25ゴールド
+
+> TAG_50GOLD
+50 gold
+50ゴールド
+
+> TAG_300GOLD
+300 gold
+300ゴールド
+
+> TXT_PERSON
+Person
+一員
+
+> TAG_ACOLYTE
+Acolyte
+アコライト
+
+> TAG_ARMORER
+Armorer
+装甲
+
+> TAG_BARKEEP
+Bar Keep
+酒屋
+
+> TAG_BEGGAR
+Beggar
+乞食
+
+> TAG_MACIL1
+Macil
+マシル
+
+> TAG_MACIL2
+Macil
+マシル
+
+> TAG_MEDIC
+Medic
+メディック
+
+> TAG_ORACLE
+Oracle
+オラクル
+
+> TAG_PRIEST
+Priest
+プリースト
+
+> TAG_RATBUDDY
+Rat Buddy
+ラット バディ
+
+> TAG_REBEL
+Rebel
+反乱軍
+
+> TAG_TEMPLAR
+Templar
+騎士団員
+
+> TAG_WEAPONSMITH
+Weapon Smith
+武器工
+
+> TAG_TALISMANRED
+Red Talisman
+赤の魔除け
+
+> TAG_TALISMANGREEN
+Green Talisman
+緑の魔除け
+
+> TAG_TALISMANBLUE
+Blue Talisman
+青の魔除け
+
+; Obituaries
+
+> OB_ACOLYTE
+%o was zealously shot down by an Acolyte.
+%o は熱心なアコライトに堕とされた。
+
+> OB_MACIL
+%o should have never rebelled against Macil.
+%o はマシルに歯向かうべきではなかった。
+
+> OB_REBEL
+%o was gunned down by a Rebel.
+%o は反乱軍に撃ち殺された。
+
+> OB_BEGGAR
+%o was beaten to death by the poor.
+%o は貧民に殴り殺された。
+
+> OB_PEASANT
+%o should have never picked a fight with a civilian.
+%o は庶民に戦いを挑むべきではなかった。
+
+> OB_ALIENSPECTRE
+%o was struck down by the Spectre.
+%o はスペクトルに討ち滅ぼされた。
+
+> OB_ENTITY
+%o felt the wrath of The One God.
+%o は唯一神の怒りに触れた。
+
+> OB_LOREMASTER
+%o couldn't escape from the Lore Master's grasp.
+%o はロアマスターの手から逃れられなかった。
+
+> OB_PROGRAMMER
+%o was deleted by the Programmer.
+%o はプログラマーに消去された。
+
+> OB_STFBISHOP
+%o was blown away by the Bishop.
+%o はビショップに吹き飛ばされた。
+
+> OB_SENTINEL
+%o was shot down by a Sentinel.
+%o はセンティネルに堕とされた。
+
+> OB_CRUSADER
+%o was swept away by a Crusader.
+"""%o はクルセーダーに一掃された。
+"""
+
+> OB_INQUISITOR
+%o was sentenced by an Inquisitor.
+"""%o は審問官によって宣告された。
+"""
+
+> OB_STALKER
+%o was bugged by a Stalker.
+"""%o はストーカーに精神を蝕まれた。
+"""
+
+> OB_TURRET
+%o triggered the automatic defenses.
+%o は警備システムを起動してしまった。
+
+> OB_TEMPLARHIT
+%o was clawed by a Templar.
+%o は騎士団員に連行された。
+
+> OB_TEMPLAR
+%o was vaporized by a Templar.
+%o は騎士団員に浄化された。
+
+> OB_REAVERHIT
+%o was sliced open by a Reaver.
+%o はリーバーに切り裂かれた。
+
+> OB_REAVER
+%o was shot down by a Reaver.
+%o はリーバーに撃ち殺された。
+
+> OB_MPPUNCHDAGGER
+%o was unwittingly backstabbed by %k.
+%o は電気ショックを %k からもらった。
+
+> OB_MPELECTRICBOLT
+%o got bolted to the wall by %k.
+%o は ％k に壁へ打ち付けられた。
+
+> OB_MPPOISONBOLT
+%o received a lethal dose of %k's wrath.
+%o は 致死量の ％k の怒りを盛られた。
+
+> OB_MPASSAULTGUN
+%o was drilled full of holes by %k's assault gun.
+%o は %k のアサルトガンで穴だらけにされた。
+
+> OB_MPMINIMISSILELAUNCHER
+%o gulped down %k's missile.
+%o は %k のミサイルを味わった。
+
+> OB_MPSTRIFEGRENADE
+%o was inverted by %k's H-E grenade.
+%o は %k のHE手榴弾によって反逆された。
+
+> OB_MPPHOSPHOROUSGRENADE
+%o took a flame bath in %k's phosphorous pyre.
+%o は %k の白リン弾で炎に包まれた。
+
+> OB_MPFLAMETHROWER
+%o was barbecued by %k.
+%o は %k に丸焼きにされてしまった。
+
+> OB_MPMAULER1
+%o was zapped by %k.
+%o は %k から電気ショックを浴びた。
+
+> OB_MPMAULER
+%o was viciously vaporized by %k.
+%o は %k の悪辣さにより気化した。
+
+> OB_MPSIGIL
+%o bowed down to the sheer power of %k's Sigil.
+%o は %k のシジルによる威圧に屈した。
+
+; Miscellaneous
+
+> TXT_STRIFE_EPI
+Quest for the Sigil
+シジルの探求
+
+> TXT_FREED_PRISONERS
+You've freed the prisoners!
+囚人を解放した!
+
+> TXT_DESTROYED_CONVERTER
+You've destroyed the Converter!
+コンバーターを破壊した!
+
+> TXT_COMPLETED_TRAINING
+Congratulations! You have completed the training area
+おめでとう!トレーニングエリアを完了した
+
+> TXT_QUEST_14
+You've blown up the Crystal
+クリスタルを爆破した
+
+> TXT_QUEST_16
+You've blown up the Gates
+ゲートを爆破した
+
+> TXT_QUEST_27
+You've blown up the Computer
+コンピューターを爆破した
+
+> TXT_KILLED_BISHOP
+You killed the Bishop!
+ビショップを殺した!
+
+> TXT_KILLED_ORACLE
+You've killed the Oracle!
+オラクルの予言を覆した!
+
+> TXT_KILLED_MACIL
+You killed Macil!
+マシルを討ち取った!
+
+> TXT_KILLED_LOREMASTER
+You've killed the Loremaster!
+ロアマスターを吊り上げた!
+
+> TXT_YOUFOOL
+You fool! You've set off the alarm.
+バカな真似を! 警報を鳴らしてしまった。
+
+> TXT_YOUREDEAD
+You're dead! You set off the alarm.
+絶望的だ! 警報を鳴らしてしまった。
+
+> TXT_HAVEENOUGH
+You seem to have enough!
+十分に持ち合わせている!
+
+> TXT_GOAWAY
+Go away!
+逃げ出せ!
+
+> TXT_COMM0
+Incoming Message...
+メッセージが届いた...
+
+> TXT_COMM1
+Incoming Message from BlackBird...
+ブラックバードからのメッセージが届いた...
+
+> TXT_FINDHELP
+Find help
+助けを探せ
+
+> TXT_TRADE
+; As in for %u amount of money.
+for %u
+%u ゴールド
+
+; Chex Quest
+
+; Pickups
+
+> GOTCHEXARMOR
+Picked up the Chex(R) Armor.
+チェックス(R)アーマー をてにいれた。
+
+> GOTSUPERCHEXARMOR
+Picked up the Super Chex(R) Armor!
+スーパーチェックス(R)アーマー をてにいれた。
+
+> GOTWATER
+Picked up a glass of water.
+コップいっぱいの みずをひろった。
+
+> GOTREPELLENT
+Picked up slime repellent.
+スライム はんぱつざい をひろった。
+
+> GOTBREAKFAST
+Supercharge Breakfast!
+ちょうしょく スーパーチャージ!
+
+> GOTCBLUEKEY
+Picked up a blue key.
+あお のかぎ をひろった。
+
+> GOTCYELLOWKEY
+Picked up a yellow key.
+きいろ のかぎ をひろった。
+
+> GOTCREDKEY
+Picked up a red key.
+あか のかぎ をひろった。
+
+> GOTFRUIT
+Picked up a bowl of fruit.
+フルーツのボウル をひろった。
+
+> GOTVEGETABLESNEED
+Vegetables are REALLY good for you!
+いま とってもひつような やさいのボウルだ!
+
+> GOTVEGETABLES
+Picked up a bowl of vegetables.
+やさいのボウル をひろった。
+
+> GOTSLIMESUIT
+Found a Slime-Proof Suit
+たい スライム スーツ をてにいれた。
+
+> GOTCHEXMAP
+Found a Computer Area Map
+コンピューターエリアマップ をてにいれた。
+
+> GOTZORCHRECHARGE
+Picked up a mini zorch recharge.
+ミニゾーチ リチャージ をひろった。
+
+> GOTMINIZORCHPACK
+Picked up a mini zorch pack.
+ミニゾーチ パック をひろった。
+
+> GOTPROPULSORRECHARGE
+Picked up a zorch propulsor recharge.
+ゾーチプロパルサーリチャージ をひろった。
+
+> GOTPROPULSORPACK
+Picked up a zorch propulsor pack.
+ゾーチプロパルサーパック をひろった。
+
+> GOTPHASINGZORCHERRECHARGE
+Picked up a phasing zorcher recharge
+フェイシング ゾーチャーリチャージ をひろった。
+
+> GOTPHASINGZORCHERPACK
+Picked up a phasing zorcher pack.
+フェイシング ゾーチャーパック をひろった。
+
+> GOTLARGEZORCHERRECHARGE
+Picked up a large zorcher recharge.
+ラージ ゾーチャーリチャージ をひろった。
+
+> GOTLARGEZORCHERPACK
+Picked up a large zorcher pack.
+ラージ ゾーチャーパック をひろった。
+
+> GOTZORCHPACK
+Picked up a Zorchpak!
+ゾーチパックをてにいれた!
+
+> GOTLAZDEVICE
+You got the LAZ Device! Woot!
+LAZ デバイスをてにいれた! ワァオ!
+
+> GOTRAPIDZORCHER
+You got the Rapid Zorcher!
+ラピッドゾーチャー をてにいれた!
+
+> GOTSUPERBOOTSPORK
+You got the Super Bootspork!
+スーパーさきわれスプーン をてにいれた!
+
+> GOTZORCHPROPULSOR
+You got the Zorch Propulsor!
+ロケット ゾーチャー をてにいれた!
+
+> GOTPHASINGZORCHER
+You got the Phasing Zorcher!
+フェイシング ゾーチャー をてにいれた!
+
+> GOTLARGEZORCHER
+You got the Large Zorcher!
+おおがたゾーチャー をてにいれた!
+
+> GOTSUPERLARGEZORCHER
+You got the Mega Zorcher!
+ちょうおおがたゾーチャー をてにいれた!
+
+> GOTMINIZORCHER
+Picked up a Mini Zorcher.
+こがたゾーチャー をてにいれた。
+
+; Actor tags
+
+> TAG_SPOON
+Spoon
+スプーン
+
+> TAG_SPORK
+Super Bootspork
+スーパーさきわれスプーン
+
+> TAG_MINIZORCHER
+Mini Zorcher
+こがたゾーチャー
+
+> TAG_LARGEZORCHER
+Large Zorcher
+おおがたゾーチャー
+
+> TAG_SUPERLARGEZORCHER
+Super-Large Zorcher
+ちょうおおがたゾーチャー
+
+> TAG_RAPIDZORCHER
+Rapid Zorcher
+れんしゃ ゾーチャー
+
+> TAG_ZORCHPROPULSOR
+Zorch Propulsor
+ロケット ゾーチ
+
+> TAG_PHASINGZORCHER
+Phasing Zorcher
+フェイシング ゾーチャー
+
+> TAG_LAZDEVICE
+LAZ Device
+ラージエリアゾーキング デバイス
+
+> OB_COMMONUS
+%o was slimed by a flemoid.
+%o はフレモイドにベトベトにされた。
+
+> OB_BIPEDICUS
+%o was slimed by a bipedicus.
+%o はバイペディクスにベトベトにされた。
+
+> OB_BIPEDICUS2
+%o was slimed by an armored bipedicus.
+%o はアーマードペディクスにベトベトにされた。
+
+> OB_CYCLOPTIS
+%o was slimed by a cycloptis.
+%o はサイクロプティスにベトベトにされた。
+
+> OB_FLEMBRANE
+%o was defeated by the Flembrane.
+%o はフレムブランにはいぼくした。
+
+> OB_MPSPOON
+%o was spoon fed by %k.
+%o は %k にスプーンでたべさせられた。
+
+> OB_MPBOOTSPORK
+%o was thoroughly mixed with %k's bootspork.
+%o は %k にスーパーさきわれスプーンでかきまぜられた。
+
+> OB_MPZORCH
+%o was zorched by %k.
+%o は %k にビリビリさせられた。
+
+> OB_MPMEGAZORCH
+%o was hit by %k's mega-zorcher.
+%o に %k のメガゾーチャーがヒットした。
+
+> OB_MPRAPIDZORCH
+%o was rapid zorched by %k.
+%o は %k に めをまわされた。
+
+> OB_MPPROPULSOR
+%o was zorched by %k's propulsor.
+%o は %k のロケットゾーチャーにあたった。
+
+> OB_MPP_SPLASH
+%o was hit by %k's propulsor.
+%o に %k のロケットゾーチャーがとどいた。
+
+> OB_MPPHASEZORCH
+%o was phase zorched by %k.
+%o は %k によってスベスベにされた。
+
+> OB_MPLAZ_BOOM
+%o fell prey to %k's LAZ device.
+%o は %k のLAZデバイスのえじきになった。
+
+> OB_MPBFG_SPLASH chex
+%o was lazzed by %k.
+%o は %k にとかされた。
+
+; Miscellaneous
+
+> CHUSTR_E1M1
+E1M1: Landing Zone
+E1M1: ちゃくりく ちてん
+
+> CHUSTR_E1M2
+E1M2: Storage Facility
+E1M2: ほかん しせつ
+
+> CHUSTR_E1M3
+E1M3: Experimental Lab
+E1M3: じっけんしつ
+
+> CHUSTR_E1M4
+E1M4: Arboretum
+E1M4: じゅもくえん
+
+> CHUSTR_E1M5
+E1M5: Caverns of Bazoik
+E1M5: バゾイクの どうくつ
+
+> CE1TEXT
+"""Mission accomplished.
+
+Are you prepared for the next mission?
+
+
+
+
+
+
+Press the escape key to continue..."""
+"""にんむはかんりょうしました。
+
+きみは つぎのにんむの じゅんびができたかい?
+
+
+エスケープ キーをおせば つづけられるよ..."""
+
+> CE2TEXT
+You've done it!
+よくやった!
+
+> CE3TEXT
+Wonderful Job!
+ワンダフル!
+
+> CE4TEXT
+Fantastic
+すばらしい!
+
+> CLOADNET
+"""You can't do load while in a net quest!
+
+Press a key."""
+"""オンラインモードでは セーブデータをロードできません
+
+なにか キーを おしてください。
+"""
+
+> QSPROMPT chex
+"""Quicksave over your quest named
+
+'%s'?
+
+Press Y or N."""
+"""ぼうけんを このなまえで すぐにセーブしますか?
+
+"%s"
+
+Yes か No できめてください。"""
+
+> QLOADNET chex
+"""You can't quickload during a netquest!
+
+Press a key."""
+"""オンラインモードでは セーブデータをロードできません
+
+なにか キーを おしてください。
+"""
+
+> QLPROMPT chex
+"""Do you want to quickload the quest named
+
+'%s'?
+
+Press Y or N."""
+"""ぼうけんを このなまえで すぐにロードしますか?
+
+"%s"
+
+Y か N をおしてください。"""
+
+> CNEWGAME
+"""You can't start a new quest
+while in a network quest.
+
+Press a key."""
+"""オンラインモードでは セーブデータをロードできません
+
+なにか キーを おしてください。
+"""
+
+> CNIGHTMARE
+"""Careful, this will be tough.
+Do you wish to continue?
+
+Press Y or N."""
+"""きをつけて、これはすごく てごわい。
+ほんとうにはじめますか?
+
+Y か N をおしてください。
+"""
+
+> CSWSTRING
+"""This is Chex(R) Quest. look for
+
+future levels at www.chexquest.com.
+
+Press a key."""
+"""これは チェックス(R)クエスト。
+
+つづきは doomwiki.org/wiki/Chex_Questからさがしてね。
+
+なにか キーを おしてください。"""
+
+> NETEND chex
+"""You can't end a netquest!
+
+Press a key."""
+"""オンラインモードでは タイトルがめんにはもどれません
+
+なにか キーを おしてください。
+"""
+
+> ENDGAME chex
+"""Are you sure you want to end the quest?
+
+Press Y or N."""
+"""ほんとうに いまのぼうけんを おわらせますか?
+
+Y か N をおしてください。
+"""
+
+> STSTR_DQDON chex
+Invincible Mode ON
+むてきモード オン
+
+> STSTR_DQDOFF chex
+Invincible Mode OFF
+むてきモード オフ
+
+> STSTR_FAADDED chex
+Zorch Added
+ゾーチ ついか
+
+> STSTR_KFAADDED chex
+Super Zorch Added
+スーパーゾーチ ついか
+
+> STSTR_CHOPPERS chex
+... Eat Chex(R)!
+...Chex(R)をたべよう!
+
+> AMMO_CLIP chex
+Mini Zorch Charge
+ミニゾーチ ほきゅう
+
+> AMMO_SHELLS chex
+Large Zorcher Charge
+ラージゾーチャー ほきゅう
+
+> AMMO_ROCKETS chex
+Propulsor Charge
+プロパルサー ほきゅう
+
+> AMMO_CELLS chex
+Phasing Zorcher Charge
+フェイシング ゾーチャー ほきゅう
+
+; Menus
+
+; Main Menus
+
+> MNU_NEWGAME
+New Game
+新規ゲーム
+
+> MNU_OPTIONS
+Options
+オプション
+
+> MNU_GAMEFILES
+Game Files
+ゲームファイル
+
+> MNU_INFO
+Info
+情報
+
+> MNU_QUITGAME
+Quit Game
+終了
+
+> MNU_CHOOSESKILL
+; This text is extremely space limited!
+Choose Skill Level:
+実力を選べ:
+
+> SKILL_BABY
+I'm too young to die.
+死ぬには若すぎる
+
+> SKILL_EASY
+Hey, not too rough.
+あまり激しくするな
+
+> SKILL_NORMAL
+Hurt me plenty.
+手加減無用
+
+> SKILL_HARD
+Ultra-Violence.
+ウルトラ バイオレンス
+
+> SKILL_NIGHTMARE
+Nightmare!
+悪夢だ!
+
+> CSKILL_BABY
+Easy does it
+やさしくして
+
+> CSKILL_EASY
+Not so sticky
+ダラダラしない
+
+> CSKILL_NORMAL
+Gobs of goo
+"""カッチカチスライム
+"""
+
+> CSKILL_HARD
+Extreme Ooze
+"""かげきなウーズ
+"""
+
+> CSKILL_NIGHTMARE
+Super Slimey!
+ちょうベトベト!
+
+> SSKILL_BABY
+Training
+トレーニング
+
+> SSKILL_EASY
+Rookie
+ルーキー
+
+> SSKILL_NORMAL
+Veteran
+ベテラン
+
+> SSKILL_HARD
+Elite
+エリート
+
+> SSKILL_NIGHTMARE
+Bloodbath
+ブラッドバス
+
+> MNU_WETNURSE
+Thou needeth a Wet-Nurse
+汝は乳母を欲する
+
+> MNU_YELLOWBELLIES
+Yellowbellies-R-Us
+我等こそが臆病者
+
+> MNU_BRINGEST
+Bringest Them Oneth
+招かれし者共
+
+> MNU_SMITE
+Thou art a Smite-Meister
+汝は芸術的殺戮者
+
+> MNU_BLACKPLAGUE
+Black Plague Possesses Thee
+汝に憑した黒死病
+
+> MNU_SQUIRE
+Squire
+見習い騎士
+
+> MNU_KNIGHT
+Knight
+騎士
+
+> MNU_WARRIOR
+Warrior
+戦士
+
+> MNU_BERSERKER
+Berserker
+狂戦士
+
+> MNU_TITAN
+Titan
+タイタン
+
+> MNU_ALTARBOY
+Altar Boy
+堂役
+
+> MNU_ACOLYTE
+Acolyte
+侍祭
+
+> MNU_PRIEST
+Priest
+司祭
+
+> MNU_CARDINAL
+Cardinal
+枢機卿
+
+> MNU_POPE
+Pope
+教皇
+
+> MNU_APPRENTICE
+Apprentice
+入門者
+
+> MNU_ENCHANTER
+Enchanter
+妖術士
+
+> MNU_SORCERER
+Sorcerer
+魔術士
+
+> MNU_WARLOCK
+Warlock
+黒魔術士
+
+> MNU_ARCHMAGE
+Archmage
+大魔導師
+
+> MNU_CHOOSECLASS
+Choose Class:
+クラス選抜:
+
+> MNU_FIGHTER
+Fighter
+戦士
+
+> MNU_CLERIC
+Cleric
+僧侶
+
+> MNU_MAGE
+Mage
+魔導士
+
+> MNU_RANDOM
+Random
+ランダム
+
+> MNU_EPISODE
+Which Episode?
+どのエピソードだ?
+
+> MNU_EPISODE strife
+Choose Campaign
+キャンペーンを選べ
+
+> MNU_COTD
+City of the Damned
+呪われた都
+
+> MNU_HELLSMAW
+Hell's Maw
+地獄の肚
+
+> MNU_DOME
+The Dome of D'Sparil
+デ'スパリルの穹窿
+
+> MNU_OSSUARY
+The Ossuary
+納骨堂
+
+> MNU_DEMESNE
+The Stagnant Demesne
+澱んだ荘園
+
+; Gameplay menus
+
+> GMPLYMNU_TEAMPLAY
+Teamplay
+チーム制
+
+> GMPLYMNU_TEAMDAMAGE
+Team damage scalar
+チームメンバーへのダメージ倍率
+
+> GMPLYMNU_SMARTAUTOAIM
+Smart Autoaim
+スマートオートエイム
+
+> GMPLYMNU_FALLINGDAMAGE
+Falling damage
+落下ダメージ
+
+> GMPLYMNU_DROPWEAPON
+Drop weapon
+死亡時に武器を落とす
+
+> GMPLYMNU_DOUBLEAMMO
+Double ammo
+弾2倍
+
+> GMPLYMNU_INFINITEAMMO
+Infinite ammo
+弾無限
+
+> GMPLYMNU_INFINITEINVENTORY
+Infinite inventory
+所持品無限
+
+> GMPLYMNU_NOMONSTERS
+No monsters
+モンスターを出現させない
+
+> GMPLYMNU_NOMONSTERSTOEXIT
+No monsters to exit
+モンスター全滅までMAPから脱出不可
+
+> GMPLYMNU_MONSTERSRESPAWN
+Monsters respawn
+モンスターの自力復活
+
+> GMPLYMNU_NORESPAWN
+Monsters do not respawn
+プレイヤーの復活禁止
+
+> GMPLYMNU_ITEMSRESPAWN
+Items respawn
+アイテムを復活
+
+> GMPLYMNU_SUPERRESPAWN
+Big powerups respawn
+強力なパワーアップアイテムを復活
+
+> GMPLYMNU_FASTMONSTERS
+Fast monsters
+モンスター高速化
+
+> GMPLYMNU_INSTANTREACTION
+Monsters Nightmare Reflexes
+敵が悪夢と同じ機敏さ
+
+> GMPLYMNU_DEGENERATION
+Degeneration
+プレイヤーの自動体力減少
+
+> GMPLYMNU_NOAUTOAIM
+Allow Autoaim
+オートエイム有効化
+
+> GMPLYMNU_ALLOWSUICIDE
+Allow Suicide
+自殺コマンド有効化
+
+> GMPLYMNU_ALLOWJUMP
+Allow jump
+ジャンプ有効化
+
+> GMPLYMNU_ALLOWCROUCH
+Allow crouch
+しゃがみ有効化
+
+> GMPLYMNU_ALLOWFREELOOK
+Allow freelook
+フリールック有効化
+
+> GMPLYMNU_ALLOWFOV
+Allow FOV
+FOVの調整を有効化
+
+> GMPLYMNU_BFGFREEAIM
+Allow BFG aiming
+BFG使用時のフリールックを有効化
+
+> GMPLYMNU_ALLOWAUTOMAP
+Allow automap
+オートマップ有効化
+
+> GMPLYMNU_AUTOMAPALLIES
+Automap allies
+オートマップに味方を表示
+
+> GMPLYMNU_ALLOWSPYING
+Allow spying
+死亡時の他プレイヤー観戦を許可
+
+> GMPLYMNU_CHASECAM
+Chasecam cheat
+チェイスカメラチート有効化
+
+> GMPLYMNU_DONTCHECKAMMO
+Check ammo for weapon switch
+武器切替時に弾の有無を確認
+
+> GMPLYMNU_KILLBOSSSPAWNS
+Icon's death kills its spawns
+最終ボスを殺した際に召喚モンスターも殺す
+
+> GMPLYMNU_NOCOUNTENDMONSTER
+End sector counts for kill %
+最終セクターの敵もキルに含む
+
+> GMPLYMNU_DEATHMATCH
+Deathmatch Settings
+デスマッチの設定
+
+> GMPLYMNU_WEAPONSSTAY
+Weapons stay
+武器を取得時も残す
+
+> GMPLYMNU_ALLOWPOWERUPS
+Allow powerups
+パワーアップアイテムを出現させる
+
+> GMPLYMNU_ALLOWHEALTH
+Allow health
+回復アイテムを出現させる
+
+> GMPLYMNU_ALLOWARMOR
+Allow armor
+アーマーを出現させる
+
+> GMPLYMNU_SPAWNFARTHEST
+Spawn farthest
+他のプレイヤーから最遠の場所に復活
+
+> GMPLYMNU_SAMEMAP
+Same map
+同じMAPを繰り返す
+
+> GMPLYMNU_FORCERESPAWN
+Force respawn
+死亡後に強制復活
+
+> GMPLYMNU_ALLOWEXIT
+Allow exit
+出口の使用を許可
+
+> GMPLYMNU_BARRELSRESPAWN
+Barrels respawn
+爆発バレルを復活させる
+
+> GMPLYMNU_RESPAWNPROTECTION
+Respawn protection
+復活したばかりのプレイヤーを保護
+
+> GMPLYMNU_LOSEFRAG
+Lose frag if fragged
+キルされた場合は得点を失う
+
+> GMPLYMNU_KEEPFRAGS
+Keep frags gained
+MAP変更後も得点を保持する
+
+> GMPLYMNU_NOTEAMSWITCH
+No team switching
+チーム変更を禁止
+
+> GMPLYMNU_COOPERATIVE
+Cooperative Settings
+協力モードの設定
+
+> GMPLYMNU_MULTIPLAYERWEAPONS
+Spawn multiplayer weapons
+マルチプレイ用の武器を出現させる
+
+> GMPLYMNU_LOSEINVENTORY
+Lose entire inventory
+死亡時に全ての所持品を失う
+
+> GMPLYMNU_KEEPKEYS
+Keep keys
+死亡後もキーを保持する
+
+> GMPLYMNU_KEEPWEAPONS
+Keep weapons
+死亡後も武器を保持する
+
+> GMPLYMNU_KEEPARMOR
+Keep armor
+死亡後もアーマーを保持する
+
+> GMPLYMNU_KEEPPOWERUPS
+Keep powerups
+死亡後もパワーアップを保持する
+
+> GMPLYMNU_KEEPAMMO
+Keep ammo
+死亡後も弾薬を保持する
+
+> GMPLYMNU_LOSEHALFAMMO
+Lose half ammo
+死亡時に弾を半分失う
+
+> GMPLYMNU_SPAWNWHEREDIED
+Spawn where died
+死亡したその場で復活
+
+> GMPLYMNU_ALWAYSSPAWNMULTI
+Always spawn multiplayer objects
+常にマルチプレイ用の物を出現
+
+> GMPLYMNU_NOVERTSPREAD
+Allow Vertical Bullet Spread
+垂直方向への散弾を許可
+
+> GMPLYMNU_NOEXTRAAMMO
+Weapons give extra ammo (DM)
+武器に追加弾薬を付与 (DMのみ)
+
+> OPTMNU_COMPATIBILITY
+Compatibility Options
+互換性 オプション
+
+> CMPTMNU_TITLE
+Compatibility Options
+互換性 オプション
+
+> CMPTMNU_MODE
+Compatibility mode
+互換性モード
+
+> CMPTMNU_ACTORBEHAVIOR
+Actor Behavior
+アクターの挙動
+
+> CMPTMNU_NOBLOCKFRIENDS
+Friendly monsters aren't blocked
+仲間キャラは敵通行不可ラインの影響を受けない
+
+> CMPTMNU_LIMITPAIN
+Limit Pain Elementals' Lost Souls
+ペインエレメンタルのロストソウル制限
+
+> CMPTMNU_MBFMONSTERMOVE
+Monster movement is affected by effects
+敵の移動が床の影響を受ける
+
+> CMPTMNU_CROSSDROPOFF
+Monsters cannot cross dropoffs
+敵はdropoffを横切れない
+
+> CMPTMNU_DROPOFF
+Monsters get stuck over dropoffs
+敵がdropoffにスタックする
+
+> CMPTMNU_INVISIBILITY
+Monsters see invisible players
+敵が透明を見破る
+
+> CMPTMNU_MINOTAUR
+No Minotaur floor flames in water
+ミノタウロスの攻撃が水を通過しない
+
+> CMPTMNU_NOTOSSDROPS
+Spawn item drops on the floor
+アイテムドロップが床に出る
+
+> CMPTMNU_DEHACKEDBEHAVIOR
+DehackEd Behavior
+DehackEdの挙動
+
+> CMPTMNU_DEHHEALTH
+DEH health settings like Doom2.exe
+Doom2.exe式のDEHヘルス設定
+
+> CMPTMNU_MUSHROOM
+Original A_Mushroom speed in DEH mods
+DEH Modでの元のA_Mushroom速度
+
+> CMPTMNU_MAPACTIONBEHAVIOR
+Map/Action Behavior
+マップ/アクションの挙動
+
+> CMPTMNU_USEBLOCKING
+All special lines can block <use>
+全てのSpecial Linesが<use>をブロック
+
+> CMPTMNU_ANYBOSSDEATH
+Allow any bossdeath for level special
+いずれのBossdeathでもlevel specialを許可
+
+> CMPTMNU_NODOORLIGHT
+Disable BOOM door light effect
+BOOMドアライト エフェクトを無効化
+
+> CMPTMNU_LIGHT
+Find neighboring light like Doom
+DOOM式の最寄りライト検知
+
+> CMPTMNU_SHORTTEX
+Find shortest textures like Doom
+DOOM式の最短テクスチャー検知
+
+> CMPTMNU_STAIRS
+Use buggier stair building
+バグだらけの階段生成を使用
+
+> CMPTMNU_FLOORMOVE
+Use Doom's floor motion behavior
+DOOMでの床の動作挙動を使用
+
+> CMPTMNU_POINTONLINE
+Use Doom's point-on-line algorithm
+DOOMでのポイントライン アルゴリズム を使用
+
+> CMPTMNU_MULTIEXIT
+Level exit can be triggered more than once
+Exitを複数回起動出来る
+
+> CMPTMNU_PHYSICSBEHAVIOR
+Physics Behavior
+物理の挙動
+
+> CMPTMNU_NOPASSOVER
+Actors are infinitely tall
+アクターの上下には入れない
+
+> CMPTMNU_BOOMSCROLL
+Boom scrollers are additive
+BOOM型スクロール床を適用
+
+> CMPTMNU_BADANGLES
+Cannot travel straight NSEW
+NSEW直進走法の不許可
+
+> CMPTMNU_WALLRUN
+Enable wall running
+壁伝い走行を許可
+
+> CMPTMNU_RAVENSCROLL
+Raven scrollers use original speed
+Raven式スクロール床を原作準拠にする
+
+> CMPTMNU_TRACE
+Self ref. sectors don't block shots
+Self ref.Sectorsは射撃を阻害しない
+
+> CMPTMNU_HITSCAN
+Use Doom code for hitscan checks
+DOOM式の即着弾判定を使用
+
+> CMPTMNU_MISSILECLIP
+Use Doom heights for missile clipping
+ミサイル通過にDOOM heightsを使用
+
+> CMPTMNU_RENDERINGBEHAVIOR
+Rendering Behavior
+レンダリングの挙動
+
+> CMPTMNU_POLYOBJ
+Draw polyobjects like Hexen
+Hexen式のPolyObjects描画
+
+> CMPTMNU_MASKEDMIDTEX
+Ignore Y offsets on masked midtextures
+マスクされた中間テクスチャーのY軸ずれを無効
+
+> CMPTMNU_SPRITESORT
+Invert sprite sorting
+反転スプライトの並び替え
+
+> CMPTMNU_SOUNDBEHAVIOR
+Sound Behavior
+音の挙動
+
+> CMPTMNU_SOUNDSLOTS
+Cripple sound for silent BFG trick
+消音BFG技の為にサウンドを重複させない
+
+> CMPTMNU_SILENTPICKUP
+Don't let others hear your pickups
+他人にピックアップ音を聞かせない
+
+> CMPTMNU_SILENTINSTANTFLOORS
+Inst. moving floors are not silent
+即時稼働するFloorsの音を鳴らさない
+
+> CMPTMNU_SECTORSOUNDS
+Sector sounds use center as source
+Sectorサウンドをフロア中央で鳴らす
+
+> CMPTMNU_SOUNDCUTOFF
+Sounds stop when actor vanishes
+アクター消滅で音を止める
+
+> CMPTMNU_SOUNDTARGET
+Use original sound target handling
+元のサウンドターゲット処理を使用
+
+> CMPTMNU_TELEPORT
+Scripted teleports don't trigger sector actions
+スクリプトテレポートではSector actionsを起こさない
+
+> CMPTMNU_PUSHWINDOW
+Non-blocking lines can be pushed
+Non-bloking linesを押せる
+
+> CMPTMNU_CHECKSWITCHRANGE
+Enable buggy CheckSwitchRange behavior
+バグのあるCheckSwitchRangeを許可
+
+> CMPTMNU_RAILINGHACK
+Enable buggy Strife railing
+バグのあるStrife railingを許可
+
+> CMPTMNU_EXPLODE1
+No vertical thrust from explosions
+爆風は垂直方向全域に影響しない
+
+> CMPTMNU_EXPLODE2
+Use original Doom explosion behavior
+Doom本来の爆発動作を使用する
+
+; player
+
+> PLYRMNU_RED
+Red
+赤の量
+
+> PLYRMNU_GREEN
+Green
+緑の量
+
+> PLYRMNU_BLUE
+Blue
+青の量
+
+> PLYRMNU_PLAYERCLASS
+Class
+役職
+
+> PLYRMNU_PLAYERSKIN
+Skin
+外装
+
+> PLYRMNU_SWITCHONPICKUP
+Switch on pickup
+武器取得時に持ち替え
+
+> PLYRMNU_PRESSSPACE
+Press \cjSPACE
+\cjスペースキー
+
+> PLYRMNU_SEEFRONT
+to see front
+で前面を表示
+
+> PLYRMNU_SEEBACK
+to see back
+で背面を表示
+
+> PLYRMNU_VERTSPREAD
+Vertical Bullet Spread
+垂直方向の散弾
+
+; controls
+
+> CNTRLMNU_ZOOM
+Weapon Zoom
+ズーム
+
+> CNTRLMNU_USER1
+Weapon State 1
+武器特殊動作 1
+
+> CNTRLMNU_USER2
+Weapon State 2
+武器特殊動作 2
+
+> CNTRLMNU_USER3
+Weapon State 3
+武器特殊動作 3
+
+> CNTRLMNU_USER4
+Weapon State 4
+武器特殊動作 4
+
+> CNTRLMNU_MOVEUP
+Fly / Swim up
+飛行/水泳時 上昇
+
+> CNTRLMNU_MOVEDOWN
+Fly / Swim down
+飛行/水泳時 下降
+
+> CNTRLMNU_LAND
+Stop flying
+飛行停止
+
+> CNTRLMNU_KEYBOARDLOOK
+Keyboard look
+キー視点上下化
+
+> CNTRLMNU_POPUPS_TITLE
+Strife Popup Screens Controls
+Strifeポップアップ表示設定
+
+> CNTRLMNU_TEAMSAY
+Team say
+チーム内発言
+
+> CNTRLMNU_DROPITEM
+Drop item
+"""アイテムを捨てる
+"""
+
+> CNTRLMNU_QUERYITEM
+Query item
+アイテム名を表示
+
+> CNTRLMNU_DROPWEAPON
+Drop weapon
+武器を捨てる
+
+> CNTRLMNU_OTHER
+Other
+その他
+
+> CNTRLMNU_COOPSPY
+Coop spy
+他者視点
+
+> CNTRLMNU_POPUPS
+Strife Popup Screens
+Strife ポップアップ画面
+
+> CNTRLMNU_MISSION
+Mission objectives
+ミッションオブジェクト
+
+> CNTRLMNU_KEYS
+Keys list
+キー類リスト
+
+> CNTRLMNU_STATS
+Weapons/ammo/stats
+武器 / 弾薬 / 状態
+
+> CNTRLMNU_TOGGLESCOREBOARD
+Toggle Scoreboard
+スコアボード切替
+
+> MOUSEMNU_LOOKSPRING
+Lookspring
+視点水平化
+
+> MOUSEMNU_LOOKSTRAFE
+Lookstrafe
+視点横移動化
+
+; Map colors
+
+> MAPCOLORMNU_BACKCOLOR
+Background
+背景
+
+> MAPCOLORMNU_YOURCOLOR
+You
+自分
+
+> MAPCOLORMNU_WALLCOLOR
+1-sided walls
+壁
+
+> MAPCOLORMNU_FDWALLCOLOR
+2-sided walls with different floors
+高低差のある床
+
+> MAPCOLORMNU_CDWALLCOLOR
+2-sided walls with different ceilings
+高低差のある天井
+
+> MAPCOLORMNU_EFWALLCOLOR
+2-sided walls with 3D floors
+多重床
+
+> MAPCOLORMNU_GRIDCOLOR
+Map grid
+マップグリッド
+
+> MAPCOLORMNU_XHAIRCOLOR
+Center point
+中心点
+
+> MAPCOLORMNU_NOTSEENCOLOR
+Not-yet-seen walls
+未見の壁
+
+> MAPCOLORMNU_LOCKEDCOLOR
+Locked doors
+鍵の掛かったドア
+
+> MAPCOLORMNU_INTRALEVELCOLOR
+Teleporter to the same map
+テレポーター
+
+> MAPCOLORMNU_INTERLEVELCOLOR
+Teleporter to a different map
+別マップへのテレポーター
+
+> MAPCOLORMNU_SECRETSECTORCOLOR
+Secret sector
+シークレット
+
+> MAPCOLORMNU_UNEXPLOREDSECRETCOLOR
+Unexplored secret
+未知のシークレット
+
+> MAPCOLORMNU_SPECIALWALLCOLOR
+Special trigger lines
+特殊トリガー
+
+> MAPCOLORMNU_CHEATMODE
+Cheat Mode
+チートモード時
+
+> MAPCOLORMNU_TSWALLCOLOR
+Invisible 2-sided walls
+表示されないline
+
+> MAPCOLORMNU_SECRETWALLCOLOR
+Secret walls
+シークレットの壁
+
+> MAPCOLORMNU_THINGCOLOR
+Actors
+アクター
+
+> MAPCOLORMNU_MONSTERCOLOR
+Monsters
+モンスター
+
+> MAPCOLORMNU_NONCOUNTINGMONSTERCOLOR
+Non-counting Monsters
+非カウントモンスター
+
+> MAPCOLORMNU_FRIENDCOLOR
+Friends
+仲間
+
+> MAPCOLORMNU_ITEMCOLOR
+Items
+アイテム
+
+> MAPCOLORMNU_COUNTITEMCOLOR
+Count Items
+カウント対象アイテム
+
+> MAPCOLORMNU_OVERLAY
+Overlay Mode
+オーバーレイモード
+
+> MAPCOLORMNU_OVCHEATMODE
+Overlay Cheat Mode
+オーバーレイ チートモード
+
+> MAPCOLORMNU_PORTAL
+Portal Overlays
+ポータル オーバーレイ
+
+; Messages
+
+> MSGMNU_TITLE
+Messages
+メッセージ類
+
+> MSGMNU_SHOWMESSAGES
+Show messages
+メッセージ表示
+
+> MSGMNU_SHOWOBITUARIES
+Show obituaries
+訃報表示
+
+> MSGMNU_SHOWSECRETS
+Show secret notifications
+シークレット発見表示
+
+> MSGMNU_MESSAGELEVEL
+Minimum message level
+最小メッセージレベル
+
+> MSGMNU_MESSAGECOLORS
+Message Colors
+メッセージ色
+
+> MSGMNU_ITEMPICKUP
+Item Pickup
+アイテム取得
+
+> MSGMNU_OBITUARIES
+Obituaries
+死亡時メッセージ
+
+> MSGMNU_CRITICALMESSAGES
+Critical Messages
+致命的なメッセージ
+
+> MSGMNU_CHATMESSAGES
+Chat Messages
+チャットメッセージ
+
+> MSGMNU_TEAMMESSAGES
+Team Messages
+チームメッセージ
+
+> MSGMNU_CENTEREDMESSAGES
+Centered Messages
+スクリプトメッセージ
+
+> MSGMNU_SCREENSHOTMESSAGES
+Screenshot messages
+スクショメッセージ
+
+> MSGMNU_LONGSAVEMESSAGES
+Detailed save messages
+詳細なセーブメッセージ
+
+> MSGMNU_DEVELOPER
+Developer message mode
+開発者用モード
+
+; Automap
+
+> AUTOMAPMNU_COLORSET
+Map color set
+地図色セット
+
+> AUTOMAPMNU_CUSTOMCOLORS
+Allow map defined colors
+定義したマップ色の許可
+
+> AUTOMAPMNU_SETCUSTOMCOLORS
+Set custom colors
+カスタム色を決める
+
+> AUTOMAPMNU_CONTROLS
+Customize map controls
+マップコントロール カスタマイズ
+
+> AUTOMAPMNU_OVERLAY
+Overlay automap
+オートマップを重ねる
+
+> AUTOMAPMNU_TEXTURED
+Enable textured display
+床テクスチャ表示を許可
+
+> AUTOMAPMNU_SHOWITEMS
+Show item counts
+アイテム数 表示
+
+> AUTOMAPMNU_SHOWMONSTERS
+Show monster counts
+モンスター数 表示
+
+> AUTOMAPMNU_SHOWSECRETS
+Show secret counts
+シークレット数 表示
+
+> AUTOMAPMNU_SHOWTIME
+Show time elapsed
+経過時間 表示
+
+> AUTOMAPMNU_SHOWTOTALTIME
+Show total time elapsed
+統計時間 表示
+
+> AUTOMAPMNU_MAPSECRETS
+Show secrets on map
+シークレットを地図に表示
+
+> AUTOMAPMNU_SHOWMAPLABEL
+Show map label
+マップ名 表示
+
+> AUTOMAPMNU_DRAWMAPBACK
+Draw map background
+マップの背景 描写
+
+> AUTOMAPMNU_SHOWKEYS
+Show keys (cheat)
+鍵 表示(チート時)
+
+> AUTOMAPMNU_SHOWTRIGGERLINES
+Show trigger lines
+トリガーライン 表示
+
+> AUTOMAPMNU_SHOWTHINGSPRITES
+Show things as sprites
+thingsのスプライト表示
+
+> AUTOMAPMNU_PTOVERLAY
+Overlay portals
+オーバーレイ ポータルズ
+
+> AUTOMAPMNU_EMPTYSPACEMARGIN
+Empty space margin
+空間の余白
+
+> AUTOMAPMNU_MARKFONT
+Mark font
+マークフォント
+
+> AUTOMAPMNU_MARKCOLOR
+Mark color
+マーク色
+
+> MAPCNTRLMNU_SETMARK
+Set mark
+マークを置く
+
+> MAPCNTRLMNU_CLEARMARK
+Clear mark
+マーククリア
+
+; Scoreboard
+
+> DSPLYMNU_SCOREBOARD
+Scoreboard Options
+スコアボード オプション
+
+> SCRBRDMNU_TITLE
+Scoreboard Options
+スコアボード オプション
+
+> SCRBRDMNU_COOPERATIVE
+Cooperative Options
+協力モードの設定
+
+> SCRBRDMNU_ENABLE
+Enable Scoreboard
+スコアボード表示
+
+> SCRBRDMNU_HEADERCOLOR
+Header Color
+ヘッダー色
+
+> SCRBRDMNU_YOURCOLOR
+Your Player Color
+自分の色
+
+> SCRBRDMNU_OTHERPLAYERCOLOR
+Other Players' Color
+他者の色
+
+> SCRBRDMNU_DEATHMATCH
+Deathmatch Options
+デスマッチの設定
+
+> SCRBRDMNU_TEAMDEATHMATCH
+Team Deathmatch Options
+チームデスマッチの設定
+
+; Alt HUD
+
+> ALTHUDMNU_TITLE
+Alternative HUD
+オルタナティブHUD
+
+> ALTHUDMNU_ENABLE
+Enable alternative HUD
+オルタナティブHUD有効
+
+> ALTHUDMNU_SHOWSECRETS
+Show secret count
+シークレット数 表示
+
+> ALTHUDMNU_SHOWMONSTERS
+Show monster count
+モンスター数 表示
+
+> ALTHUDMNU_SHOWITEMS
+Show item count
+アイテム数の表示
+
+> ALTHUDMNU_SHOWSTATS
+Show stamina and accuracy
+スタミナと精度の表示
+
+> ALTHUDMNU_SHOWBERSERK
+Show berserk
+バーサーク表示
+
+> ALTHUDMNU_SHOWWEAPONS
+Show weapons
+武器表示
+
+> ALTHUDMNU_SHOWAMMO
+Show ammo for
+弾薬等の表示
+
+> ALTHUDMNU_SHOWTIME
+Show time
+時間の表示
+
+> ALTHUDMNU_TIMECOLOR
+Time color
+時間の字色
+
+> ALTHUDMNU_SHOWLAG
+Show network latency
+ネットのラグ表示
+
+> ALTHUDMNU_AMMOORDER
+Ammo display order
+弾薬表示順
+
+> ALTHUDMNU_AMMORED
+Red ammo display below %
+弾薬の赤色表示%
+
+> ALTHUDMNU_AMMOYELLOW
+Yellow ammo display below %
+弾薬の黄色表示%
+
+> ALTHUDMNU_HEALTHRED
+Red health display below
+体力の赤色表示%
+
+> ALTHUDMNU_HEALTHYELLOW
+Yellow health display below
+体力の黄色表示%
+
+> ALTHUDMNU_HEALTHGREEN
+Green health display below
+体力の緑色表示%
+
+> ALTHUDMNU_ARMORRED
+Red armor display below
+防具の赤色表示%
+
+> ALTHUDMNU_ARMORYELLOW
+Yellow armor display below
+防具の黄色表示%
+
+> ALTHUDMNU_ARMORGREEN
+Green armor display below
+防具の緑色表示%
+
+> ALTHUDMNU_AUTOMAPHUD
+Alternative Automap HUD
+オルタナティブ オートマップHUD
+
+> ALTHUDMNU_TITLECOLOR
+Map title color
+マップ名の色
+
+> ALTHUDMNU_MAPTIMECOLOR
+Map time color
+経過時間の色
+
+> ALTHUDMNU_HUBTIMECOLOR
+Hub time color
+区間経過時間の色
+
+> ALTHUDMNU_TOTALTIMECOLOR
+Total time color
+合計経過時間の色
+
+> ALTHUDMNU_COORDINATECOLOR
+Coordinate color
+座標色
+
+> ALTHUDMNU_COORDINATEMODE
+Coordinate mode
+座標モード
+
+> ALTHUDMNU_STATSNAMECOLOR
+Statistics name color
+統計名の色
+
+> ALTHUDMNU_STATSCOLOR
+Statistics color
+統計の色
+
+; Display (game related)
+
+> DSPLYMNU_CAPFPS
+Rendering Interpolation
+レンダリング補間
+
+> DSPLYMNU_BLENDMETHOD
+Transparency render mode
+レンダリング透過モード
+
+> DSPLYMNU_WIPETYPE
+Screen wipe style
+スクリーンワイプモード
+
+> DSPLYMNU_SHOWENDOOM
+Show ENDOOM screen
+ENDOOM画面を表示
+
+> DSPLYMNU_BLOODFADE
+Blood Flash Intensity
+血粉の濃度
+
+> DSPLYMNU_PICKUPFADE
+Pickup Flash Intensity
+取得の視界色濃度
+
+> DSPLYMNU_WATERFADE
+Underwater Blend Intensity
+水中反響音の濃度
+
+> DSPLYMNU_SKYMODE
+Sky render mode
+空の表示方法
+
+> DSPLYMNU_LINEARSKY
+Linear skies
+空の歪み
+
+> DSPLYMNU_GZDFULLBRIGHT
+Fullbright overrides sector color
+明るさ最大時にsector color塗り替え
+
+> DSPLYMNU_SCALEFUZZ
+Scale fuzz effect
+ファズエフェクトサイズ
+
+> DSPLYMNU_DRAWFUZZ
+Use fuzz effect
+ファズエフェクトを使用
+
+> DSPLYMNU_OLDTRANS
+Classic Transparency
+旧式の透明度
+
+> DSPLYMNU_TRANSSOUL
+Lost Soul translucency
+ロストソウルの透明度
+
+> DSPLYMNU_FAKECONTRAST
+Use fake contrast
+フェイクコントラストを使用
+
+> DSPLYMNU_ROCKETTRAILS
+Rocket Trails
+ロケットの軌跡
+
+> DSPLYMNU_BLOODTYPE
+Blood Type
+血の種類
+
+> DSPLYMNU_PUFFTYPE
+Bullet Puff Type
+弾煙の種類
+
+> DSPLYMNU_MAXPARTICLES
+Number of particles
+パーティクルの最大数
+
+> DSPLYMNU_MAXDECALS
+Number of decals
+デカールの最大数
+
+> DSPLYMNU_PLAYERSPRITES
+Show player sprites
+プレイヤーの武器の表示
+
+> DSPLYMNU_DEATHCAM
+Death camera
+死亡時の三人称視点
+
+> DSPLYMNU_TELEZOOM
+Teleporter zoom
+テレポーター使用時のズーム
+
+> DSPLYMNU_QUAKEINTENSITY
+Earthquake shake intensity
+地震エフェクトの激しさ
+
+> DSPLYMNU_NOMONSTERINTERPOLATION
+Interpolate monster movement
+モンスターの移動補間
+
+> DSPLYMNU_MENUDIM
+Menu dim
+メニュー背景
+
+> DSPLYMNU_DIMCOLOR
+Dim color
+背景色
+
+> DSPLYMNU_MOVEBOB
+View bob amount while moving
+視点揺れする移動値
+
+> DSPLYMNU_STILLBOB
+View bob amount while not moving
+視点揺れしない移動値
+
+> DSPLYMNU_BOBSPEED
+Weapon bob speed
+武器揺れ速度
+
+; Scaling
+
+> SCALEMNU_TITLE
+Scaling Options
+スケーリング オプション
+
+> SCALEMNU_OVERRIDE
+Overrides for above setting
+設定の上書き
+
+> SCALEMNU_MESSAGES
+Messages
+メッセージ類
+
+> SCALEMNU_CONSOLE
+Console
+コンソール
+
+> SCALEMNU_STATBAR
+Status bar
+ステータスバー
+
+> SCALEMNU_HUD
+Fullscreen HUD
+全画面HUD
+
+> SCALEMNU_ALTHUD
+Alternative HUD
+オルタナティブHUD
+
+> SCALEMNU_HUDASPECT
+HUD preserves aspect ratio
+HUDのアスペクト比維持
+
+> SCALEMNU_USEUI
+Use default scale
+通常サイズを使う
+
+> SCALEMNU_USEFS
+Scale to fullscreen
+全画面に拡大
+
+> SCALEMNU_ADAPT
+Adapt to screen size
+画面サイズに合わせる
+
+; HUD
+
+> HUDMNU_TITLE
+HUD Options
+HUDオプション
+
+> HUDMNU_ALTHUD
+Alternative HUD
+オルタナティブHUD
+
+> HUDMNU_MESSAGE
+Message Options
+メッセージの設定
+
+> HUDMNU_UISCALE
+User interface scale
+インターフェースの大きさ
+
+> HUDMNU_FORCECROSSHAIR
+Force default crosshair
+デフォルトの照準を使う
+
+> HUDMNU_GROWCROSSHAIR
+Grow crosshair when picking up items
+アイテム取得時に照準を大きくする
+
+> HUDMNU_NAMETAGS
+Display nametags
+ディスプレイネームタグ
+
+> HUDMNU_NAMETAGCOLOR
+Nametag color
+ネームタグ色
+
+> HUDMNU_OLDOUCH
+Use old ouch mug shot formula
+旧式ouch mug shotを使用
+
+> HUDMNU_HEXENFLASHES
+Hexen weapon flashes
+Hexen武器の視界色
+
+> HUDMNU_POISONFLASHES
+Poison damage flashes
+毒ダメージの視界色
+
+> HUDMNU_ICEFLASHES
+Ice death flashes
+氷結死の視界色
+
+> HUDMNU_HAZARDFLASHES
+Poison Buildup flashes
+蓄積毒の視界色
+
+> HUDMNU_SCALEOPT
+Scaling Options
+スケーリング オプション
+
+> MISCMNU_QUERYIWAD
+Show IWAD selection dialog
+IWADの選択画面を表示
+
+> MISCMNU_ALLCHEATS
+Enable cheats from all games
+全ゲームでチート使用可にする
+
+; Option Menus
+
+> MISCMNU_ENABLESCRIPTSCREENSHOTS
+Enable making screenshots by scripts
+スクリプトからのスクショ作成を有効化
+
+> MISCMNU_DEHLOAD
+Load *.deh/*.bex lumps
+.deh/.bexファイルを読み込む
+
+> MISCMNU_CACHENODES
+Cache nodes
+ノードキャッシュ
+
+> MISCMNU_CACHETIME
+Time threshold for node caching
+ノードキャッシュ時間の閾値
+
+> MISCMNU_CLEARNODECACHE
+Clear node cache
+ノードのキャッシュをクリア
+
+> MISCMNU_INTERSCROLL
+Allow skipping of intermission scrollers
+クリア結果集計のスキップを許可
+
+> NETMNU_TITLE
+Network Options
+ネットワーク オプション
+
+> NETMNU_LOCALOPTIONS
+Local options
+ローカル オプション
+
+> NETMNU_MOVEPREDICTION
+Movement prediction
+移動予測
+
+> NETMNU_LINESPECIALPREDICTION
+Predict line actions
+line actionsを予測する
+
+> NETMNU_PREDICTIONLERPSCALE
+Prediction Lerp Scale
+リープスケール予測
+
+> NETMNU_LERPTHRESHOLD
+Lerp Threshold
+リープしきい値
+
+> NETMNU_HOSTOPTIONS
+Host options
+ホスト オプション
+
+> NETMNU_EXTRATICS
+Extra Tics
+予備秒数
+
+> NETMNU_TICBALANCE
+Latency balancing
+レイテンシーバランス
+
+> OPTVAL_ORIGINAL
+Original
+オリジナル
+
+> OPTVAL_OPTIMIZED
+Optimized
+最適化
+
+> OPTVAL_CLASSIC
+Classic (Faster)
+旧式(速度重視)
+
+> OPTVAL_PRECISE
+Precise
+精密
+
+> OPTVAL_CAPPED
+Capped
+上限
+
+> OPTVAL_PARTICLES
+Particles
+パーティクル
+
+> OPTVAL_SPRITES
+Sprites
+スプライト
+
+> OPTVAL_SPRITESPARTICLES
+Sprites & Particles
+スプライト & パーティクル
+
+> OPTVAL_MELT
+Melt
+メルト
+
+> OPTVAL_BURN
+Burn
+バーン
+
+> OPTVAL_CROSSFADE
+Crossfade
+クロスフェード
+
+> OPTVAL_SMOOTH_1
+; This setting is duplicated in order to allow for different grammatical gender endings in the Russian language (and any other language that depends on a grammatical gender system). In English, due to the lack of a grammatical gender system, both option values are the same.
+Smooth
+スムーズ
+
+> OPTVAL_SMOOTH_2
+Smooth
+スムーズ
+
+> OPTVAL_TRANSLUCENT
+Translucent
+半透明
+
+> OPTVAL_FUZZ
+Fuzz
+ファズ
+
+> OPTVAL_SHADOW
+Shadow
+シャドウ
+
+> OPTVAL_ITEMS
+Items
+アイテム
+
+> OPTVAL_WEAPONS
+Weapons
+武器
+
+> OPTVAL_BOTH
+Both
+両方
+
+> OPTVAL_ZDOOM
+ZDoom
+
+> OPTVAL_STRIFE
+Strife
+
+> OPTVAL_PLAYER
+Player
+プレイヤー
+
+> OPTVAL_MAP
+Map
+マップ
+
+> OPTVAL_SCALETO640X400
+Scale to 640x400
+640x400スケール
+
+> OPTVAL_PIXELDOUBLE
+Pixel double
+ピクセル2倍
+
+> OPTVAL_PIXELQUADRUPLE
+Pixel quadruple
+ピクセル4倍
+
+> OPTVAL_CURRENTWEAPON
+Current weapon
+使用中の武器
+
+> OPTVAL_AVAILABLEWEAPONS
+Available weapons
+所持してる武器
+
+> OPTVAL_ALLWEAPONS
+All weapons
+全ての武器
+
+> OPTVAL_LEVELMILLISECONDS
+Level, milliseconds
+現場, ミリ秒
+
+> OPTVAL_LEVELSECONDS
+Level, seconds
+現場, 秒
+
+> OPTVAL_LEVEL
+Level
+現場
+
+> OPTVAL_HUBSECONDS
+Hub, seconds
+区間, 秒
+
+> OPTVAL_HUB
+Hub
+区間
+
+> OPTVAL_TOTALSECONDS
+Total, seconds
+合計, 秒
+
+> OPTVAL_TOTAL
+Total
+合計
+
+> OPTVAL_SYSTEMSECONDS
+System, seconds
+PC時刻, 秒
+
+> OPTVAL_SYSTEM
+System
+PC時刻
+
+> OPTVAL_NETGAMESONLY
+Netgames only
+オンラインのみ
+
+> OPTVAL_AMMOIMAGETEXT
+Image and Text
+画像と字
+
+> OPTVAL_AMMOTEXTIMAGE
+Text and Image
+字と画像
+
+> OPTVAL_SCRIPTSONLY
+Scripts Only
+スクリプトのみ
+
+> OPTVAL_ALL
+All
+全て
+
+> OPTVAL_ONLYLASTONE
+Only last one
+最後のみ
+
+> OPTVAL_TRADITIONALDOOM
+Traditional Doom
+正式DOOM
+
+> OPTVAL_TRADITIONALSTRIFE
+Traditional Strife
+正式Strife
+
+> OPTVAL_TRADITIONALRAVEN
+Traditional Raven
+正式Raven
+
+> OPTVAL_ONLYWHENFOUND
+Only when found
+発見時のみ
+
+> OPTVAL_ONFOROVERLAYONLY
+On for overlay only
+オーバーレイ専用
+
+> OPTVAL_OVERLAYNORMAL
+Overlay+Normal
+オーバーレイ+通常
+
+> OPTVAL_OVERLAYONLY
+Overlay Only
+オーバーレイのみ
+
+> OPTVAL_NOTFORHUBS
+Not for hubs
+区間では出さない
+
+> OPTVAL_FRONT
+Front
+画像
+
+> OPTVAL_ANIMATED
+Animated
+動作
+
+> OPTVAL_ROTATED
+Rotated
+回転
+
+> OPTVAL_MAPDEFINEDCOLORSONLY
+Map defined colors only
+指定した色のみ
+
+> OPTVAL_NODOORS
+All except doors
+ドア以外全て
+
+> OPTVAL_DOUBLE
+Double
+ダブル
+
+> OPTVAL_TRIPLE
+Triple
+トリプル
+
+> OPTVAL_QUADRUPLE
+Quadruple
+クァッド
+
+> OPTVAL_ITEMPICKUP
+Item Pickup
+アイテム取得
+
+> OPTVAL_OBITUARIES
+Obituaries
+死亡時
+
+> OPTVAL_CRITICALMESSAGES
+Critical Messages
+重要メッセージ
+
+> OPTVAL_NEVERFRIENDS
+Never friends
+フレンド以外
+
+> OPTVAL_ONLYMONSTERS
+Only monsters
+モンスターのみ
+
+> OPTVAL_HEXEN
+Hexen
+
+> OPTVAL_OLD
+Old
+旧式
+
+> OPTVAL_DOOM
+Doom
+
+> OPTVAL_DOOMSTRICT
+Doom (strict)
+Doom(厳密)
+
+> OPTVAL_BOOM
+Boom
+
+> OPTVAL_BOOMSTRICT
+Boom (strict)
+Boom(厳密)
+
+> OPTVAL_MBF
+MBF
+
+> OPTVAL_MBFSTRICT
+MBF (strict)
+MBF(厳密)
+
+> OPTVAL_MBF21
+MBF21
+
+> OPTVAL_MBF21STRICT
+MBF21 (strict)
+MBF21(厳密)
+
+> OPTVAL_ZDOOM2063
+ZDoom 2.0.63
+
+> OPTVAL_ALLUNACKNOWLEDGED
+All unacknowledged
+未確認全て
+
+> OPTVAL_ERRORS
+Errors
+エラー
+
+> OPTVAL_WARNINGS
+Warnings
+警告
+
+> OPTVAL_NOTIFICATIONS
+Notifications
+通知
+
+> OPTVAL_EVERYTHING
+Everything
+全て
+
+> OPTVAL_HWPOLY
+Hardware accelerated
+ハードウェア アクセラレート
+
+> OPTVAL_SWDOOM
+Doom Software Renderer
+Doom ソフトウェアレンダー
+
+> OPTVAL_SWDOOMTC
+True Color SW Renderer
+トゥルーカラー SWレンダー
+
+> OPTVAL_DEDICATED
+High-Performance
+ハイパフォーマンス
+
+> OPTVAL_INTEGRATED
+Power-Saving
+パワーセービング
+
+> OPTVAL_VANILLA
+Vanilla
+バニラ
+
+> OPTVAL_VTFZDOOM
+ZDoom (Forced)
+ZDoom(強制)
+
+> OPTVAL_VTFVANILLA
+Vanilla (Forced)
+バニラ(強制)
+
+> OPTVAL_VTAZDOOM
+Auto (ZDoom Preferred)
+自動(ZDoom優先)
+
+> OPTVAL_VTAVANILLA
+Auto (Vanilla Preferred)
+自動(バニラ優先)
+
+> OPTVAL_SMALL
+Small
+小
+
+> OPTVAL_LARGE
+Large
+大
+
+> OPTVAL_CONSOLE
+Console
+コンソール
+
+> C_BRICK
+\caBrick
+\ca丹
+
+> C_TAN
+\cbTan
+\cb香
+
+> C_GRAY
+\ccGray
+\cc灰
+
+> C_GREEN
+\cdGreen
+\cd緑
+
+> C_BROWN
+\ceBrown
+\ce茶
+
+> C_GOLD
+\cfGold
+\cf金
+
+> C_RED
+\cgRed
+\cg赤
+
+> C_BLUE
+\chBlue
+\ch青
+
+> C_ORANGE
+\ciOrange
+\ci橙
+
+> C_WHITE
+\cjWhite
+\cj白
+
+> C_YELLOW
+\ckYellow
+\ck黄
+
+> C_DEFAULT
+\clDefault
+\cl初期
+
+> C_BLACK
+\cmBlack
+\cm黒
+
+> C_LIGHTBLUE
+\cnLight blue
+\cn空
+
+> C_CREAM
+\coCream
+\co肉
+
+> C_OLIVE
+\cpOlive
+\cp泥
+
+> C_DARKGREEN
+\cqDark green
+\cq深
+
+> C_DARKRED
+\crDark red
+\cr朱
+
+> C_DARKBROWN
+\csDark brown
+\cs焦
+
+> C_PURPLE
+\ctPurple
+\ct紫
+
+> C_DARKGRAY
+\cuDark gray
+\cu鉛
+
+> C_CYAN
+\cvCyan
+\cv天
+
+> C_ICE
+\cwIce
+\cw氷
+
+> C_FIRE
+\cxFire
+\cx炎
+
+> C_SAPPHIRE
+\cySapphire
+\cy藍
+
+> C_TEAL
+\czTeal
+\cz碧
+
+> OPTSTR_HERETIC
+Heretic
+
+> OPTSTR_CHEX
+Chex
+
+> OPTSTR_NOSOUND
+No Sound
+サウンドなし
+
+> OPTSTR_NOINTERPOLATION
+No interpolation
+補間無し
+
+> OPTSTR_SPLINE
+Spline
+スプライン
+
+> OPTSTR_OPENAL
+OpenAL
+
+> DSPLYMNU_GLOPT
+Hardware Renderer
+ハードウェア レンダラー
+
+> DSPLYMNU_SWOPT
+Software Renderer
+ソフトウェア レンダラー
+
+> GLMNU_TITLE
+Hardware Rendering Options
+ハードウェアレンダリング オプション
+
+> GLMNU_DYNLIGHT
+Dynamic Light Options
+ダイナミックライト オプション
+
+> GLMNU_PREFS
+Preferences
+環境設定
+
+> GLTEXMNU_TRIMSPREDGE
+Trim sprite edges
+スプライトの角を取る
+
+> GLTEXMNU_SORTDRAWLIST
+Sort draw lists by texture
+テクスチャーから描画リストを分類
+
+> GLLIGHTMNU_TITLE
+Dynamic Lights
+ダイナミックライト
+
+> GLLIGHTMNU_LIGHTSENABLED
+Dynamic Lights (Hardware)
+ダイナミックライト(OpenGL)
+
+> GLLIGHTMNU_LIGHTDEFS
+Enable light definitions
+ライト定義 許可
+
+> GLLIGHTMNU_LIGHTSPRITES
+Lights affect sprites
+ライトがスプライトに影響
+
+> GLLIGHTMNU_LIGHTPARTICLES
+Lights affect particles
+ライトがパーティクルに影響
+
+> GLLIGHTMNU_LIGHTSHADOWMAP
+Light shadowmaps
+ライトのシャドウマッピング
+
+> GLLIGHTMNU_LIGHTSHADOWMAPQUALITY
+Shadowmap quality
+シャドウマップ 品質
+
+> GLLIGHTMNU_LIGHTSHADOWMAPFILTER
+Shadowmap filter
+シャドウマップ フィルター
+
+> GLPREFMNU_FOGMODE
+Fog mode
+フォグモード
+
+> GLPREFMNU_FOGFORCEFULLBRIGHT
+Fog forces fullbright
+濃霧は明るさ最大
+
+> GLPREFMNU_WPNLIGHTSTR
+Weapon light strength
+武器ライトの強さ
+
+> GLPREFMNU_ENVIRONMENTMAPMIRROR
+Environment map on mirrors
+マップオンミラーの画像表示
+
+> GLPREFMNU_ENV
+Enhanced night vision mode
+バイザーを暗視装置調にする
+
+> GLPREFMNU_ENVSTEALTH
+ENV shows stealth monsters
+暗視バイザーが透明を見破る
+
+> GLPREFMNU_SPRCLIP
+Adjust sprite clipping
+スプライトのずらしを調整する
+
+> GLPREFMNU_SPRBLEND
+Smooth sprite edges
+スプライトの角を丸める
+
+> GLPREFMNU_FUZZSTYLE
+Fuzz Style
+ファズスタイル
+
+> GLPREFMNU_SPRBILLBOARD
+Sprite billboard
+スプライト ビルボード
+
+> GLPREFMNU_SPRBILLFACECAMERA
+Sprites face camera
+スプライトのフェイスカメラ
+
+> GLPREFMNU_PARTICLESTYLE
+Particle style
+パーティクル スタイル
+
+> GLPREFMNU_RENDERQUALITY
+Rendering quality
+レンダリング品質
+
+> GLPREFMNU_VRMODE
+Stereo 3D VR
+ステレオ3DのVR
+
+> GLPREFMNU_VRQUADSTEREO
+Enable Quad Stereo
+クァッドステレオを有効
+
+> GLPREFMNU_SWLMBANDED
+Banded SW Lightmode
+バンデドSWライトモード
+
+> GLPREFMNU_VRIPD
+Distance Between Your Eyes
+自分の目との距離
+
+> GLPREFMNU_VRSCREENDIST
+Distance From Your Screen
+画面からの距離
+
+> OPTVAL_SMART
+Smart
+スマート
+
+> OPTVAL_SMARTER
+Smarter
+よりスマート
+
+> OPTVAL_INFRAREDONLY
+Infrared only
+赤外線のみ
+
+> OPTVAL_INFRAREDANDTORCH
+Infrared and torch
+赤外線と松明
+
+> OPTVAL_ANYFIXEDCOLORMAP
+Any fixed colormap
+任意の固定カラーマップ
+
+> OPTVAL_USEASPALETTE
+Use as palette
+パレットとして使用
+
+> OPTVAL_BLEND
+Blend
+混合
+
+> OPTVAL_BRIGHT
+Bright
+明るい
+
+> OPTVAL_DARK
+Dark
+暗い
+
+> OPTVAL_LEGACY
+; This refers to the Doom Legacy port, not a legacy lighting style!
+Doom Legacy
+
+> OPTVAL_SOFTWARE
+Software
+ソフトウェア
+
+> OPTVAL_OPTIMAL
+Optimal
+最適
+
+> OPTVAL_YAXIS
+Y Axis
+縦軸
+
+> OPTVAL_XYAXIS
+X/Y Axis
+縦/横軸
+
+> OPTVAL_SQUARE
+Square
+平方
+
+> OPTVAL_ROUND
+Round
+円形
+
+> OPTVAL_RADIAL
+Radial
+放射状
+
+> OPTVAL_PIXELFUZZ
+Pixel fuzz
+ピクセル ファズ
+
+> OPTVAL_SMOOTHFUZZ
+Smooth fuzz
+滑らかなファズ
+
+> OPTVAL_SWIRLYFUZZ
+Swirly fuzz
+渦状ファズ
+
+> OPTVAL_TRANSLUCENTFUZZ
+Translucent fuzz
+半透明ファズ
+
+> OPTVAL_NOISE
+Noise
+ノイズ
+
+> OPTVAL_SMOOTHNOISE
+Smooth Noise
+滑らかなノイズ
+
+> OPTVAL_JAGGEDFUZZ
+Jagged fuzz
+ギザギザ
+
+> OPTVAL_GREENMAGENTA
+Green/Magenta
+緑/紫
+
+> OPTVAL_REDCYAN
+Red/Cyan
+赤/空
+
+> OPTVAL_AMBERBLUE
+Amber/Blue
+黄/青
+
+> OPTVAL_LEFTEYE
+Left Eye
+左目
+
+> OPTVAL_RIGHTEYE
+Right Eye
+右目
+
+> OPTVAL_SBSFULL
+Side-by-side Full
+両サイド フル
+
+> OPTVAL_SBSNARROW
+Side-by-side Narrow
+両サイド ナロー
+
+> OPTVAL_TOPBOTTOM
+Top/Bottom
+天/底
+
+> OPTVAL_ROWINTERLEAVED
+Row Interleaved
+行インターリーブ
+
+> OPTVAL_COLUMNINTERLEAVED
+Column Interleaved
+列インターリーブ
+
+> OPTVAL_CHECKERBOARD
+Checkerboard
+市松模様
+
+> OPTVAL_QUADBUFFERED
+Quad-buffered
+クワッドバッファー
+
+> DSPLYMNU_TCOPT
+TrueColor Options
+トゥルーカラー オプション
+
+> TCMNU_TITLE
+TrueColor Options
+トゥルーカラー オプション
+
+> TCMNU_TRUECOLOR
+True color output
+トゥルーカラー出力
+
+> TCMNU_MINFILTER
+Linear filter when downscaling
+縮小時のリニアフィルター
+
+> TCMNU_MAGFILTER
+Linear filter when upscaling
+拡大時のリニアフィルター
+
+> TCMNU_MIPMAP
+Use mipmapped textures
+ミップマップテクスチャを使用
+
+> TCMNU_DYNLIGHTS
+Dynamic lights (Software)
+ダイナミックライト (ソフトウェア)
+
+> OS_TITLE
+Option Search
+オプション検索
+
+> OS_ANY
+Search for any term
+いずれかの用語を探す
+
+> OS_ALL
+Search for all terms
+全ての用語を探す
+
+> OS_NO_RESULTS
+No results found.
+見つかりませんでした。
+
+> OS_LABEL
+Search:
+検索:
+
+> AUTOMAPMNU_SHOWKEYS_ALWAYS
+Always show keys
+常にキーを表示
+
+; Newly added content
+
+> TXT_NO_TEAM_CHANGE
+Team changing has been disabled!
+チームの変更は受け付けない!
+
+> TXT_JOINED_TEAM
+; %s is the player and gender sensitive
+%s joined the %t team
+%s は %t のチームに入隊した
+
+> TXT_LONER
+%s is now a loner.
+%s は今 一匹狼だ。
+
+> TXT_LEFTWITHFRAGS
+%s left the game with %d frags
+"""%s が逃げ出したので %d に点が入った
+"""
+
+> TXT_LEFTTHEGAME
+%s left the game
+%s は退出した
+
+> TXT_COULDNOTREAD
+Could not read savegame '%s'.
+%s' のセーブデータを読み込めなかった。
+
+> TXT_NOINFOJSON
+%s' is not a valid savegame: Missing 'info.json'.
+%s' は有効なセーブデータ ではない: 'info.json'が不明。
+
+> TXT_FAILEDTOREADSG
+Failed to access savegame info in '%s'.
+%s' のセーブデータにアクセス出来なかった。
+
+> TXT_INCOMPATIBLESG
+Savegame '%s' is from an incompatible version.
+%s' は互換性の無いバージョンのセーブデータだ。
+
+> TXT_OTHERENGINESG
+Savegame '%s' is from another ZDoom-based engine:
+%s' は別のZDoom型のセーブデータだ。
+
+> TXT_TOOOLDSG
+Savegame '%s' is from an older version: %d (%e is the oldest supported)
+%s' はバージョンが合わないセーブデータだ: %d(%e は旧式版の物)
+
+> TXT_TOONEWSG
+; Shouldn’t this say “%e is the newest supported”?\n\n— Undead\n\nAsk Randi: The text is old. I won't change it.
+Savegame '%s' is from a newer version: %d (%e is the highest supported)
+%s' はバージョンが合わないセーブデータだ: %d(%e は最新版の物)
+
+> TXT_NOMAPSG
+Savegame '%s' is missing the current map.
+セーブデータ '%s'に現在のマップはない。
+
+> TXT_NOGLOBALSJSON
+%s' is not a valid savegame: Missing 'globals.json'.
+%s' は有効なセーブデータではない: 'globals.json'が不明。
+
+> TXT_SGINFOERR
+Failed to access savegame info in '%s'
+%s' のセーブデータにアクセス出来なかった
+
+> TXT_SAVEPENDING
+A game save is still pending.
+セーブ中だ
+
+> TXT_NOTSAVEABLE
+Not in a saveable game.
+セーブ可能なゲームではない
+
+> TXT_NOTINLEVEL
+Not in a level
+レベル内ではない
+
+> TXT_SPPLAYERDEAD
+Player is dead in a single-player game
+シングルプレイでプレイヤーが死んだ
+
+> TXT_SAVEFAILED
+Save failed
+セーブに失敗した。
+
+> TXT_SCREENSHOTERR
+Could not create screenshot.
+スクリーンショットを作成できなかった。
+
+> TXT_BY
+; As in paused by player %s.
+By %s
+"""%s より
+"""
+
+> TXT_QUITENDOOM
+Press any key or click anywhere in the window to quit.
+何かのキーを押すか、ウィンドウのどこかをクリックすると終了する。
+
+> HUDMNU_FLASH
+Screen Blend Options
+スクリーンブレンド オプション
+
+> GLMNU_3DMODE
+3D mode
+3Dモード
+
+> HUDMNU_CROSSHAIRON
+Crosshair
+クロスヘア
+
+> MSGMNU_SUBTITLES
+Subtitles
+サブタイトル
+
+> GLPREFMNU_PALTONENOGREY
+Prevent gray shadows
+グレイシャドウを防ぐ
+
+> HUDMNU_FONTOPTIONS
+Font Options
+フォント オプション
+
+> FONTMNU_LOG
+Use standard font for log display
+ログ表示に標準フォントを使用
+
+> FONTMNU_DLG
+Use standard font for dialogues
+ダイアログに標準フォントを使用
+
+> MISCMNU_QUICKEXIT
+Quick Exit
+終了メッセージ無し
+
+> DSPLYMNU_CUSTOMINVERTMAP
+Custom Inverse Map
+マップ反転色カスタム
+
+> DSPLYMNU_CUSTOMINVERTC1
+"""Custom Inverse Color Dark
+"""
+反転色カスタム 暗
+
+> DSPLYMNU_CUSTOMINVERTC2
+Custom Inverse Color Light
+反転色カスタム 明
+
+> DSPLYMNU_BOBFIRE
+Weapon bob amount when firing
+射撃時の武器スイング
+
+> SCALEMNU_SCALECLASSIC
+; HUD->Scaling Options
+Intermission and Screen Border Classic Scaling
+旧式スケールのクリア結果と画面ボーダー
+
+> SCALEMNU_INTER
+Intermission background
+クリア結果の背景
+
+> SCALEMNU_BORDER
+Screen border
+画面ボーダー
+
+> SCALEMNU_FACTOR
+Scaling factor
+スケーリング倍率
+
+> SCALEMNU_RATIO
+Aspect ratio
+アスペクト比
+
+> OPTVAL_BUILD
+; as in "Build engine". This should not be translated unless there is a translated name for the engine
+Build
+
+> MISCMNU_ALWAYSTALLY
+; sv_alwaystally
+Show Tally Screen On Level Exit
+Exit時にタリー画面を表示
+
+> OPTVAL_MODDEFINED
+; this is '==0'
+Mod Defined
+Mod定義
+
+> OPTVAL_NOTHUBS
+Always, except within hubs
+区間を除き、常に
+
+> OPTVAL_WITHHUBS
+Always, even within hubs
+区間内でも、常に
+
+> CNTRLMNU_LAYOUT
+Preferred keyboard layout
+優先するキー配列
+
+> OPTVAL_CLASSICZ
+Classic ZDoom
+従来のZDOOM
+
+> OPTVAL_MODERN
+Modern (WASD)
+現代的(WASD)
+
+> OPTVAL_MODERNLEFT
+Modern (Keypad)
+現代的(Keypad)
+
+> MISCMNU_SETSLOTSTRICT
+Strict KEYCONF Weapons/Players
+厳密なKEYCONFの武器/プレイヤー
+
+> MISCMNU_CLEANMENU\n
+Classic ZDoom menu scaling
+従来のZDメニュースケール
+
+> MISCMNU_WIPERCENT
+Use percents on summary screen
+集計画面でパーセント表示
+
+> MISCMNU_CLEANSTAT
+Classic ZDoom scaling on summary screen
+集計画面で従来のZDスケール
+
+> TAG_STRIFEZOMBIE
+; Called "citizens" according to Doomwiki
+Citizen
+住民
+
+> TAG_CEILINGTURRET
+Ceiling Turret
+警備システム
+
+> TAG_CRUSADER
+; Names need to match the obituaries!
+Crusader
+クルセーダー
+
+> TAG_INQUISITOR
+Inquisitor
+審問官
+
+> TAG_PEASANT
+Peasant
+庶民
+
+> TAG_REAVER
+Reaver
+リーバー
+
+> TAG_SENTINEL
+Sentinel
+センティネル
+
+> TAG_STALKER
+Stalker
+ストーカー
+
+> TAG_BISHOP
+The Bishop
+ビショップ
+
+> TAG_ENTITY
+The One God
+唯一神
+
+> TAG_PROGRAMMER
+The Programmer
+プログラマー
+
+> TAG_ALIENSPECTRE
+The Spectre
+スペクトル
+
+> TAG_KNEELINGGUY
+Kneeling Guy
+礼拝者
+
+> GMPLYMNU_MULTIPLAYERTHINGS
+Spawn multiplayer things in coop
+協力モードでマルチ用thingsを出す
+
+> DSPLYMNU_SPRITESHADOW
+Sprite shadows
+スプライト シャドウ
+
+> OPTVAL_SPRSHADALWAYS
+; Will enable sprite shadows for monster and player sprites
+Monsters and players
+敵とプレイヤー
+
+> DSPLYMNU_FOV
+; the FOV slider
+FOV
+
+> CMPTMNU_NOMBF21
+Disable MBF21 features
+MBF21機能を無効
+
+> ALTHUDMNU_SHOWTIMESTAT
+Show time widget
+ウィジットタイマーの表示
+
+> OPTVAL_MBF21
+MBF21
+
+> CMPTMNU_VILEGHOSTS
+Crushed monsters get resurrected as ghosts
+圧死した敵が蘇生でゴースト化
+
+> MISCMNU_FVIEWBOB
+View bobbing while flying
+飛行中の視点揺れ
+
+> OB_DEMON1HIT
+%o was maimed by a Serpent.
+%o はサーペントに斬り捨てられた。
+
+> AUTOMAPMNU_LINEANTIALIASING
+Antialias Lines
+Linesのアンチエイリアス
+
+> GMPLYMNU_NOPLAYERCLIP
+Move and shoot through other players
+移動と攻撃が他プレイヤーを通過
+
+> GMPLYMNU_SHAREKEYS
+Share keys with all players
+全プレイヤーにキーを共有
+
+> GLPREFMNU_SPRBILLFACECAMERAFORCE
+Disallow override of camera facing mode
+Facing modeのカメラをオーバーライドしない
+
+> ALTHUDMNU_SWAPHEALTHARMOR
+Swap health and armor
+体力とアーマーをスワップ
+
+> SCALEMNU_HUD_OLDSCALE
+; hud_oldscale
+Use classic HUD scaling
+旧式HUDスケーリングを使う
+
+> SCALEMNU_HUD_SCALEFACTOR
+; hud_scalefactor
+HUD scale factor
+HUDスケール倍率
+
+> GMPLYMNU_COOPTHINGS
+; Any Actor that only appears in co-op is disabled
+Spawn co-op only things in multiplayer
+マルチで協力モード限定thingsを出す
+
+> GMPLYMNU_COOPITEMS
+; Items that only appear in co-op are disabled
+Spawn co-op only pickup items in multiplayer
+マルチで協力モード限定アイテムを出す
+
+> GMPLYMNU_LOCALITEMS
+; Items are picked up client-side rather than fully taken by the client who picked it up
+Players pick up their own copy of items in multiplayer
+マルチでプレイヤー達は複製アイテムを拾う
+
+> GMPLYMNU_NOLOCALDROP
+; Drops from Actors aren't picked up locally
+Disable client-side pick ups on dropped items
+クライアント側で落としたアイテムを拾わせない
+
+> MISCMNU_RESTARTONDEATH
+; Disables autoloading save on death
+Restart level on Death
+リスタート時に死亡する
+
+> GMPLYMNU_PISTOLSTART
+; Resets inventory on every map
+Pistol Start
+ピストルスタート
+
+> CMPTMNU_VOODOOZOMBIES
+Allow creation of zombie players
+ゾンビプレイヤーの生成許可
+
+> CMPTMNU_FDTELEPORT
+ignore floor z when teleporting
+テレポート時にfloor z値を無視する
+
+> OPTVAL_ANAMORPHIC
+; Hardware Sprite Clipping mode that gives the illusion of a sprite being in a different position than it really is, allowing it to be rendered under the floor despite clipping
+Forced-Perspective
+
+> SNDMENU_FOOTSTEPVOLUME
+Footstep Volume
+
+> ID24_GOTINCINERATOR
+You got the incinerator!
+
+> ID24_GOTCALAMITYBLADE
+You got the calamity blade!  Hot damn!
+
+> ID24_GOTFUELCAN
+Picked up a fuel can.
+
+> ID24_GOTFUELTANK
+Picked up a fuel tank.
+
+> TAG_ID24INCINERATOR
+Incinerator
+
+> TAG_ID24CALAMITYBLADE
+Calamity Blade
+
+> AMMO_ID24FUEL
+Fuel Can
+
+> AMMO_ID24FUELTANK
+Fuel Tank
+

@@ -1,0 +1,2491 @@
+; Miscellaneous
+
+> PRESSYN
+Press Y or N.
+YかNで答えろ
+
+> TXT_YES
+Yes
+はい
+
+> TXT_NO
+No
+いいえ
+
+> SAVEDEAD
+"""You can't save if you aren't playing!
+
+Press a key."""
+"""プレイ中でないとセーブできない!
+
+何かキーを押せ"""
+
+> SAFEMESSAGE
+Do you really want to do this?
+本当に実行するのか?
+
+> NOTSET
+Not set
+セットされてない
+
+> QSPROMPT
+"""Quicksave over your game named
+
+'%s'?
+
+Press Y or N."""
+"""この名前で上書きするのか?
+
+'%s'
+
+Y か N で答えろ"""
+
+> QLPROMPT
+"""Do you want to quickload the game named
+
+'%s'?
+
+Press Y or N."""
+"""この名前のデータをロードするのか?
+
+'%s'
+
+Y か N で答えろ"""
+
+> TXT_X_CHEATS
+; This is a gender sensitive message where %s represents the player
+%s cheats
+%s はチート使用
+
+> MSGOFF
+Messages: OFF
+メッセージ: オフ
+
+> MSGON
+Messages: ON
+メッセージ: オン
+
+> TXT_SAY
+Say:
+発言:
+
+> TXT_QUITENDOOM
+Press any key or click anywhere in the window to quit.
+何かのキーを押すか、ウィンドウのどこかをクリックすると終了する。
+
+; Savegame
+
+> NEWSAVE
+<New Save Game>
+<新規セーブ>
+
+> GGSAVED
+Game saved.
+セーブ完了。
+
+> SAVECOMMENT_TIME
+Time
+"""時間
+"""
+
+> MNU_LOADGAME
+Load Game
+ロード
+
+> MNU_SAVEGAME
+Save Game
+セーブ
+
+> MNU_NOPICTURE
+No Picture
+画像無し
+
+> MNU_DIFFVERSION
+Different Version
+"""別バージョンの
+データ"""
+
+> MNU_NOFILES
+No files
+ファイル無し
+
+> MNU_DELETESG
+"""Do you really want to delete the savegame?
+"""
+本当にこのセーブを消すのか?
+
+; General
+
+> OPTVAL_OFF
+Off
+オフ
+
+> OPTVAL_ON
+On
+オン
+
+> OPTVAL_AUTO
+Auto
+自動
+
+> OPTMNU_TITLE
+Options
+オプション
+
+> OPTMNU_CONTROLS
+Customize Controls
+キー配置変更
+
+> OPTMNU_MOUSE
+Mouse Options
+マウス オプション
+
+> OPTMNU_JOYSTICK
+Controller Options
+コントローラーオプション
+
+> OPTMNU_PLAYER
+Player Setup
+プレイヤーの特徴
+
+> OPTMNU_GAMEPLAY
+Gameplay Options
+ゲームプレイ オプション
+
+> OPTMNU_AUTOMAP
+Automap Options
+オートマップ オプション
+
+> OPTMNU_HUD
+HUD Options
+HUD オプション
+
+> OPTMNU_MISCELLANEOUS
+Miscellaneous Options
+その他のオプション
+
+> OPTMNU_SOUND
+Sound Options
+サウンド オプション
+
+> OPTMNU_DISPLAY
+Display Options
+ディスプレイ オプション
+
+> OPTMNU_VIDEO
+Set video mode
+ビデオ 調整
+
+> OPTMNU_DEFAULTS
+Reset to defaults
+初期設定に戻す
+
+> OPTMNU_RESETTOSAVED
+Reset to last saved
+最後に保存した設定に戻す
+
+> OPTMNU_WRITEINI
+Save current settings
+現在の設定を保存
+
+> OPTMNU_CONSOLE
+Go to console
+コンソールを開く
+
+> OPTMNU_NETWORK
+Network Options
+ネットワーク オプション
+
+> OPTMNU_REVERB
+Reverb environment editor
+リバーブ環境エディタ
+
+; Customize controls
+
+> CNTRLMNU_SWITCHTEXT1
+ENTER to change, BACKSPACE to clear
+Enter で決定、BackSpaceで無効化
+
+> CNTRLMNU_SWITCHTEXT2
+Press new key for control, ESC to cancel
+登録したいキーを押すか, Escでキャンセル
+
+> CNTRLMNU_CONTROLS
+Controls
+操作系統
+
+> CNTRLMNU_ATTACK
+Fire
+撃つ
+
+> CNTRLMNU_ALTATTACK
+Secondary Fire
+セカンダリ
+
+> CNTRLMNU_RELOAD
+Weapon Reload
+リロード
+
+> CNTRLMNU_USE
+Use / Open
+開く / スイッチ等使用
+
+> CNTRLMNU_FORWARD
+Move forward
+前進
+
+> CNTRLMNU_BACK
+Move backward
+後退
+
+> CNTRLMNU_MOVELEFT
+Strafe left
+左移動
+
+> CNTRLMNU_MOVERIGHT
+Strafe right
+右移動
+
+> CNTRLMNU_TURNLEFT
+Turn left
+左を向く
+
+> CNTRLMNU_TURNRIGHT
+Turn right
+右を向く
+
+> CNTRLMNU_TURN180
+Quick Turn
+背後を向く
+
+> CNTRLMNU_JUMP
+Jump
+ジャンプ
+
+> CNTRLMNU_CROUCH
+Crouch
+屈む
+
+> CNTRLMNU_TOGGLECROUCH
+Crouch Toggle
+屈む切替
+
+> CNTRLMNU_MOUSELOOK
+Mouse look
+マウス視点上下化
+
+> CNTRLMNU_LOOKUP
+; Look doesn't change the aim! It only alters the view pitch
+Look up
+視点を上げる
+
+> CNTRLMNU_LOOKDOWN
+Look down
+視点を下げる
+
+> CNTRLMNU_CENTERVIEW
+Center view
+視点を戻す
+
+> CNTRLMNU_RUN
+Run
+駆け足
+
+> CNTRLMNU_TOGGLERUN
+Toggle Run
+常時駆け足切替
+
+> CNTRLMNU_STRAFE
+Strafe
+横移動化
+
+> CNTRLMNU_SCOREBOARD
+Show Scoreboard
+スコアボード表示
+
+> CNTRLMNU_ACTION
+Action
+アクション
+
+> CNTRLMNU_ACTION_TITLE
+Customize Action Controls
+アクション操作設定
+
+> CNTRLMNU_CHAT
+Chat
+チャット
+
+> MNU_MULTIPLAYER
+Multiplayer
+マルチプレイヤー
+
+> CNTRLMNU_SAY
+Say
+発言
+
+> CNTRLMNU_CHAT_TITLE
+Customize Chat Controls
+チャット操作設定
+
+> CNTRLMNU_WEAPONS_TITLE
+Customize Weapon Controls
+武器操作設定
+
+> CNTRLMNU_INVENTORY_TITLE
+Customize Inventory Controls
+インベントリ操作設定
+
+> CNTRLMNU_OTHER_TITLE
+Customize Other Controls
+その他の操作設定
+
+> CNTRLMNU_WEAPONS
+Weapons
+武器
+
+> CNTRLMNU_NEXTWEAPON
+Next weapon
+次の武器
+
+> CNTRLMNU_PREVIOUSWEAPON
+Previous weapon
+前の武器
+
+> CNTRLMNU_SLOT1
+; Todo - make game specific
+Weapon 1
+武器スロット 1
+
+> CNTRLMNU_SLOT2
+; only show appropriate slots per game\n
+Weapon 2
+武器スロット 2
+
+> CNTRLMNU_SLOT3
+Weapon 3
+武器スロット 3
+
+> CNTRLMNU_SLOT4
+Weapon 4
+武器スロット 4
+
+> CNTRLMNU_SLOT5
+Weapon 5
+武器スロット 5
+
+> CNTRLMNU_SLOT6
+Weapon 6
+武器スロット 6
+
+> CNTRLMNU_SLOT7
+Weapon 7
+武器スロット 7
+
+> CNTRLMNU_SLOT8
+Weapon 8
+武器スロット 8
+
+> CNTRLMNU_SLOT9
+Weapon 9
+武器スロット 9
+
+> CNTRLMNU_SLOT0
+Weapon 10
+武器スロット 0
+
+> CNTRLMNU_INVENTORY
+Inventory
+所持品
+
+> CNTRLMNU_USEITEM
+Activate item
+アイテムを使用
+
+> CNTRLMNU_USEALLITEMS
+Activate all items
+全てのアイテムを使用
+
+> CNTRLMNU_NEXTITEM
+Next item
+次のアイテム
+
+> CNTRLMNU_PREVIOUSITEM
+Previous item
+前のアイテム
+
+> MAPCNTRLMNU_TITLE
+; most are not used yet but will be
+Customize Map Controls
+マップコントロール カスタマイズ
+
+> MAPCNTRLMNU_CONTROLS
+Map Controls
+マップコントロール
+
+> MAPCNTRLMNU_PANLEFT
+Pan left
+左に振る
+
+> MAPCNTRLMNU_PANRIGHT
+Pan right
+右に振る
+
+> MAPCNTRLMNU_PANUP
+Pan up
+上に振る
+
+> MAPCNTRLMNU_PANDOWN
+Pan down
+下に振る
+
+> MAPCNTRLMNU_ZOOMIN
+Zoom in
+ズームイン
+
+> MAPCNTRLMNU_ZOOMOUT
+Zoom out
+ズームアウト
+
+> MAPCNTRLMNU_TOGGLEZOOM
+Toggle zoom
+ズーム切替
+
+> MAPCNTRLMNU_TOGGLEFOLLOW
+Toggle follow
+追従切替
+
+> MAPCNTRLMNU_TOGGLEGRID
+Toggle grid
+グリッド切替
+
+> MAPCNTRLMNU_ROTATE
+Toggle rotate
+回転切替
+
+> MAPCNTRLMNU_TOGGLETEXTURE
+Toggle texture
+テクスチャ切替
+
+> CNTRLMNU_AUTOMAP
+Toggle automap
+オートマップの切替
+
+> CNTRLMNU_CHASECAM
+Chasecam
+背後視点
+
+> CNTRLMNU_SCREENSHOT
+Screenshot
+画面キャプチャ
+
+> CNTRLMNU_CONSOLE
+Open console
+コンソールを開く
+
+> CNTRLMNU_PAUSE
+Pause
+ポーズ
+
+> CNTRLMNU_DISPLAY_INC
+Increase Display Size
+画面サイズを拡大
+
+> CNTRLMNU_DISPLAY_DEC
+Decrease Display Size
+画面サイズを縮小
+
+> CNTRLMNU_OPEN_HELP
+Open Help
+"""ヘルプを開く
+"""
+
+> CNTRLMNU_OPEN_SAVE
+Open Save Menu
+セーブメニューを開く
+
+> CNTRLMNU_OPEN_LOAD
+Open Load Menu
+ロードメニューを開く
+
+> CNTRLMNU_OPEN_OPTIONS
+Open Options Menu
+オプションメニューを開く
+
+> CNTRLMNU_OPEN_DISPLAY
+Open Display Menu
+ディスプレイメニューを開く
+
+> CNTRLMNU_QUICKSAVE
+Quicksave
+クイックセーブ
+
+> CNTRLMNU_QUICKLOAD
+Quickload
+クイックロード
+
+> CNTRLMNU_EXIT_TO_MAIN
+Exit to Main Menu
+メインメニューに戻る
+
+> CNTRLMNU_TOGGLE_MESSAGES
+Toggle Messages
+メッセージ表示の切替
+
+> CNTRLMNU_MENU_QUIT
+Quit Game
+ゲームを終了
+
+> CNTRLMNU_ADJUST_GAMMA
+Adjust Gamma
+ガンマ値を調整
+
+; Mouse
+
+> MOUSEMNU_ENABLEMOUSE
+Enable mouse
+マウスの使用
+
+> MOUSEMNU_MOUSEINMENU
+Enable mouse in menus
+メニューでのマウスの使用
+
+> MOUSEMNU_SHOWBACKBUTTON
+Show back button
+戻るボタンを表示
+
+> MOUSEMNU_CURSOR
+Cursor
+カーソル
+
+> MOUSEMNU_SENSITIVITY_X
+Horizontal sensitivity
+水平感度
+
+> MOUSEMNU_SENSITIVITY_Y
+Vertical sensitivity
+垂直感度
+
+> MOUSEMNU_SMOOTHMOUSE
+Smooth mouse movement
+マウス操作を滑らかにする
+
+> MOUSEMNU_TURNSPEED
+Turning speed
+旋回速度
+
+> MOUSEMNU_MOUSELOOKSPEED
+Mouselook speed
+上下視点速度
+
+> MOUSEMNU_FORWBACKSPEED
+Forward/Backward speed
+"""前進/後退速度
+"""
+
+> MOUSEMNU_STRAFESPEED
+Strafing speed
+横移動速度
+
+> MOUSEMNU_ALWAYSMOUSELOOK
+Always Mouselook
+常に上下視点をオン
+
+> MOUSEMNU_INVERTMOUSE
+Invert Mouse Y
+視点操作反転
+
+> MOUSEMNU_INVERTMOUSEX
+Invert Mouse X
+視点操作反転
+
+> OPTVAL_UPPERLEFT
+Upper left
+左上
+
+> OPTVAL_UPPERRIGHT
+Upper right
+右上
+
+> OPTVAL_LOWERLEFT
+Lower left
+左下
+
+> OPTVAL_LOWERRIGHT
+Lower right
+右下
+
+> OPTVAL_TOUCHSCREENLIKE
+Touchscreen-like
+タッチスクリーン式
+
+> OPTSTR_SIMPLEARROW
+Simple arrow
+シンプル
+
+> OPTSTR_SYSTEMCURSOR
+System cursor
+システム
+
+> OPTVAL_DEFAULT
+Default
+デフォルト
+
+; Controller
+
+> JOYMNU_TITLE
+Configure Controller
+コントローラー構成:
+
+> JOYMNU_OPTIONS
+Controller Options
+コントローラー設定
+
+> JOYMNU_NOMENU
+Block controller input in menu
+メニューではコントローラーを無視
+
+> JOYMNU_ENABLE
+Enable controller support
+コントローラーサポート許可
+
+> JOYMNU_DINPUT
+Enable DirectInput controllers
+ダイレクトインプットコントローラー許可
+
+> JOYMNU_XINPUT
+Enable XInput controllers
+Xinput コントローラー許可
+
+> JOYMNU_PS2
+Enable raw PlayStation 2 adapters
+PlayStation2 アダプター許可
+
+> JOYMNU_NOCON
+No controllers detected
+コントローラーが見つかりません
+
+> JOYMNU_CONFIG
+Configure controllers:
+コントローラー構成:
+
+> JOYMNU_DISABLED1
+Controller support must be
+コントローラーサポートは
+
+> JOYMNU_DISABLED2
+; Supposed to be empty in Russian and Serbian.
+enabled to detect any
+検出しました
+
+> JOYMNU_INVALID
+Invalid controller specified for menu
+メニューではコントローラーを使用しない
+
+> JOYMNU_OVRSENS
+Overall sensitivity
+全体的な感度
+
+> JOYMNU_AXIS
+Axis Configuration
+軸構成
+
+> JOYMNU_INVERT
+Invert
+反転
+
+> JOYMNU_DEADZONE
+Dead zone
+デッドゾーン
+
+> JOYMNU_NOAXES
+No configurable axes
+軸構成を無効
+
+> OPTVAL_NONE
+None
+無し
+
+> OPTVAL_TURNING
+Turning
+旋回
+
+> OPTVAL_LOOKINGUPDOWN
+Looking Up/Down
+視点上下
+
+> OPTVAL_MOVINGFORWARD
+Moving Forward
+前進
+
+> OPTVAL_STRAFING
+Strafing
+横移動
+
+> OPTVAL_MOVINGUPDOWN
+Moving Up/Down
+前進後退
+
+> OPTVAL_INVERTED
+Inverted
+反転する
+
+> OPTVAL_NOTINVERTED
+Not Inverted
+反転しない
+
+; Player Menu
+
+> TXT_COLOR_BLUE
+Blue
+青
+
+> TXT_COLOR_RED
+Red
+赤
+
+> TXT_COLOR_GREEN
+Green
+緑
+
+> TXT_COLOR_GRAY
+Gray
+灰
+
+> TXT_COLOR_DARKGRAY
+Dark gray
+鉛
+
+> TXT_COLOR_DARKGREEN
+Dark Green
+深
+
+> TXT_COLOR_BROWN
+Brown
+茶
+
+> TXT_COLOR_DARKBLUE
+Dark Blue
+紺
+
+> TXT_COLOR_LIGHTRED
+Light Red
+丹
+
+> TXT_COLOR_YELLOW
+Yellow
+黄
+
+> TXT_COLOR_PURPLE
+Purple
+紫
+
+> TXT_COLOR_DULLGREEN
+Olive
+苔
+
+> TXT_COLOR_BEIGE
+Beige
+淡
+
+> TXT_COLOR_LIGHTGREEN
+Light Green
+葵
+
+> TXT_COLOR_LIGHTBLUE
+Light Blue
+空
+
+> TXT_COLOR_LIGHTGRAY
+Light Gray
+鉛
+
+> TXT_COLOR_LIGHTBROWN
+Light Brown
+褐
+
+> TXT_COLOR_GOLD
+Gold
+金
+
+> TXT_COLOR_BRIGHTGREEN
+Bright Green
+鮮
+
+> TXT_COLOR_RUST
+Rust
+錆
+
+> PLYRMNU_NAME
+Name
+名前
+
+> PLYRMNU_TEAM
+Team
+チーム
+
+> PLYRMNU_PLAYERCOLOR
+Color
+色
+
+> PLYRMNU_PLAYERGENDER
+Gender
+性別
+
+> OPTVAL_MALE
+Male
+男
+
+> OPTVAL_FEMALE
+Female
+女
+
+> OPTVAL_NEUTRAL
+Neutral
+中間
+
+> OPTVAL_OTHER
+Object
+物体
+
+> GMPLYMNU_TITLE
+Gameplay Options
+ゲームプレイ オプション
+
+> OPTVAL_ALWAYS
+Always
+常に
+
+> OPTVAL_NEVER
+Never
+しない
+
+> PLYRMNU_AUTOAIM
+Autoaim
+自動照準
+
+> PLYRMNU_ALWAYSRUN
+Always Run
+常に駆け足
+
+; Display
+
+> DSPLYMNU_SCREENSIZE
+Screen size
+画面サイズ
+
+> DSPLYMNU_VSYNC
+Vertical Sync
+垂直同期
+
+> DSPLYMNU_MODELS
+Models
+モデル
+
+> DSPLYMNU_CROSSHAIRSCALE
+Scale crosshair
+照準スケール
+
+> DSPLYMNU_BRIGHTNESS
+Brightness
+明るさ
+
+> DSPLYMNU_GAMMA
+Gamma correction
+ガンマ値
+
+> DSPLYMNU_CONTRAST
+Contrast
+コントラスト
+
+> DSPLYMNU_SATURATION
+Saturation
+サチュレーション
+
+> DSPLYMNU_SBSCALE
+Status Bar Scale
+ステータススケール
+
+> DSPLYMNU_MESSAGES
+Messages
+メッセージ類
+
+> MSGMNU_CENTERMESSAGES
+Center messages
+メッセージを中央に
+
+> MSGMNU_PULSEMESSAGES
+Pulsating message Display
+取得時等の文を明滅
+
+> MSGMNU_MESSAGESCALE
+Message Scale
+メッセージスケール
+
+; Automap
+
+> MNU_COLORPICKER
+Select Color
+色選択
+
+> AUTOMAPMNU_ROTATE
+Rotate automap
+オートマップの回転表示
+
+> AUTOMAPMNU_FOLLOW
+Follow player
+プレイヤー追従
+
+> AUTOMAPMNU_LINEALPHA
+Line alpha
+線の半透明度
+
+> AUTOMAPMNU_LINETHICKNESS
+Line thickness
+線の太さ
+
+> MAPCOLORMNU_TITLE
+Customize Map Colors
+カスタム色を決める
+
+> MAPCOLORMNU_DEFAULTMAPCOLORS
+Restore default custom colors
+カスタム色を初期化
+
+; Sound
+
+> SNDMNU_SNDENABLED
+Sound enabled
+サウンド有効
+
+> SNDMNU_MUSENABLED
+Music enabled
+音楽有効
+
+> OPTVAL_4000HZ
+4000 Hz
+
+> OPTVAL_8000HZ
+8000 Hz
+
+> OPTVAL_11025HZ
+11025 Hz
+
+> OPTVAL_22050HZ
+22050 Hz
+
+> OPTVAL_32000HZ
+32000 Hz
+
+> OPTVAL_44100HZ
+44100 Hz
+
+> OPTVAL_48000HZ
+48000 Hz
+
+> OPTVAL_64SAMPLES
+64 samples
+
+> OPTVAL_128SAMPLES
+128 samples
+
+> OPTVAL_256SAMPLES
+256 samples
+
+> OPTVAL_512SAMPLES
+512 samples
+
+> OPTVAL_1024SAMPLES
+1024 samples
+
+> OPTVAL_2048SAMPLES
+2048 samples
+
+> OPTVAL_4096SAMPLES
+4096 samples
+
+> OPTSTR_AUTO
+Auto
+自動
+
+> OPTSTR_MONO
+Mono
+モノラル
+
+> OPTSTR_STEREO
+Stereo
+ステレオ
+
+> OPTSTR_PROLOGIC
+Dolby Pro Logic Decoder
+ドルビー プロロジック デコーダー
+
+> OPTSTR_QUAD
+Quad
+クァッド
+
+> OPTSTR_SURROUND
+5 speakers
+5 スピーカー
+
+> OPTSTR_5POINT1
+5.1 speakers
+5.1 スピーカー
+
+> OPTSTR_7POINT1
+7.1 speakers
+7.1 スピーカー
+
+> OPENALMNU_PLAYBACKDEVICE
+Playback device
+プレイバック デバイス
+
+> OPENALMNU_ENABLEEFX
+Enable EFX
+EFXを有効化
+
+> OPENALMNU_RESAMPLER
+Resampler
+リサンプラー
+
+> SNDMNU_SFXVOLUME
+Sounds volume
+効果音音量
+
+> SNDMNU_MENUVOLUME
+Menu volume
+メニュー音量
+
+> SNDMNU_MUSICVOLUME
+Music volume
+音楽音量
+
+> SNDMNU_MIDIDEVICE
+MIDI device
+MIDIデバイス
+
+> SNDMNU_BACKGROUND
+Sound in Background
+バックグラウンドでのサウンド
+
+> SNDMNU_UNDERWATERREVERB
+Underwater reverb
+水中反響音
+
+> SNDMNU_RANDOMIZEPITCHES
+Randomize pitches
+ランダマイズ ピッチ
+
+> SNDMNU_CHANNELS
+Sound channels
+サウンド チャンネル
+
+> SNDMNU_BACKEND
+Sound backend
+サウンド バックエンド
+
+> SNDMNU_OPENAL
+OpenAL options
+OpenAL オプション
+
+> SNDMNU_RESTART
+Restart sound
+サウンド再起動
+
+> SNDMNU_ADVANCED
+Advanced options
+高度なオプション
+
+> SNDMNU_MODREPLAYER
+Module replayer options
+モジュールリプレイヤー オプション
+
+> SNDMNU_MIDIPLAYER
+Midi player options
+Midi再生のオプション
+
+> SNDMNU_MENUSOUND
+Sound in Menus
+メニューでのサウンド
+
+> ADVSNDMNU_TITLE
+Advanced Sound Options
+高度なサウンドオプション
+
+> ADVSNDMNU_SAMPLERATE
+Sample rate
+サンプルレート
+
+> ADVSNDMNU_HRTF
+HRTF
+
+> ADVSNDMNU_OPLSYNTHESIS
+OPL Synthesis
+OPLシンセサイズ
+
+> ADVSNDMNU_OPLNUMCHIPS
+Number of emulated OPL chips
+OPLチップエミュレートの番号
+
+> ADVSNDMNU_OPLFULLPAN
+Full MIDI stereo panning
+Full MIDIステレオパンニング
+
+> ADVSNDMNU_OPLCORES
+OPL Emulator Core
+OPL エミュレート コア
+
+> ADVSNDMNU_MIDIVOICES
+MIDI voices
+MIDI ボイス
+
+> ADVSNDMNU_FLUIDSYNTH
+FluidSynth
+
+> ADVSNDMNU_GLOBAL
+Global
+グローバル
+
+> ADVSNDMNU_FREEVERB
+Freeverb
+フリーバーブ
+
+> ADVSNDMNU_GLOBAL_FREEVERB
+Global Freeverb
+グローバル フリーバーブ
+
+> ADVSNDMNU_FLUIDPATCHSET
+Patch set
+パッチ セット
+
+> ADVSNDMNU_FLUIDGAIN
+Gain
+ゲイン
+
+> ADVSNDMNU_REVERB
+Reverb
+リバーブ
+
+> ADVSNDMNU_REVERB_LEVEL
+Reverb Level
+リバーブ量
+
+> ADVSNDMNU_CHORUS
+Chorus
+コーラス
+
+> ADVSNDMNU_TIMIDITY
+Timidity++
+
+> ADVSNDMNU_ADLMIDI
+ADLMidi
+
+> ADVSNDMNU_OPNMIDI
+OPNMidi
+
+> ADVSNDMNU_TIMIDITYCONFIG
+Timidity config file
+Timidity コンフィグファイル
+
+> ADVSNDMNU_TIMIDITYVOLUME
+Relative volume
+相対音量
+
+> ADVSNDMNU_WILDMIDI
+WildMidi
+
+> ADVSNDMNU_WILDMIDICONFIG
+WildMidi config file
+WildMidi コンフィグファイル
+
+> ADVSNDMNU_SELCONFIG
+Select configuration
+構成選択
+
+> ADVSNDMNU_ADVRESAMPLING
+Advanced Resampling
+高度なリサンプリング
+
+> ADVSNDMNU_OPLBANK
+OPL Bank
+
+> ADVSNDMNU_ADLOPLCORES
+OPL Emulator Core
+OPL エミュレートコア
+
+> ADVSNDMNU_RUNPCMRATE
+Run emulator at PCM rate
+PCMレートでエミュレート実行
+
+> ADVSNDMNU_ADLNUMCHIPS
+Number of emulated OPL chips
+OPLチップエミュレートの番号
+
+> ADVSNDMNU_VLMODEL
+Volume model
+音量モデル
+
+> ADVSNDMNU_OPNCORES
+OPN2 Emulator Core
+OPN2 エミュレート コア
+
+> ADVSNDMNU_GUSEMULATION
+GUS Emulation
+GUS エミュレーション
+
+> ADVSNDMNU_GUSCONFIG
+GUS config file
+GUS コンフィグファイル
+
+> ADVSNDMNU_DMXGUS
+Read DMXGUS lumps
+DMXGUS ランプを読む
+
+> ADVSNDMNU_GUSMEMSIZE
+GUS memory size
+GUS メモリーサイズ
+
+> ADVSNDMNU_OPNNUMCHIPS
+Number of emulated OPN chips
+OPNチップエミュレートの番号
+
+> ADVSNDMNU_ADLCUSTOMBANK
+Use custom WOPL bank
+カスタムWOPL bankを使用
+
+> ADVSNDMNU_OPLBANKFILE
+WOPL Bank file
+WOPL bankファイル
+
+> ADVSNDMNU_OPNCUSTOMBANK
+Use custom WOPN bank
+カスタムWOPN bankを使用
+
+> ADVSNDMNU_OPNBANKFILE
+WOPN Bank file
+WOPN bankファイル
+
+> OPTVAL_ALIASING
+Aliasing
+エイリアシング
+
+> OPTVAL_LINEAR_1
+; This setting is duplicated threefold in order to allow for different grammatical gender endings
+Linear
+リニア
+
+> OPTVAL_LINEAR_2
+Linear
+リニア
+
+> OPTVAL_LINEAR_3
+Linear
+リニア
+
+> OPTVAL_NEAREST
+Nearest
+最寄り
+
+> OPTVAL_PCF_LOW
+PCF (Low)
+PCF (低)
+
+> OPTVAL_PCF_MEDIUM
+PCF (Medium)
+PCF (中)
+
+> OPTVAL_PCF_HIGH
+PCF (High)
+PCF (高)
+
+> OPTVAL_CUBIC
+Cubic
+キュービック
+
+> OPTVAL_BLEP
+Band-limited step
+帯域制限ステップ
+
+> OPTVAL_LINEARSLOW
+Linear (Slower)
+リニア(遅め)
+
+> OPTVAL_BLAM
+Band-limited linear
+帯域制限リニア
+
+> OPTVAL_CUBICSLOW
+Cubic (Slower)
+キュービック (遅め)
+
+> OPTVAL_SINC
+Sinc
+シンク
+
+> OPTVAL_NOTEONOFFONLY
+Note on/off only
+ノート オン/オフ のみ
+
+> OPTVAL_FULLRAMPING
+Full ramping
+フルランピング
+
+> MODMNU_MASTERVOLUME
+Master volume
+全体音量
+
+> MODMNU_QUALITY
+Quality
+クオリティ
+
+> MODMNU_VOLUMERAMPING
+Volume ramping
+音量ランピング
+
+> OPTVAL_LIBXMP
+libXMP
+
+> OPTVAL_DUMB
+Dumb
+
+> MODMNU_CHIPOMATIC
+Chip-o-matic
+チップ オー マチック
+
+> OPTVAL_MAMEOPL2
+MAME OPL2
+
+> OPTVAL_DOSBOXOPL3
+DOSBox OPL3
+
+> OPTVAL_JAVAOPL3
+Java OPL3
+
+> OPTVAL_NUKEDOPL3
+Nuked OPL3
+
+> OPTVAL_MAMEOPN2
+MAME YM2612
+
+> OPTVAL_NP2OPNA
+Neko Project II Kai OPNA
+
+> OPTVAL_MAMEOPNA
+MAME YM2608
+
+> OPTVAL_PMDWINOPNA
+PMDWin OPNA
+
+> OPTVAL_OPALOPL3
+Opal OPL3
+
+> OPTVAL_NUKEDOPL3174
+Nuked OPL3 v1.7.4
+
+> OPTVAL_NUKEDOPN2
+Nuked OPN2
+
+> OPTVAL_GENSOPN2
+GENS YM2612
+
+> ADLVLMODEL_AUTO
+Auto (Use setup of bank)
+自動(bankのセットアップ使用)
+
+> ADLVLMODEL_GENERIC
+Generic
+一般的
+
+> ADLVLMODEL_NATIVE
+OPL Native
+OPLネイティブ
+
+> ADLVLMODEL_DMX
+DMX (Accurate, with AM bug)
+
+> ADLVLMODEL_APOGEE
+Apogee (Accurate, with AM bug)
+
+> ADLVLMODEL_WIN9X
+Win9X-like (SB16)
+Win9X式 (SB16)
+
+> ADLVLMODEL_WIN9XGENERIC
+Win9X-like (Generic FM)
+Win9X式 (Generic FM)
+
+> ADLVLMODEL_DMX_FIXED
+DMX (Without AM voice bug)
+DMX(AMボイスバグ無し)
+
+> ADLVLMODEL_APOGEE_FIXED
+Apogee (Without AM voice bug)
+Apogee(AMボイスバグ無し)
+
+> ADLVLMODEL_AIL
+IBM Audio Library Interface
+
+> ADLVLMODEL_HMI
+HMI Sound Operating System
+
+> ADLVLMODEL_HMIOLD
+HMI SOS (Old, with bugs)
+HMI SOS(旧式、バグ含む)
+
+> OPTVAL_UNLIMITED
+Unlimited
+無制限
+
+> OPTVAL_256K
+256K
+
+> OPTVAL_512K
+512K
+
+> OPTVAL_768K
+768K
+
+> OPTVAL_1024K
+1024K
+
+; Postprocessing
+
+> OPTVAL_UNCHARTED2
+Uncharted 2
+
+> OPTVAL_HEJLDAWSON
+Hejl Dawson
+
+> OPTVAL_REINHARD
+Reinhard
+
+> OPTVAL_PALETTE
+Palette
+パレット
+
+> OPTVAL_LOW
+Low
+低
+
+> OPTVAL_MEDIUM
+Medium
+中
+
+> OPTVAL_HIGH
+High
+高
+
+> OPTVAL_EXTREME
+Extreme
+最高
+
+> OPTVAL_OBVERSEFIRST
+Obverse
+正面
+
+> OPTVAL_REVERSEFIRST
+Reverse
+反転
+
+> GLMNU_POSTPROCESS
+Postprocessing
+ポストプロセッシング
+
+> GLPREFMNU_TONEMAP
+Tonemap Mode
+トーンマップ モード
+
+> GLPREFMNU_LENS
+Lens distortion effect
+レンズの歪みエフェクト
+
+> GLPREFMNU_FXAA
+FXAA Quality
+FXAA品質
+
+> GLPREFMNU_DITHER
+Dither output
+ディザー出力
+
+> GLPREFMNU_PALTONEMAPORDER
+Tonemap Palette Order
+トーンマップパレット順序
+
+> GLPREFMNU_PALTONEMAPPOWER
+Tonemap Palette Exponent
+トーンマップパレット指数
+
+> GLPREFMNU_MULTISAMPLE
+Multisample
+マルチサンプル
+
+> GLPREFMNU_BLOOM
+Bloom effect
+ブルーム エフェクト
+
+> GLPREFMNU_SSAO
+Ambient occlusion quality
+アンビエント オクルージョンの品質
+
+> GLPREFMNU_SSAO_PORTALS
+Portals with AO
+AOを伴うポータル
+
+> GLPREFMNU_MENUBLUR
+Menu Blur
+メニューブラー
+
+> GLPREFMNU_ENVIRONMENTMAPMIRROR
+Environment map on mirrors
+マップオンミラーの画像表示
+
+> GLPREFMNU_RENDERQUALITY
+Rendering quality
+レンダリング品質
+
+> OPTVAL_SPEED
+Speed
+速度寄り
+
+> OPTVAL_QUALITY
+Quality
+品質寄り
+
+> GLPREFMNU_SECLIGHTMODE
+Sector light mode
+セクターライトモード
+
+> GLPREFMNU_FOGMODE
+Fog mode
+フォグモード
+
+> OPTVAL_RADIAL
+Radial
+放射状
+
+> OPTVAL_STANDARD
+Standard
+標準
+
+; Texture options
+
+> GLTEXMNU_TEXFILTER
+Texture Filter mode
+テクスチャーフィルター モード
+
+> GLTEXMNU_ANISOTROPIC
+Anisotropic filter
+異方性フィルター
+
+> OPTVAL_NONENEARESTMIPMAP
+None (nearest mipmap)
+なし(最寄りミップマップ)
+
+> OPTVAL_NONELINEARMIPMAP
+None (linear mipmap)
+なし(リニアミップマップ)
+
+> OPTVAL_NONETRILINEAR
+None (trilinear)
+なし(トライリニア)
+
+> OPTVAL_BILINEAR
+Bilinear
+バイリニア
+
+> OPTVAL_TRILINEAR
+Trilinear
+トライリニア
+
+> OPTVAL_2X
+2x
+
+> OPTVAL_4X
+4x
+
+> OPTVAL_8X
+8x
+
+> OPTVAL_16X
+16x
+
+> OPTVAL_32X
+32x
+
+> GLTEXMNU_TITLE
+Texture Options
+テクスチャー オプション
+
+> GLTEXMNU_TEXENABLED
+Textures enabled
+テクスチャー有効
+
+> GLTEXMNU_ENABLEHIRES
+Enable hires textures
+ハイレゾ テクスチャー有効
+
+> GLTEXMNU_HQRESIZE
+High Quality Resize mode
+高品質リサイズ モード
+
+> GLTEXMNU_HQRESIZEMULT
+High Quality Resize multiplier
+高品質リサイズ乗数
+
+> GLTEXMNU_HQRESIZEWARN
+This mode requires %d times more video memory
+このモードでは %d 倍以上のビデオメモリが必要です!
+
+> GLTEXMNU_RESIZETEX
+Resize textures
+テクスチャー類のリサイズ
+
+> GLTEXMNU_RESIZESPR
+Resize sprites
+スプライト類のリサイズ
+
+> GLTEXMNU_RESIZEFNT
+Resize fonts
+フォント類のリサイズ
+
+> GLTEXMNU_RESIZESKN
+Resize model skins
+モデルスキン類のリサイズ
+
+> GLTEXMNU_PRECACHETEX
+Precache GL textures
+プリキャッシュGLテクスチャー
+
+> VIDMNU_TITLE
+Video Mode
+ビデオ調整
+
+> OPTVAL_SCALENEAREST
+Scaled (Nearest)
+スケーリング (最寄り)
+
+> OPTVAL_SCALELINEAR
+Scaled (Linear)
+スケーリング (リニア)
+
+> OPTVAL_LETTERBOX
+Letterbox
+レターボックス
+
+> OPTVAL_STRETCH
+Stretch
+伸縮
+
+> VIDMNU_RENDERMODE
+Render Mode
+レンダラー
+
+> VIDMNU_FULLSCREEN
+Fullscreen
+全画面
+
+> VIDMNU_HIDPI
+Retina/HiDPI support
+Retina/HiDPI サポート
+
+> VIDMNU_ASPECTRATIO
+Aspect ratio
+アスペクト比
+
+> VIDMNU_FORCEASPECT
+Force aspect ratio
+アスペクト比に従う
+
+> VIDMNU_CROPASPECT
+Forced ratio style
+比率の形式
+
+> VIDMNU_5X4ASPECTRATIO
+Enable 5:4 aspect ratio
+5:4アスペクト比を可能にする
+
+> VIDMNU_SCALEMODE
+Resolution scale
+画面スケール
+
+> VIDMNU_SCALEFACTOR
+Scale Factor
+スケール倍率
+
+> VIDMNU_USELINEAR
+Use Linear Scaling (Fullscreen)
+リニアスケールを使う(全画面)
+
+> VIDMNU_CUSTOMRES
+Custom Pixel Scaling
+カスタム ピクセルスケール
+
+> VIDMNU_CUSTOMX
+Custom Width
+カスタム 幅
+
+> VIDMNU_CUSTOMY
+Custom Height
+カスタム 高さ
+
+> VIDMNU_APPLYW
+Apply Changes (Windowed)
+変更を適用(ウィンドウ化)
+
+> VIDMNU_APPLYFS
+Apply Changes (Fullscreen)
+変更を適用(全画面化)
+
+> VIDMNU_RESPRESET
+Choose Resolution Preset
+解像度プリセットを選ぶ
+
+> VIDMNU_RESPRESETTTL
+Custom Resolution Presets
+カスタム解像度プリセット
+
+> VIDMNU_RESPRESETHEAD
+Preset Resolution Modes
+解像度モードの調整
+
+> VIDMNU_ASPECT43
+4:3 Aspect
+アスペクト比 4:3
+
+> VIDMNU_ASPECT54
+5:4 Aspect
+アスペクト比 5:4
+
+> VIDMNU_ASPECT169
+16:9 Aspect
+アスペクト比 16:9
+
+> VIDMNU_ASPECT1610
+16:10 Aspect
+アスペクト比 16:10
+
+> VIDMNU_ASPECT219
+21:9 Aspect
+アスペクト比 21:9
+
+> OPTVAL_NORMAL
+Normal
+通常
+
+> OPTVAL_LOWEST
+; This describes vid_scalemode 1, which represents the lowest possible scaling to fill the allocated screen area
+Lowest Possible Scale
+可能な限り最小
+
+> OPTVAL_CUSTOM
+Custom
+カスタム
+
+> VIDMNU_MAXFPS
+Max FPS
+最大FPS値
+
+> OPTVAL_60FPS
+60 fps
+
+> OPTVAL_75FPS
+75 fps
+
+> OPTVAL_90FPS
+90 fps
+
+> OPTVAL_120FPS
+120 fps
+
+> OPTVAL_144FPS
+144 fps
+
+> OPTVAL_200FPS
+200 fps
+
+> VIDMNU_PREFERBACKEND
+Preferred Rendering API
+優先レンダリングAPI
+
+> OPTVAL_OPENGL
+OpenGL
+
+> OPTVAL_VULKAN
+Vulkan
+
+> OPTVAL_OPENGLES
+; Rendering backend
+OpenGL ES
+
+; Miscellaneous Options
+
+> MISCMNU_MERGEKEYS
+Merge left+right Alt/Ctrl/Shift
+左と右のALT/CTRL/SHIFTキーを統合
+
+> MISCMNU_WINFULLSCREENTOGGLE
+Alt-Enter toggles fullscreen
+ALTとENTERで全画面に切り替え
+
+> MISCMNU_MACFULLSCREENTOGGLE
+Command-F toggles fullscreen
+Ctrl + Fキーで全画面表示
+
+> MISCMNU_ENABLEAUTOSAVES
+Enable autosaves
+オートセーブを有効化
+
+> MISCMNU_AUTOSAVECOUNT
+Number of autosaves
+オートセーブの最大数
+
+> MISCMNU_SAVELOADCONFIRMATION
+Save/Load confirmation
+セーブ/ロード時に確認
+
+> MISCMNU_NOCHEATS
+Disable keyboard cheats
+キーボードからのチート無効
+
+> MISCMNU_QUICKSAVEROTATION
+Quicksave rotation
+クイックセーブ間隔
+
+> MISCMNU_QUICKSAVECOUNT
+Number of quicksaves in rotation
+間隔クイックセーブの数
+
+> MISCMNU_CLEANMENU
+Disable Menu Clean Scaling
+メニュー画面を伸縮させない
+
+> MISCMNU_PAUSEINBACKGROUND
+Pause game in background
+バックグラウンド時に一時停止
+
+> HUDMNU_CROSSHAIR
+Default Crosshair
+デフォルトの照準
+
+> HUDMNU_CROSSHAIRCOLOR
+Crosshair color
+照準色
+
+> HUDMNU_CROSSHAIRHEALTH
+Crosshair shows health
+照準のヘルス表示
+
+> HUDMNU_CROSSHAIRSCALE
+Scale crosshair
+照準サイズ
+
+> OPTVAL_YES_STANDARD
+; copied from elsewhere
+Standard
+標準
+
+> OPTVAL_YES_ENHANCED
+Enhanced
+強調
+
+> OPTMNU_LANGUAGE
+Language
+言語設定
+
+; Reverb editor
+
+> TXT_UNDOCHANGES
+Undo Changes
+変更を戻す
+
+> REVMNU_SELECT
+Select Environment
+反響選択
+
+> REVMNU_TEST
+Test Environment
+反響テスト
+
+> REVMNU_EDIT
+Edit Environment
+反響編集
+
+> REVMNU_NEW
+New Environment
+新規反響設定
+
+> REVMNU_REVERT
+Revert settings
+設定を戻す
+
+> REVMNU_ENVIRONMENT_SIZE
+; Please translate only if you know how to properly name this technical jargon!
+Environment Size
+反響サイズ
+
+> REVMNU_ENVIRONMENT_DIFFUSION
+Environment Diffusion
+反響伝播
+
+> REVMNU_ROOM
+Room
+
+> REVMNU_ROOM_HF
+Room HF
+
+> REVMNU_ROOM_LF
+Room LF
+
+> REVMNU_DECAY_TIME
+Decay Time
+
+> REVMNU_DECAY_HF_RATIO
+Decay HF Ratio
+Decay HF比率
+
+> REVMNU_DECAY_LF_RATIO
+Decay LF Ratio
+Decay LF比率
+
+> REVMNU_REFLECTIONS
+Reflections
+
+> REVMNU_REFLECTIONS_DELAY
+Reflections Delay
+
+> REVMNU_REFLECTIONS_PAN_X
+Reflections Pan X
+Reflections X定位
+
+> REVMNU_REFLECTIONS_PAN_Y
+Reflections Pan Y
+Reflections Y定位
+
+> REVMNU_REFLECTIONS_PAN_Z
+Reflections Pan Z
+Reflections Z定位
+
+> REVMNU_REVERB
+Reverb
+
+> REVMNU_REVERB_DELAY
+Reverb Delay
+
+> REVMNU_REVERB_PAN_X
+Reverb Pan X
+Reverb X定位
+
+> REVMNU_REVERB_PAN_Y
+Reverb Pan Y
+Reverb Y定位
+
+> REVMNU_REVERB_PAN_Z
+Reverb Pan Z
+Reverb Z定位
+
+> REVMNU_ECHO_TIME
+Echo Time
+
+> REVMNU_ECHO_DEPTH
+Echo Depth
+
+> REVMNU_MODULATION_TIME
+Modulation Time
+
+> REVMNU_MODULATION_DEPTH
+Modulation Depth
+
+> REVMNU_AIR_ABSORPTION_HF
+Air Absorption HF
+
+> REVMNU_HF_REFERENCE
+HF Reference
+HF参照値
+
+> REVMNU_LF_REFERENCE
+LF Reference
+LF参照値
+
+> REVMNU_ROOM_ROLLOFF_FACTOR
+Room Rolloff Factor
+
+> REVMNU_DIFFUSION
+Diffusion
+
+> REVMNU_DENSITY
+Density
+密度
+
+> REVMNU_Reflections_Scale
+Reflections Scale
+Reflections音階
+
+> REVMNU_Reflections_Delay_Scale
+Reflections Delay Scale
+Reflections Delay音階
+
+> REVMNU_Decay_Time_Scale
+Decay Time Scale
+Decay Time音階
+
+> REVMNU_Decay_HF_Limit
+Decay HF Limit
+Decay HF限度
+
+> REVMNU_Reverb_Scale
+Reverb Scale
+Reverb音階
+
+> REVMNU_Reverb_Delay_Scale
+Reverb Delay Scale
+Reverb Delay音階
+
+> REVMNU_Echo_Time_Scale
+Echo Time Scale
+Echo Time音階
+
+> REVMNU_Modulation_Time_Scale
+Modulation Time Scale
+Modulation Time音階
+
+> REVMNU_Based_on
+Based on
+音響の元
+
+> REVMNU_Name
+Name
+名前
+
+> REVMNU_ID_1
+ID #1
+
+> REVMNU_ID_2
+ID #2
+
+> REVMNU_Create
+Create
+作成
+
+> REVMNU_Save
+Save...
+セーブする...
+
+> REVMNU_File_name
+File name
+ファイル名
+
+> REVMNU_Environments_to_save
+Environments to save
+音響を保存
+
+; Vulkan
+
+> DSPLYMNU_VKOPT
+Vulkan Options (Experimental)
+Vulkan機能オプション(実験的)
+
+> VK_TITLE
+Vulkan Options
+Vulkan機能オプション
+
+> VKMNU_ENABLE
+Enable Vulkan
+Vulkanを有効化
+
+> VKMNU_DEVICE
+Vulkan Device ID
+Vulkanデバイス ID
+
+> VKMNU_HDR
+High Dynamic Range
+ハイダイナミックレンジ
+
+> VK_WARNING
+Warning: The Vulkan renderer is highly experimental!
+警告：Vulkanレンダラーは実験段階です!
+
+> VK_RESTART
+These options will require a restart to take effect.
+これらのオプションを有効にするには再起動が必要です。
+
+> VKMNU_DEVICESELECT
+; This is not yet implemented - but it is planned
+Select Vulkan Device
+Vulkanデバイスの選択
+
+; Texture scaling
+
+> OPTVAL_SCALENX
+ScaleNx
+
+> OPTVAL_NORMALNX
+NormalNx
+
+> OPTVAL_HQNX
+hqNx
+
+> OPTVAL_HQNXMMX
+hqNx MMX
+
+> OPTVAL_NXBRZ
+xBRZ
+
+> OPTVAL_OLD_NXBRZ
+Old xBRZ
+旧xBRZ
+
+; Option Search
+
+> OS_TITLE
+Option Search
+オプション検索
+
+> OS_ANY
+Search for any term
+いずれかの用語を探す
+
+> OS_ALL
+Search for all terms
+全ての用語を探す
+
+> OS_NO_RESULTS
+No results found.
+見つかりませんでした。
+
+> OS_LABEL
+Search:
+検索:
+
+; Blood Bath Announcer
+
+> TXT_OBITUARY1
+%k boned %o like a fish
+%k は %o の骨を魚のように引っこ抜いた。
+
+> TXT_OBITUARY2
+%k castrated %o
+%k は %o を去勢した。
+
+> TXT_OBITUARY3
+%k creamed %o
+%k は %o に反吐ブチ撒けさせた。
+
+> TXT_OBITUARY4
+%k decimated %o
+%k は %o の居場所を間引いた。
+
+> TXT_OBITUARY5
+%k destroyed %o
+%k は %o を完全に破壊した。
+
+> TXT_OBITUARY6
+%k diced %o
+%k は %o を賽の目に切った。
+
+> TXT_OBITUARY7
+%k disembowled %o
+%k は %o の臓物を引きずり出した。
+
+> TXT_OBITUARY8
+%k flattened %o
+%k は %o をぶっ潰した。
+
+> TXT_OBITUARY9
+%k gave %o Anal Justice
+%k は %o のケツにぶち込んだ。
+
+> TXT_OBITUARY10
+%k gave AnAl MaDnEsS to %o
+%k は %o のケツをガバガバにした。
+
+> TXT_OBITUARY11
+%k killed %o
+%k は %o をブッ殺した。
+
+> TXT_OBITUARY12
+%k made mincemeat out of %o
+%k は %o をミンチにした。
+
+> TXT_OBITUARY13
+%k massacred %o
+%k は %o を虐殺した。
+
+> TXT_OBITUARY14
+%k mutilated %o
+%k は %o をバラバラ死体にした。
+
+> TXT_OBITUARY15
+%k reamed %o
+%k は %o の穴を大きく広げた。
+
+> TXT_OBITUARY16
+%k ripped %o a new orifice
+%k は %o を切り裂いて新しい穴を作ってあげた。
+
+> TXT_OBITUARY17
+%k slaughtered %o
+%k は %o を屠殺した。
+
+> TXT_OBITUARY18
+%k smashed %o
+%k は %o をぶっ飛ばした。
+
+> TXT_OBITUARY19
+%k sodomized %o
+%o は %k にカマを掘られた。 
+
+> TXT_OBITUARY20
+%k splattered %o
+%k は %o にばら撒かれた。
+
+> TXT_OBITUARY21
+%k squashed %o
+%k は %o に潰された。
+
+> TXT_OBITUARY22
+%k throttled %o
+%k は %o に絞られた。
+
+> TXT_OBITUARY23
+%k wasted %o
+%k は %o に消された。
+
+> TXT_OBITUARY24
+%k body bagged %o
+%k は %o を死体袋にした。
+
+> TXT_OBITUARY25
+%k sent %o to Hell
+%k は %o を地獄に送った。
+
+> TXT_OBITUARY26
+%k toasted %o
+%k は %o を焼却した。
+
+> TXT_OBITUARY27
+%k snuffed %o
+%k は %o を処刑した。
+
+> TXT_OBITUARY28
+%k hosed %o
+%k は %o にぶっかけた。
+
+> TXT_OBITUARY29
+%k sprayed %o
+%k は %o を撒き散らした。
+
+> TXT_OBITUARY30
+%k made dog meat out of %o
+%k は %o を犬の餌にした。
+
+> TXT_OBITUARY31
+%k beat %o like a cur
+%k は %o を狂犬の様に扱った。
+
+> TXT_SELFOBIT1
+%o is excrement
+%o はもはや排泄物のようだ。
+
+> TXT_SELFOBIT2
+%o is hamburger
+%o はハンバーガーになった。
+
+> TXT_SELFOBIT3
+%o suffered scrotum separation
+%o の陰嚢は剥離していた。
+
+> TXT_SELFOBIT4
+%o volunteered for population control
+%o は人口削減政策の実験台に志願した。
+
+> TXT_SELFOBIT5
+%o has suicided
+%o は勝手にくたばった。
+
+> TXT_SELFOBIT6
+%o received the Darwin Award
+%o にはダーウィン賞が授与された。
+
+> USE_GENERIC_FONT
+; This is not a text to be translated but an engine switch for complex languages.
+""""""
+1
+
+> REQUIRED_CHARACTERS
+; This should list all uppercase characters that are REQUIRED for proper language display. If it is acceptable that accents get omitted a character should NOT be listed here!
+
+> OPTMNU_FULLOPTIONS
+Full options menu
+全オプション欄
+
+> OPTMNU_SIMPLEON
+Simple options menu
+必要なオプションのみ
+
+> OPTMNU_OPENCONFIG
+Browse Game Config
+ゲームコンフィグ参照
+
+> OPTMNU_OPENSCREENSHOTS
+Browse Screenshots
+クリーンショット参照
+
+> OPTMNU_OPENSAVES
+Browse Saved Games
+セーブしたゲーム参照
+
+> MOUSEMNU_SWAPBUTTONS
+Swap mouse buttons
+マウスボタンを反転
+
+; Additional menu texts
+
+> OPTVAL_ONLYMODIFIED
+Only modified
+モディファイのみ
+
+> TXT_UNKNOWN
+Unknown
+不明
+
+> OPTVAL_HUD
+HUD
+
+> OPTVAL_AUTOMAP
+Automap
+オートマップ
+
+> OPTVAL_HUDANDMAP
+HUD + Automap
+HUD+オートマップ
+
+> TXT_SAVEGAMENEEDS
+This savegame needs these files
+このセーブデータには 必要なファイルがある
+
+> OPTMNU_MULTIPLAYER
+Multiplayer Options
+マルチプレイ オプション
+
+> OPTMNU_INPUT
+Input Options
+入力オプション
+
+> OPTMNU_SYSTEM
+System Options
+システムオプション
+
+> OPTMNU_LIGHT
+Light Options
+光源オプション
+
+> OPTMNU_SPRITE
+Sprite Options
+スプライトオプション
+
+> GLPREFMNU_CORONAS
+Coronas
+光冠
+
+> DSPLYMNU_APPEARANCE
+Appearance
+アピアランス
+
+> DSPLYMNU_ADVANCED
+Advanced Display Options
+高度なディスプレイオプション
+
+; IWAD/Game picker
+
+> PICKER_SELECT
+Select which game file to run.
+実行するゲームファイルを選択します。
+
+> PICKER_PLAY
+Play Game
+プレイ
+
+> PICKER_EXIT
+Exit
+終了
+
+> PICKER_GENERAL
+General
+一般
+
+> PICKER_EXTRA
+Extra Graphics
+追加グラフィックス
+
+> PICKER_FULLSCREEN
+Fullscreen
+フルスクリーン
+
+> PICKER_NOAUTOLOAD
+Disable autoload
+オートロード無効
+
+> PICKER_DONTASK
+Don't ask me again
+再度聞かない
+
+> PICKER_LIGHTS
+Lights
+ライト
+
+> PICKER_BRIGHTMAPS
+Brightmaps
+ブライトマップ
+
+> PICKER_WIDESCREEN
+Widescreen
+ワイドスクリーン
+
+> PICKER_ADDPARM
+Additional Parameters:
+追加パラメータ
+
+> PICKER_WELCOME
+Welcome to %s!
+ようこそ:  %s!
+
+> PICKER_VERSION
+Version %s
+バージョン %s
+
+> PICKER_PREFERBACKEND
+Rendering API
+優先レンダリングAPI
+
+> PICKER_TAB_PLAY
+Game
+ゲーム
+
+> JOYMNU_JOYENABLE
+; Option to enable or disable individual controllers/joysticks when configuring it in the Controller Options menu
+Enable this controller
+このコントローラーを有効にする
+
+> CNTRLMNU_OPEN_MAIN
+Open Main Menu
+メインメニューを開く
+
+; New content
+
+> MODMNU_REPLAYER
+Module replayer
+モジュール リプレイヤー
+
+> JOYMNU_JOYENABLEINBACKGROUND
+; This is enabled per-controller, it means to enable "this" controller in the background when GZDoom is not in focus.
+Allow Background Controller Input
+
+> MISCMNU_SAVEORDER
+; Order to sort the list of saved games in the save and load game menu. This used to only be alphabetical.
+Save Game Sorting Order
+
+> OPTVAL_ALPHABETICAL
+Alphabetical
+
+> OPTVAL_LASTSAVEDTIME
+Last Saved Time
+
