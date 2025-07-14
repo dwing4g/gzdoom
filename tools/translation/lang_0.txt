@@ -2,31 +2,31 @@
 
 > PRESSYN
 Press Y or N.
-YかNで答えろ
+按Y键确认，按N键取消。
 
 > TXT_YES
 Yes
-はい
+是
 
 > TXT_NO
 No
-いいえ
+否
 
 > SAVEDEAD
 """You can't save if you aren't playing!
 
 Press a key."""
-"""プレイ中でないとセーブできない!
+"""未在游戏中无法保存！
 
-何かキーを押せ"""
+按下任意键。"""
 
 > SAFEMESSAGE
 Do you really want to do this?
-本当に実行するのか?
+你确定要这么做吗？
 
 > NOTSET
 Not set
-セットされてない
+未设置
 
 > QSPROMPT
 """Quicksave over your game named
@@ -34,11 +34,11 @@ Not set
 '%s'?
 
 Press Y or N."""
-"""この名前で上書きするのか?
+"""快速保存覆盖到存档名
 
-'%s'
+“%s”？
 
-Y か N で答えろ"""
+按Y键确认，按N键取消。"""
 
 > QLPROMPT
 """Do you want to quickload the game named
@@ -46,298 +46,297 @@ Y か N で答えろ"""
 '%s'?
 
 Press Y or N."""
-"""この名前のデータをロードするのか?
+"""你确定要快速加载存档名
 
-'%s'
+“%s”？
 
-Y か N で答えろ"""
+按Y键确认，按N键取消。"""
 
 > TXT_X_CHEATS
 ; This is a gender sensitive message where %s represents the player
 %s cheats
-%s はチート使用
+%s 作弊了
 
 > MSGOFF
 Messages: OFF
-メッセージ: オフ
+提示：开启
 
 > MSGON
 Messages: ON
-メッセージ: オン
+提示：关闭
 
 > TXT_SAY
 Say:
-発言:
+发言：
 
 > TXT_QUITENDOOM
 Press any key or click anywhere in the window to quit.
-何かのキーを押すか、ウィンドウのどこかをクリックすると終了する。
+; ;何かのキーを押すか、ウィンドウのどこかをクリックすると終了する。
 
 ; Savegame
 
 > NEWSAVE
 <New Save Game>
-<新規セーブ>
+<新存档>
 
 > GGSAVED
 Game saved.
-セーブ完了。
+保存完成。
 
 > SAVECOMMENT_TIME
 Time
-"""時間
-"""
+时间
 
 > MNU_LOADGAME
 Load Game
-ロード
+加载存档
 
 > MNU_SAVEGAME
 Save Game
-セーブ
+保存存档
 
 > MNU_NOPICTURE
 No Picture
-画像無し
+无图像
 
 > MNU_DIFFVERSION
 Different Version
-"""別バージョンの
-データ"""
+其它版本
 
 > MNU_NOFILES
 No files
-ファイル無し
+无文件
 
 > MNU_DELETESG
 """Do you really want to delete the savegame?
 """
-本当にこのセーブを消すのか?
+"""你真的想要删除这个存档吗？
+"""
 
 ; General
 
 > OPTVAL_OFF
 Off
-オフ
+关
 
 > OPTVAL_ON
 On
-オン
+开
 
 > OPTVAL_AUTO
 Auto
-自動
+自动
 
 > OPTMNU_TITLE
 Options
-オプション
+选项
 
 > OPTMNU_CONTROLS
 Customize Controls
-キー配置変更
+自定义控制
 
 > OPTMNU_MOUSE
 Mouse Options
-マウス オプション
+鼠标选项
 
 > OPTMNU_JOYSTICK
 Controller Options
-コントローラーオプション
+摇杆选项
 
 > OPTMNU_PLAYER
 Player Setup
-プレイヤーの特徴
+玩家设置
 
 > OPTMNU_GAMEPLAY
 Gameplay Options
-ゲームプレイ オプション
+玩法选项
 
 > OPTMNU_AUTOMAP
 Automap Options
-オートマップ オプション
+地图选项
 
 > OPTMNU_HUD
 HUD Options
-HUD オプション
+界面选项
 
 > OPTMNU_MISCELLANEOUS
 Miscellaneous Options
-その他のオプション
+其它选项
 
 > OPTMNU_SOUND
 Sound Options
-サウンド オプション
+声音选项
 
 > OPTMNU_DISPLAY
 Display Options
-ディスプレイ オプション
+显示选项
 
 > OPTMNU_VIDEO
 Set video mode
-ビデオ 調整
+设置视频模式
 
 > OPTMNU_DEFAULTS
 Reset to defaults
-初期設定に戻す
+重置成默认
 
 > OPTMNU_RESETTOSAVED
 Reset to last saved
-最後に保存した設定に戻す
+重置成上次保存的设置
 
 > OPTMNU_WRITEINI
 Save current settings
-現在の設定を保存
+保存当前设置
 
 > OPTMNU_CONSOLE
 Go to console
-コンソールを開く
+进入控制台
 
 > OPTMNU_NETWORK
 Network Options
-ネットワーク オプション
+网络选项
 
 > OPTMNU_REVERB
 Reverb environment editor
-リバーブ環境エディタ
+混响环境编辑器
 
 ; Customize controls
 
 > CNTRLMNU_SWITCHTEXT1
 ENTER to change, BACKSPACE to clear
-Enter で決定、BackSpaceで無効化
+按回车键更改，按退格键清除
 
 > CNTRLMNU_SWITCHTEXT2
 Press new key for control, ESC to cancel
-登録したいキーを押すか, Escでキャンセル
+按一个键作为新键位，按ESC键取消
 
 > CNTRLMNU_CONTROLS
 Controls
-操作系統
+控制键位
 
 > CNTRLMNU_ATTACK
 Fire
-撃つ
+攻击
 
 > CNTRLMNU_ALTATTACK
 Secondary Fire
-セカンダリ
+副攻击
 
 > CNTRLMNU_RELOAD
 Weapon Reload
-リロード
+武器装填
 
 > CNTRLMNU_USE
 Use / Open
-開く / スイッチ等使用
+使用/打开
 
 > CNTRLMNU_FORWARD
 Move forward
-前進
+前移
 
 > CNTRLMNU_BACK
 Move backward
-後退
+后移
 
 > CNTRLMNU_MOVELEFT
 Strafe left
-左移動
+左移
 
 > CNTRLMNU_MOVERIGHT
 Strafe right
-右移動
+右移
 
 > CNTRLMNU_TURNLEFT
 Turn left
-左を向く
+向左转
 
 > CNTRLMNU_TURNRIGHT
 Turn right
-右を向く
+向右转
 
 > CNTRLMNU_TURN180
 Quick Turn
-背後を向く
+快速转身
 
 > CNTRLMNU_JUMP
 Jump
-ジャンプ
+跳跃
 
 > CNTRLMNU_CROUCH
 Crouch
-屈む
+下蹲(按住)
 
 > CNTRLMNU_TOGGLECROUCH
 Crouch Toggle
-屈む切替
+下蹲(切换状态)
 
 > CNTRLMNU_MOUSELOOK
 Mouse look
-マウス視点上下化
+鼠标视角
 
 > CNTRLMNU_LOOKUP
 ; Look doesn't change the aim! It only alters the view pitch
 Look up
-視点を上げる
+向上看
 
 > CNTRLMNU_LOOKDOWN
 Look down
-視点を下げる
+向下看
 
 > CNTRLMNU_CENTERVIEW
 Center view
-視点を戻す
+视野居中
 
 > CNTRLMNU_RUN
 Run
-駆け足
+奔跑(按住)
 
 > CNTRLMNU_TOGGLERUN
 Toggle Run
-常時駆け足切替
+奔跑(切换状态)
 
 > CNTRLMNU_STRAFE
 Strafe
-横移動化
+平移(按住)
 
 > CNTRLMNU_SCOREBOARD
 Show Scoreboard
-スコアボード表示
+显示分数板(按住)
 
 > CNTRLMNU_ACTION
 Action
-アクション
+动作
 
 > CNTRLMNU_ACTION_TITLE
 Customize Action Controls
-アクション操作設定
+自定义动作控制
 
 > CNTRLMNU_CHAT
 Chat
-チャット
+聊天
 
 > MNU_MULTIPLAYER
 Multiplayer
-マルチプレイヤー
+多人游戏
 
 > CNTRLMNU_SAY
 Say
-発言
+发言
 
 > CNTRLMNU_CHAT_TITLE
 Customize Chat Controls
-チャット操作設定
+自定义聊天控制
 
 > CNTRLMNU_WEAPONS_TITLE
 Customize Weapon Controls
-武器操作設定
+自定义武器控制
 
 > CNTRLMNU_INVENTORY_TITLE
 Customize Inventory Controls
-インベントリ操作設定
+自定义物品控制
 
 > CNTRLMNU_OTHER_TITLE
 Customize Other Controls
-その他の操作設定
+自定义其它控制
 
 > CNTRLMNU_WEAPONS
 Weapons
@@ -345,258 +344,256 @@ Weapons
 
 > CNTRLMNU_NEXTWEAPON
 Next weapon
-次の武器
+下一个武器
 
 > CNTRLMNU_PREVIOUSWEAPON
 Previous weapon
-前の武器
+上一个武器
 
 > CNTRLMNU_SLOT1
 ; Todo - make game specific
 Weapon 1
-武器スロット 1
+武器1
 
 > CNTRLMNU_SLOT2
 ; only show appropriate slots per game\n
 Weapon 2
-武器スロット 2
+武器2
 
 > CNTRLMNU_SLOT3
 Weapon 3
-武器スロット 3
+武器3
 
 > CNTRLMNU_SLOT4
 Weapon 4
-武器スロット 4
+武器4
 
 > CNTRLMNU_SLOT5
 Weapon 5
-武器スロット 5
+武器5
 
 > CNTRLMNU_SLOT6
 Weapon 6
-武器スロット 6
+武器6
 
 > CNTRLMNU_SLOT7
 Weapon 7
-武器スロット 7
+武器7
 
 > CNTRLMNU_SLOT8
 Weapon 8
-武器スロット 8
+武器8
 
 > CNTRLMNU_SLOT9
 Weapon 9
-武器スロット 9
+武器9
 
 > CNTRLMNU_SLOT0
 Weapon 10
-武器スロット 0
+武器10
 
 > CNTRLMNU_INVENTORY
 Inventory
-所持品
+物品栏
 
 > CNTRLMNU_USEITEM
 Activate item
-アイテムを使用
+激活当前物品
 
 > CNTRLMNU_USEALLITEMS
 Activate all items
-全てのアイテムを使用
+激活全部物品
 
 > CNTRLMNU_NEXTITEM
 Next item
-次のアイテム
+下一件物品
 
 > CNTRLMNU_PREVIOUSITEM
 Previous item
-前のアイテム
+上一件物品
 
 > MAPCNTRLMNU_TITLE
 ; most are not used yet but will be
 Customize Map Controls
-マップコントロール カスタマイズ
+自定义地图控制
 
 > MAPCNTRLMNU_CONTROLS
 Map Controls
-マップコントロール
+地图控制
 
 > MAPCNTRLMNU_PANLEFT
 Pan left
-左に振る
+左斜视
 
 > MAPCNTRLMNU_PANRIGHT
 Pan right
-右に振る
+右斜视
 
 > MAPCNTRLMNU_PANUP
 Pan up
-上に振る
+上斜视
 
 > MAPCNTRLMNU_PANDOWN
 Pan down
-下に振る
+下斜视
 
 > MAPCNTRLMNU_ZOOMIN
 Zoom in
-ズームイン
+放大
 
 > MAPCNTRLMNU_ZOOMOUT
 Zoom out
-ズームアウト
+缩小
 
 > MAPCNTRLMNU_TOGGLEZOOM
 Toggle zoom
-ズーム切替
+切换缩放模式
 
 > MAPCNTRLMNU_TOGGLEFOLLOW
 Toggle follow
-追従切替
+切换跟随模式
 
 > MAPCNTRLMNU_TOGGLEGRID
 Toggle grid
-グリッド切替
+切换网格模式
 
 > MAPCNTRLMNU_ROTATE
 Toggle rotate
-回転切替
+切换旋转模式
 
 > MAPCNTRLMNU_TOGGLETEXTURE
 Toggle texture
-テクスチャ切替
+切换纹理模式
 
 > CNTRLMNU_AUTOMAP
 Toggle automap
-オートマップの切替
+切换地图模式
 
 > CNTRLMNU_CHASECAM
 Chasecam
-背後視点
+跟随镜头
 
 > CNTRLMNU_SCREENSHOT
 Screenshot
-画面キャプチャ
+截屏
 
 > CNTRLMNU_CONSOLE
 Open console
-コンソールを開く
+打开控制台
 
 > CNTRLMNU_PAUSE
 Pause
-ポーズ
+暂停
 
 > CNTRLMNU_DISPLAY_INC
 Increase Display Size
-画面サイズを拡大
+增加显示尺寸
 
 > CNTRLMNU_DISPLAY_DEC
 Decrease Display Size
-画面サイズを縮小
+减少显示尺寸
 
 > CNTRLMNU_OPEN_HELP
 Open Help
-"""ヘルプを開く
-"""
+打开帮助
 
 > CNTRLMNU_OPEN_SAVE
 Open Save Menu
-セーブメニューを開く
+打开保存菜单
 
 > CNTRLMNU_OPEN_LOAD
 Open Load Menu
-ロードメニューを開く
+打开加载菜单
 
 > CNTRLMNU_OPEN_OPTIONS
 Open Options Menu
-オプションメニューを開く
+打开选项菜单
 
 > CNTRLMNU_OPEN_DISPLAY
 Open Display Menu
-ディスプレイメニューを開く
+打开显示菜单
 
 > CNTRLMNU_QUICKSAVE
 Quicksave
-クイックセーブ
+快速保存
 
 > CNTRLMNU_QUICKLOAD
 Quickload
-クイックロード
+快速加载
 
 > CNTRLMNU_EXIT_TO_MAIN
 Exit to Main Menu
-メインメニューに戻る
+退出到主菜单
 
 > CNTRLMNU_TOGGLE_MESSAGES
 Toggle Messages
-メッセージ表示の切替
+切换消息模式
 
 > CNTRLMNU_MENU_QUIT
 Quit Game
-ゲームを終了
+退出游戏
 
 > CNTRLMNU_ADJUST_GAMMA
 Adjust Gamma
-ガンマ値を調整
+调整伽马值
 
 ; Mouse
 
 > MOUSEMNU_ENABLEMOUSE
 Enable mouse
-マウスの使用
+启用鼠标
 
 > MOUSEMNU_MOUSEINMENU
 Enable mouse in menus
-メニューでのマウスの使用
+在菜单里启用鼠标
 
 > MOUSEMNU_SHOWBACKBUTTON
 Show back button
-戻るボタンを表示
+显示后退按钮
 
 > MOUSEMNU_CURSOR
 Cursor
-カーソル
+光标
 
 > MOUSEMNU_SENSITIVITY_X
 Horizontal sensitivity
-水平感度
+水平灵敏度
 
 > MOUSEMNU_SENSITIVITY_Y
 Vertical sensitivity
-垂直感度
+垂直灵敏度
 
 > MOUSEMNU_SMOOTHMOUSE
 Smooth mouse movement
-マウス操作を滑らかにする
+平滑鼠标移动
 
 > MOUSEMNU_TURNSPEED
 Turning speed
-旋回速度
+转身速度
 
 > MOUSEMNU_MOUSELOOKSPEED
 Mouselook speed
-上下視点速度
+鼠标视角速度
 
 > MOUSEMNU_FORWBACKSPEED
 Forward/Backward speed
-"""前進/後退速度
-"""
+前进/后退速度
 
 > MOUSEMNU_STRAFESPEED
 Strafing speed
-横移動速度
+平移速度
 
 > MOUSEMNU_ALWAYSMOUSELOOK
 Always Mouselook
-常に上下視点をオン
+总是使用鼠标视角
 
 > MOUSEMNU_INVERTMOUSE
 Invert Mouse Y
-視点操作反転
+反转鼠标Y轴
 
 > MOUSEMNU_INVERTMOUSEX
 Invert Mouse X
-視点操作反転
+反转鼠标X轴
 
 > OPTVAL_UPPERLEFT
 Upper left
@@ -616,220 +613,220 @@ Lower right
 
 > OPTVAL_TOUCHSCREENLIKE
 Touchscreen-like
-タッチスクリーン式
+触屏式
 
 > OPTSTR_SIMPLEARROW
 Simple arrow
-シンプル
+简易箭头
 
 > OPTSTR_SYSTEMCURSOR
 System cursor
-システム
+系统光标
 
 > OPTVAL_DEFAULT
 Default
-デフォルト
+默认
 
 ; Controller
 
 > JOYMNU_TITLE
 Configure Controller
-コントローラー構成:
+配置控制器
 
 > JOYMNU_OPTIONS
 Controller Options
-コントローラー設定
+控制器选项
 
 > JOYMNU_NOMENU
 Block controller input in menu
-メニューではコントローラーを無視
+在菜单里停用控制器输入
 
 > JOYMNU_ENABLE
 Enable controller support
-コントローラーサポート許可
+启用控制器支持
 
 > JOYMNU_DINPUT
 Enable DirectInput controllers
-ダイレクトインプットコントローラー許可
+启用DirectInput控制器
 
 > JOYMNU_XINPUT
 Enable XInput controllers
-Xinput コントローラー許可
+启用XInput控制器
 
 > JOYMNU_PS2
 Enable raw PlayStation 2 adapters
-PlayStation2 アダプター許可
+启用旧的PS2适配器
 
 > JOYMNU_NOCON
 No controllers detected
-コントローラーが見つかりません
+未检测到控制器
 
 > JOYMNU_CONFIG
 Configure controllers:
-コントローラー構成:
+配置控制器：
 
 > JOYMNU_DISABLED1
 Controller support must be
-コントローラーサポートは
+支持控制器必须
 
 > JOYMNU_DISABLED2
 ; Supposed to be empty in Russian and Serbian.
 enabled to detect any
-検出しました
+启用才能检测到
 
 > JOYMNU_INVALID
 Invalid controller specified for menu
-メニューではコントローラーを使用しない
+只在菜单中让控制器无效
 
 > JOYMNU_OVRSENS
 Overall sensitivity
-全体的な感度
+总体灵敏度
 
 > JOYMNU_AXIS
 Axis Configuration
-軸構成
+轴配置
 
 > JOYMNU_INVERT
 Invert
-反転
+反转
 
 > JOYMNU_DEADZONE
 Dead zone
-デッドゾーン
+死区
 
 > JOYMNU_NOAXES
 No configurable axes
-軸構成を無効
+没有可配置的轴
 
 > OPTVAL_NONE
 None
-無し
+无
 
 > OPTVAL_TURNING
 Turning
-旋回
+转身
 
 > OPTVAL_LOOKINGUPDOWN
 Looking Up/Down
-視点上下
+向上/下看
 
 > OPTVAL_MOVINGFORWARD
 Moving Forward
-前進
+前移
 
 > OPTVAL_STRAFING
 Strafing
-横移動
+平移
 
 > OPTVAL_MOVINGUPDOWN
 Moving Up/Down
-前進後退
+上/下移
 
 > OPTVAL_INVERTED
 Inverted
-反転する
+反转
 
 > OPTVAL_NOTINVERTED
 Not Inverted
-反転しない
+不反转
 
 ; Player Menu
 
 > TXT_COLOR_BLUE
 Blue
-青
+蓝色
 
 > TXT_COLOR_RED
 Red
-赤
+红色
 
 > TXT_COLOR_GREEN
 Green
-緑
+绿色
 
 > TXT_COLOR_GRAY
 Gray
-灰
+灰色
 
 > TXT_COLOR_DARKGRAY
 Dark gray
-鉛
+深灰色
 
 > TXT_COLOR_DARKGREEN
 Dark Green
-深
+深绿色
 
 > TXT_COLOR_BROWN
 Brown
-茶
+棕色
 
 > TXT_COLOR_DARKBLUE
 Dark Blue
-紺
+深蓝色
 
 > TXT_COLOR_LIGHTRED
 Light Red
-丹
+浅红色
 
 > TXT_COLOR_YELLOW
 Yellow
-黄
+黄色
 
 > TXT_COLOR_PURPLE
 Purple
-紫
+紫色
 
 > TXT_COLOR_DULLGREEN
 Olive
-苔
+黄褐色
 
 > TXT_COLOR_BEIGE
 Beige
-淡
+米黄色
 
 > TXT_COLOR_LIGHTGREEN
 Light Green
-葵
+浅绿色
 
 > TXT_COLOR_LIGHTBLUE
 Light Blue
-空
+浅蓝色
 
 > TXT_COLOR_LIGHTGRAY
 Light Gray
-鉛
+浅灰色
 
 > TXT_COLOR_LIGHTBROWN
 Light Brown
-褐
+浅棕色
 
 > TXT_COLOR_GOLD
 Gold
-金
+金色
 
 > TXT_COLOR_BRIGHTGREEN
 Bright Green
-鮮
+亮绿色
 
 > TXT_COLOR_RUST
 Rust
-錆
+锈色
 
 > PLYRMNU_NAME
 Name
-名前
+名称
 
 > PLYRMNU_TEAM
 Team
-チーム
+团队
 
 > PLYRMNU_PLAYERCOLOR
 Color
-色
+颜色
 
 > PLYRMNU_PLAYERGENDER
 Gender
-性別
+性别
 
 > OPTVAL_MALE
 Male
@@ -841,7 +838,7 @@ Female
 
 > OPTVAL_NEUTRAL
 Neutral
-中間
+中性
 
 > OPTVAL_OTHER
 Object
@@ -849,117 +846,117 @@ Object
 
 > GMPLYMNU_TITLE
 Gameplay Options
-ゲームプレイ オプション
+玩法选项
 
 > OPTVAL_ALWAYS
 Always
-常に
+总是
 
 > OPTVAL_NEVER
 Never
-しない
+从不
 
 > PLYRMNU_AUTOAIM
 Autoaim
-自動照準
+自动瞄准
 
 > PLYRMNU_ALWAYSRUN
 Always Run
-常に駆け足
+总是奔跑
 
 ; Display
 
 > DSPLYMNU_SCREENSIZE
 Screen size
-画面サイズ
+屏幕尺寸
 
 > DSPLYMNU_VSYNC
 Vertical Sync
-垂直同期
+垂直同步
 
 > DSPLYMNU_MODELS
 Models
-モデル
+模型
 
 > DSPLYMNU_CROSSHAIRSCALE
 Scale crosshair
-照準スケール
+缩放准星
 
 > DSPLYMNU_BRIGHTNESS
 Brightness
-明るさ
+亮度
 
 > DSPLYMNU_GAMMA
 Gamma correction
-ガンマ値
+伽马校正
 
 > DSPLYMNU_CONTRAST
 Contrast
-コントラスト
+对比度
 
 > DSPLYMNU_SATURATION
 Saturation
-サチュレーション
+饱和度
 
 > DSPLYMNU_SBSCALE
 Status Bar Scale
-ステータススケール
+状态栏缩放
 
 > DSPLYMNU_MESSAGES
 Messages
-メッセージ類
+消息
 
 > MSGMNU_CENTERMESSAGES
 Center messages
-メッセージを中央に
+居中消息
 
 > MSGMNU_PULSEMESSAGES
 Pulsating message Display
-取得時等の文を明滅
+闪烁消息显示
 
 > MSGMNU_MESSAGESCALE
 Message Scale
-メッセージスケール
+消息缩放
 
 ; Automap
 
 > MNU_COLORPICKER
 Select Color
-色選択
+选择颜色
 
 > AUTOMAPMNU_ROTATE
 Rotate automap
-オートマップの回転表示
+旋转地图
 
 > AUTOMAPMNU_FOLLOW
 Follow player
-プレイヤー追従
+跟随玩家
 
 > AUTOMAPMNU_LINEALPHA
 Line alpha
-線の半透明度
+线条透明度
 
 > AUTOMAPMNU_LINETHICKNESS
 Line thickness
-線の太さ
+线条粗细
 
 > MAPCOLORMNU_TITLE
 Customize Map Colors
-カスタム色を決める
+自定义地图颜色
 
 > MAPCOLORMNU_DEFAULTMAPCOLORS
 Restore default custom colors
-カスタム色を初期化
+自定义颜色恢复成默认
 
 ; Sound
 
 > SNDMNU_SNDENABLED
 Sound enabled
-サウンド有効
+音效已启用
 
 > SNDMNU_MUSENABLED
 Music enabled
-音楽有効
+音乐已启用
 
 > OPTVAL_4000HZ
 4000 Hz
@@ -984,194 +981,201 @@ Music enabled
 
 > OPTVAL_64SAMPLES
 64 samples
+64采样
 
 > OPTVAL_128SAMPLES
 128 samples
+128采样
 
 > OPTVAL_256SAMPLES
 256 samples
+256采样
 
 > OPTVAL_512SAMPLES
 512 samples
+512采样
 
 > OPTVAL_1024SAMPLES
 1024 samples
+1024采样
 
 > OPTVAL_2048SAMPLES
 2048 samples
+2048采样
 
 > OPTVAL_4096SAMPLES
 4096 samples
+4096采样
 
 > OPTSTR_AUTO
 Auto
-自動
+自动
 
 > OPTSTR_MONO
 Mono
-モノラル
+单声道
 
 > OPTSTR_STEREO
 Stereo
-ステレオ
+立体声
 
 > OPTSTR_PROLOGIC
 Dolby Pro Logic Decoder
-ドルビー プロロジック デコーダー
+杜比Pro逻辑解码器
 
 > OPTSTR_QUAD
 Quad
-クァッド
+四声道
 
 > OPTSTR_SURROUND
 5 speakers
-5 スピーカー
+5声道
 
 > OPTSTR_5POINT1
 5.1 speakers
-5.1 スピーカー
+5.1声道
 
 > OPTSTR_7POINT1
 7.1 speakers
-7.1 スピーカー
+7.1声道
 
 > OPENALMNU_PLAYBACKDEVICE
 Playback device
-プレイバック デバイス
+播放设备
 
 > OPENALMNU_ENABLEEFX
 Enable EFX
-EFXを有効化
+开启EFX
 
 > OPENALMNU_RESAMPLER
 Resampler
-リサンプラー
+重采样
 
 > SNDMNU_SFXVOLUME
 Sounds volume
-効果音音量
+音效音量
 
 > SNDMNU_MENUVOLUME
 Menu volume
-メニュー音量
+菜单音量
 
 > SNDMNU_MUSICVOLUME
 Music volume
-音楽音量
+音乐音量
 
 > SNDMNU_MIDIDEVICE
 MIDI device
-MIDIデバイス
+MIDI设备
 
 > SNDMNU_BACKGROUND
 Sound in Background
-バックグラウンドでのサウンド
+背景音效
 
 > SNDMNU_UNDERWATERREVERB
 Underwater reverb
-水中反響音
+水下混响
 
 > SNDMNU_RANDOMIZEPITCHES
 Randomize pitches
-ランダマイズ ピッチ
+随机声调
 
 > SNDMNU_CHANNELS
 Sound channels
-サウンド チャンネル
+声道
 
 > SNDMNU_BACKEND
 Sound backend
-サウンド バックエンド
+声音后台
 
 > SNDMNU_OPENAL
 OpenAL options
-OpenAL オプション
+OpenAL选项
 
 > SNDMNU_RESTART
 Restart sound
-サウンド再起動
+重启声音
 
 > SNDMNU_ADVANCED
 Advanced options
-高度なオプション
+高级选项
 
 > SNDMNU_MODREPLAYER
 Module replayer options
-モジュールリプレイヤー オプション
+模块播放选项
 
 > SNDMNU_MIDIPLAYER
 Midi player options
-Midi再生のオプション
+MIDI播放器选项
 
 > SNDMNU_MENUSOUND
 Sound in Menus
-メニューでのサウンド
+菜单中的音效
 
 > ADVSNDMNU_TITLE
 Advanced Sound Options
-高度なサウンドオプション
+高级声音选项
 
 > ADVSNDMNU_SAMPLERATE
 Sample rate
-サンプルレート
+采样率
 
 > ADVSNDMNU_HRTF
 HRTF
 
 > ADVSNDMNU_OPLSYNTHESIS
 OPL Synthesis
-OPLシンセサイズ
+OPL合成器
 
 > ADVSNDMNU_OPLNUMCHIPS
 Number of emulated OPL chips
-OPLチップエミュレートの番号
+模拟OPL芯片数
 
 > ADVSNDMNU_OPLFULLPAN
 Full MIDI stereo panning
-Full MIDIステレオパンニング
+全MIDI立体声偏移
 
 > ADVSNDMNU_OPLCORES
 OPL Emulator Core
-OPL エミュレート コア
+OPL模拟器核心
 
 > ADVSNDMNU_MIDIVOICES
 MIDI voices
-MIDI ボイス
+MIDI语音
 
 > ADVSNDMNU_FLUIDSYNTH
 FluidSynth
 
 > ADVSNDMNU_GLOBAL
 Global
-グローバル
+全局
 
 > ADVSNDMNU_FREEVERB
 Freeverb
-フリーバーブ
+Freeverb
 
 > ADVSNDMNU_GLOBAL_FREEVERB
 Global Freeverb
-グローバル フリーバーブ
+全局Freeverb
 
 > ADVSNDMNU_FLUIDPATCHSET
 Patch set
-パッチ セット
+补丁设置
 
 > ADVSNDMNU_FLUIDGAIN
 Gain
-ゲイン
+提升
 
 > ADVSNDMNU_REVERB
 Reverb
-リバーブ
+混响
 
 > ADVSNDMNU_REVERB_LEVEL
 Reverb Level
-リバーブ量
+混响等级
 
 > ADVSNDMNU_CHORUS
 Chorus
-コーラス
+和声
 
 > ADVSNDMNU_TIMIDITY
 Timidity++
@@ -1184,162 +1188,162 @@ OPNMidi
 
 > ADVSNDMNU_TIMIDITYCONFIG
 Timidity config file
-Timidity コンフィグファイル
+Timidity配置文件
 
 > ADVSNDMNU_TIMIDITYVOLUME
 Relative volume
-相対音量
+相对音量
 
 > ADVSNDMNU_WILDMIDI
 WildMidi
 
 > ADVSNDMNU_WILDMIDICONFIG
 WildMidi config file
-WildMidi コンフィグファイル
+WildMidi配置文件
 
 > ADVSNDMNU_SELCONFIG
 Select configuration
-構成選択
+选择配置
 
 > ADVSNDMNU_ADVRESAMPLING
 Advanced Resampling
-高度なリサンプリング
+高级重采样
 
 > ADVSNDMNU_OPLBANK
 OPL Bank
 
 > ADVSNDMNU_ADLOPLCORES
 OPL Emulator Core
-OPL エミュレートコア
+OPL模拟器核心
 
 > ADVSNDMNU_RUNPCMRATE
 Run emulator at PCM rate
-PCMレートでエミュレート実行
+按PCM速率运行模拟器
 
 > ADVSNDMNU_ADLNUMCHIPS
 Number of emulated OPL chips
-OPLチップエミュレートの番号
+模拟OPL芯片数
 
 > ADVSNDMNU_VLMODEL
 Volume model
-音量モデル
+音量模型
 
 > ADVSNDMNU_OPNCORES
 OPN2 Emulator Core
-OPN2 エミュレート コア
+OPN2模拟器核心
 
 > ADVSNDMNU_GUSEMULATION
 GUS Emulation
-GUS エミュレーション
+GUS模拟
 
 > ADVSNDMNU_GUSCONFIG
 GUS config file
-GUS コンフィグファイル
+GUS配置文件
 
 > ADVSNDMNU_DMXGUS
 Read DMXGUS lumps
-DMXGUS ランプを読む
+读取DMXGUS块
 
 > ADVSNDMNU_GUSMEMSIZE
 GUS memory size
-GUS メモリーサイズ
+GUS内存大小
 
 > ADVSNDMNU_OPNNUMCHIPS
 Number of emulated OPN chips
-OPNチップエミュレートの番号
+模拟OPN芯片数
 
 > ADVSNDMNU_ADLCUSTOMBANK
 Use custom WOPL bank
-カスタムWOPL bankを使用
+使用自定义WOPL库
 
 > ADVSNDMNU_OPLBANKFILE
 WOPL Bank file
-WOPL bankファイル
+WOPL库文件
 
 > ADVSNDMNU_OPNCUSTOMBANK
 Use custom WOPN bank
-カスタムWOPN bankを使用
+使用自定义WOPN库
 
 > ADVSNDMNU_OPNBANKFILE
 WOPN Bank file
-WOPN bankファイル
+WOPN库文件
 
 > OPTVAL_ALIASING
 Aliasing
-エイリアシング
+混叠
 
 > OPTVAL_LINEAR_1
 ; This setting is duplicated threefold in order to allow for different grammatical gender endings
 Linear
-リニア
+线性
 
 > OPTVAL_LINEAR_2
 Linear
-リニア
+线性
 
 > OPTVAL_LINEAR_3
 Linear
-リニア
+线性
 
 > OPTVAL_NEAREST
 Nearest
-最寄り
+最邻近
 
 > OPTVAL_PCF_LOW
 PCF (Low)
-PCF (低)
+PCF(低)
 
 > OPTVAL_PCF_MEDIUM
 PCF (Medium)
-PCF (中)
+PCF(中)
 
 > OPTVAL_PCF_HIGH
 PCF (High)
-PCF (高)
+PCF(高)
 
 > OPTVAL_CUBIC
 Cubic
-キュービック
+方波
 
 > OPTVAL_BLEP
 Band-limited step
-帯域制限ステップ
+; ;帯域制限ステップ
 
 > OPTVAL_LINEARSLOW
 Linear (Slower)
-リニア(遅め)
+线性(较慢)
 
 > OPTVAL_BLAM
 Band-limited linear
-帯域制限リニア
+; ;帯域制限リニア
 
 > OPTVAL_CUBICSLOW
 Cubic (Slower)
-キュービック (遅め)
+方波(较慢)
 
 > OPTVAL_SINC
 Sinc
-シンク
+正弦波
 
 > OPTVAL_NOTEONOFFONLY
 Note on/off only
-ノート オン/オフ のみ
+仅记录开/关
 
 > OPTVAL_FULLRAMPING
 Full ramping
-フルランピング
+; ;フルランピング
 
 > MODMNU_MASTERVOLUME
 Master volume
-全体音量
+主音量
 
 > MODMNU_QUALITY
 Quality
-クオリティ
+品质
 
 > MODMNU_VOLUMERAMPING
 Volume ramping
-音量ランピング
+音量放大
 
 > OPTVAL_LIBXMP
 libXMP
@@ -1389,15 +1393,18 @@ GENS YM2612
 
 > ADLVLMODEL_AUTO
 Auto (Use setup of bank)
-自動(bankのセットアップ使用)
+自动（使用bank设置）
+; ;自動(bankのセットアップ使用)
 
 > ADLVLMODEL_GENERIC
 Generic
-一般的
+通用
+; ;一般的
 
 > ADLVLMODEL_NATIVE
 OPL Native
-OPLネイティブ
+OPL 本机
+; ;OPLネイティブ
 
 > ADLVLMODEL_DMX
 DMX (Accurate, with AM bug)
@@ -1408,10 +1415,12 @@ Apogee (Accurate, with AM bug)
 > ADLVLMODEL_WIN9X
 Win9X-like (SB16)
 Win9X式 (SB16)
+; ;Win9X式 (SB16)
 
 > ADLVLMODEL_WIN9XGENERIC
 Win9X-like (Generic FM)
 Win9X式 (Generic FM)
+; ;Win9X式 (Generic FM)
 
 > ADLVLMODEL_DMX_FIXED
 DMX (Without AM voice bug)
@@ -1433,7 +1442,7 @@ HMI SOS(旧式、バグ含む)
 
 > OPTVAL_UNLIMITED
 Unlimited
-無制限
+无限制
 
 > OPTVAL_256K
 256K
@@ -1460,71 +1469,88 @@ Reinhard
 
 > OPTVAL_PALETTE
 Palette
-パレット
+调色盘
+; ;パレット
 
 > OPTVAL_LOW
 Low
 低
+; ;低
 
 > OPTVAL_MEDIUM
 Medium
-中
+低
+; ;中
 
 > OPTVAL_HIGH
 High
 高
+; ;高
 
 > OPTVAL_EXTREME
 Extreme
 最高
+; ;最高
 
 > OPTVAL_OBVERSEFIRST
 Obverse
 正面
+; ;正面
 
 > OPTVAL_REVERSEFIRST
 Reverse
-反転
+反面
+; ;反転
 
 > GLMNU_POSTPROCESS
 Postprocessing
-ポストプロセッシング
+后期处理
+; ;ポストプロセッシング
 
 > GLPREFMNU_TONEMAP
 Tonemap Mode
-トーンマップ モード
+调色板模式
+; ;トーンマップ モード
 
 > GLPREFMNU_LENS
 Lens distortion effect
-レンズの歪みエフェクト
+镜头失真效果
+; ;レンズの歪みエフェクト
 
 > GLPREFMNU_FXAA
 FXAA Quality
-FXAA品質
+FXAA品质
+; ;FXAA品質
 
 > GLPREFMNU_DITHER
 Dither output
-ディザー出力
+抖动输出
+; ;ディザー出力
 
 > GLPREFMNU_PALTONEMAPORDER
 Tonemap Palette Order
-トーンマップパレット順序
+调色板顺序
+; ;トーンマップパレット順序
 
 > GLPREFMNU_PALTONEMAPPOWER
 Tonemap Palette Exponent
-トーンマップパレット指数
+调色板指数
+; ;トーンマップパレット指数
 
 > GLPREFMNU_MULTISAMPLE
 Multisample
-マルチサンプル
+多重采样
+; ;マルチサンプル
 
 > GLPREFMNU_BLOOM
 Bloom effect
-ブルーム エフェクト
+Bloom
+; ;ブルーム エフェクト
 
 > GLPREFMNU_SSAO
 Ambient occlusion quality
-アンビエント オクルージョンの品質
+环境光遮挡质量
+; ;アンビエント オクルージョンの品質
 
 > GLPREFMNU_SSAO_PORTALS
 Portals with AO
@@ -1532,7 +1558,8 @@ AOを伴うポータル
 
 > GLPREFMNU_MENUBLUR
 Menu Blur
-メニューブラー
+菜单模糊
+; ;メニューブラー
 
 > GLPREFMNU_ENVIRONMENTMAPMIRROR
 Environment map on mirrors
@@ -1570,31 +1597,38 @@ Standard
 
 > GLTEXMNU_TEXFILTER
 Texture Filter mode
-テクスチャーフィルター モード
+材质过滤模式
+; ;テクスチャーフィルター モード
 
 > GLTEXMNU_ANISOTROPIC
 Anisotropic filter
-異方性フィルター
+各项异性过滤
+; ;異方性フィルター
 
 > OPTVAL_NONENEARESTMIPMAP
 None (nearest mipmap)
-なし(最寄りミップマップ)
+无 （近邻mip贴图）
+; ;なし(最寄りミップマップ)
 
 > OPTVAL_NONELINEARMIPMAP
 None (linear mipmap)
-なし(リニアミップマップ)
+无 （双线mip贴图）
+; ;なし(リニアミップマップ)
 
 > OPTVAL_NONETRILINEAR
 None (trilinear)
-なし(トライリニア)
+无 （三线mip贴图）
+; ;なし(トライリニア)
 
 > OPTVAL_BILINEAR
 Bilinear
-バイリニア
+双线性
+; ;バイリニア
 
 > OPTVAL_TRILINEAR
 Trilinear
-トライリニア
+三线性
+; ;トライリニア
 
 > OPTVAL_2X
 2x
@@ -1657,111 +1691,138 @@ Precache GL textures
 
 > VIDMNU_TITLE
 Video Mode
-ビデオ調整
+视频模式
+; ;ビデオ調整
 
 > OPTVAL_SCALENEAREST
 Scaled (Nearest)
-スケーリング (最寄り)
+缩放 （近邻）
+; ;スケーリング (最寄り)
 
 > OPTVAL_SCALELINEAR
 Scaled (Linear)
-スケーリング (リニア)
+缩放 （线性）
+; ;スケーリング (リニア)
 
 > OPTVAL_LETTERBOX
 Letterbox
-レターボックス
+黑边
+; ;レターボックス
 
 > OPTVAL_STRETCH
 Stretch
-伸縮
+拉伸
+; ;伸縮
 
 > VIDMNU_RENDERMODE
 Render Mode
-レンダラー
+渲染模式
+; ;レンダラー
 
 > VIDMNU_FULLSCREEN
 Fullscreen
-全画面
+全屏
+; ;全画面
 
 > VIDMNU_HIDPI
 Retina/HiDPI support
-Retina/HiDPI サポート
+Retina/HiDPI 支持
+; ;Retina/HiDPI サポート
 
 > VIDMNU_ASPECTRATIO
 Aspect ratio
-アスペクト比
+屏幕宽高比
+; ;アスペクト比
 
 > VIDMNU_FORCEASPECT
 Force aspect ratio
-アスペクト比に従う
+调整屏幕宽高比
+; ;アスペクト比に従う
 
 > VIDMNU_CROPASPECT
 Forced ratio style
-比率の形式
+调整宽高比风格
+; ;比率の形式
 
 > VIDMNU_5X4ASPECTRATIO
 Enable 5:4 aspect ratio
-5:4アスペクト比を可能にする
+启用 5:4 宽高比
+; ;5:4アスペクト比を可能にする
 
 > VIDMNU_SCALEMODE
 Resolution scale
-画面スケール
+分辨率比率
+; ;画面スケール
 
 > VIDMNU_SCALEFACTOR
 Scale Factor
-スケール倍率
+缩放度
+; ;スケール倍率
 
 > VIDMNU_USELINEAR
 Use Linear Scaling (Fullscreen)
-リニアスケールを使う(全画面)
+使用线性缩放（全屏）
+; ;リニアスケールを使う(全画面)
 
 > VIDMNU_CUSTOMRES
 Custom Pixel Scaling
-カスタム ピクセルスケール
+自定义像素缩放
+; ;カスタム ピクセルスケール
 
 > VIDMNU_CUSTOMX
 Custom Width
-カスタム 幅
+自定义屏幕高度
+; ;カスタム 幅
 
 > VIDMNU_CUSTOMY
 Custom Height
-カスタム 高さ
+自定义屏幕宽度
+; ;カスタム 高さ
 
 > VIDMNU_APPLYW
 Apply Changes (Windowed)
-変更を適用(ウィンドウ化)
+启用改动 (窗口)
+; ;変更を適用(ウィンドウ化)
 
 > VIDMNU_APPLYFS
 Apply Changes (Fullscreen)
-変更を適用(全画面化)
+启用改动(全屏)
+; ;変更を適用(全画面化)
 
 > VIDMNU_RESPRESET
 Choose Resolution Preset
-解像度プリセットを選ぶ
+选择预设分辨率
+; ;解像度プリセットを選ぶ
 
 > VIDMNU_RESPRESETTTL
 Custom Resolution Presets
-カスタム解像度プリセット
+自定义预设分辨率
+; ;カスタム解像度プリセット
 
 > VIDMNU_RESPRESETHEAD
 Preset Resolution Modes
-解像度モードの調整
+预设分辨率模式
+; ;解像度モードの調整
 
 > VIDMNU_ASPECT43
 4:3 Aspect
-アスペクト比 4:3
+4:3 宽高比
+; ;アスペクト比 4:3
 
 > VIDMNU_ASPECT54
 5:4 Aspect
-アスペクト比 5:4
+5:4 宽高比
+; ;アスペクト比 5:4
 
 > VIDMNU_ASPECT169
 16:9 Aspect
-アスペクト比 16:9
+16:9 宽高比
+; ;アスペクト比 16:9
 
 > VIDMNU_ASPECT1610
 16:10 Aspect
-アスペクト比 16:10
+16:10 宽高比
+; ;アスペクト比 16:10
 
 > VIDMNU_ASPECT219
 21:9 Aspect
@@ -1769,20 +1830,24 @@ Preset Resolution Modes
 
 > OPTVAL_NORMAL
 Normal
-通常
+正常
+; ;通常
 
 > OPTVAL_LOWEST
 ; This describes vid_scalemode 1, which represents the lowest possible scaling to fill the allocated screen area
 Lowest Possible Scale
-可能な限り最小
+尽可能最小
+; ;可能な限り最小
 
 > OPTVAL_CUSTOM
 Custom
-カスタム
+自定义
+; ;カスタム
 
 > VIDMNU_MAXFPS
 Max FPS
-最大FPS値
+最大 FPS
+; ;最大FPS値
 
 > OPTVAL_60FPS
 60 fps
@@ -1804,7 +1869,8 @@ Max FPS
 
 > VIDMNU_PREFERBACKEND
 Preferred Rendering API
-優先レンダリングAPI
+优先呈现API
+; ;優先レンダリングAPI
 
 > OPTVAL_OPENGL
 OpenGL
@@ -1820,39 +1886,48 @@ OpenGL ES
 
 > MISCMNU_MERGEKEYS
 Merge left+right Alt/Ctrl/Shift
-左と右のALT/CTRL/SHIFTキーを統合
+合并 left+right Alt/Ctrl/Shift
+; ;左と右のALT/CTRL/SHIFTキーを統合
 
 > MISCMNU_WINFULLSCREENTOGGLE
 Alt-Enter toggles fullscreen
-ALTとENTERで全画面に切り替え
+Alt-Enter切换全屏
+; ;ALTとENTERで全画面に切り替え
 
 > MISCMNU_MACFULLSCREENTOGGLE
 Command-F toggles fullscreen
-Ctrl + Fキーで全画面表示
+使用Ctrl+F键全屏显示
+; ;Ctrl + Fキーで全画面表示
 
 > MISCMNU_ENABLEAUTOSAVES
 Enable autosaves
-オートセーブを有効化
+启用自动保存
+; ;オートセーブを有効化
 
 > MISCMNU_AUTOSAVECOUNT
 Number of autosaves
-オートセーブの最大数
+自动保存数
+; ;オートセーブの最大数
 
 > MISCMNU_SAVELOADCONFIRMATION
 Save/Load confirmation
-セーブ/ロード時に確認
+保存/加载确认
+; ;セーブ/ロード時に確認
 
 > MISCMNU_NOCHEATS
 Disable keyboard cheats
-キーボードからのチート無効
+禁用键盘作弊
+; ;キーボードからのチート無効
 
 > MISCMNU_QUICKSAVEROTATION
 Quicksave rotation
-クイックセーブ間隔
+快速保存间隔
+; ;クイックセーブ間隔
 
 > MISCMNU_QUICKSAVECOUNT
 Number of quicksaves in rotation
-間隔クイックセーブの数
+快速保存数
+; ;間隔クイックセーブの数
 
 > MISCMNU_CLEANMENU
 Disable Menu Clean Scaling
@@ -1864,67 +1939,82 @@ Pause game in background
 
 > HUDMNU_CROSSHAIR
 Default Crosshair
-デフォルトの照準
+默认瞄星
+; ;デフォルトの照準
 
 > HUDMNU_CROSSHAIRCOLOR
 Crosshair color
-照準色
+准星颜色
+; ;照準色
 
 > HUDMNU_CROSSHAIRHEALTH
 Crosshair shows health
-照準のヘルス表示
+准星大小显示健康
+; ;照準のヘルス表示
 
 > HUDMNU_CROSSHAIRSCALE
 Scale crosshair
-照準サイズ
+准星大小
+; ;照準サイズ
 
 > OPTVAL_YES_STANDARD
 ; copied from elsewhere
 Standard
-標準
+标准
+; ;標準
 
 > OPTVAL_YES_ENHANCED
 Enhanced
-強調
+增强
+; ;強調
 
 > OPTMNU_LANGUAGE
 Language
-言語設定
+语言
+; ;言語設定
 
 ; Reverb editor
 
 > TXT_UNDOCHANGES
 Undo Changes
-変更を戻す
+取消更改
+; ;変更を戻す
 
 > REVMNU_SELECT
 Select Environment
-反響選択
+回声选择
+; ;反響選択
 
 > REVMNU_TEST
 Test Environment
-反響テスト
+回声测试
+; ;反響テスト
 
 > REVMNU_EDIT
 Edit Environment
-反響編集
+回声编辑
+; ;反響編集
 
 > REVMNU_NEW
 New Environment
-新規反響設定
+新建回声设置
+; ;新規反響設定
 
 > REVMNU_REVERT
 Revert settings
-設定を戻す
+还原设置
+; ;設定を戻す
 
 > REVMNU_ENVIRONMENT_SIZE
 ; Please translate only if you know how to properly name this technical jargon!
 Environment Size
-反響サイズ
+回声大小
+; ;反響サイズ
 
 > REVMNU_ENVIRONMENT_DIFFUSION
 Environment Diffusion
-反響伝播
+回声传播
+; ;反響伝播
 
 > REVMNU_ROOM
 Room
@@ -1941,10 +2031,12 @@ Decay Time
 > REVMNU_DECAY_HF_RATIO
 Decay HF Ratio
 Decay HF比率
+; ;Decay HF比率
 
 > REVMNU_DECAY_LF_RATIO
 Decay LF Ratio
 Decay LF比率
+; ;Decay LF比率
 
 > REVMNU_REFLECTIONS
 Reflections
@@ -1955,14 +2047,17 @@ Reflections Delay
 > REVMNU_REFLECTIONS_PAN_X
 Reflections Pan X
 Reflections X定位
+; ;Reflections X定位
 
 > REVMNU_REFLECTIONS_PAN_Y
 Reflections Pan Y
 Reflections Y定位
+; ;Reflections Y定位
 
 > REVMNU_REFLECTIONS_PAN_Z
 Reflections Pan Z
 Reflections Z定位
+; ;Reflections Z定位
 
 > REVMNU_REVERB
 Reverb
@@ -1973,14 +2068,17 @@ Reverb Delay
 > REVMNU_REVERB_PAN_X
 Reverb Pan X
 Reverb X定位
+; ;Reverb X定位
 
 > REVMNU_REVERB_PAN_Y
 Reverb Pan Y
 Reverb Y定位
+; ;Reverb Y定位
 
 > REVMNU_REVERB_PAN_Z
 Reverb Pan Z
 Reverb Z定位
+; ;Reverb Z定位
 
 > REVMNU_ECHO_TIME
 Echo Time
@@ -1999,11 +2097,13 @@ Air Absorption HF
 
 > REVMNU_HF_REFERENCE
 HF Reference
-HF参照値
+HF参考值
+; ;HF参照値
 
 > REVMNU_LF_REFERENCE
 LF Reference
-LF参照値
+LF参考值
+; ;LF参照値
 
 > REVMNU_ROOM_ROLLOFF_FACTOR
 Room Rolloff Factor
@@ -2014,46 +2114,57 @@ Diffusion
 > REVMNU_DENSITY
 Density
 密度
+; ;密度
 
 > REVMNU_Reflections_Scale
 Reflections Scale
-Reflections音階
+Reflections级别
+; ;Reflections音階
 
 > REVMNU_Reflections_Delay_Scale
 Reflections Delay Scale
-Reflections Delay音階
+Echo Time级别
+; ;Reflections Delay音階
 
 > REVMNU_Decay_Time_Scale
 Decay Time Scale
-Decay Time音階
+Decay Time级别
+; ;Decay Time音階
 
 > REVMNU_Decay_HF_Limit
 Decay HF Limit
-Decay HF限度
+Decay HF范围
+; ;Decay HF限度
 
 > REVMNU_Reverb_Scale
 Reverb Scale
-Reverb音階
+Reverb级别
+; ;Reverb音階
 
 > REVMNU_Reverb_Delay_Scale
 Reverb Delay Scale
-Reverb Delay音階
+Reverb Delay级别
+; ;Reverb Delay音階
 
 > REVMNU_Echo_Time_Scale
 Echo Time Scale
-Echo Time音階
+Echo Time级别
+; ;Echo Time音階
 
 > REVMNU_Modulation_Time_Scale
 Modulation Time Scale
-Modulation Time音階
+Modulation Time级别
+; ;Modulation Time音階
 
 > REVMNU_Based_on
 Based on
-音響の元
+音响的来源
+; ;音響の元
 
 > REVMNU_Name
 Name
-名前
+名称
+; ;名前
 
 > REVMNU_ID_1
 ID #1
@@ -2063,49 +2174,60 @@ ID #2
 
 > REVMNU_Create
 Create
-作成
+创建
+; ;作成
 
 > REVMNU_Save
 Save...
-セーブする...
+保存中...
+; ;セーブする...
 
 > REVMNU_File_name
 File name
-ファイル名
+文件名
+; ;ファイル名
 
 > REVMNU_Environments_to_save
 Environments to save
-音響を保存
+保存声音
+; ;音響を保存
 
 ; Vulkan
 
 > DSPLYMNU_VKOPT
 Vulkan Options (Experimental)
-Vulkan機能オプション(実験的)
+Vulkan 设定（测试版）
+; ;Vulkan機能オプション(実験的)
 
 > VK_TITLE
 Vulkan Options
-Vulkan機能オプション
+Vulkan 设定
+; ;Vulkan機能オプション
 
 > VKMNU_ENABLE
 Enable Vulkan
-Vulkanを有効化
+开启 Vulkan
+; ;Vulkanを有効化
 
 > VKMNU_DEVICE
 Vulkan Device ID
-Vulkanデバイス ID
+Vulkan 硬件编号
+; ;Vulkanデバイス ID
 
 > VKMNU_HDR
 High Dynamic Range
-ハイダイナミックレンジ
+高动态范围
+; ;ハイダイナミックレンジ
 
 > VK_WARNING
 Warning: The Vulkan renderer is highly experimental!
-警告：Vulkanレンダラーは実験段階です!
+警告: Vulkan 输出还处于高度实验阶段！
+; ;警告：Vulkanレンダラーは実験段階です!
 
 > VK_RESTART
 These options will require a restart to take effect.
-これらのオプションを有効にするには再起動が必要です。
+需要重启来启用这些设定。
+; ;これらのオプションを有効にするには再起動が必要です。
 
 > VKMNU_DEVICESELECT
 ; This is not yet implemented - but it is planned
@@ -2131,195 +2253,241 @@ xBRZ
 
 > OPTVAL_OLD_NXBRZ
 Old xBRZ
-旧xBRZ
+老式xBRZ
+; ;旧xBRZ
 
 ; Option Search
 
 > OS_TITLE
 Option Search
-オプション検索
+设置搜索
+; ;オプション検索
 
 > OS_ANY
 Search for any term
-いずれかの用語を探す
+搜索任一项目
+; ;いずれかの用語を探す
 
 > OS_ALL
 Search for all terms
-全ての用語を探す
+搜索全部项目
+; ;全ての用語を探す
 
 > OS_NO_RESULTS
 No results found.
-見つかりませんでした。
+无搜索结果。
+; ;見つかりませんでした。
 
 > OS_LABEL
 Search:
-検索:
+搜索：
+; ;検索:
 
 ; Blood Bath Announcer
 
 > TXT_OBITUARY1
 %k boned %o like a fish
-%k は %o の骨を魚のように引っこ抜いた。
+%k 把 %o 像鱼一样剔骨。
+; ;%k は %o の骨を魚のように引っこ抜いた。
 
 > TXT_OBITUARY2
 %k castrated %o
-%k は %o を去勢した。
+%k 把 %o 给骟了。
+; ;%k は %o を去勢した。
 
 > TXT_OBITUARY3
 %k creamed %o
-%k は %o に反吐ブチ撒けさせた。
+%k 把 %o 给打服气了。
+; ;%k は %o に反吐ブチ撒けさせた。
 
 > TXT_OBITUARY4
 %k decimated %o
-%k は %o の居場所を間引いた。
+%k 把 %o 消灭了。
+; ;%k は %o の居場所を間引いた。
 
 > TXT_OBITUARY5
 %k destroyed %o
-%k は %o を完全に破壊した。
+%k 把 %o 消灭了。
+; ;%k は %o を完全に破壊した。
 
 > TXT_OBITUARY6
 %k diced %o
-%k は %o を賽の目に切った。
+%k 把 %o 切丁了。
+; ;%k は %o を賽の目に切った。
 
 > TXT_OBITUARY7
 %k disembowled %o
-%k は %o の臓物を引きずり出した。
+%k 想知道 %o 的肚子里有什么。
+; ;%k は %o の臓物を引きずり出した。
 
 > TXT_OBITUARY8
 %k flattened %o
-%k は %o をぶっ潰した。
+%k 把 %o 变成了二次元生物。
+; ;%k は %o をぶっ潰した。
 
 > TXT_OBITUARY9
 %k gave %o Anal Justice
-%k は %o のケツにぶち込んだ。
+%k 对 %o 使出千年杀。
+; ;%k は %o のケツにぶち込んだ。
 
 > TXT_OBITUARY10
 %k gave AnAl MaDnEsS to %o
-%k は %o のケツをガバガバにした。
+%k 对 %o 使出千年杀。
+; ;%k は %o のケツをガバガバにした。
 
 > TXT_OBITUARY11
 %k killed %o
-%k は %o をブッ殺した。
+%k 杀死了 %o。
+; ;%k は %o をブッ殺した。
 
 > TXT_OBITUARY12
 %k made mincemeat out of %o
-%k は %o をミンチにした。
+%o 被 %k 变成了肉碎。
+; ;%k は %o をミンチにした。
 
 > TXT_OBITUARY13
 %k massacred %o
-%k は %o を虐殺した。
+%k 屠杀了 %o。
+; ;%k は %o を虐殺した。
 
 > TXT_OBITUARY14
 %k mutilated %o
-%k は %o をバラバラ死体にした。
+%k 把 %o 肢解了。
+; ;%k は %o をバラバラ死体にした。
 
 > TXT_OBITUARY15
 %k reamed %o
-%k は %o の穴を大きく広げた。
+%k 在 %o 身上开了一个新洞。
+; ;%k は %o の穴を大きく広げた。
 
 > TXT_OBITUARY16
 %k ripped %o a new orifice
-%k は %o を切り裂いて新しい穴を作ってあげた。
+%k 在 %o 身上开了一个新洞。
+; ;%k は %o を切り裂いて新しい穴を作ってあげた。
 
 > TXT_OBITUARY17
 %k slaughtered %o
-%k は %o を屠殺した。
+%k 把 %o 宰了。
+; ;%k は %o を屠殺した。
 
 > TXT_OBITUARY18
 %k smashed %o
-%k は %o をぶっ飛ばした。
+%k 把 %o 打碎了。
+; ;%k は %o をぶっ飛ばした。
 
 > TXT_OBITUARY19
 %k sodomized %o
-%o は %k にカマを掘られた。 
+%o 被 %k 爆菊了。
+; ;%o は %k にカマを掘られた。
 
 > TXT_OBITUARY20
 %k splattered %o
-%k は %o にばら撒かれた。
+%k 把 %o 洒了一地。
+; ;%k は %o にばら撒かれた。
 
 > TXT_OBITUARY21
 %k squashed %o
-%k は %o に潰された。
+%k 把 %o 踩扁了。
+; ;%k は %o に潰された。
 
 > TXT_OBITUARY22
 %k throttled %o
-%k は %o に絞られた。
+%k 把 %o 勒死了。
+; ;%k は %o に絞られた。
 
 > TXT_OBITUARY23
 %k wasted %o
-%k は %o に消された。
+%k 把 %o 废了。
+; ;%k は %o に消された。
 
 > TXT_OBITUARY24
 %k body bagged %o
-%k は %o を死体袋にした。
+%k 把 %o 装进了尸体袋。
+; ;%k は %o を死体袋にした。
 
 > TXT_OBITUARY25
 %k sent %o to Hell
-%k は %o を地獄に送った。
+%k 把 %o 送进地狱。
+; ;%k は %o を地獄に送った。
 
 > TXT_OBITUARY26
 %k toasted %o
-%k は %o を焼却した。
+%o 被 %k 烤了。
+; ;%k は %o を焼却した。
 
 > TXT_OBITUARY27
 %k snuffed %o
-%k は %o を処刑した。
+%o 被 %k 灭了。
+; ;%k は %o を処刑した。
 
 > TXT_OBITUARY28
 %k hosed %o
-%k は %o にぶっかけた。
+%k 把 %o 喷得到处都是。
+; ;%k は %o にぶっかけた。
 
 > TXT_OBITUARY29
 %k sprayed %o
-%k は %o を撒き散らした。
+%k 把 %o 喷得到处都是。
+; ;%k は %o を撒き散らした。
 
 > TXT_OBITUARY30
 %k made dog meat out of %o
-%k は %o を犬の餌にした。
+%k 把 %o 做成了狗粮。
+; ;%k は %o を犬の餌にした。
 
 > TXT_OBITUARY31
 %k beat %o like a cur
-%k は %o を狂犬の様に扱った。
+%o 被 %k 像对野狗一样痛扁。
+; ;%k は %o を狂犬の様に扱った。
 
 > TXT_SELFOBIT1
 %o is excrement
-%o はもはや排泄物のようだ。
+%o 成了一坨
+; ;%o はもはや排泄物のようだ。
 
 > TXT_SELFOBIT2
 %o is hamburger
-%o はハンバーガーになった。
+%o 成了汉堡。
+; ;%o はハンバーガーになった。
 
 > TXT_SELFOBIT3
 %o suffered scrotum separation
-%o の陰嚢は剥離していた。
+%o 蛋碎了。
+; ;%o の陰嚢は剥離していた。
 
 > TXT_SELFOBIT4
 %o volunteered for population control
-%o は人口削減政策の実験台に志願した。
+%o 自愿参加人类清除计划
+; ;%o は人口削減政策の実験台に志願した。
 
 > TXT_SELFOBIT5
 %o has suicided
-%o は勝手にくたばった。
+%o 自杀了
+; ;%o は勝手にくたばった。
 
 > TXT_SELFOBIT6
 %o received the Darwin Award
-%o にはダーウィン賞が授与された。
+%o被授予达尔文奖。
+; ;%o にはダーウィン賞が授与された。
 
 > USE_GENERIC_FONT
 ; This is not a text to be translated but an engine switch for complex languages.
 """"""
 1
+; ;1
 
 > REQUIRED_CHARACTERS
 ; This should list all uppercase characters that are REQUIRED for proper language display. If it is acceptable that accents get omitted a character should NOT be listed here!
 
 > OPTMNU_FULLOPTIONS
 Full options menu
-全オプション欄
+完整选项菜单
+; ;全オプション欄
 
 > OPTMNU_SIMPLEON
 Simple options menu
-必要なオプションのみ
+缩略选项菜单
+; ;必要なオプションのみ
 
 > OPTMNU_OPENCONFIG
 Browse Game Config
