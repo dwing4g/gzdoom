@@ -2,78 +2,65 @@
 
 > PRESSKEY
 Press a key.
-按下任意键。
-; ;何かキーを押せ
+按任意键。
 
 > SECRETMESSAGE
 A secret is revealed!
-已发现秘密地点！
-; ;シークレットを解き明かした!
+发现了一个秘密！
 
 > D_DEVSTR
 """Useless mode ON.
 """
-USELESS模式开启。
-; ;このモードは使わないでおけ
+开启了无用模式。
 
 > QUITMSG
 """Are you sure you want to
 quit this great game?"""
-你当真要退出这么完美的游戏？
-; ;"""本当にこの素晴らしい運命を
-; ;終わらせるのですね?"""
+"""你确定想要退出
+这么伟大的游戏？"""
 
 > LOADNET
 ; In some languages, it may make more sense to translate “Press a key” as “Press any key.”
 """You can't do load while in a net game!
 
 Press a key."""
-"""无法在多人游戏的状况下读取存档！
-按下任意键。"""
-; ;"""オンラインプレイでは ロードできない!
+"""你不能在多人游戏中加载存档！
 
-; ;何かキーを押せ
-; ;"""
+按任意键。"""
 
 > QLOADNET
 """You can't quickload during a netgame!
 
 Press a key."""
-无法在多人游戏的状况下快速读取！ 按下任意键。
-; ;"""オンラインプレイでは ロードできない!
+"""你不能在多人游戏中快速加载存档！
 
-; ;何かキーを押せ"""
+按任意键。"""
 
 > QSAVESPOT
 """You haven't picked a quicksave slot yet!
 
 Press a key."""
-尚未选择快速存档栏位！ 按下任意键。
-; ;"""オンラインプレイでは セーブできない!
+"""你还没选取快速保存的栏位！
 
-; ;何かキーを押せ"""
+按任意键。"""
 
 > NEWGAME
 """You can't start a new game
 while in a network game.
 
 Press a key."""
-无法在未开始游戏的情况下保存！ 按下任意键。
-; ;"""オンラインプレイでは勝手にニューゲームは
-; ;始められない!
+"""你不能在多人游戏中开始新游戏
 
-; ;何かキーを押せ"""
+按任意键。"""
 
 > NIGHTMARE
 """Are you sure? This skill level
 isn't even remotely fair.
 
 Press Y or N."""
-你确定吗？这个难度毫无人性可言。 按下 Y 或 N 。
-; ;"""本気か? このスキルは
-; ;マトモな状態ではないぞ。
+"""你确定吗？这个难度等级毫不公平。
 
-; ;Y か N で答えろ"""
+按Y键确认，按N键取消。"""
 
 > SWSTRING
 """This is the shareware version of Doom.
@@ -81,1267 +68,1028 @@ Press Y or N."""
 You need to order the entire trilogy.
 
 Press a key."""
-这是共享版本。  你需要购买才能进入全部章节。  按下任意键。
-; ;"""これは体験版だ。
-; ;わかったら本体を買え。
+"""这是共享版的Doom。
 
-; ;キーを押せば戻るぞ。"""
+你需要购买完整的三个章节。
+
+按任意键。"""
 
 > NETEND
 """You can't end a netgame!
 
 Press a key."""
-你无法应一个关闭多人游戏！ 按下任意键。
-; ;"""オンラインプレイでは勝手に終了できない!
+"""你无法结束这次多人游戏！
 
-; ;何かキーを押せ"""
+按任意键。"""
 
 > ENDGAME
 """Are you sure you want to end the game?
 
 Press Y or N."""
-是否要结束游戏？ 按下 Y 或 N 。
-; ;"""本当にゲームを中断するのか?
+"""你确定想要结束游戏吗？
 
-; ;Y か N で答えろ"""
+按Y键确认，按N键取消。"""
 
 > RAVENQUITMSG
 Are you sure you want to quit?
-你确定要退出？
-; ;本当に終了するのか?
+你确定想要退出？
 
 > SWSTRING heretic
 Only available in the registered version
-仅在注册版本中可用
-; ;製品版でのみ可能だ。
+仅在注册版中可用
 
 > DOSY
 (Press Y to quit)
-（按Y键退出）
-; ;(Y で終了)
+(按Y键退出)
 
 ; Quit messages
 
 > QUITMSG1
 """Please don't leave, there's more
 demons to toast!"""
-别急着走好吗！还有那么多的恶魔在大快朵颐！
-; ;"""離れないでくれ!
-; ;まだ獲物が残っているんだ!"""
+"""请别离开，还有更多
+恶魔等着被烧烤呢！"""
 
 > QUITMSG2
 """Let's beat it -- this is turning
 into a bloodbath!"""
-想泡血浴？那就直接上去撕了它！
-; ;"""まだ物足りないだろう?
-; ;早く戻って皆殺しにしろ!"""
+"""快干它——这都快
+变成血浴了！"""
 
 > QUITMSG3
 """I wouldn't leave if I were you.
 DOS is much worse."""
-我要是你的话才不会轻易退出。 毕竟DOS难用多了。
-; ;"""俺がお前だったらここは離れない。
-; ;デスクトップなぞ最悪だ。"""
+"""我要是你，我可不会走。
+DOS系统比这还糟糕。"""
 
 > QUITMSG4
 """You're trying to say you like DOS
 better than me, right?"""
-你觉得DOS比我还好用，是不？
-; ;"""貴方はこちらよりも
-; ;デスクトップの方が好みらしいな?"""
+"""你是想说你更喜欢DOS系统
+而不是我，对吗？"""
 
 > QUITMSG5
 """Don't leave yet -- there's a
 demon around that corner!"""
-别急着走，转角就能遇到下一个恶魔！
-; ;"""待ってくれ!まだあそこの角に
-; ;デーモンが残っているんだ!"""
+"""先别走——那边
+拐角处还有个恶魔！"""
 
 > QUITMSG6
 """Ya know, next time you come in here
 I'm gonna toast ya."""
-你懂的，下次再来我一定要烤了你。
-; ;"""わかったよ。
-; ;今度戻ってきたら一杯奢るよ。"""
+"""丫懂得，下次你再进来，
+我就烤了丫。"""
 
 > QUITMSG7
 Go ahead and leave. see if I care.
-只管走。我才不会在乎。
-; ;置いて行っちゃうんだ。勝手にしろ。
+尽管离开吧，看我在不在乎。
 
 > QUITMSG8
 ; More info here.
 """You want to quit?
 Then, thou hast lost an eighth!"""
-你要退出吗？这可是违背了八大教义！（创世纪梗）
-; ;"""終了したい?ならば、
-; ;汝は8分の1を失うぞ!"""
+"""你想退出？
+那么，你就失去了八美德之一！"""
 
 > QUITMSG9
 ; A “dimensional shambler” is a creature appearing in the works of H. P. Lovecraft.
-"""Don't go now, there's a 
+"""Don't go now, there's a
 dimensional shambler waiting
 at the DOS prompt!"""
-别走，DOS提示符里有个空鬼！（克苏鲁梗）
-; ;"""まだやめたらダメだ、
-; ;あの空鬼がデスクトップには
-; ;待ち構えているんだぞ!"""
+"""先别走，DOS提示符那里
+有个空鬼在等着呢！"""
 
 > QUITMSG10
 """Get outta here and go back
 to your boring programs."""
-滚去用你的无聊程序吧。
-; ;"""早く出ていって、いつものつまらない
-; ;プログラムに戻るんだな。"""
+"""快滚回你那些
+无聊的程序去吧。"""
 
 > QUITMSG11
-"""If I were your boss, I'd 
+"""If I were your boss, I'd
 deathmatch ya in a minute!"""
-我要是你老板的话，一分钟死斗就解决你！
-; ;"""もし私が君の上司なら、すぐにでも
-; ;デスマッチを始める所だぞ!"""
+"""我要是你的老板，
+我立马就跟丫决斗！"""
 
 > QUITMSG12
 """Look, bud. you leave now
 and you forfeit your body count!"""
-你看，老兄。 这么退出你这击杀数白攒了。
-; ;"""おいおい待てよ、今やめたら
-; ;殺したデーモンの数を数えられないぞ!"""
+"""你看，伙计。你现在离开
+就等于放弃你的击杀数！"""
 
 > QUITMSG13
 """Just leave. when you come
 back, I'll be waiting with a bat."""
-去吧。等回来时，我会拿根棍棒等你。
-; ;"""帰ればいいさ、
-; ;君が戻ってきたときには、
-; ;私はバットを持って待ってるから"""
+"""走吧。你回来的时候，
+我会拿着球棒等着你。"""
 
 > QUITMSG14
 """You're lucky I don't smack
 you for thinking about leaving."""
-没在退出时被我扇几个耳巴子算你走运。
-; ;"""やめることについて考えたのに、
-; ;私に殴られないなんて、
-; ;君はラッキーだな"""
+"""我没因为你想离开就
+扇你几巴掌算你走运。"""
 
 > QUITMSG15
 """Where are you going?!
 What about the rebellion?"""
-你要去哪？！你的倔劲哪去了？
-; ;"""どこに行く気だ?!
-; ;反抗するつもりか?"""
+"""你要去哪儿？！
+你那叛逆哪去了？"""
 
 > QUITMSG16
 """Carnage interruptus...
 What a tease!"""
-杀不动啦……你可真逗？
-; ;"""大虐殺は寸止めされた...
-; ;何という意地悪なやつだ!"""
+"""杀卡壳了……
+真让人失望！"""
 
 > QUITMSG17
 """But you're the hope
 -- my only chance!!"""
-Only You~ ,Can take me 杀恶魔~
-; ;"""それでもお前を信じている
-; ;-- 唯一の希望なんだ!!"""
+"""但你就是一线希望
+——我唯一的机会！！"""
 
 > QUITMSG18
 Nobody walks out on Blackbird.
-不辞而别是没有教养的哦。
-; ;ブラックバードに気付かれず抜け出せるのか。
+没人能从黑鸟这里溜走。
 
 > QUITMSG19
 I thought you were different...
-还以为你与众不同……
-; ;私は あなたは特別だと思っていた...
+我还以为你与众不同……
 
 > QUITMSG20
 Fine! just kill and run!
-很好！杀完了就跑路！
-; ;いいぞ! ゲリラ戦の時間だ!
+好嘛！杀完就跑！
 
 > QUITMSG21
 """You can quit...
 but you can't hide..."""
-跑得了和尚跑不了庙。
-; ;"""終わる事は出来る...
-; ;しかし隠れることは出来ない..."""
+"""你可以退出……
+但你躲不掉……"""
 
 > QUITMSG22
 """Whaaa, what's the matter?
 Mommy says dinnertime?"""
-怎么？你妈喊你回去吃饭了？
-; ;"""はあぁ、どうしたんだい?
-; ;ママに晩飯へ呼ばれたのかよ?"""
+"""哇，怎么了？
+妈妈喊你回家吃饭？"""
 
 > QUITMSG23
 """Don't quit now, there are still
 flemoids on the loose!"""
-别走啊，那些flemoids还在那里！
-; ;"""まだやめないでくれ、
-; ;にげだしたフレモイドたちが
-; ;のこっているんだから!"""
+"""先别退出，还有
+黏液怪在逃窜呢！"""
 
 > QUITMSG24
 """Don't give up -- the flemoids will
 get the upper hand!"""
-别放弃——不然那些flemoids就赢了！
-; ;"""あきらめてはダメだ、
-; ;フレモイドたちの しょうりに
-; ;なってしまうぞ!"""
+"""别放弃——黏液怪会
+占上风的！"""
 
 > QUITMSG25
 """Don't leave now.
 We need your help!"""
-不要走。我们需要你！
-; ;"""まだかえらないでくれ。
-; ;われわれには きみのたすけが
-; ;ひつようだ!"""
+"""先别离开。
+我们需要你的帮助！"""
 
 > QUITMSG26
 """I hope you're just taking a
 break for Chex(R) party mix."""
-希望你只是为了吃Chex Mix而稍作修整。
-; ;"""チェックス(R)パーティミックスを
-; ;たべるためにおやすみかな?"""
+"""我希望你只是在吃
+奇克斯(R)派对组合休息一下。"""
 
 > QUITMSG27
 """Don't quit now!
 We need your help!"""
-不要退出。我们需要你！
-; ;"""まだやめないでくれ!
-; ;われわれには きみのたすけが
-; ;ひつようだ!"""
+"""先别退出！
+我们需要你的帮助！"""
 
 > QUITMSG28
 """Don't abandon the
 Intergalactic Federation of Cereals!"""
-不要抛弃谷物星系联盟！
-; ;"""ぎんがシリアルれんぽう を
-; ;みすてないでくれ!"""
+"""别抛弃
+星系谷物联盟！"""
 
 > QUITMSG29
 """The real Chex(R) Warrior
 wouldn't give up so fast!"""
-"""真正的奇克斯勇士
-不会这么快放弃的！"""
-; ;"""しんのチェックス(R)せんしは
-; ;そんなにすぐあきらめはしないぞ!"""
+"""真正的奇克斯(R)战士
+不会这么快就放弃！"""
 
 ; Pickups
 
 > TXT_DEFAULTPICKUPMSG
 You got a pickup
-获得道具
-; ;何か拾った
+获得了一个道具
 
 ; Locks
 
 > PD_ANY
 Any key will open this door
-这个门要用钥匙开启
-; ;いずれかのキーで開けることができる。
+需要某个钥匙才能开这个门
 
 > PD_ANYOBJ
 Any key will activate this object
-这个装置要用钥匙启动
-; ;いずれかのキーで起動させることができる。
+需要某个钥匙才能激活这个物体
 
 > PD_ALL3
 You need all three keys to open this door
-这个门要用三个钥匙才能开启
-; ;3つのキー全てが無ければ開かない。
+需要所有三把钥匙才能开这个门
 
 > PD_ALL3O
 You need all three keys to activate this object
-这个装置要用三个钥匙才能开启
-; ;3つのキー全てが必要だ。
+需要所有三把钥匙才能激活这个物体
 
 > PD_ALL6
 You need all six keys to open this door
-这个门要用六个钥匙才能开启
-; ;6つ全てのキーが無ければ開かない。
+需要所有六把钥匙才能开这个门
 
 > PD_ALL6O
 You need all six keys to activate this object
-这个装置要用六个钥匙才能开启
-; ;6つ全てのキーが必要だ。
+需要所有六把钥匙才能激活这个物体
 
 > PD_ALLKEYS
 You need all the keys
 需要所有钥匙
-; ;全てのキーが必要だ。
 
 ; Chat
 
 > HUSTR_MSGU
 [Message unsent]
-[未发送消息]
-; ;[メッセージ未送信]
+[消息未发送]
 
 > HUSTR_TALKTOSELF1
 You mumble to yourself
 你在喃喃自语
-; ;ネタにならない呟きだ
 
 > HUSTR_TALKTOSELF2
 Who's there?
 是谁？
-; ;誰かいるか?
 
 > HUSTR_TALKTOSELF3
 You scare yourself
-你把自己吓了一跳
-; ;"""怯えているな
-; ;"""
+自己吓自己
 
 > HUSTR_TALKTOSELF4
 You start to rave
 你开始胡言乱语
-; ;イカレ始めた
 
 > HUSTR_TALKTOSELF5
 You've lost it...
 你失去了意识……
-; ;我を失った...
 
 > HUSTR_MESSAGESENT
 [Message Sent]
 [消息已发出]
-; ;[メッセージ送信]
 
 ; Cheats
 
 > STSTR_MUS
 Music Change
 音乐更换
-; ;music変更
 
 > STSTR_NOMUS
 Impossible Selection
 无法选择
-; ;その変更は不可能だ
 
 > STSTR_DQDON
 Degreelessness Mode ON
 无敌模式：开
-; ;無敵モード: オン
 
 > STSTR_DQDOFF
 Degreelessness Mode OFF
 无敌模式：关
-; ;無敵モード: オフ
 
 > STSTR_DQD2ON
 Ultimate Degreelessness Mode ON
 终极无敌模式：开
-; ;究極無敵モード: オン
 
 > STSTR_DQD2OFF
 Ultimate Degreelessness Mode OFF
 终极无敌模式：关
-; ;究極無敵モード: オフ
 
 > STSTR_KFAADDED
 Very Happy Ammo Added
-弹药全满
-; ;とても満足する武器弾薬を受け取った
+增加了非常满意的弹药
 
 > STSTR_FAADDED
 Ammo (no keys) Added
-获得武器弹药（无钥匙）
-; ;武器弾薬(鍵なし)を受け取った
+增加了弹药(无钥匙)
 
 > STSTR_NCON
 No Clipping Mode ON
 穿墙模式：开
-; ;壁抜けモード: オン
 
 > STSTR_NCOFF
 No Clipping Mode OFF
 穿墙模式：关
-; ;壁抜けモード: オフ
 
 > STSTR_NC2ON
 No Clipping Mode 2 ON
-2号穿墙模式：开
-; ;壁抜けモード2: オン
+穿墙模式2：开
 
 > STSTR_NC2OFF
 No Clipping Mode 2 OFF
-壁抜けモード2: オフ
+穿墙模式2：关
 
 > STSTR_BEHOLD
 ; “inVuln”: Invulnerability sphere\n“Str”: Berserk\n“Inviso”: Blur sphere\n“Rad”: Radiation-shielding suit\n“Allmap”: Computer area map\n“Lite-amp”: Light-amplification visor
 inVuln, Str, Inviso, Rad, Allmap, or Lite-amp
-无敌，强力，隐身，抗辐射，地图全开
-; ;v,i,s,a,r,l の何れかを選べ
+无敌(V)、强力(S)、隐身(I)、防辐射(R)、全地图(A)、夜视仪(L)
 
 > STSTR_BEHOLDX
 Power-up Toggled
-POWER UP 切换
-; ;パワーアップ 適用
+能量提升已切换
 
 > STSTR_CHOPPERS
 ; Printed when entering the idchoppers cheat, which gives the player a chainsaw
 ... doesn't suck - GM
 ……不恶心 - GM
-; ;...わるかぁねえぞ --gm
 
 > STSTR_CLEV
 Changing Level...
-更换关卡…
-; ;場所を変更...
+更换关卡……
 
 > TXT_BUDDHAON
 Buddha mode ON
-Buddha mode：启动
-; ;ブッダモード: オン
+佛陀模式：开
 
 > TXT_BUDDHAOFF
 Buddha mode OFF
-Buddha mode：关闭
-; ;ブッダモード: オフ
+佛陀模式：关
 
 > TXT_BUDDHA2ON
 Ultimate Buddha Mode ON
-Ultimate Buddha Mode：启动
-; ;究極ブッダモード: オン
+终极佛陀模式：开
 
 > TXT_BUDDHA2OFF
 Ultimate Buddha Mode OFF
-Ultimate Buddha Mode：关闭
-; ;究極ブッダモード: オフ
+终极佛陀模式：关
 
 > TXT_CHEATPOWERON
 Power on
-POWER ON
-; ;パワー オン
+电源：开
 
 > TXT_CHEATPOWEROFF
 Power off
-POWER OFF
-; ;パワー オフ
+电源：关
 
 > TXT_CHEATHEALTH
 Full health
 生命全满
-; ;ヘルス全回復
 
 > TXT_CHEATKEYS
 All keys
-获取全部钥匙
-; ;キー全部
+所有钥匙
 
 > TXT_CHEATSOUNDON
 Sound debug on
-声音调试模式：开启
-; ;サウンドデバッグ オン
+声音调试：开
 
 > TXT_CHEATSOUNDOFF
 Sound debug off
-声音调试模式：关闭
-; ;サウンドデバッグ オフ
+声音调试：关
 
 > TXT_CHEATIDDQD
 Trying to cheat, eh? Now you die!
-嗯，你死了。下次还开作弊不？
-; ;その名を唱えたな? 褒美に死をやろう!
+想作弊，嗯？那你死了！
 
 > TXT_CHEATIDKFA
 Cheater - you don't deserve weapons
-挂逼不配拥有武器
-; ;不届き者め、貴様が偉業を成すはずがない
+作弊者——你不配拥有武器
 
 > TXT_CHEATTICKERON
 Ticker on
-Ticker 开启
-; ;ティッカー オン
+Ticker：开
 
 > TXT_CHEATTICKEROFF
 Ticker off
-Ticker 关闭
-; ;ティッカー オフ
+Ticker：关
 
 > TXT_CHEATARTIFACTS3
 You got it
 你得到了
-; ;それを渡そう。
 
 > TXT_MIDASTOUCH
 You got the Midas Touch, baby
-点金之手触碰了你，孩子
-; ;ミダス王の様だな、ベイビー
+你得到了点金术，孩子
 
 > TXT_GOTSTUFF
 You got the stuff!
-全副武装！
-; ;スタッフを手に入れた!
+你收获满满！
 
 > TXT_FREEZEON
 Freeze mode on
-冻结模式 开启
-; ;フリーズモード オン
+冻结模式：开
 
 > TXT_FREEZEOFF
 Freeze mode off
-冻结模式 关闭
-; ;フリーズモード オフ
+冻结模式：关
 
 > TXT_STRANGE
 You feel strange...
-你有种奇怪的感觉...
-; ;これは奇妙な感じだな...
+你感觉很怪……
 
 > TXT_STRANGER
 You feel even stranger.
-感觉更奇怪了。
-; ;これはかなり奇妙だ。
+你感觉更怪了。
 
 > TXT_NOTSTRANGE
 You feel like yourself again.
-做回自己真好！
-; ;自分自身の様に感じている。
+你感觉又做回自己了。
 
 > TXT_LEADBOOTSON
 Lead boots on
-Lead boots 开启
-; ;足枷 オン
+防辐射靴：开
 
 > TXT_LEADBOOTSOFF
 Lead boots off
-Lead boots 关闭
-; ;足枷 オフ
+防辐射靴：关
 
 > TXT_LIGHTER
 You feel lighter
-你感觉轻飘飘的
-; ;体が軽くなった
+你感觉变轻了
 
 > TXT_GRAVITY
 Gravity weighs you down
-重力重新将你拉回地面
-; ;重力に従った
+重力将你拉了下来
 
 > TXT_NOTARGET_ON
 No Target ON
-又聋又瞎的怪物：开启
-; ;ノーターゲット オン
+无目标：开
 
 > TXT_NOTARGET_OFF
 No Target OFF
-又聋又瞎的怪物：关闭
-; ;ノーターゲット オフ
+无目标：关
 
 > TXT_ANUBIS_ON
 "Quake with fear!"
 “吓得发抖！”
-; ;恐れおののけ!
 
 > TXT_ANUBIS_OFF
 No more Ogre Armor
-再也没有食人魔了。
-; ;オーガアーマーはもう嫌
+再也没有食人魔盔甲
 
 > TXT_CHASECAM_ON
 chasecam ON
-第三人称视角 开启
-; ;チェイスカメラ オン
+跟随视角：开
 
 > TXT_CHASECAM_OFF
 chasecam OFF
-第三人称视角 关闭
-; ;チェイスカメラ オフ
+跟随视角：关
 
 > TXT_BADDIE_KILLED
 1 baddie killed
-干掉了一个坏蛋
-; ;1 体 殺した
+干掉了1个坏蛋
 
 > TXT_BADDIES_KILLED
 %d baddies killed
 干掉了%d个坏蛋
-; ;%d 体 殺した
 
 > TXT_MONSTER_KILLED
 1 monster killed
-干掉了一个怪物
-; ;1 匹 殺した
+干掉了1个怪物
 
 > TXT_MONSTERS_KILLED
 %d monsters killed
 干掉了%d个怪物
-; ;%d 匹 殺した
 
 > TXT_NO_RESURRECT
 Unable to resurrect. Player is no longer connected to its body.
-无法复活。玩家没有寄宿在这个身体里。
-; ;復活できない。プレイヤーはこの体に宿っていない。
+无法复活，玩家不再能连接到其身体了。
 
 > TXT_ALL_ARTIFACTS
 All Artifacts!
-所以神器！
-; ;全アーティファクト!
+所有神器！
 
 > TXT_WHAT_KILL
 What do you want to kill outside of a game?
-如果在游戏之外你会想杀些什么？
-; ;ゲーム外で何を殺す気だ?
+游戏之外你想杀些什么？
 
 > TXT_NOT_FROZEN
 Frozen player properties turned off
-禁用冻结玩家属性
-; ;凍ったプレイヤーのプロパティを無効化
+关闭玩家属性冻结
 
 ; Automap
 
 > AMSTR_FOLLOWOFF
 Follow Mode OFF
-追踪模式：关闭
-; ;追従モード: オフ
+跟随模式：关
 
 > AMSTR_FOLLOWON
 Follow Mode ON
-追踪模式：开启
-; ;追従モード: オン
+跟随模式：开
 
 > AMSTR_GRIDON
 Grid ON
-Grid 开启
-; ;グリッド: オン
+网格：开
 
 > AMSTR_GRIDOFF
 Grid OFF
-Grid 关闭
-; ;グリッド: オフ
+网格：关
 
 > AMSTR_TEXON
 Texture Mode ON
-Texture Mode 启动
-; ;テクスチャーモード: オン
+纹理模式：开
 
 > AMSTR_TEXOFF
 Texture Mode OFF
-Texture Mode 关闭
-; ;テクスチャーモード: オフ
+纹理模式：关
 
 > AMSTR_MARKEDSPOT
 Marked Spot
-标记地点
-; ;目標をマークした
+标记点
 
 > AMSTR_MARKSCLEARED
 All Marks Cleared
-所有标记已清除
-; ;全目標を解除した
+所有标记都清除了
 
 ; Multiplayer
 
 > TXT_FRAGLIMIT
 Fraglimit hit.
-已达到击杀上限。
-; ;フラグリミット!
+已达分数上限。
 
 > TXT_TIMELIMIT
 Timelimit hit.
-已达到时间上限。
-; ;ゲームセット!
+已达时间上限。
 
 > SPREEKILLSELF
 %o was looking good until %g killed %hself!
-%o 在势头正旺时遭到了 %g 的制裁！
-; ;%o は自滅するまでなかなか良かったぞ!
+%o 还感觉良好直到被 %g 击杀！
 
 > SPREEOVER
 %o's killing spree was ended by %k
-%k 终结了 %o 的大杀特杀
-; ;%k が %o の快進撃を断ち切った!
+%o 的大杀特杀被 %k 终结
 
 > SPREE5
 %k is on a killing spree!
 %k 正在大杀特杀！
-; ;%k が連続キル!
 
 > SPREE10
 %k is on a rampage!
-%k  已经暴走了！
-; ;%k が大暴れだ!
+%k 暴走了！
 
 > SPREE15
 %k is dominating!
-%k 正在主宰比赛！
-; ;%k が圧倒している!
+%k 正在主宰！
 
 > SPREE20
 %k is unstoppable!
 %k 已经无人能挡！
-; ;%k が止まらない!
 
 > SPREE25
 %k is Godlike!
 %k 已经超神！
-; ;%k が神の様だ!
 
 > MULTI2
 Double kill!
 双杀！
-; ;ダブルキル!
 
 > MULTI3
 Multi kill!
 三杀！
-; ;マルチキル!
 
 > MULTI4
 Ultra kill!
-终极击杀！
-; ;ウルトラキル!
+终极杀！
 
 > MULTI5
 Monster kill!
-鬼畜击杀！
-; ;モンスターキル!
+鬼畜杀！
 
 ; Scoreboard
 
 > SCORE_BONUS
 Bonus
 奖励
-; ;ボーナス
 
 > SCORE_COLOR
 Color
 颜色
-; ;色
 
 > SCORE_SECRET
 Secret
 秘密
-; ;シークレット
 
 > SCORE_NAME
 Name
 名称
-; ;名前
 
 > SCORE_DELAY
 Delay (ms)
 延迟(ms)
-; ;ping
 
 > SCORE_FRAGS
 Frags
 得分
-; ;フラグ
 
 > SCORE_DEATHS
 Deaths
 死亡
-; ;デス
 
 > SCORE_OTHER
 Other
-その他
+其它
 
 > SCORE_MISSED
 Missed
-空枪
-; ;ミス
+未命中
 
 > SCORE_TOTAL
 Total
 总计
-; ;合計
 
 > SCORE_LVLTIME
 Level Time
 关卡时间
-; ;時間
 
 ; Level Summary
 
 > TXT_IMKILLS
 Kills
 击杀
-; ;キル
 
 > TXT_IMITEMS
 Items
 物品
-; ;アイテム
 
 > TXT_IMSECRETS
 Secrets
 秘密
-; ;シークレット
 
 > TXT_IMTIME
 Time
 时间
-; ;経過時間
 
 > TXT_IMPAR
 Par
 平均时间
-; ;最速時間
 
 > WI_FINISHED
 Finished
-完成
-; ;攻略
+已完成
 
 > WI_ENTERING
 Entering
-进入
-; ;突入開始
+正在进入
 
 > WI_ENTERING heretic hexen
 Now entering:
-正在加载
-; ;突入中:
+正在加载：
 
 ; HUD
 
 > AM_MONSTERS
 Monsters:
 怪物：
-; ;奴等:
 
 > AM_SECRETS
 Secrets:
 秘密：
-; ;隠場:
 
 > AM_ITEMS
 Items:
 物品：
-; ;物資:
 
 ; Obituaries
 
 > OB_SUICIDE
 %o suicides.
 %o 自杀了。
-; ;%o は自殺した。
 
 > OB_FALLING
 %o fell too far.
-%o 摔得太远。
-; ;%o はあまりにも高い所から転落した。
+%o 摔得太狠。
 
 > OB_CRUSH
 %o was squished.
-%o 被轧成肉饼。
-; ;%o は潰された。
+%o 被压扁。
 
 > OB_EXIT
 %o tried to leave.
-%o 企图逃跑。
-; ;%o は逃げようとした。
+%o 试图离开。
 
 > OB_WATER
 %o can't swim.
 %o 不会游泳。
-; ;%o は泳げなかった。
 
 > OB_SLIME
 %o mutated.
 %o 变异了。
-; ;%o は変異した。
 
 > OB_LAVA
 %o melted.
-%o 化成了泥。
-; ;%o は溶かされた。
+%o 融化了。
 
 > OB_BARREL
 %o went boom.
-%o 炸了。
-; ;%o は爆発で吹き飛ばされた。
+%o 被炸了。
 
 > OB_SPLASH
 %o stood in the wrong spot.
-%o 在错误的时间站在了错误的地点。
-; ;%o はいけない場所に立っていた。
+%o 站在了错误的地点。
 
 > OB_R_SPLASH
 %o should have stood back.
 %o 应该躲在后面。
-; ;%o は後ろへ引くべきだった。
 
 > OB_ROCKET
 %o should have stood back.
 %o 应该躲在后面。
-; ;%o は後ろへ引くべきだった。
 
 > OB_KILLEDSELF
 %o killed %hself.
-%o 自杀了。
-; ;%o は自滅した。
+%o 杀了自己。
 
 > OB_VOODOO
 %o was killed by the power of voodoo.
 %o 死于巫毒术。
-; ;%o はブードゥー人形で殺された。
 
 > OB_MPTELEFRAG
 %o was telefragged by %k.
-%k 传送击杀 %o。
-; ;%o は %k にテレフラグされた。
+%o 被 %k 传送杀了。
 
 > OB_MONTELEFRAG
 %o was telefragged.
-%o 惨遭传送杀。
-; ;%o はテレフラグされた。
+%o 被传送杀了。
 
 > OB_DEFAULT
 %o died.
 %o 死了。
-; ;%o は死亡した。
 
 > OB_MPDEFAULT
 %o was killed by %k.
 %o 被 %k 击杀。
-; ;%o は %k によって殺された。
 
 > OB_FRIENDLY1
 %k mows down a teammate.
 %k 放倒了一个队友。
-; ;%k は仲間を無慈悲に殺した。
 
 > OB_FRIENDLY2
 ; English was changed to remove problematic pronoun referencing the killer
 %k seems to need glasses.
-%k 该配副眼镜了。
-; ;%k には眼鏡が必要なようだ。
+%k 该配眼镜了。
 
 > OB_FRIENDLY3
 %k gets a frag for the other team.
-%k 在给对面送分。
-; ;%k は敵チームに得点を入れた。
+%k 给对面送了一分。
 
 > OB_FRIENDLY4
 %k loses another friend.
 %k 失去一个队友。
-; ;%k はまた友達を失った。
 
 ; Pickup
 
 > GOTARMOR
 Picked up the armor.
-获得护甲。
-; ;アーマーを身に着けた。
+拾取了护甲。
 
 > GOTMEGA
 Picked up the MegaArmor!
-获得高级护甲！
-; ;メガアーマーを身に着けた!
+拾取了大护甲！
 
 > GOTHTHBONUS
 Picked up a health bonus.
-获得生命奖励。
-; ;ヘルスボーナスを拾った。
+拾取了生命奖励。
 
 > GOTARMBONUS
 Picked up an armor bonus.
-获得护甲奖励。
-; ;アーマーボーナスを拾った。
+拾取了护甲奖励。
 
 > GOTSTIM
 Picked up a stimpack.
-获得兴奋剂。
-; ;スティムパックを拾った。
+拾取了兴奋剂。
 
 > GOTMEDINEED
 Picked up a medikit that you REALLY need!
-得到真正需要的医疗道具！
-; ;本当に必要なメディキットを手に入れた!
+拾取了正需要的医疗包！
 
 > GOTMEDIKIT
 Picked up a medikit.
-获得医疗包。
-; ;メディキットを拾った。
+拾取了医疗包。
 
 > GOTSUPER
 Supercharge!
 灵魂球！
-; ;スーパーチャージ!
 
 > GOTBLUECARD
 Picked up a blue keycard.
-获得蓝钥匙卡。
-; ;ブルー キーカードを手に入れた。
+拾取了蓝钥匙卡。
 
 > GOTYELWCARD
 Picked up a yellow keycard.
-获得黄钥匙卡。
-; ;イエローキーカードを手に入れた。
+拾取了黄钥匙卡。
 
 > GOTREDCARD
 Picked up a red keycard.
-获得红钥匙卡。
-; ;レッド キーカードを手に入れた。
+拾取了红钥匙卡。
 
 > GOTBLUESKUL
 Picked up a blue skull key.
-获得蓝色骷髅钥匙。
-; ;ブルー スカルキーを手に入れた。
+拾取了蓝骷髅钥匙。
 
 > GOTYELWSKUL
 Picked up a yellow skull key.
-获得黄色骷髅钥匙。
-; ;イエロースカルキーを手に入れた。
+拾取了黄骷髅钥匙。
 
 > GOTREDSKUL
 Picked up a red skull key.
-获得红色骷髅钥匙。
-; ;レッド スカルキーを手に入れた。
+拾取了红骷髅钥匙。
 
 > GOTINVUL
 Invulnerability!
 无敌球！
-; ;不死身だ!
 
 > GOTBERSERK
 Berserk!
 狂战包！
-; ;バーサーク!
 
 > GOTINVIS
 Partial Invisibility
 隐身球
-; ;半透明化スフィア
 
 > GOTSUIT
 Radiation Shielding Suit
 防辐射服
-; ;放射線防護服 
 
 > GOTMAP
 Computer Area Map
 电子地图
-; ;コンピューターエリアマップ
 
 > GOTVISOR
 Light Amplification Visor
-夜视仪！
-; ;"""暗視バイザー
-; ;"""
+夜视仪
 
 > GOTMSPHERE
 MegaSphere!
-极效球！
-; ;メガスフィアー!
+超级球！
 
 > GOTCLIP
 Picked up a clip.
-获得一个弹匣。
-; ;弾倉を拾った。
+拾取了弹匣。
 
 > GOTCLIPBOX
 Picked up a box of bullets.
-获得一箱子弹。
-; ;弾薬箱を拾った。
+拾取了子弹箱。
 
 > GOTROCKET
 Picked up a rocket.
-获得一枚火箭。
-; ;ロケットを拾った。
+拾取了火箭。
 
 > GOTROCKBOX
 Picked up a box of rockets.
-获得一箱火箭。
-; ;ロケット箱を拾った。
+拾取了火箭箱。
 
 > GOTCELL
 Picked up an energy cell.
-获得电池。
-; ;エネルギーセルを拾った。
+拾取了电池。
 
 > GOTCELLBOX
 Picked up an energy cell pack.
-获得电池包。
-; ;エネルギーセルパックを拾った。
+拾取了电池包。
 
 > GOTSHELLS
 Picked up 4 shotgun shells.
-获得4发霰弹。
-; ;4発の散弾を拾った。
+拾取了4发霰弹。
 
 > GOTSHELLBOX
 Picked up a box of shotgun shells.
-获得一盒霰弹。
-; ;散弾箱を拾った。
+拾取了霰弹盒。
 
 > GOTBACKPACK
 Picked up a backpack full of ammo!
-获得弹药背包！
-; ;弾薬の入ったバックパックを手に入れた!
+拾取了弹药背包！
 
 > GOTBFG9000
 You got the BFG9000! Oh, yes.
-获得BFG 9000！ 芜湖！
-; ;BFG9000を手に入れた!やったぜ。
+你获得了BFG9000！哇，太棒了。
 
 > GOTCHAINGUN
 You got the chaingun!
-获得机枪！
-; ;チェーンガンを手に入れた!
+你获得了机枪！
 
 > GOTCHAINSAW
 A chainsaw! Find some meat!
-电锯！割草时间到！
-; ;チェーンソウだ!肉を寄越せ!
+电锯！割肉时间到！
 
 > GOTLAUNCHER
 You got the rocket launcher!
-获得火箭炮！
-; ;ロケットランチャーを手に入れた!
+你获得了火箭发射器！
 
 > GOTPLASMA
 You got the plasma gun!
-获得电浆步枪！
-; ;プラズマライフルを手に入れた!
+你获得了电浆枪！
 
 > GOTSHOTGUN
 You got the shotgun!
-获得霰弹枪！
-; ;ショットガンを手に入れた!
+你获得了霰弹枪！
 
 > GOTSHOTGUN2
 You got the super shotgun!
-获得超级霰弹枪！
-; ;スーパーショットガンを手に入れた!
+你获得了超级霰弹枪！
 
 > PICKUP_PISTOL_DROPPED
 Picked up a pistol.
-获得手枪！
-; ;ピストルを拾った。
+拾取了手枪。
 
 > BETA_BONUS1
 You pick up a demonic dagger.
-获得恶魔匕首。
-; ;デモニックダガーを拾った。
+你拾取了恶魔匕首。
 
 > BETA_BONUS2
 You pick up a skullchest.
-你捡起一个骷髅箱。
-; ;スカルチェストを拾った。
+你拾取了骷髅箱。
 
 > BETA_BONUS3
 You pick up an evil sceptre.
-获得邪恶法杖。
-; ;エビルセプターを拾った。
+你拾取了邪恶法杖。
 
 > BETA_BONUS4
 You pick up an unholy bible.
-获得邪恶圣经。
-; ;アンホーリーバイブルを拾った。
+你拾取了邪恶圣经。
 
 ; Locks
 
 > PD_BLUEO
 You need a blue key to activate this object
-需要蓝钥匙来启动这个装置
-; ;この装置には ブルーキーが必要だ。
+你需要蓝钥匙才能激活这个物体
 
 > PD_REDO
 You need a red key to activate this object
-需要红钥匙来启动这个装置
-; ;この装置には レッドキーが必要だ。
+你需要红钥匙才能激活这个物体
 
 > PD_YELLOWO
 You need a yellow key to activate this object
-需要黄钥匙来启动这个装置
-; ;この装置にはイエローキーが必要だ。
+你需要黄钥匙才能激活这个物体
 
 > PD_BLUEK
 You need a blue key to open this door
-需要蓝钥匙来开启这个门
-; ;このドアには ブルーキーが必要だ。
+你需要蓝钥匙才能开这个门
 
 > PD_REDK
 You need a red key to open this door
-需要红钥匙来开启这个门
-; ;このドアには レッドキーが必要だ。
+你需要红钥匙才能开这个门
 
 > PD_YELLOWK
 You need a yellow key to open this door
-需要黄钥匙来开启这个门
-; ;このドアには イエローキー が必要だ。
+你需要黄钥匙才能开这个门
 
 > PD_BLUECO
 You need a blue card to activate this object
-需要蓝钥匙卡来开启这个装置
-; ;この装置には ブルーカード が必要だ。
+你需要蓝钥匙卡才能激活这个物体
 
 > PD_REDCO
 You need a red card to activate this object
-需要红钥匙卡来开启这个装置
-; ;この装置には レッドカード が必要だ。
+你需要红钥匙卡才能激活这个物体
 
 > PD_YELLOWCO
 You need a yellow card to activate this object
-需要黄钥匙卡来开启这个装置
-; ;この装置には イエローカード が必要だ。
+你需要黄钥匙卡才能激活这个物体
 
 > PD_BLUESO
 You need a blue skull to activate this object
-需要蓝色骷髅钥匙来启动这个装置
-; ;この装置には ブルースカル が必要だ。
+你需要蓝骷髅钥匙才能激活这个物体
 
 > PD_REDSO
 You need a red skull to activate this object
-需要红色骷髅钥匙来启动这个装置
-; ;この装置には レッドスカル が必要だ。
+你需要红骷髅钥匙才能激活这个物体
 
 > PD_YELLOWSO
 You need a yellow skull to activate this object
-需要黄色骷髅钥匙来启动这个装置
-; ;この装置には イエロースカル が必要だ。
+你需要黄骷髅钥匙才能激活这个物体
 
 > PD_BLUEC
 You need a blue card to open this door
-需要蓝钥匙卡来开启这个门
-; ;このドアには ブルーカード が必要だ。
+你需要蓝钥匙卡才能开这个门
 
 > PD_REDC
 You need a red card to open this door
-需要红钥匙卡来开启这个门
-; ;このドアには レッドカード が必要だ。
+你需要红钥匙卡才能开这个门
 
 > PD_YELLOWC
 You need a yellow card to open this door
-需要黄钥匙卡来开启这个门
-; ;このドアには イエローカード が必要だ。
+你需要黄钥匙卡才能开这个门
 
 > PD_BLUES
 You need a blue skull to open this door
-需要蓝色骷髅钥匙来开启这个门
-; ;このドアには ブルースカル が必要だ。
+你需要蓝骷髅钥匙才能开这个门
 
 > PD_REDS
 You need a red skull to open this door
-需要红色骷髅钥匙来开启这个门
-; ;このドアには レッドスカル が必要だ。
+你需要红骷髅钥匙才能开这个门
 
 > PD_YELLOWS
 You need a yellow skull to open this door
-需要黄色骷髅钥匙来开启这个门
-; ;このドアには イエロースカル が必要だ。
+你需要黄骷髅钥匙才能开这个门
 
 ; Cast call names
 
 > CC_ZOMBIE
 Zombieman
-僵尸士兵
-; ;ゾンビ兵
+僵尸兵
 
 > CC_SHOTGUN
 ; a.k.a. (former human) sergeant
 Shotgun Guy
-散弹枪僵尸
-; ;ショットガンゾンビ
+霰弹枪士官
 
 > CC_HEAVY
 ; a.k.a. former commando
@@ -1523,62 +1271,62 @@ Energy Cells
 
 > OB_STEALTHBABY
 %o thought %g saw an arachnotron.
-%o 以为是看到了机械蜘蛛。
+%o 以为 %g 看到了机械蜘蛛。
 ; ;%o がアラクノトロンを見た気がした。
 
 > OB_STEALTHVILE
 %o thought %g saw an archvile.
-%o 以为是看到了恶弧。
+%o 以为 %g 看到了恶弧。
 ; ;%o がアーチバイルを見た気がした。
 
 > OB_STEALTHBARON
 %o thought %g saw a Baron of Hell.
-%o 以为是看到了地狱男爵。
+%o 以为 %g 看到了地狱男爵。
 ; ;%o がバロンを見た気がした。
 
 > OB_STEALTHCACO
 %o thought %g saw a cacodemon.
-%o 以为是看到了独眼魔。
+%o 以为 %g 看到了独眼魔。
 ; ;%o がカコデーモンを見た気がした。
 
 > OB_STEALTHCHAINGUY
 %o thought %g saw a chaingunner.
-%o 以为是看到了机枪僵尸。
+%o 以为 %g 看到了机枪僵尸。
 ; ;%o がチェインガンナーを見た気がした。
 
 > OB_STEALTHDEMON
 %o thought %g saw a demon.
-%o 以为是看到了粉红魔。
+%o 以为 %g 看到了粉红魔。
 ; ;%o がデーモンを見た気がした。
 
 > OB_STEALTHKNIGHT
 %o thought %g saw a Hell Knight.
-%o 以为是看到了地狱骑士。
+%o 以为 %g 看到了地狱骑士。
 ; ;%o がヘルナイトを見た気がした。
 
 > OB_STEALTHIMP
 %o thought %g saw an imp.
-%o 以为是看到了小鬼。
+%o 以为 %g 看到了小鬼。
 ; ;%o がインプを見た気がした。
 
 > OB_STEALTHFATSO
 %o thought %g saw a mancubus.
-%o 以为是看到了肥球。
+%o 以为 %g 看到了肥球。
 ; ;%o がマンキュバスを見た気がした。
 
 > OB_STEALTHUNDEAD
 %o thought %g saw a revenant.
-%o 以为是看到了亡魂。
+%o 以为 %g 看到了亡魂。
 ; ;%o がレバナントを見た気がした。
 
 > OB_STEALTHSHOTGUNGUY
 %o thought %g saw a sergeant.
-%o 以为是看到了霰弹枪僵尸。
+%o 以为 %g 看到了霰弹枪僵尸。
 ; ;%o が軍曹を見た気がした。
 
 > OB_STEALTHZOMBIE
 %o thought %g saw a zombieman.
-%o 以为是看到了僵尸士兵。
+%o 以为 %g 看到了僵尸士兵。
 ; ;%o がゾンビ兵を見た気がした。
 
 > OB_UNDEADHIT
@@ -1763,216 +1511,175 @@ Energy Cells
 
 ; Heretic
 
-; Pickup 
+; Pickup
 
 > TXT_GOTBLUEKEY
 Blue Key
-蓝色钥匙
-; ;青の鍵
+蓝钥匙
 
 > TXT_GOTYELLOWKEY
 Yellow Key
-黄色钥匙
-; ;黄の鍵
+黄钥匙
 
 > TXT_GOTGREENKEY
 Green Key
-绿色钥匙
-; ;緑の鍵
+绿钥匙
 
 > TXT_ARTIHEALTH
 Quartz Flask
 石英药瓶
-; ;石英フラスコ
 
 > TXT_ARTIFLY
 Wings of Wrath
 愤怒之翼
-; ;レイスの翼
 
 > TXT_ARTIINVULNERABILITY
 Ring of Invincibility
 无敌戒指
-; ;不死の指輪
 
 > TXT_ARTITOMEOFPOWER
 Tome of Power
 力量之书
-; ;力の術書
 
 > TXT_ARTIINVISIBILITY
 Shadowsphere
 暗影球
-; ;闇の球体
 
 > TXT_ARTIEGG
 Morph Ovum
 转化蛋
-; ;変貌の卵子
 
 > TXT_ARTISUPERHEALTH
 Mystic Urn
 神秘瓮
-; ;神秘の骨壷
 
 > TXT_ARTITORCH
 Torch
 火炬
-; ;松明
 
 > TXT_ARTIFIREBOMB
 Time Bomb of the Ancients
 远古时空炸弹
-; ;古代の時限爆薬
 
 > TXT_ARTITELEPORT
 Chaos Device
 混沌之器
-; ;カオスデバイス
 
 > TXT_ITEMHEALTH
 Crystal Vial
 水晶瓶
-; ;水晶瓶
 
 > TXT_ITEMBAGOFHOLDING
 Bag of Holding
 行李袋
-; ;持ち物袋
 
 > TXT_ITEMSHIELD1
 Silver Shield
 银盾
-; ;銀の盾
 
 > TXT_ITEMSHIELD2
 Enchanted Shield
 附魔盾
-; ;魔法の盾
 
 > TXT_ITEMSUPERMAP
 Map Scroll
 地图卷轴
-; ;地図の巻物
 
 > TXT_AMMOGOLDWAND1
 Wand Crystal
 魔杖水晶
-; ;ワンドクリスタル
 
 > TXT_AMMOGOLDWAND2
 Crystal Geode
 结晶原石
-; ;晶洞石
 
 > TXT_AMMOMACE1
 Mace Spheres
 战锤球
-; ;メイス球弾
 
 > TXT_AMMOMACE2
 Pile of Mace Spheres
 战锤球堆
-; ;メイス球弾の固まり
 
 > TXT_AMMOCROSSBOW1
 Ethereal Arrows
 空灵之箭
-; ;イセリアルの矢
 
 > TXT_AMMOCROSSBOW2
 Quiver of Ethereal Arrows
 空灵之箭箭囊
-; ;イセリアルの矢筒
 
 > TXT_AMMOBLASTER1
 Claw Orb
 利爪球
-; ;クローオーブ
 
 > TXT_AMMOBLASTER2
 Energy Orb
 能量球
-; ;エネルギーオーブ
 
 > TXT_AMMOSKULLROD1
 Lesser Runes
 次级符文
-; ;レッサールーン
 
 > TXT_AMMOSKULLROD2
 Greater Runes
 高级符文
-; ;グレータールーン
 
 > TXT_AMMOPHOENIXROD1
 Flame Orb
 火球
-; ;フレイムオーブ
 
 > TXT_AMMOPHOENIXROD2
 Inferno Orb
 地狱火球
-; ;インフェルノオーブ
 
 > TXT_WPNGOLDWAND
 Gold Wand
 黄金魔杖
-; ;ゴールドワンド
 
 > TXT_WPNMACE
 Firemace
 火焰战锤
-; ;ファイアメイス
 
 > TXT_WPNCROSSBOW
 Ethereal Crossbow
 空灵之弩
-; ;イセリアルクロスボウ
 
 > TXT_WPNBLASTER
 Dragon Claw
 龙爪
-; ;ドラゴンクロー
 
 > TXT_WPNSKULLROD
 Hellstaff
 地狱法杖
-; ;ヘルスタッフ
 
 > TXT_WPNPHOENIXROD
 Phoenix Rod
 凤凰法杖
-; ;フェニックスロッド
 
 > TXT_WPNGAUNTLETS
 Gauntlets of the Necromancer
 死灵法师护手
-; ;ネクロマンサーの篭手
 
 ; Locks
 
 > TXT_NEEDBLUEKEY
 You need a blue key to open this door
-需要蓝钥匙来开启这个门
-; ;開くには 青の鍵が必要だ
+你需要蓝钥匙才能开这个门
 
 > TXT_NEEDGREENKEY
 You need a green key to open this door
-需要绿钥匙来开启这个门
-; ;開くには 緑の鍵が必要だ
+你需要绿钥匙才能开这个门
 
 > TXT_NEEDYELLOWKEY
 You need a yellow key to open this door
-需要黄钥匙来开启这个门
-; ;開くには 黄の鍵が必要だ
+你需要黄钥匙才能开这个门
 
 ; Actor tag names
 
 > FN_CHICKEN
 Chicken
 鸡
-; ;鶏
 
 > FN_BEAST
 ; Wordplay: werewolf
@@ -1983,7 +1690,6 @@ Weredragon
 ; Wordplay: sabre-tooth
 Sabreclaw
 剑爪
-; ;サーベルクロー
 
 > FN_DSPARIL
 D'Sparil
@@ -2057,17 +1763,16 @@ Elven Wand
 
 > OB_CHICKEN
 %o was pecked to death.
-%o 他被啄死了。
-; ;%o はくちばしで突かれ死んだ。
+%o 被啄死了。
 
 > OB_BEAST
 %o was charred by a weredragon.
-%o 他被一只Weredragon烧焦了。
+%o 被一只Weredragon烧焦了。
 ; ;%o はウェアドラゴンに黒焦げにされた。
 
 > OB_CLINK
 %o was slashed by a sabreclaw.
-%o他被sabreclaw割裂了。
+%o 被sabreclaw割裂了。
 ; ;%o はサーベルクローに切り裂かれた。
 
 > OB_DSPARIL1
@@ -2208,69 +1913,59 @@ Elven Wand
 
 > TXT_MANA_1
 Blue Mana
-蓝色法力
-; ;青マナ
+蓝魔能
 
 > TXT_MANA_2
 Green Mana
-绿色法力
-; ;緑マナ
+绿魔能
 
 > TXT_MANA_BOTH
 Combined Mana
-复合法力
-; ;複合マナ
+复合魔能
 
 > TXT_KEY_STEEL
 Steel Key
-钢制钥匙
-; ;鋼の鍵
+钢钥匙
 
 > TXT_KEY_CAVE
 Cave Key
 洞穴钥匙
-; ;洞窟の鍵
 
 > TXT_KEY_AXE
 Axe Key
-斧头钥匙
-; ;斧の鍵
+斧钥匙
 
 > TXT_KEY_FIRE
 Fire Key
-火焰钥匙
-; ;炎の鍵
+火钥匙
 
 > TXT_KEY_EMERALD
 Emerald Key
 翡翠钥匙
-; ;翠玉の鍵
 
 > TXT_KEY_DUNGEON
 Dungeon Key
 地牢钥匙
-; ;迷宮の鍵
 
 > TXT_KEY_SILVER
 Silver Key
 银钥匙
-; ;銀の鍵
 
 > TXT_KEY_RUSTED
 Rusted Key
-錆びた鍵
+锈钥匙
 
 > TXT_KEY_HORN
 Horn Key
-角の鍵
+角钥匙
 
 > TXT_KEY_SWAMP
 Swamp Key
-沼の鍵
+沼泽钥匙
 
 > TXT_KEY_CASTLE
 Castle Key
-城の鍵
+城堡钥匙
 
 > TXT_ARTIINVULNERABILITY2
 Icon of the Defender
@@ -2295,7 +1990,6 @@ Banishment Device
 > TXT_ARTISPEED
 Boots of Speed
 速度之靴
-; ;素早さの靴
 
 > TXT_ARTIBOOSTMANA
 Krater of Might
@@ -2427,8 +2121,7 @@ Bloodscourge Assembled
 
 > TXT_WEAPONPIECE
 A weapon piece! This is your lucky day!
-一件武器！今天是你的幸运日！
-; ;武器の一片! 今日は吉日だ!
+武器碎片！今天是你的幸运日！
 
 > TXT_QUIETUS_PIECE
 Segment of Quietus
@@ -2730,8 +2423,7 @@ Silver and brass gear
 
 > OB_FIREDEMON
 %o tasted an Afrit's fire.
-%o 尝过烈火的滋味。
-; ;%o はアフリートの炎を味わった。
+%o 尝到了烈火的滋味。
 
 > OB_DEMON1
 %o was scalded by a Serpent.
@@ -3283,7 +2975,7 @@ Grenade Launcher
 グレネードランチャー
 
 > TAG_GLAUNCHER2
-; White phosphorous grenade launcher 
+; White phosphorous grenade launcher
 Grenade Launcher
 グレネードランチャー
 
@@ -3801,12 +3493,10 @@ You seem to have enough!
 > TXT_GOAWAY
 Go away!
 走开！
-; ;逃げ出せ!
 
 > TXT_COMM0
 Incoming Message...
 传入消息...
-; ;メッセージが届いた...
 
 > TXT_COMM1
 Incoming Message from BlackBird...
@@ -4207,8 +3897,7 @@ Super Zorch Added
 
 > STSTR_CHOPPERS chex
 ... Eat Chex(R)!
-... 吃Chex（R）！
-; ;...Chex(R)をたべよう!
+……吃奇克斯(R)！
 
 > AMMO_CLIP chex
 Mini Zorch Charge
@@ -4233,58 +3922,47 @@ Phasing Zorcher Charge
 > MNU_NEWGAME
 New Game
 新游戏
-; ;新規ゲーム
 
 > MNU_OPTIONS
 Options
-设置
-; ;オプション
+选项
 
 > MNU_GAMEFILES
 Game Files
 游戏文件
-; ;ゲームファイル
 
 > MNU_INFO
 Info
 信息
-; ;情報
 
 > MNU_QUITGAME
 Quit Game
-終了
-; ;終了
+退出游戏
 
 > MNU_CHOOSESKILL
 ; This text is extremely space limited!
 Choose Skill Level:
-选择难度
-; ;実力を選べ:
+选择难度等级：
 
 > SKILL_BABY
 I'm too young to die.
 我还年轻不想死。
-; ;死ぬには若すぎる
 
 > SKILL_EASY
 Hey, not too rough.
 嘿，不要太粗暴。
-; ;あまり激しくするな
 
 > SKILL_NORMAL
 Hurt me plenty.
 用力打我啊。
-; ;手加減無用
 
 > SKILL_HARD
 Ultra-Violence.
-很强很暴力。
-; ;ウルトラ バイオレンス
+极其暴力。
 
 > SKILL_NIGHTMARE
 Nightmare!
 噩梦！
-; ;悪夢だ!
 
 > CSKILL_BABY
 Easy does it
@@ -4313,27 +3991,22 @@ Super Slimey!
 > SSKILL_BABY
 Training
 训练
-; ;トレーニング
 
 > SSKILL_EASY
 Rookie
 菜鸟
-; ;ルーキー
 
 > SSKILL_NORMAL
 Veteran
 老兵
-; ;ベテラン
 
 > SSKILL_HARD
 Elite
 精英
-; ;エリート
 
 > SSKILL_NIGHTMARE
 Bloodbath
-大屠杀
-; ;ブラッドバス
+血浴
 
 > MNU_WETNURSE
 Thou needeth a Wet-Nurse
@@ -4367,22 +4040,18 @@ Squire
 > MNU_KNIGHT
 Knight
 骑士
-; ;騎士
 
 > MNU_WARRIOR
 Warrior
 战士
-; ;戦士
 
 > MNU_BERSERKER
 Berserker
 狂战士
-; ;狂戦士
 
 > MNU_TITAN
 Titan
 泰坦
-; ;タイタン
 
 > MNU_ALTARBOY
 Altar Boy
@@ -4407,7 +4076,6 @@ Cardinal
 > MNU_POPE
 Pope
 教皇
-; ;教皇
 
 > MNU_APPRENTICE
 Apprentice
@@ -4431,46 +4099,43 @@ Warlock
 
 > MNU_ARCHMAGE
 Archmage
-大魔导师
-; ;大魔導師
+大法师
 
 > MNU_CHOOSECLASS
 Choose Class:
-种类选择：
-; ;クラス選抜:
+选择职位：
 
 > MNU_FIGHTER
 Fighter
-戦士
+战士
 
 > MNU_CLERIC
 Cleric
-僧侶
+牧师
 
 > MNU_MAGE
 Mage
-魔導士
+法师
 
 > MNU_RANDOM
 Random
-ランダム
+随机
 
 > MNU_EPISODE
 Which Episode?
-どのエピソードだ?
+哪个章节？
 
 > MNU_EPISODE strife
 Choose Campaign
-キャンペーンを選べ
+选择战役
 
 > MNU_COTD
 City of the Damned
 被诅咒的城市
-; ;呪われた都
 
 > MNU_HELLSMAW
 Hell's Maw
-地獄の肚
+地狱深渊
 
 > MNU_DOME
 The Dome of D'Sparil
@@ -4490,67 +4155,54 @@ The Stagnant Demesne
 > GMPLYMNU_TEAMPLAY
 Teamplay
 团队游戏
-; ;チーム制
 
 > GMPLYMNU_TEAMDAMAGE
 Team damage scalar
-对队友的伤害倍率
-; ;チームメンバーへのダメージ倍率
+队友伤害倍率
 
 > GMPLYMNU_SMARTAUTOAIM
 Smart Autoaim
-辅助瞄准
-; ;スマートオートエイム
+智能自动瞄准
 
 > GMPLYMNU_FALLINGDAMAGE
 Falling damage
-坠落伤害
-; ;落下ダメージ
+掉落伤害
 
 > GMPLYMNU_DROPWEAPON
 Drop weapon
-死亡时武器掉落
-; ;死亡時に武器を落とす
+掉落武器
 
 > GMPLYMNU_DOUBLEAMMO
 Double ammo
 双倍弹药
-; ;弾2倍
 
 > GMPLYMNU_INFINITEAMMO
 Infinite ammo
 无限弹药
-; ;弾無限
 
 > GMPLYMNU_INFINITEINVENTORY
 Infinite inventory
-无限库存
-; ;所持品無限
+无限物品
 
 > GMPLYMNU_NOMONSTERS
 No monsters
-关卡中的不放置怪物
-; ;モンスターを出現させない
+无怪物
 
 > GMPLYMNU_NOMONSTERSTOEXIT
 No monsters to exit
-仅允许全怪物击杀时过关
-; ;モンスター全滅までMAPから脱出不可
+怪物全灭才能过关
 
 > GMPLYMNU_MONSTERSRESPAWN
 Monsters respawn
-开启怪物自动复活
-; ;モンスターの自力復活
+怪物自动刷新
 
 > GMPLYMNU_NORESPAWN
 Monsters do not respawn
-禁止怪物自动复活
-; ;プレイヤーの復活禁止
+禁止怪物自动刷新
 
 > GMPLYMNU_ITEMSRESPAWN
 Items respawn
 物品自动刷新
-; ;アイテムを復活
 
 > GMPLYMNU_SUPERRESPAWN
 Big powerups respawn
@@ -4560,7 +4212,6 @@ Big powerups respawn
 > GMPLYMNU_FASTMONSTERS
 Fast monsters
 加速怪物
-; ;モンスター高速化
 
 > GMPLYMNU_INSTANTREACTION
 Monsters Nightmare Reflexes
@@ -4574,42 +4225,34 @@ Degeneration
 > GMPLYMNU_NOAUTOAIM
 Allow Autoaim
 允许自动瞄准
-; ;オートエイム有効化
 
 > GMPLYMNU_ALLOWSUICIDE
 Allow Suicide
 允许自杀
-; ;自殺コマンド有効化
 
 > GMPLYMNU_ALLOWJUMP
 Allow jump
 允许跳跃
-; ;ジャンプ有効化
 
 > GMPLYMNU_ALLOWCROUCH
 Allow crouch
 允许下蹲
-; ;しゃがみ有効化
 
 > GMPLYMNU_ALLOWFREELOOK
 Allow freelook
-允许上下移动视角
-; ;フリールック有効化
+允许自由视角
 
 > GMPLYMNU_ALLOWFOV
 Allow FOV
-允许定制FOV
-; ;FOVの調整を有効化
+允许调整FOV
 
 > GMPLYMNU_BFGFREEAIM
 Allow BFG aiming
 允许BFG瞄准
-; ;BFG使用時のフリールックを有効化
 
 > GMPLYMNU_ALLOWAUTOMAP
 Allow automap
 允许查看地图
-; ;オートマップ有効化
 
 > GMPLYMNU_AUTOMAPALLIES
 Automap allies
@@ -4643,8 +4286,7 @@ End sector counts for kill %
 
 > GMPLYMNU_DEATHMATCH
 Deathmatch Settings
-死斗设定
-; ;デスマッチの設定
+死斗设置
 
 > GMPLYMNU_WEAPONSSTAY
 Weapons stay
@@ -5034,27 +4676,22 @@ Use original Doom explosion behavior
 > PLYRMNU_RED
 Red
 红色
-; ;赤の量
 
 > PLYRMNU_GREEN
 Green
 绿色
-; ;緑の量
 
 > PLYRMNU_BLUE
 Blue
 蓝色
-; ;青の量
 
 > PLYRMNU_PLAYERCLASS
 Class
-经典
-; ;役職
+职位
 
 > PLYRMNU_PLAYERSKIN
 Skin
-皮肤
-; ;外装
+外观
 
 > PLYRMNU_SWITCHONPICKUP
 Switch on pickup
@@ -5063,100 +4700,81 @@ Switch on pickup
 
 > PLYRMNU_PRESSSPACE
 Press \cjSPACE
-\cj空格键
-; ;\cjスペースキー
+按\cj空格键
 
 > PLYRMNU_SEEFRONT
 to see front
-显示前面
-; ;で前面を表示
+显示前方
 
 > PLYRMNU_SEEBACK
 to see back
-显示背面
-; ;で背面を表示
+显示后方
 
 > PLYRMNU_VERTSPREAD
 Vertical Bullet Spread
-垂直方向の散弾
+垂直的子弹散射
 
 ; controls
 
 > CNTRLMNU_ZOOM
 Weapon Zoom
 武器缩放
-; ;ズーム
 
 > CNTRLMNU_USER1
 Weapon State 1
 武器状态1
-; ;武器特殊動作 1
 
 > CNTRLMNU_USER2
 Weapon State 2
 武器状态2
-; ;武器特殊動作 2
 
 > CNTRLMNU_USER3
 Weapon State 3
 武器状态3
-; ;武器特殊動作 3
 
 > CNTRLMNU_USER4
 Weapon State 4
 武器状态4
-; ;武器特殊動作 4
 
 > CNTRLMNU_MOVEUP
 Fly / Swim up
-向上飞行 / 游泳
-; ;飛行/水泳時 上昇
+向上飞行/游泳
 
 > CNTRLMNU_MOVEDOWN
 Fly / Swim down
-向下飞行 / 游泳
-; ;飛行/水泳時 下降
+向下飞行/游泳
 
 > CNTRLMNU_LAND
 Stop flying
 停止飞行
-; ;飛行停止
 
 > CNTRLMNU_KEYBOARDLOOK
 Keyboard look
 使用键盘控制视角
-; ;キー視点上下化
 
 > CNTRLMNU_POPUPS_TITLE
 Strife Popup Screens Controls
-Strife弹出通知屏幕的控制
-; ;Strifeポップアップ表示設定
+Strife弹出画面的控制
 
 > CNTRLMNU_TEAMSAY
 Team say
 团队发言
-; ;チーム内発言
 
 > CNTRLMNU_DROPITEM
 Drop item
-丢弃当前选择的道具
-; ;"""アイテムを捨てる
-; ;"""
+丢弃物品
 
 > CNTRLMNU_QUERYITEM
 Query item
-查询当前选择的道具的信息
-; ;アイテム名を表示
+查询物品
 
 > CNTRLMNU_DROPWEAPON
 Drop weapon
-丢弃当前持有的武器
-; ;武器を捨てる
+丢弃武器
 
 > CNTRLMNU_OTHER
 Other
-其他
-; ;その他
+其它
 
 > CNTRLMNU_COOPSPY
 Coop spy
@@ -5165,90 +4783,73 @@ Coop spy
 
 > CNTRLMNU_POPUPS
 Strife Popup Screens
-Strife弹窗信息屏
-; ;Strife ポップアップ画面
+Strife弹出画面
 
 > CNTRLMNU_MISSION
 Mission objectives
 任务目标
-; ;ミッションオブジェクト
 
 > CNTRLMNU_KEYS
 Keys list
-钥匙清单
-; ;キー類リスト
+钥匙列表
 
 > CNTRLMNU_STATS
 Weapons/ammo/stats
 武器/弹药/状态
-; ;武器 / 弾薬 / 状態
 
 > CNTRLMNU_TOGGLESCOREBOARD
 Toggle Scoreboard
-按住切换显示得分板
-; ;スコアボード切替
+切换分数板
 
 > MOUSEMNU_LOOKSPRING
 Lookspring
-开启此项并开启“总是用鼠标移动视角”时，按下“用鼠标移动视角”会将视角立刻移到水平面上
-; ;視点水平化
+移动时居中视角
 
 > MOUSEMNU_LOOKSTRAFE
 Lookstrafe
-开启此项后移动鼠标将使角色左右平移，而不是移动视角
-; ;視点横移動化
+移动鼠标来平移
 
 ; Map colors
 
 > MAPCOLORMNU_BACKCOLOR
 Background
 背景
-; ;背景
 
 > MAPCOLORMNU_YOURCOLOR
 You
 你
-; ;自分
 
 > MAPCOLORMNU_WALLCOLOR
 1-sided walls
 单面墙
-; ;壁
 
 > MAPCOLORMNU_FDWALLCOLOR
 2-sided walls with different floors
-不同楼层的双面墙
-; ;高低差のある床
+不同地面的双面墙
 
 > MAPCOLORMNU_CDWALLCOLOR
 2-sided walls with different ceilings
 不同天花板的双面墙
-; ;高低差のある天井
 
 > MAPCOLORMNU_EFWALLCOLOR
 2-sided walls with 3D floors
-不同3D楼层的双面墙
-; ;多重床
+三维地面的双面墙
 
 > MAPCOLORMNU_GRIDCOLOR
 Map grid
 地图网格
-; ;マップグリッド
 
 > MAPCOLORMNU_XHAIRCOLOR
 Center point
 中心点
-; ;中心点
 
 > MAPCOLORMNU_NOTSEENCOLOR
 Not-yet-seen walls
-尚未见过的墙壁
-; ;未見の壁
+没见过的墙
 
 > MAPCOLORMNU_LOCKEDCOLOR
 Locked doors
-被上锁的门
-; ;鍵の掛かったドア
+已上锁的门
 
 > MAPCOLORMNU_INTRALEVELCOLOR
 Teleporter to the same map
@@ -5287,18 +4888,15 @@ Invisible 2-sided walls
 
 > MAPCOLORMNU_SECRETWALLCOLOR
 Secret walls
-秘密墙壁
-; ;シークレットの壁
+秘密墙
 
 > MAPCOLORMNU_THINGCOLOR
 Actors
 角色
-; ;アクター
 
 > MAPCOLORMNU_MONSTERCOLOR
 Monsters
 怪物
-; ;モンスター
 
 > MAPCOLORMNU_NONCOUNTINGMONSTERCOLOR
 Non-counting Monsters
@@ -5308,64 +4906,52 @@ Non-counting Monsters
 > MAPCOLORMNU_FRIENDCOLOR
 Friends
 友方
-; ;仲間
 
 > MAPCOLORMNU_ITEMCOLOR
 Items
 物品
-; ;アイテム
 
 > MAPCOLORMNU_COUNTITEMCOLOR
 Count Items
 计数物品
-; ;カウント対象アイテム
 
 > MAPCOLORMNU_OVERLAY
 Overlay Mode
-叠放模式
-; ;オーバーレイモード
+重叠模式
 
 > MAPCOLORMNU_OVCHEATMODE
 Overlay Cheat Mode
-叠放作弊模式
-; ;オーバーレイ チートモード
+重叠作弊模式
 
 > MAPCOLORMNU_PORTAL
 Portal Overlays
-传送点叠放
-; ;ポータル オーバーレイ
+传送点重叠
 
 ; Messages
 
 > MSGMNU_TITLE
 Messages
-信息
-; ;メッセージ類
+消息
 
 > MSGMNU_SHOWMESSAGES
 Show messages
-显示信息
-; ;メッセージ表示
+显示消息
 
 > MSGMNU_SHOWOBITUARIES
 Show obituaries
-显示被击杀信息
-; ;訃報表示
+显示被击杀
 
 > MSGMNU_SHOWSECRETS
 Show secret notifications
-显示发现隐藏点的提示
-; ;シークレット発見表示
+显示发现秘密的通知
 
 > MSGMNU_MESSAGELEVEL
 Minimum message level
-最低显示信息的水平
-; ;最小メッセージレベル
+最低消息等级
 
 > MSGMNU_MESSAGECOLORS
 Message Colors
-信息颜色
-; ;メッセージ色
+消息颜色
 
 > MSGMNU_ITEMPICKUP
 Item Pickup
@@ -5379,38 +4965,31 @@ Obituaries
 
 > MSGMNU_CRITICALMESSAGES
 Critical Messages
-重要信息
-; ;致命的なメッセージ
+关键消息
 
 > MSGMNU_CHATMESSAGES
 Chat Messages
-聊天信息
-; ;チャットメッセージ
+聊天消息
 
 > MSGMNU_TEAMMESSAGES
 Team Messages
-队伍信息
-; ;チームメッセージ
+团队消息
 
 > MSGMNU_CENTEREDMESSAGES
 Centered Messages
 居中消息
-; ;スクリプトメッセージ
 
 > MSGMNU_SCREENSHOTMESSAGES
 Screenshot messages
-截图信息
-; ;スクショメッセージ
+截图消息
 
 > MSGMNU_LONGSAVEMESSAGES
 Detailed save messages
-详细存档信息
-; ;詳細なセーブメッセージ
+详细存档消息
 
 > MSGMNU_DEVELOPER
 Developer message mode
-开发者信息模式
-; ;開発者用モード
+开发者消息模式
 
 ; Automap
 
@@ -5894,75 +5473,62 @@ Overrides for above setting
 
 > SCALEMNU_MESSAGES
 Messages
-信息
-; ;メッセージ類
+消息
 
 > SCALEMNU_CONSOLE
 Console
 控制台
-; ;コンソール
 
 > SCALEMNU_STATBAR
 Status bar
-状况栏
-; ;ステータスバー
+状态栏
 
 > SCALEMNU_HUD
 Fullscreen HUD
-全屏幕 HUD
-; ;全画面HUD
+全屏HUD
 
 > SCALEMNU_ALTHUD
 Alternative HUD
-可选 HUD
-; ;オルタナティブHUD
+替换HUD
 
 > SCALEMNU_HUDASPECT
 HUD preserves aspect ratio
-HUD保留纵横比
+HUD保持纵横比
 ; ;HUDのアスペクト比維持
 
 > SCALEMNU_USEUI
 Use default scale
 使用默认缩放
-; ;通常サイズを使う
 
 > SCALEMNU_USEFS
 Scale to fullscreen
 放大到全屏
-; ;全画面に拡大
 
 > SCALEMNU_ADAPT
 Adapt to screen size
 调整屏幕大小
-; ;画面サイズに合わせる
 
 ; HUD
 
 > HUDMNU_TITLE
 HUD Options
-HUD设置
-; ;HUDオプション
+HUD选项
 
 > HUDMNU_ALTHUD
 Alternative HUD
-替代HUD
-; ;オルタナティブHUD
+替换HUD
 
 > HUDMNU_MESSAGE
 Message Options
-消息设置
-; ;メッセージの設定
+消息选项
 
 > HUDMNU_UISCALE
 User interface scale
 用户界面缩放
-; ;インターフェースの大きさ
 
 > HUDMNU_FORCECROSSHAIR
 Force default crosshair
-强制使用默认准星
-; ;デフォルトの照準を使う
+强制默认准星
 
 > HUDMNU_GROWCROSSHAIR
 Grow crosshair when picking up items
@@ -6007,7 +5573,6 @@ Poison Buildup flashes
 > HUDMNU_SCALEOPT
 Scaling Options
 缩放选项
-; ;スケーリング オプション
 
 > MISCMNU_QUERYIWAD
 Show IWAD selection dialog
@@ -6044,7 +5609,6 @@ Time threshold for node caching
 > MISCMNU_CLEARNODECACHE
 Clear node cache
 清除节点缓存
-; ;ノードのキャッシュをクリア
 
 > MISCMNU_INTERSCROLL
 Allow skipping of intermission scrollers
@@ -6053,18 +5617,15 @@ Allow skipping of intermission scrollers
 
 > NETMNU_TITLE
 Network Options
-网络设置
-; ;ネットワーク オプション
+网络选项
 
 > NETMNU_LOCALOPTIONS
 Local options
-本地设置
-; ;ローカル オプション
+本地选项
 
 > NETMNU_MOVEPREDICTION
 Movement prediction
 移动预测
-; ;移動予測
 
 > NETMNU_LINESPECIALPREDICTION
 Predict line actions
@@ -6083,58 +5644,47 @@ Lerp阈值
 
 > NETMNU_HOSTOPTIONS
 Host options
-主机设置
-; ;ホスト オプション
+主机选项
 
 > NETMNU_EXTRATICS
 Extra Tics
 预备秒数
-; ;予備秒数
 
 > NETMNU_TICBALANCE
 Latency balancing
 延迟平衡
-; ;レイテンシーバランス
 
 > OPTVAL_ORIGINAL
 Original
 原始
-; ;オリジナル
 
 > OPTVAL_OPTIMIZED
 Optimized
 优化
-; ;最適化
 
 > OPTVAL_CLASSIC
 Classic (Faster)
-经典 (高性能)
-; ;旧式(速度重視)
+经典(更快)
 
 > OPTVAL_PRECISE
 Precise
-精准
-; ;精密
+精确
 
 > OPTVAL_CAPPED
 Capped
 限制
-; ;上限
 
 > OPTVAL_PARTICLES
 Particles
 颗粒化
-; ;パーティクル
 
 > OPTVAL_SPRITES
 Sprites
-脚本
-; ;スプライト
+精灵
 
 > OPTVAL_SPRITESPARTICLES
 Sprites & Particles
-脚本 & 粒子
-; ;スプライト & パーティクル
+精灵和粒子
 
 > OPTVAL_MELT
 Melt
@@ -6155,42 +5705,34 @@ Crossfade
 ; This setting is duplicated in order to allow for different grammatical gender endings in the Russian language (and any other language that depends on a grammatical gender system). In English, due to the lack of a grammatical gender system, both option values are the same.
 Smooth
 平滑
-; ;スムーズ
 
 > OPTVAL_SMOOTH_2
 Smooth
 平滑
-; ;スムーズ
 
 > OPTVAL_TRANSLUCENT
 Translucent
 半透明
-; ;半透明
 
 > OPTVAL_FUZZ
 Fuzz
 模糊
-; ;ファズ
 
 > OPTVAL_SHADOW
 Shadow
 阴影
-; ;シャドウ
 
 > OPTVAL_ITEMS
 Items
 物品
-; ;アイテム
 
 > OPTVAL_WEAPONS
 Weapons
 武器
-; ;武器
 
 > OPTVAL_BOTH
 Both
-全选
-; ;両方
+二者
 
 > OPTVAL_ZDOOM
 ZDoom
@@ -6201,132 +5743,106 @@ Strife
 > OPTVAL_PLAYER
 Player
 玩家
-; ;プレイヤー
 
 > OPTVAL_MAP
 Map
 地图
-; ;マップ
 
 > OPTVAL_SCALETO640X400
 Scale to 640x400
-640x400分辨率
-; ;640x400スケール
+缩放到640x400
 
 > OPTVAL_PIXELDOUBLE
 Pixel double
 双倍像素
-; ;ピクセル2倍
 
 > OPTVAL_PIXELQUADRUPLE
 Pixel quadruple
 四倍像素
-; ;ピクセル4倍
 
 > OPTVAL_CURRENTWEAPON
 Current weapon
 当前武器
-; ;使用中の武器
 
 > OPTVAL_AVAILABLEWEAPONS
 Available weapons
 可用武器
-; ;所持してる武器
 
 > OPTVAL_ALLWEAPONS
 All weapons
 全武器
-; ;全ての武器
 
 > OPTVAL_LEVELMILLISECONDS
 Level, milliseconds
 关卡，毫秒
-; ;現場, ミリ秒
 
 > OPTVAL_LEVELSECONDS
 Level, seconds
 关卡，秒
-; ;現場, 秒
 
 > OPTVAL_LEVEL
 Level
 关卡
-; ;現場
 
 > OPTVAL_HUBSECONDS
 Hub, seconds
 枢纽，秒
-; ;区間, 秒
 
 > OPTVAL_HUB
 Hub
 枢纽
-; ;区間
 
 > OPTVAL_TOTALSECONDS
 Total, seconds
 总计，秒
-; ;合計, 秒
 
 > OPTVAL_TOTAL
 Total
 总计
-; ;合計
 
 > OPTVAL_SYSTEMSECONDS
 System, seconds
 系统，秒
-; ;PC時刻, 秒
 
 > OPTVAL_SYSTEM
 System
 系统
-; ;PC時刻
 
 > OPTVAL_NETGAMESONLY
 Netgames only
-仅限网络游戏
-; ;オンラインのみ
+仅网络游戏
 
 > OPTVAL_AMMOIMAGETEXT
 Image and Text
-图片和文本
-; ;画像と字
+图像和文字
 
 > OPTVAL_AMMOTEXTIMAGE
 Text and Image
-文本和图片
-; ;字と画像
+文字和图像
 
 > OPTVAL_SCRIPTSONLY
 Scripts Only
-仅限脚本
-; ;スクリプトのみ
+仅脚本
 
 > OPTVAL_ALL
 All
 全部
-; ;全て
 
 > OPTVAL_ONLYLASTONE
 Only last one
-仅限最近一个
-; ;最後のみ
+仅最近的
 
 > OPTVAL_TRADITIONALDOOM
 Traditional Doom
-传统 Doom
-; ;正式DOOM
+传统Doom
 
 > OPTVAL_TRADITIONALSTRIFE
 Traditional Strife
-传统 Strife
-; ;正式Strife
+传统Strife
 
 > OPTVAL_TRADITIONALRAVEN
 Traditional Raven
-传统 Raven
-; ;正式Raven
+传统Raven
 
 > OPTVAL_ONLYWHENFOUND
 Only when found
@@ -6381,32 +5897,26 @@ All except doors
 > OPTVAL_DOUBLE
 Double
 双倍
-; ;ダブル
 
 > OPTVAL_TRIPLE
 Triple
 三倍
-; ;トリプル
 
 > OPTVAL_QUADRUPLE
 Quadruple
 四倍
-; ;クァッド
 
 > OPTVAL_ITEMPICKUP
 Item Pickup
 物品拾取
-; ;アイテム取得
 
 > OPTVAL_OBITUARIES
 Obituaries
 被击杀
-; ;死亡時
 
 > OPTVAL_CRITICALMESSAGES
 Critical Messages
 关键信息
-; ;重要メッセージ
 
 > OPTVAL_NEVERFRIENDS
 Never friends
@@ -6415,47 +5925,42 @@ Never friends
 
 > OPTVAL_ONLYMONSTERS
 Only monsters
-仅限怪物
-; ;モンスターのみ
+仅怪物
 
 > OPTVAL_HEXEN
 Hexen
 
 > OPTVAL_OLD
 Old
-老式
-; ;旧式
+旧式
 
 > OPTVAL_DOOM
 Doom
 
 > OPTVAL_DOOMSTRICT
 Doom (strict)
-Doom (严格)
-; ;Doom(厳密)
+Doom(严格)
 
 > OPTVAL_BOOM
 Boom
 
 > OPTVAL_BOOMSTRICT
 Boom (strict)
-Boom (严格)
-; ;Boom(厳密)
+Boom(严格)
 
 > OPTVAL_MBF
 MBF
 
 > OPTVAL_MBFSTRICT
 MBF (strict)
-MBF (严格
-; ;MBF(厳密)
+MBF(严格)
 
 > OPTVAL_MBF21
 MBF21
 
 > OPTVAL_MBF21STRICT
 MBF21 (strict)
-MBF21(厳密)
+MBF21(严格)
 
 > OPTVAL_ZDOOM2063
 ZDoom 2.0.63
@@ -6468,87 +5973,70 @@ All unacknowledged
 > OPTVAL_ERRORS
 Errors
 错误
-; ;エラー
 
 > OPTVAL_WARNINGS
 Warnings
 警告
-; ;警告
 
 > OPTVAL_NOTIFICATIONS
 Notifications
-提示
-; ;通知
+通知
 
 > OPTVAL_EVERYTHING
 Everything
 所有
-; ;全て
 
 > OPTVAL_HWPOLY
 Hardware accelerated
 硬件加速
-; ;ハードウェア アクセラレート
 
 > OPTVAL_SWDOOM
 Doom Software Renderer
-DOOM软件渲染
-; ;Doom ソフトウェアレンダー
+Doom软件渲染器
 
 > OPTVAL_SWDOOMTC
 True Color SW Renderer
-实时色彩渲染
-; ;トゥルーカラー SWレンダー
+真彩色软件渲染器
 
 > OPTVAL_DEDICATED
 High-Performance
-高特效
-; ;ハイパフォーマンス
+高性能
 
 > OPTVAL_INTEGRATED
 Power-Saving
 节能
-; ;パワーセービング
 
 > OPTVAL_VANILLA
 Vanilla
-原始DOOM
-; ;バニラ
+原始版
 
 > OPTVAL_VTFZDOOM
 ZDoom (Forced)
 ZDoom(强制)
-; ;ZDoom(強制)
 
 > OPTVAL_VTFVANILLA
 Vanilla (Forced)
-Vanilla (强制)
-; ;バニラ(強制)
+原始版(强制)
 
 > OPTVAL_VTAZDOOM
 Auto (ZDoom Preferred)
-自动 (ZDoom优先)
-; ;自動(ZDoom優先)
+自动(ZDoom优先)
 
 > OPTVAL_VTAVANILLA
 Auto (Vanilla Preferred)
-自动 (Vanilla优先)
-; ;自動(バニラ優先)
+自动(原始版优先)
 
 > OPTVAL_SMALL
 Small
 小
-; ;小
 
 > OPTVAL_LARGE
 Large
 大
-; ;大
 
 > OPTVAL_CONSOLE
 Console
 控制台
-; ;コンソール
 
 > C_BRICK
 \caBrick
@@ -6688,66 +6176,54 @@ Chex
 
 > OPTSTR_NOSOUND
 No Sound
-没有声音
-; ;サウンドなし
+无声音
 
 > OPTSTR_NOINTERPOLATION
 No interpolation
 无插值
-; ;補間無し
 
 > OPTSTR_SPLINE
 Spline
 样条函数
-; ;スプライン
 
 > OPTSTR_OPENAL
 OpenAL
 
 > DSPLYMNU_GLOPT
 Hardware Renderer
-硬件渲染
-; ;ハードウェア レンダラー
+硬件渲染器
 
 > DSPLYMNU_SWOPT
 Software Renderer
-软件渲染
-; ;ソフトウェア レンダラー
+软件渲染器
 
 > GLMNU_TITLE
 Hardware Rendering Options
-硬件渲染设置
-; ;ハードウェアレンダリング オプション
+硬件渲染选项
 
 > GLMNU_DYNLIGHT
 Dynamic Light Options
-动态光效设置
-; ;ダイナミックライト オプション
+动态光源选项
 
 > GLMNU_PREFS
 Preferences
-首选项
-; ;環境設定
+偏好选项
 
 > GLTEXMNU_TRIMSPREDGE
 Trim sprite edges
-修剪贴图边缘
-; ;スプライトの角を取る
+修剪精灵边缘
 
 > GLTEXMNU_SORTDRAWLIST
 Sort draw lists by texture
-根据材质对绘制列表排序
-; ;テクスチャーから描画リストを分類
+根据纹理排序绘制列表
 
 > GLLIGHTMNU_TITLE
 Dynamic Lights
-动态光效
-; ;ダイナミックライト
+动态光源
 
 > GLLIGHTMNU_LIGHTSENABLED
 Dynamic Lights (Hardware)
-动态光效（硬件）
-; ;ダイナミックライト(OpenGL)
+动态光源(硬件)
 
 > GLLIGHTMNU_LIGHTDEFS
 Enable light definitions
@@ -6781,8 +6257,7 @@ Shadowmap filter
 
 > GLPREFMNU_FOGMODE
 Fog mode
-尘雾模式
-; ;フォグモード
+雾效模式
 
 > GLPREFMNU_FOGFORCEFULLBRIGHT
 Fog forces fullbright
@@ -6816,18 +6291,15 @@ Adjust sprite clipping
 
 > GLPREFMNU_SPRBLEND
 Smooth sprite edges
-平滑贴图边缘
-; ;スプライトの角を丸める
+平滑精灵边缘
 
 > GLPREFMNU_FUZZSTYLE
 Fuzz Style
 模糊样式
-; ;ファズスタイル
 
 > GLPREFMNU_SPRBILLBOARD
 Sprite billboard
-贴图视角跟随
-; ;スプライト ビルボード
+精灵公告板
 
 > GLPREFMNU_SPRBILLFACECAMERA
 Sprites face camera
@@ -6837,12 +6309,10 @@ Sprites face camera
 > GLPREFMNU_PARTICLESTYLE
 Particle style
 粒子样式
-; ;パーティクル スタイル
 
 > GLPREFMNU_RENDERQUALITY
 Rendering quality
 渲染质量
-; ;レンダリング品質
 
 > GLPREFMNU_VRMODE
 Stereo 3D VR
@@ -6872,12 +6342,10 @@ Distance From Your Screen
 > OPTVAL_SMART
 Smart
 智能
-; ;スマート
 
 > OPTVAL_SMARTER
 Smarter
 更智能
-; ;よりスマート
 
 > OPTVAL_INFRAREDONLY
 Infrared only
@@ -6902,7 +6370,6 @@ Use as palette
 > OPTVAL_BLEND
 Blend
 混合
-; ;混合
 
 > OPTVAL_BRIGHT
 Bright
@@ -6920,73 +6387,59 @@ Doom Legacy
 
 > OPTVAL_SOFTWARE
 Software
-软件加速
-; ;ソフトウェア
+软件
 
 > OPTVAL_OPTIMAL
 Optimal
 最佳
-; ;最適
 
 > OPTVAL_YAXIS
 Y Axis
 Y轴
-; ;縦軸
 
 > OPTVAL_XYAXIS
 X/Y Axis
 X/Y轴
-; ;縦/横軸
 
 > OPTVAL_SQUARE
 Square
 方形
-; ;平方
 
 > OPTVAL_ROUND
 Round
 圆形
-; ;円形
 
 > OPTVAL_RADIAL
 Radial
 放射状
-; ;放射状
 
 > OPTVAL_PIXELFUZZ
 Pixel fuzz
 像素模糊
-; ;ピクセル ファズ
 
 > OPTVAL_SMOOTHFUZZ
 Smooth fuzz
 平滑模糊
-; ;滑らかなファズ
 
 > OPTVAL_SWIRLYFUZZ
 Swirly fuzz
 漩涡模糊
-; ;渦状ファズ
 
 > OPTVAL_TRANSLUCENTFUZZ
 Translucent fuzz
 半透明模糊
-; ;半透明ファズ
 
 > OPTVAL_NOISE
 Noise
 噪音
-; ;ノイズ
 
 > OPTVAL_SMOOTHNOISE
 Smooth Noise
-平滑化噪音
-; ;滑らかなノイズ
+平滑噪音
 
 > OPTVAL_JAGGEDFUZZ
 Jagged fuzz
 锯齿模糊
-; ;ギザギザ
 
 > OPTVAL_GREENMAGENTA
 Green/Magenta
@@ -7006,12 +6459,10 @@ Amber/Blue
 > OPTVAL_LEFTEYE
 Left Eye
 左眼
-; ;左目
 
 > OPTVAL_RIGHTEYE
 Right Eye
 右眼
-; ;右目
 
 > OPTVAL_SBSFULL
 Side-by-side Full
@@ -7046,22 +6497,18 @@ Checkerboard
 > OPTVAL_QUADBUFFERED
 Quad-buffered
 四倍缓冲
-; ;クワッドバッファー
 
 > DSPLYMNU_TCOPT
 TrueColor Options
-TrueColor设置
-; ;トゥルーカラー オプション
+真彩色选项
 
 > TCMNU_TITLE
 TrueColor Options
-TrueColor设置
-; ;トゥルーカラー オプション
+真彩色选项
 
 > TCMNU_TRUECOLOR
 True color output
-TrueColor输出
-; ;トゥルーカラー出力
+真彩色输出
 
 > TCMNU_MINFILTER
 Linear filter when downscaling
@@ -7080,38 +6527,31 @@ Use mipmapped textures
 
 > TCMNU_DYNLIGHTS
 Dynamic lights (Software)
-动态光效（软件）
-; ;ダイナミックライト (ソフトウェア)
+动态光源(软件)
 
 > OS_TITLE
 Option Search
-设置搜索
-; ;オプション検索
+选项搜索
 
 > OS_ANY
 Search for any term
-搜索任一项目
-; ;いずれかの用語を探す
+搜索任意条目
 
 > OS_ALL
 Search for all terms
-搜索全部项目
-; ;全ての用語を探す
+搜索全部条目
 
 > OS_NO_RESULTS
 No results found.
 无搜索结果。
-; ;見つかりませんでした。
 
 > OS_LABEL
 Search:
 搜索：
-; ;検索:
 
 > AUTOMAPMNU_SHOWKEYS_ALWAYS
 Always show keys
 总是显示钥匙
-; ;常にキーを表示
 
 ; Newly added content
 
@@ -7216,44 +6656,35 @@ Player is dead in a single-player game
 > TXT_SAVEFAILED
 Save failed
 存档失败
-; ;セーブに失敗した。
 
 > TXT_SCREENSHOTERR
 Could not create screenshot.
-无法截屏。
-; ;スクリーンショットを作成できなかった。
+无法创建截屏。
 
 > TXT_BY
 ; As in paused by player %s.
 By %s
-来自 %s
-; ;"""%s より
-; ;"""
+被 %s
 
 > TXT_QUITENDOOM
 Press any key or click anywhere in the window to quit.
-点击或按下任意键来退出。
-; ;何かのキーを押すか、ウィンドウのどこかをクリックすると終了する。
+按任意键或点击窗口内任意位置来退出。
 
 > HUDMNU_FLASH
 Screen Blend Options
-滤镜设置
-; ;スクリーンブレンド オプション
+画面混合选项
 
 > GLMNU_3DMODE
 3D mode
-3D 模式
-; ;3Dモード
+三维模式
 
 > HUDMNU_CROSSHAIRON
 Crosshair
 准星
-; ;クロスヘア
 
 > MSGMNU_SUBTITLES
 Subtitles
 字幕
-; ;サブタイトル
 
 > GLPREFMNU_PALTONENOGREY
 Prevent gray shadows
@@ -7262,8 +6693,7 @@ Prevent gray shadows
 
 > HUDMNU_FONTOPTIONS
 Font Options
-字体设置
-; ;フォント オプション
+字体选项
 
 > FONTMNU_LOG
 Use standard font for log display
@@ -7278,7 +6708,6 @@ Use standard font for dialogues
 > MISCMNU_QUICKEXIT
 Quick Exit
 快速退出
-; ;終了メッセージ無し
 
 > DSPLYMNU_CUSTOMINVERTMAP
 Custom Inverse Map
@@ -7334,14 +6763,13 @@ Build
 > MISCMNU_ALWAYSTALLY
 ; sv_alwaystally
 Show Tally Screen On Level Exit
-Exit时显示数字画面
+在关卡出口显示统计画面
 ; ;Exit時にタリー画面を表示
 
 > OPTVAL_MODDEFINED
 ; this is '==0'
 Mod Defined
-Mod定义
-; ;Mod定義
+模组定义
 
 > OPTVAL_NOTHUBS
 Always, except within hubs
@@ -7361,42 +6789,35 @@ Preferred keyboard layout
 > OPTVAL_CLASSICZ
 Classic ZDoom
 经典ZDoom
-; ;従来のZDOOM
 
 > OPTVAL_MODERN
 Modern (WASD)
-现代 (WASD)
-; ;現代的(WASD)
+现代(WASD)
 
 > OPTVAL_MODERNLEFT
 Modern (Keypad)
-现代 (小键盘)
-; ;現代的(Keypad)
+现代(小键盘)
 
 > MISCMNU_SETSLOTSTRICT
 Strict KEYCONF Weapons/Players
-严格的KEYCONF 武器/玩家
-; ;厳密なKEYCONFの武器/プレイヤー
+严格的KEYCONF武器/玩家
 
 > MISCMNU_CLEANMENU\n
 Classic ZDoom menu scaling
-经典ZDoom菜单缩放
-; ;従来のZDメニュースケール
+经典ZDoom的菜单缩放
 
 > MISCMNU_WIPERCENT
 Use percents on summary screen
-在总结屏幕上使用百分比
-; ;集計画面でパーセント表示
+在结算画面上使用百分比
 
 > MISCMNU_CLEANSTAT
 Classic ZDoom scaling on summary screen
-总结屏幕上的经典ZDoom缩放
-; ;集計画面で従来のZDスケール
+在结算画面上用经典ZDoom缩放
 
 > TAG_STRIFEZOMBIE
 ; Called "citizens" according to Doomwiki
 Citizen
-住民
+市民
 
 > TAG_CEILINGTURRET
 Ceiling Turret
@@ -7413,11 +6834,11 @@ Inquisitor
 
 > TAG_PEASANT
 Peasant
-庶民
+农民
 
 > TAG_REAVER
 Reaver
-リーバー
+掠夺者
 
 > TAG_SENTINEL
 Sentinel

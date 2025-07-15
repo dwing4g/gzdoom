@@ -48,7 +48,7 @@ for _, p in ipairs(csvs) do
 	local lines = loadCsv(s)
 	local colId = 0
 	for i, s in ipairs(lines[1]) do
-		if s == lang or (s == 'jp' or s == 'ja jp') and colId == 0 then
+		if s == lang or (s == 'jp' or s:sub(1,2) == 'ja') and colId == 0 then
 			colId = i
 		end
 	end
@@ -57,25 +57,25 @@ for _, p in ipairs(csvs) do
 	f = io.open(p[2], 'wb')
 	for i, line in ipairs(lines) do
 		if i > 1 then
-			local en = line[1]
-			local id = line[2]
-			local rm = line[3]
+			local en = line[1] or '' -- default
+			local id = line[2] or '' -- Identifier
+			local rm = line[3] or '' -- Remarks
 			local cn = line[colId] or ''
-			if line[4] ~= '' then
-				id = id .. ' ' .. line[4]
+			if line[4] and line[4] ~= '' then
+				id = id .. ' ' .. line[4] -- Filter
 			end
+			id = id:gsub('\r', ''):gsub('\n', '\\n')
 			if id ~= '' then
-				id = id:gsub('\r?\n', '\\n')
 				if t[id] then
-					print('WARN: duplicated id: ' .. id)
+					print('WARN: duplicated id: "' .. id .. '"')
 				end
 				t[id] = true
 				f:write('> ', id, '\n')
 			end
-			if rm ~= '' then f:write('; ', rm:gsub('\r?\n', '\\n'), '\n') end
+			if rm ~= '' then f:write('; ', rm:gsub('\r', ''):gsub('\n', '\\n'), '\n') end
 			if en ~= '' or cn ~= '' then
 				if en:find '^"""' or en:find '^; ' then
-					error('ERROR: invalid prefix in english: ' .. en)
+					error('ERROR: invalid prefix in english: "' .. en .. '"')
 				end
 				if en:find '[\r\n]' or en == "" then
 					f:write('"""', en:gsub('\r', ''), '"""\n')
@@ -84,7 +84,7 @@ for _, p in ipairs(csvs) do
 				end
 				if cn ~= '' then
 					if cn:find '^"""' or cn:find '^; ' then
-						error('ERROR: invalid prefix in japanese: ' .. cn)
+						error('ERROR: invalid prefix: "' .. cn .. '"')
 					end
 					if cn:find '[\r\n]' then
 						f:write('"""', cn:gsub('\r', ''), '"""\n')

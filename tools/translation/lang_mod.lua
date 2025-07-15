@@ -91,7 +91,7 @@ for _, p in ipairs(csvs) do
 			else
 				if k then
 					if t[k] then
-						print('WARN: duplicated id: ' .. k)
+						print('WARN: duplicated id: "' .. k .. '"')
 					end
 					t[k] = {}
 				end
@@ -110,7 +110,7 @@ for _, p in ipairs(csvs) do
 					v = nil
 				else
 					if t[k] then
-						print('WARN: duplicated id: ' .. k)
+						print('WARN: duplicated id: "' .. k .. '"')
 					end
 					t[k] = {e, v}
 					k, e, v = nil, nil, nil
@@ -121,19 +121,15 @@ for _, p in ipairs(csvs) do
 
 	for i, line in ipairs(lines) do
 		if i > 1 then
-			local id = line[2]
-			if line[4] ~= '' then
-				id = id .. ' ' .. line[4]
+			local id = line[2] or '' -- Identifier
+			if line[4] and line[4] ~= '' then
+				id = id .. ' ' .. line[4] -- Filter
 			end
 			id = id:gsub('\r', ''):gsub('\n', '\\n')
-			if id ~= '' then
-				if not t[id] then
-					print('WARN: not found id: ' .. id)
-				end
-				line[colId] = t[id] and t[id][2] or line[colId] or ''
-			else
-				line[colId] = line[colId] or ''
+			if id ~= '' and not t[id] then
+				print('WARN: not found id: "' .. id .. '"')
 			end
+			line[colId] = id and t[id] and t[id][2] or line[colId] or ''
 		end
 	end
 	s = saveCsv(lines)

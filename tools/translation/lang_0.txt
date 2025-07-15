@@ -71,7 +71,7 @@ Say:
 
 > TXT_QUITENDOOM
 Press any key or click anywhere in the window to quit.
-; ;何かのキーを押すか、ウィンドウのどこかをクリックすると終了する。
+按任意键或点击窗口内任意位置来退出。
 
 ; Savegame
 
@@ -880,7 +880,7 @@ Models
 
 > DSPLYMNU_CROSSHAIRSCALE
 Scale crosshair
-缩放准星
+准星比例
 
 > DSPLYMNU_BRIGHTNESS
 Brightness
@@ -900,7 +900,7 @@ Saturation
 
 > DSPLYMNU_SBSCALE
 Status Bar Scale
-状态栏缩放
+状态栏比例
 
 > DSPLYMNU_MESSAGES
 Messages
@@ -916,7 +916,7 @@ Pulsating message Display
 
 > MSGMNU_MESSAGESCALE
 Message Scale
-消息缩放
+消息比例
 
 ; Automap
 
@@ -1307,7 +1307,7 @@ Cubic
 
 > OPTVAL_BLEP
 Band-limited step
-; ;帯域制限ステップ
+带宽限制步进
 
 > OPTVAL_LINEARSLOW
 Linear (Slower)
@@ -1315,7 +1315,7 @@ Linear (Slower)
 
 > OPTVAL_BLAM
 Band-limited linear
-; ;帯域制限リニア
+带宽限制线性
 
 > OPTVAL_CUBICSLOW
 Cubic (Slower)
@@ -1331,7 +1331,7 @@ Note on/off only
 
 > OPTVAL_FULLRAMPING
 Full ramping
-; ;フルランピング
+完全音量平滑
 
 > MODMNU_MASTERVOLUME
 Master volume
@@ -1339,7 +1339,7 @@ Master volume
 
 > MODMNU_QUALITY
 Quality
-品质
+质量
 
 > MODMNU_VOLUMERAMPING
 Volume ramping
@@ -1353,7 +1353,7 @@ Dumb
 
 > MODMNU_CHIPOMATIC
 Chip-o-matic
-チップ オー マチック
+芯片自动化
 
 > OPTVAL_MAMEOPL2
 MAME OPL2
@@ -1393,52 +1393,50 @@ GENS YM2612
 
 > ADLVLMODEL_AUTO
 Auto (Use setup of bank)
-自动（使用bank设置）
-; ;自動(bankのセットアップ使用)
+自动(使用库设置)
 
 > ADLVLMODEL_GENERIC
 Generic
 通用
-; ;一般的
 
 > ADLVLMODEL_NATIVE
 OPL Native
-OPL 本机
-; ;OPLネイティブ
+OPL本机
 
 > ADLVLMODEL_DMX
 DMX (Accurate, with AM bug)
+DMX(精确的，带AM bug)
 
 > ADLVLMODEL_APOGEE
-Apogee (Accurate, with AM bug)
+Apogee(精确的，带AM bug)
 
 > ADLVLMODEL_WIN9X
 Win9X-like (SB16)
-Win9X式 (SB16)
-; ;Win9X式 (SB16)
+Win9X式(SB16)
 
 > ADLVLMODEL_WIN9XGENERIC
 Win9X-like (Generic FM)
-Win9X式 (Generic FM)
-; ;Win9X式 (Generic FM)
+Win9X式(通用FM)
 
 > ADLVLMODEL_DMX_FIXED
 DMX (Without AM voice bug)
-DMX(AMボイスバグ無し)
+DMX(没有AM语音bug)
 
 > ADLVLMODEL_APOGEE_FIXED
 Apogee (Without AM voice bug)
-Apogee(AMボイスバグ無し)
+Apogee(没有AM语音bug)
 
 > ADLVLMODEL_AIL
 IBM Audio Library Interface
+IBM音频库接口
 
 > ADLVLMODEL_HMI
 HMI Sound Operating System
+HMI声音操作系统
 
 > ADLVLMODEL_HMIOLD
 HMI SOS (Old, with bugs)
-HMI SOS(旧式、バグ含む)
+HMI SOS(旧式，含bugs)
 
 > OPTVAL_UNLIMITED
 Unlimited
@@ -1469,166 +1467,141 @@ Reinhard
 
 > OPTVAL_PALETTE
 Palette
-调色盘
-; ;パレット
+调色板
 
 > OPTVAL_LOW
 Low
 低
-; ;低
 
 > OPTVAL_MEDIUM
 Medium
-低
-; ;中
+中
 
 > OPTVAL_HIGH
 High
 高
-; ;高
 
 > OPTVAL_EXTREME
 Extreme
-最高
-; ;最高
+极高
 
 > OPTVAL_OBVERSEFIRST
 Obverse
 正面
-; ;正面
 
 > OPTVAL_REVERSEFIRST
 Reverse
 反面
-; ;反転
 
 > GLMNU_POSTPROCESS
 Postprocessing
-后期处理
-; ;ポストプロセッシング
+后处理
 
 > GLPREFMNU_TONEMAP
 Tonemap Mode
-调色板模式
-; ;トーンマップ モード
+色调映射模式
 
 > GLPREFMNU_LENS
 Lens distortion effect
 镜头失真效果
-; ;レンズの歪みエフェクト
 
 > GLPREFMNU_FXAA
 FXAA Quality
-FXAA品质
-; ;FXAA品質
+FXAA质量
 
 > GLPREFMNU_DITHER
 Dither output
 抖动输出
-; ;ディザー出力
 
 > GLPREFMNU_PALTONEMAPORDER
 Tonemap Palette Order
-调色板顺序
-; ;トーンマップパレット順序
+色调映射调色板顺序
 
 > GLPREFMNU_PALTONEMAPPOWER
 Tonemap Palette Exponent
-调色板指数
-; ;トーンマップパレット指数
+色调映射调色板指数
 
 > GLPREFMNU_MULTISAMPLE
 Multisample
 多重采样
-; ;マルチサンプル
 
 > GLPREFMNU_BLOOM
 Bloom effect
-Bloom
-; ;ブルーム エフェクト
+泛光效果
 
 > GLPREFMNU_SSAO
 Ambient occlusion quality
-环境光遮挡质量
-; ;アンビエント オクルージョンの品質
+环境光遮蔽质量
 
 > GLPREFMNU_SSAO_PORTALS
 Portals with AO
-AOを伴うポータル
+入口带环境光遮蔽
 
 > GLPREFMNU_MENUBLUR
 Menu Blur
 菜单模糊
-; ;メニューブラー
 
 > GLPREFMNU_ENVIRONMENTMAPMIRROR
 Environment map on mirrors
-マップオンミラーの画像表示
+镜面使用环境映射
 
 > GLPREFMNU_RENDERQUALITY
 Rendering quality
-レンダリング品質
+渲染质量
 
 > OPTVAL_SPEED
 Speed
-速度寄り
+速度优先
 
 > OPTVAL_QUALITY
 Quality
-品質寄り
+质量优先
 
 > GLPREFMNU_SECLIGHTMODE
 Sector light mode
-セクターライトモード
+区域光照模式
 
 > GLPREFMNU_FOGMODE
 Fog mode
-フォグモード
+雾效模式
 
 > OPTVAL_RADIAL
 Radial
-放射状
+放射
 
 > OPTVAL_STANDARD
 Standard
-標準
+标准
 
 ; Texture options
 
 > GLTEXMNU_TEXFILTER
 Texture Filter mode
-材质过滤模式
-; ;テクスチャーフィルター モード
+纹理过滤模式
 
 > GLTEXMNU_ANISOTROPIC
 Anisotropic filter
 各项异性过滤
-; ;異方性フィルター
 
 > OPTVAL_NONENEARESTMIPMAP
 None (nearest mipmap)
-无 （近邻mip贴图）
-; ;なし(最寄りミップマップ)
+无(mipmap使用最邻近)
 
 > OPTVAL_NONELINEARMIPMAP
 None (linear mipmap)
-无 （双线mip贴图）
-; ;なし(リニアミップマップ)
+无(mipmap使用双线性)
 
 > OPTVAL_NONETRILINEAR
 None (trilinear)
-无 （三线mip贴图）
-; ;なし(トライリニア)
+无(三线性)
 
 > OPTVAL_BILINEAR
 Bilinear
 双线性
-; ;バイリニア
 
 > OPTVAL_TRILINEAR
 Trilinear
 三线性
-; ;トライリニア
 
 > OPTVAL_2X
 2x
@@ -1647,230 +1620,204 @@ Trilinear
 
 > GLTEXMNU_TITLE
 Texture Options
-テクスチャー オプション
+纹理选项
 
 > GLTEXMNU_TEXENABLED
 Textures enabled
-テクスチャー有効
+纹理已启用
 
 > GLTEXMNU_ENABLEHIRES
 Enable hires textures
-ハイレゾ テクスチャー有効
+启用高精度纹理
 
 > GLTEXMNU_HQRESIZE
 High Quality Resize mode
-高品質リサイズ モード
+高质量缩放模式
 
 > GLTEXMNU_HQRESIZEMULT
 High Quality Resize multiplier
-高品質リサイズ乗数
+高质量缩放倍率
 
 > GLTEXMNU_HQRESIZEWARN
 This mode requires %d times more video memory
-このモードでは %d 倍以上のビデオメモリが必要です!
+这种模式需要%d倍以上的显存
 
 > GLTEXMNU_RESIZETEX
 Resize textures
-テクスチャー類のリサイズ
+缩放纹理
 
 > GLTEXMNU_RESIZESPR
 Resize sprites
-スプライト類のリサイズ
+缩放精灵
 
 > GLTEXMNU_RESIZEFNT
 Resize fonts
-フォント類のリサイズ
+缩放字体
 
 > GLTEXMNU_RESIZESKN
 Resize model skins
-モデルスキン類のリサイズ
+缩放模型皮肤
 
 > GLTEXMNU_PRECACHETEX
 Precache GL textures
-プリキャッシュGLテクスチャー
+预缓存GL纹理
 
 > VIDMNU_TITLE
 Video Mode
 视频模式
-; ;ビデオ調整
 
 > OPTVAL_SCALENEAREST
 Scaled (Nearest)
-缩放 （近邻）
-; ;スケーリング (最寄り)
+缩放(最邻近)
 
 > OPTVAL_SCALELINEAR
 Scaled (Linear)
-缩放 （线性）
-; ;スケーリング (リニア)
+缩放(线性)
 
 > OPTVAL_LETTERBOX
 Letterbox
-黑边
-; ;レターボックス
+信箱边框
 
 > OPTVAL_STRETCH
 Stretch
 拉伸
-; ;伸縮
 
 > VIDMNU_RENDERMODE
 Render Mode
 渲染模式
-; ;レンダラー
 
 > VIDMNU_FULLSCREEN
 Fullscreen
 全屏
-; ;全画面
 
 > VIDMNU_HIDPI
 Retina/HiDPI support
-Retina/HiDPI 支持
-; ;Retina/HiDPI サポート
+视网膜/高DPI支持
 
 > VIDMNU_ASPECTRATIO
 Aspect ratio
-屏幕宽高比
-; ;アスペクト比
+宽高比
 
 > VIDMNU_FORCEASPECT
 Force aspect ratio
-调整屏幕宽高比
-; ;アスペクト比に従う
+强制宽高比
 
 > VIDMNU_CROPASPECT
 Forced ratio style
-调整宽高比风格
-; ;比率の形式
+强制比例风格
 
 > VIDMNU_5X4ASPECTRATIO
 Enable 5:4 aspect ratio
-启用 5:4 宽高比
-; ;5:4アスペクト比を可能にする
+启用5:4宽高比
 
 > VIDMNU_SCALEMODE
 Resolution scale
-分辨率比率
-; ;画面スケール
+分辨率比例
 
 > VIDMNU_SCALEFACTOR
 Scale Factor
-缩放度
-; ;スケール倍率
+比例因子
 
 > VIDMNU_USELINEAR
 Use Linear Scaling (Fullscreen)
-使用线性缩放（全屏）
-; ;リニアスケールを使う(全画面)
+使用线性缩放(全屏)
 
 > VIDMNU_CUSTOMRES
 Custom Pixel Scaling
 自定义像素缩放
-; ;カスタム ピクセルスケール
 
 > VIDMNU_CUSTOMX
 Custom Width
-自定义屏幕高度
-; ;カスタム 幅
+自定义宽度
 
 > VIDMNU_CUSTOMY
 Custom Height
-自定义屏幕宽度
-; ;カスタム 高さ
+自定义高度
 
 > VIDMNU_APPLYW
 Apply Changes (Windowed)
-启用改动 (窗口)
-; ;変更を適用(ウィンドウ化)
+应用修改(窗口化)
 
 > VIDMNU_APPLYFS
 Apply Changes (Fullscreen)
-启用改动(全屏)
-; ;変更を適用(全画面化)
+应用修改(全屏)
 
 > VIDMNU_RESPRESET
 Choose Resolution Preset
-选择预设分辨率
-; ;解像度プリセットを選ぶ
+选择分辨率预设
 
 > VIDMNU_RESPRESETTTL
 Custom Resolution Presets
-自定义预设分辨率
-; ;カスタム解像度プリセット
+自定义分辨率预设
 
 > VIDMNU_RESPRESETHEAD
 Preset Resolution Modes
 预设分辨率模式
-; ;解像度モードの調整
 
 > VIDMNU_ASPECT43
 4:3 Aspect
-4:3 宽高比
-; ;アスペクト比 4:3
+4:3宽高比
 
 > VIDMNU_ASPECT54
 5:4 Aspect
-5:4 宽高比
-; ;アスペクト比 5:4
+5:4宽高比
 
 > VIDMNU_ASPECT169
 16:9 Aspect
-16:9 宽高比
-; ;アスペクト比 16:9
+16:9宽高比
 
 > VIDMNU_ASPECT1610
 16:10 Aspect
-16:10 宽高比
-; ;アスペクト比 16:10
+16:10宽高比
 
 > VIDMNU_ASPECT219
 21:9 Aspect
-アスペクト比 21:9
+21:9宽高比
 
 > OPTVAL_NORMAL
 Normal
 正常
-; ;通常
 
 > OPTVAL_LOWEST
 ; This describes vid_scalemode 1, which represents the lowest possible scaling to fill the allocated screen area
 Lowest Possible Scale
-尽可能最小
-; ;可能な限り最小
+比例尽可能最小
 
 > OPTVAL_CUSTOM
 Custom
 自定义
-; ;カスタム
 
 > VIDMNU_MAXFPS
 Max FPS
-最大 FPS
-; ;最大FPS値
+最大帧率
 
 > OPTVAL_60FPS
 60 fps
+60帧/秒
 
 > OPTVAL_75FPS
 75 fps
+75帧/秒
 
 > OPTVAL_90FPS
 90 fps
+90帧/秒
 
 > OPTVAL_120FPS
 120 fps
+120帧/秒
 
 > OPTVAL_144FPS
 144 fps
+144帧/秒
 
 > OPTVAL_200FPS
 200 fps
+200帧/秒
 
 > VIDMNU_PREFERBACKEND
 Preferred Rendering API
-优先呈现API
-; ;優先レンダリングAPI
+优先渲染API
 
 > OPTVAL_OPENGL
 OpenGL
@@ -1886,285 +1833,255 @@ OpenGL ES
 
 > MISCMNU_MERGEKEYS
 Merge left+right Alt/Ctrl/Shift
-合并 left+right Alt/Ctrl/Shift
-; ;左と右のALT/CTRL/SHIFTキーを統合
+合并左+右Alt/Ctrl/Shift键
 
 > MISCMNU_WINFULLSCREENTOGGLE
 Alt-Enter toggles fullscreen
-Alt-Enter切换全屏
-; ;ALTとENTERで全画面に切り替え
+Alt+回车键切换全屏
 
 > MISCMNU_MACFULLSCREENTOGGLE
 Command-F toggles fullscreen
-使用Ctrl+F键全屏显示
-; ;Ctrl + Fキーで全画面表示
+Command+F键切换全屏
 
 > MISCMNU_ENABLEAUTOSAVES
 Enable autosaves
 启用自动保存
-; ;オートセーブを有効化
 
 > MISCMNU_AUTOSAVECOUNT
 Number of autosaves
-自动保存数
-; ;オートセーブの最大数
+自动保存上限数量
 
 > MISCMNU_SAVELOADCONFIRMATION
 Save/Load confirmation
-保存/加载确认
-; ;セーブ/ロード時に確認
+保存/加载时需要确认
 
 > MISCMNU_NOCHEATS
 Disable keyboard cheats
 禁用键盘作弊
-; ;キーボードからのチート無効
 
 > MISCMNU_QUICKSAVEROTATION
 Quicksave rotation
 快速保存间隔
-; ;クイックセーブ間隔
 
 > MISCMNU_QUICKSAVECOUNT
 Number of quicksaves in rotation
-快速保存数
-; ;間隔クイックセーブの数
+快速保存上限数量
 
 > MISCMNU_CLEANMENU
 Disable Menu Clean Scaling
-メニュー画面を伸縮させない
+禁用菜单缩放
 
 > MISCMNU_PAUSEINBACKGROUND
 Pause game in background
-バックグラウンド時に一時停止
+后台运行时暂停游戏
 
 > HUDMNU_CROSSHAIR
 Default Crosshair
-默认瞄星
-; ;デフォルトの照準
+默认准星
 
 > HUDMNU_CROSSHAIRCOLOR
 Crosshair color
 准星颜色
-; ;照準色
 
 > HUDMNU_CROSSHAIRHEALTH
 Crosshair shows health
-准星大小显示健康
-; ;照準のヘルス表示
+准星显示生命值
 
 > HUDMNU_CROSSHAIRSCALE
 Scale crosshair
-准星大小
-; ;照準サイズ
+准星比例
 
 > OPTVAL_YES_STANDARD
 ; copied from elsewhere
 Standard
 标准
-; ;標準
 
 > OPTVAL_YES_ENHANCED
 Enhanced
 增强
-; ;強調
 
 > OPTMNU_LANGUAGE
 Language
 语言
-; ;言語設定
 
 ; Reverb editor
 
 > TXT_UNDOCHANGES
 Undo Changes
-取消更改
-; ;変更を戻す
+撤回更改
 
 > REVMNU_SELECT
 Select Environment
-回声选择
-; ;反響選択
+选择环境
 
 > REVMNU_TEST
 Test Environment
-回声测试
-; ;反響テスト
+测试回声
 
 > REVMNU_EDIT
 Edit Environment
-回声编辑
-; ;反響編集
+编辑环境
 
 > REVMNU_NEW
 New Environment
-新建回声设置
-; ;新規反響設定
+新建环境
 
 > REVMNU_REVERT
 Revert settings
 还原设置
-; ;設定を戻す
 
 > REVMNU_ENVIRONMENT_SIZE
 ; Please translate only if you know how to properly name this technical jargon!
 Environment Size
-回声大小
-; ;反響サイズ
+环境大小
 
 > REVMNU_ENVIRONMENT_DIFFUSION
 Environment Diffusion
-回声传播
-; ;反響伝播
+环境传播
 
 > REVMNU_ROOM
 Room
+房间
 
 > REVMNU_ROOM_HF
 Room HF
+房间HF
 
 > REVMNU_ROOM_LF
 Room LF
+房间LF
 
 > REVMNU_DECAY_TIME
 Decay Time
+衰减时间
 
 > REVMNU_DECAY_HF_RATIO
 Decay HF Ratio
-Decay HF比率
-; ;Decay HF比率
+衰减HF率
 
 > REVMNU_DECAY_LF_RATIO
 Decay LF Ratio
-Decay LF比率
-; ;Decay LF比率
+衰减LF率
 
 > REVMNU_REFLECTIONS
 Reflections
+反射
 
 > REVMNU_REFLECTIONS_DELAY
 Reflections Delay
+反射延迟
 
 > REVMNU_REFLECTIONS_PAN_X
 Reflections Pan X
-Reflections X定位
-; ;Reflections X定位
+反射X定位
 
 > REVMNU_REFLECTIONS_PAN_Y
 Reflections Pan Y
-Reflections Y定位
-; ;Reflections Y定位
+反射Y定位
 
 > REVMNU_REFLECTIONS_PAN_Z
 Reflections Pan Z
-Reflections Z定位
-; ;Reflections Z定位
+反射Z定位
 
 > REVMNU_REVERB
 Reverb
+混响
 
 > REVMNU_REVERB_DELAY
 Reverb Delay
+混响延迟
 
 > REVMNU_REVERB_PAN_X
 Reverb Pan X
-Reverb X定位
-; ;Reverb X定位
+混响X定位
 
 > REVMNU_REVERB_PAN_Y
 Reverb Pan Y
-Reverb Y定位
-; ;Reverb Y定位
+混响Y定位
 
 > REVMNU_REVERB_PAN_Z
 Reverb Pan Z
-Reverb Z定位
-; ;Reverb Z定位
+混响Z定位
 
 > REVMNU_ECHO_TIME
 Echo Time
+回声时间
 
 > REVMNU_ECHO_DEPTH
 Echo Depth
+回声深度
 
 > REVMNU_MODULATION_TIME
 Modulation Time
+调制时间
 
 > REVMNU_MODULATION_DEPTH
 Modulation Depth
+调制深度
 
 > REVMNU_AIR_ABSORPTION_HF
 Air Absorption HF
+空气吸收HF
 
 > REVMNU_HF_REFERENCE
 HF Reference
 HF参考值
-; ;HF参照値
 
 > REVMNU_LF_REFERENCE
 LF Reference
 LF参考值
-; ;LF参照値
 
 > REVMNU_ROOM_ROLLOFF_FACTOR
 Room Rolloff Factor
+房间滚降因子
 
 > REVMNU_DIFFUSION
 Diffusion
+传播
 
 > REVMNU_DENSITY
 Density
 密度
-; ;密度
 
 > REVMNU_Reflections_Scale
 Reflections Scale
-Reflections级别
-; ;Reflections音階
+反射比例
 
 > REVMNU_Reflections_Delay_Scale
 Reflections Delay Scale
-Echo Time级别
-; ;Reflections Delay音階
+反射延迟比例
 
 > REVMNU_Decay_Time_Scale
 Decay Time Scale
-Decay Time级别
-; ;Decay Time音階
+衰减时间比例
 
 > REVMNU_Decay_HF_Limit
 Decay HF Limit
-Decay HF范围
-; ;Decay HF限度
+衰减HF限制
 
 > REVMNU_Reverb_Scale
 Reverb Scale
-Reverb级别
-; ;Reverb音階
+混响比例
 
 > REVMNU_Reverb_Delay_Scale
 Reverb Delay Scale
-Reverb Delay级别
-; ;Reverb Delay音階
+混响延迟比例
 
 > REVMNU_Echo_Time_Scale
 Echo Time Scale
-Echo Time级别
-; ;Echo Time音階
+回声时间比例
 
 > REVMNU_Modulation_Time_Scale
 Modulation Time Scale
-Modulation Time级别
-; ;Modulation Time音階
+调制时间比例
 
 > REVMNU_Based_on
 Based on
-音响的来源
-; ;音響の元
+基于
 
 > REVMNU_Name
 Name
 名称
-; ;名前
 
 > REVMNU_ID_1
 ID #1
@@ -2175,64 +2092,53 @@ ID #2
 > REVMNU_Create
 Create
 创建
-; ;作成
 
 > REVMNU_Save
 Save...
-保存中...
-; ;セーブする...
+保存...
 
 > REVMNU_File_name
 File name
 文件名
-; ;ファイル名
 
 > REVMNU_Environments_to_save
 Environments to save
-保存声音
-; ;音響を保存
+保存环境
 
 ; Vulkan
 
 > DSPLYMNU_VKOPT
 Vulkan Options (Experimental)
-Vulkan 设定（测试版）
-; ;Vulkan機能オプション(実験的)
+Vulkan选项(实验版)
 
 > VK_TITLE
 Vulkan Options
-Vulkan 设定
-; ;Vulkan機能オプション
+Vulkan选项
 
 > VKMNU_ENABLE
 Enable Vulkan
-开启 Vulkan
-; ;Vulkanを有効化
+启用Vulkan
 
 > VKMNU_DEVICE
 Vulkan Device ID
-Vulkan 硬件编号
-; ;Vulkanデバイス ID
+Vulkan设备ID
 
 > VKMNU_HDR
 High Dynamic Range
 高动态范围
-; ;ハイダイナミックレンジ
 
 > VK_WARNING
 Warning: The Vulkan renderer is highly experimental!
-警告: Vulkan 输出还处于高度实验阶段！
-; ;警告：Vulkanレンダラーは実験段階です!
+警告: Vulkan渲染器处于高度实验阶段！
 
 > VK_RESTART
 These options will require a restart to take effect.
-需要重启来启用这些设定。
-; ;これらのオプションを有効にするには再起動が必要です。
+这些选项需要重启才能生效。
 
 > VKMNU_DEVICESELECT
 ; This is not yet implemented - but it is planned
 Select Vulkan Device
-Vulkanデバイスの選択
+选择Vulkan设备
 
 ; Texture scaling
 
@@ -2253,328 +2159,282 @@ xBRZ
 
 > OPTVAL_OLD_NXBRZ
 Old xBRZ
-老式xBRZ
-; ;旧xBRZ
+旧式xBRZ
 
 ; Option Search
 
 > OS_TITLE
 Option Search
-设置搜索
-; ;オプション検索
+选项搜索
 
 > OS_ANY
 Search for any term
-搜索任一项目
-; ;いずれかの用語を探す
+搜索任意条目
 
 > OS_ALL
 Search for all terms
-搜索全部项目
-; ;全ての用語を探す
+搜索全部条目
 
 > OS_NO_RESULTS
 No results found.
 无搜索结果。
-; ;見つかりませんでした。
 
 > OS_LABEL
 Search:
 搜索：
-; ;検索:
 
 ; Blood Bath Announcer
 
 > TXT_OBITUARY1
 %k boned %o like a fish
-%k 把 %o 像鱼一样剔骨。
-; ;%k は %o の骨を魚のように引っこ抜いた。
+%k 像对鱼一样剔了 %o 的骨
 
 > TXT_OBITUARY2
 %k castrated %o
-%k 把 %o 给骟了。
-; ;%k は %o を去勢した。
+%k 阉割了 %o
 
 > TXT_OBITUARY3
 %k creamed %o
-%k 把 %o 给打服气了。
-; ;%k は %o に反吐ブチ撒けさせた。
+%k 彻底打败了 %o
 
 > TXT_OBITUARY4
 %k decimated %o
-%k 把 %o 消灭了。
-; ;%k は %o の居場所を間引いた。
+%k 消灭了 %o
 
 > TXT_OBITUARY5
 %k destroyed %o
-%k 把 %o 消灭了。
-; ;%k は %o を完全に破壊した。
+%k 毁灭了 %o
 
 > TXT_OBITUARY6
 %k diced %o
-%k 把 %o 切丁了。
-; ;%k は %o を賽の目に切った。
+%k 切碎了 %o
 
 > TXT_OBITUARY7
 %k disembowled %o
-%k 想知道 %o 的肚子里有什么。
-; ;%k は %o の臓物を引きずり出した。
+%k 解脱了 %o
 
 > TXT_OBITUARY8
 %k flattened %o
-%k 把 %o 变成了二次元生物。
-; ;%k は %o をぶっ潰した。
+%k 拍扁了 %o
 
 > TXT_OBITUARY9
 %k gave %o Anal Justice
-%k 对 %o 使出千年杀。
-; ;%k は %o のケツにぶち込んだ。
+%k 对 %o 使出千年杀
 
 > TXT_OBITUARY10
 %k gave AnAl MaDnEsS to %o
-%k 对 %o 使出千年杀。
-; ;%k は %o のケツをガバガバにした。
+%k 对 %o 使出疯狂千年杀。
 
 > TXT_OBITUARY11
 %k killed %o
-%k 杀死了 %o。
-; ;%k は %o をブッ殺した。
+%k 杀死了 %o
 
 > TXT_OBITUARY12
 %k made mincemeat out of %o
-%o 被 %k 变成了肉碎。
-; ;%k は %o をミンチにした。
+%o 把 %k 剁成了肉馅
 
 > TXT_OBITUARY13
 %k massacred %o
-%k 屠杀了 %o。
-; ;%k は %o を虐殺した。
+%k 屠杀了 %o
 
 > TXT_OBITUARY14
 %k mutilated %o
-%k 把 %o 肢解了。
-; ;%k は %o をバラバラ死体にした。
+%k 肢解了 %o
 
 > TXT_OBITUARY15
 %k reamed %o
-%k 在 %o 身上开了一个新洞。
-; ;%k は %o の穴を大きく広げた。
+%k 给 %o 开了个洞
 
 > TXT_OBITUARY16
 %k ripped %o a new orifice
-%k 在 %o 身上开了一个新洞。
-; ;%k は %o を切り裂いて新しい穴を作ってあげた。
+%k 给 %o 撕了个新洞
 
 > TXT_OBITUARY17
 %k slaughtered %o
-%k 把 %o 宰了。
-; ;%k は %o を屠殺した。
+%k 宰了 %o
 
 > TXT_OBITUARY18
 %k smashed %o
-%k 把 %o 打碎了。
-; ;%k は %o をぶっ飛ばした。
+%k 击飞了 %o
 
 > TXT_OBITUARY19
 %k sodomized %o
-%o 被 %k 爆菊了。
-; ;%o は %k にカマを掘られた。
+%o 爆菊了 %k
 
 > TXT_OBITUARY20
 %k splattered %o
-%k 把 %o 洒了一地。
-; ;%k は %o にばら撒かれた。
+%k 把 %o 撒了一地
 
 > TXT_OBITUARY21
 %k squashed %o
-%k 把 %o 踩扁了。
-; ;%k は %o に潰された。
+%k 踩扁了 %o
 
 > TXT_OBITUARY22
 %k throttled %o
-%k 把 %o 勒死了。
-; ;%k は %o に絞られた。
+%k 勒死了 %o
 
 > TXT_OBITUARY23
 %k wasted %o
-%k 把 %o 废了。
-; ;%k は %o に消された。
+%k 废了 %o
 
 > TXT_OBITUARY24
 %k body bagged %o
-%k 把 %o 装进了尸体袋。
-; ;%k は %o を死体袋にした。
+%k 把 %o 装进了裹尸袋
 
 > TXT_OBITUARY25
 %k sent %o to Hell
-%k 把 %o 送进地狱。
-; ;%k は %o を地獄に送った。
+%k 把 %o 送进地狱
 
 > TXT_OBITUARY26
 %k toasted %o
-%o 被 %k 烤了。
-; ;%k は %o を焼却した。
+%o 烧烤了 %k
 
 > TXT_OBITUARY27
 %k snuffed %o
-%o 被 %k 灭了。
-; ;%k は %o を処刑した。
+%o 灭了 %k
 
 > TXT_OBITUARY28
 %k hosed %o
-%k 把 %o 喷得到处都是。
-; ;%k は %o にぶっかけた。
+%k 把 %o 喷得到处都是
 
 > TXT_OBITUARY29
 %k sprayed %o
-%k 把 %o 喷得到处都是。
-; ;%k は %o を撒き散らした。
+%k 把 %o 洒得到处都是
 
 > TXT_OBITUARY30
 %k made dog meat out of %o
-%k 把 %o 做成了狗粮。
-; ;%k は %o を犬の餌にした。
+%k 把 %o 做成了狗粮
 
 > TXT_OBITUARY31
 %k beat %o like a cur
-%o 被 %k 像对野狗一样痛扁。
-; ;%k は %o を狂犬の様に扱った。
+%k 像对野狗一样痛扁 %o
 
 > TXT_SELFOBIT1
 %o is excrement
-%o 成了一坨
-; ;%o はもはや排泄物のようだ。
+%o 成了便便
 
 > TXT_SELFOBIT2
 %o is hamburger
-%o 成了汉堡。
-; ;%o はハンバーガーになった。
+%o 成了汉堡
 
 > TXT_SELFOBIT3
 %o suffered scrotum separation
-%o 蛋碎了。
-; ;%o の陰嚢は剥離していた。
+%o 的蛋碎了
 
 > TXT_SELFOBIT4
 %o volunteered for population control
-%o 自愿参加人类清除计划
-; ;%o は人口削減政策の実験台に志願した。
+%o 自愿参加了人口控制
 
 > TXT_SELFOBIT5
 %o has suicided
 %o 自杀了
-; ;%o は勝手にくたばった。
 
 > TXT_SELFOBIT6
 %o received the Darwin Award
-%o被授予达尔文奖。
-; ;%o にはダーウィン賞が授与された。
+%o 被授予了达尔文奖
 
 > USE_GENERIC_FONT
 ; This is not a text to be translated but an engine switch for complex languages.
 """"""
 1
-; ;1
 
 > REQUIRED_CHARACTERS
 ; This should list all uppercase characters that are REQUIRED for proper language display. If it is acceptable that accents get omitted a character should NOT be listed here!
 
 > OPTMNU_FULLOPTIONS
 Full options menu
-完整选项菜单
-; ;全オプション欄
+菜单列出完整选项
 
 > OPTMNU_SIMPLEON
 Simple options menu
-缩略选项菜单
-; ;必要なオプションのみ
+菜单列出简要选项
 
 > OPTMNU_OPENCONFIG
 Browse Game Config
-ゲームコンフィグ参照
+浏览游戏配置
 
 > OPTMNU_OPENSCREENSHOTS
 Browse Screenshots
-クリーンショット参照
+浏览截图
 
 > OPTMNU_OPENSAVES
 Browse Saved Games
-セーブしたゲーム参照
+浏览游戏存档
 
 > MOUSEMNU_SWAPBUTTONS
 Swap mouse buttons
-マウスボタンを反転
+交换鼠标按钮
 
 ; Additional menu texts
 
 > OPTVAL_ONLYMODIFIED
 Only modified
-モディファイのみ
+仅修改的
 
 > TXT_UNKNOWN
 Unknown
-不明
+未知
 
 > OPTVAL_HUD
 HUD
 
 > OPTVAL_AUTOMAP
 Automap
-オートマップ
+地图
 
 > OPTVAL_HUDANDMAP
 HUD + Automap
-HUD+オートマップ
+HUD+地图
 
 > TXT_SAVEGAMENEEDS
 This savegame needs these files
-このセーブデータには 必要なファイルがある
+此存档需要这些文件
 
 > OPTMNU_MULTIPLAYER
 Multiplayer Options
-マルチプレイ オプション
+多人游戏选项
 
 > OPTMNU_INPUT
 Input Options
-入力オプション
+输入选项
 
 > OPTMNU_SYSTEM
 System Options
-システムオプション
+系统选项
 
 > OPTMNU_LIGHT
 Light Options
-光源オプション
+光照选项
 
 > OPTMNU_SPRITE
 Sprite Options
-スプライトオプション
+精灵选项
 
 > GLPREFMNU_CORONAS
 Coronas
-光冠
+光晕
 
 > DSPLYMNU_APPEARANCE
 Appearance
-アピアランス
+外观
 
 > DSPLYMNU_ADVANCED
 Advanced Display Options
-高度なディスプレイオプション
+高级显示选项
 
 ; IWAD/Game picker
 
 > PICKER_SELECT
 Select which game file to run.
-実行するゲームファイルを選択します。
+选择运行哪个游戏文件。
 
 > PICKER_PLAY
 Play Game
-プレイ
+玩游戏
 
 > PICKER_EXIT
 Exit
-終了
+退出
 
 > PICKER_GENERAL
 General
@@ -2582,78 +2442,81 @@ General
 
 > PICKER_EXTRA
 Extra Graphics
-追加グラフィックス
+额外图像
 
 > PICKER_FULLSCREEN
 Fullscreen
-フルスクリーン
+全屏
 
 > PICKER_NOAUTOLOAD
 Disable autoload
-オートロード無効
+禁用自动加载
 
 > PICKER_DONTASK
 Don't ask me again
-再度聞かない
+不要再问我
 
 > PICKER_LIGHTS
 Lights
-ライト
+光照
 
 > PICKER_BRIGHTMAPS
 Brightmaps
-ブライトマップ
+光照图
 
 > PICKER_WIDESCREEN
 Widescreen
-ワイドスクリーン
+宽屏
 
 > PICKER_ADDPARM
 Additional Parameters:
-追加パラメータ
+附加参数：
 
 > PICKER_WELCOME
 Welcome to %s!
-ようこそ:  %s!
+欢迎来到 %s!
 
 > PICKER_VERSION
 Version %s
-バージョン %s
+版本 %s
 
 > PICKER_PREFERBACKEND
 Rendering API
-優先レンダリングAPI
+渲染API
 
 > PICKER_TAB_PLAY
 Game
-ゲーム
+游戏
 
 > JOYMNU_JOYENABLE
 ; Option to enable or disable individual controllers/joysticks when configuring it in the Controller Options menu
 Enable this controller
-このコントローラーを有効にする
+启用此控制器
 
 > CNTRLMNU_OPEN_MAIN
 Open Main Menu
-メインメニューを開く
+打开主菜单
 
 ; New content
 
 > MODMNU_REPLAYER
 Module replayer
-モジュール リプレイヤー
+模块播放器
 
 > JOYMNU_JOYENABLEINBACKGROUND
 ; This is enabled per-controller, it means to enable "this" controller in the background when GZDoom is not in focus.
 Allow Background Controller Input
+在后台也允许控制器输入
 
 > MISCMNU_SAVEORDER
 ; Order to sort the list of saved games in the save and load game menu. This used to only be alphabetical.
 Save Game Sorting Order
+存档排列顺序
 
 > OPTVAL_ALPHABETICAL
 Alphabetical
+字母顺序
 
 > OPTVAL_LASTSAVEDTIME
 Last Saved Time
-
+上次保存时间
