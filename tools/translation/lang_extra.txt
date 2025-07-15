@@ -3648,23 +3648,23 @@ Too bad. The only thing you're getting is dead!
 > TXT_DLG_SCRIPT02_D69736_INASM
 ; MAP02: Rowan.
 In a small world, word travels fast. I hear you just removed some obstacles from your path. Nice work. Are you interested in some more lucrative projects?
-"""この小さな世界では噂が広まるのは早いもんだ。
-あんたが素早く厄介事を片付けたと聞いたぞ。
-もっと儲かる仕事をやってみる気はないかね?"""
+"""在小圈子里，消息传得很快。
+我听说你刚清除了一些障碍。
+干得不错。你对一些更赚钱的项目感兴趣吗？"""
 
 > TXT_RPLY0_SCRIPT02_D69736_SUREW
 ; 〃
 Sure, why not.
-ああ、もちろんだ。
+当然，怎么会不感兴趣。
 
 > TXT_RPLY1_SCRIPT02_D69736_NOTHA
 ; 〃
 No thanks.
-やめとくよ。
+不了，谢谢。
 
 > TXT_RYES1_SCRIPT02_D69736_THENG
 Then get lost!
-じゃあ失せるんだな!
+我只是走丢了!
 
 > TXT_DLG_SCRIPT02_D71252_FOOLG
 ; Rowan.
@@ -8013,15 +8013,15 @@ If there is any honor inside that pathetic shell of a body, you'll enter into th
 
 > TXT_RANDOMGOODBYE_1
 Bye!
-じゃあな!
+再见！
 
 > TXT_RANDOMGOODBYE_2
 Thanks, bye!
-どうも、じゃあ!
+感谢，再见！
 
 > TXT_RANDOMGOODBYE_3
 See you later!
-また今度!
+下次见！
 
 ; Strife logs
 
@@ -8592,7 +8592,7 @@ Order Sergeant
 
 > TXT_SPEAKER_ROWAN
 Rowan
-ロワン
+罗温
 
 > TXT_SPEAKER_FERIS
 Feris

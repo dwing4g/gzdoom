@@ -976,7 +976,7 @@ You got the rocket launcher!
 
 > GOTPLASMA
 You got the plasma gun!
-你获得了电浆枪！
+你获得了电浆步枪！
 
 > GOTSHOTGUN
 You got the shotgun!
@@ -1089,160 +1089,130 @@ Zombieman
 > CC_SHOTGUN
 ; a.k.a. (former human) sergeant
 Shotgun Guy
-霰弹枪士官
+霰弹枪军士
 
 > CC_HEAVY
 ; a.k.a. former commando
 Heavy Weapon Dude
-机枪僵尸
-; ;ヘビーウェポンゾンビ
+机枪突击手
 
 > CC_IMP
 Imp
-小鬼
-; ;インプ
+幼魔
 
 > CC_DEMON
 Demon
 粉红魔
-; ;デーモン
 
 > CC_LOST
 Lost Soul
-失落之魂
-; ;ロストソウル
+丧魂
 
 > CC_CACO
 Cacodemon
 独眼魔
-; ;カコデーモン
 
 > CC_HELL
 Hell Knight
 地狱骑士
-; ;ヘルナイト
 
 > CC_BARON
 Baron of Hell
 地狱男爵
-; ;バロンオブヘル
 
 > CC_ARACH
 Arachnotron
 机械蜘蛛
-; ;アラクノトロン
 
 > CC_PAIN
 Pain Elemental
 痛苦元素
-; ;ペインエレメンタル
 
 > CC_REVEN
 Revenant
 亡魂
-; ;レバナント
 
 > CC_MANCU
 Mancubus
 肥球
-; ;マンキュバス
 
 > CC_ARCH
 Arch-Vile
-恶弧
-; ;アーチバイル
+恶魔召唤师
 
 > CC_SPIDER
 The Spider Mastermind
-蜘蛛首领
-; ;スパイダーマスターマインド
+蜘蛛首脑
 
 > CC_CYBER
 The Cyberdemon
 机械恶魔
-; ;サイバーデーモン
 
 > CC_HERO
 Our Hero
 我们的英雄
-; ;我らのヒーロー
 
 ; Actor tag names
 
 > FN_SHOTGUN
 Sergeant
-霰弹枪僵尸
-; ;ゾンビ軍曹
+霰弹枪军士
 
 > FN_HEAVY
 Chaingunner
-机枪僵尸
-; ;チェーンガンゾンビ
+机枪突击手
 
 > FN_SPECTRE
 Spectre
 幽灵
-; ;スペクトル
 
 > FN_SPIDER
 Spider Mastermind
-蜘蛛首领
-; ;スパイダーマスターマインド
+蜘蛛首脑
 
 > FN_CYBER
 Cyberdemon
 机械恶魔
-; ;サイバーデーモン
 
 > FN_WOLFSS
 Nazi
 纳粹
-; ;ナチ兵
 
 > FN_DOG
 Dog
-狗
-; ;犬
+军犬
 
 > TAG_FIST
 Brass Knuckles
 铜指虎
-; ;ナックルダスター
 
 > TAG_CHAINSAW
 Chainsaw
 电锯
-; ;チェーンソウ
 
 > TAG_PISTOL
 Pistol
 手枪
-; ;ピストル
 
 > TAG_SHOTGUN
 Shotgun
 霰弹枪
-; ;ショットガン
 
 > TAG_SUPERSHOTGUN
 Super Shotgun
 超级霰弹枪
-; ;スーパーショットガン
 
 > TAG_CHAINGUN
 Chaingun
 机枪
-; ;チェーンガン
 
 > TAG_ROCKETLAUNCHER
 Rocket Launcher
-火箭炮
-; ;ロケットランチャー
+火箭发射器
 
 > TAG_PLASMARIFLE
 Plasma Rifle
 电浆步枪
-; ;プラズマライフル
 
 > TAG_BFG9000
 BFG 9000
@@ -1250,22 +1220,18 @@ BFG 9000
 > AMMO_CLIP
 Bullets
 子弹
-; ;銃弾
 
 > AMMO_SHELLS
 Shotgun Shells
 霰弹
-; ;散弾シェル
 
 > AMMO_ROCKETS
 Rockets
-火箭
-; ;ロケット弾
+火箭弹
 
 > AMMO_CELLS
 Energy Cells
 电池
-; ;エネルギーセル
 
 ; Obituaries
 
@@ -1276,7 +1242,7 @@ Energy Cells
 
 > OB_STEALTHVILE
 %o thought %g saw an archvile.
-%o 以为 %g 看到了恶弧。
+%o 以为 %g 看到了恶魔召唤师。
 ; ;%o がアーチバイルを見た気がした。
 
 > OB_STEALTHBARON
@@ -1291,7 +1257,7 @@ Energy Cells
 
 > OB_STEALTHCHAINGUY
 %o thought %g saw a chaingunner.
-%o 以为 %g 看到了机枪僵尸。
+%o 以为 %g 看到了机枪突击手。
 ; ;%o がチェインガンナーを見た気がした。
 
 > OB_STEALTHDEMON
@@ -1306,7 +1272,7 @@ Energy Cells
 
 > OB_STEALTHIMP
 %o thought %g saw an imp.
-%o 以为 %g 看到了小鬼。
+%o 以为 %g 看到了幼魔。
 ; ;%o がインプを見た気がした。
 
 > OB_STEALTHFATSO
@@ -1321,12 +1287,12 @@ Energy Cells
 
 > OB_STEALTHSHOTGUNGUY
 %o thought %g saw a sergeant.
-%o 以为 %g 看到了霰弹枪僵尸。
+%o 以为 %g 看到了霰弹枪军士。
 ; ;%o が軍曹を見た気がした。
 
 > OB_STEALTHZOMBIE
 %o thought %g saw a zombieman.
-%o 以为 %g 看到了僵尸士兵。
+%o 以为 %g 看到了僵尸兵。
 ; ;%o がゾンビ兵を見た気がした。
 
 > OB_UNDEADHIT
@@ -1336,7 +1302,7 @@ Energy Cells
 
 > OB_IMPHIT
 %o was slashed by an imp.
-%o 被小鬼撕碎了。
+%o 被幼魔撕碎了。
 ; ;%o はインプに切り裂かれた。
 
 > OB_CACOHIT
@@ -1366,17 +1332,17 @@ Energy Cells
 
 > OB_ZOMBIE
 %o was killed by a zombieman.
-%o 被僵尸士兵射杀了。
+%o 被僵尸兵射杀了。
 ; ;%o はゾンビ兵に殺された。
 
 > OB_SHOTGUY
 %o was shot by a sergeant.
-%o 被霰弹枪打成了筛子。
+%o 被霰弹枪军士打成了筛子。
 ; ;%o はゾンビ軍曹に撃たれた。
 
 > OB_VILE
 %o was incinerated by an archvile.
-%o 被恶弧烧成了灰。
+%o 被恶魔召唤师烧成了灰。
 ; ;%o はアーチバイルに焼き尽くされた。
 
 > OB_UNDEAD
@@ -1391,17 +1357,17 @@ Energy Cells
 
 > OB_CHAINGUY
 %o was perforated by a chaingunner.
-%o 被机枪僵尸打的浑身是洞。
+%o 被机枪突击手打的浑身是洞。
 ; ;%o はチェインガンナーに蜂の巣にされた。
 
 > OB_SKULL
 %o was spooked by a lost soul.
-%o 被失落之魂吓死了。
+%o 被丧魂吓死了。
 ; ;%o はロストソウルにビビらされた。
 
 > OB_IMP
 %o was burned by an imp.
-%o 被小鬼烧死了。
+%o 被幼魔烧死了。
 ; ;%o はインプに焼かれた。
 
 > OB_CACO
@@ -1421,7 +1387,7 @@ Energy Cells
 
 > OB_SPIDER
 %o stood in awe of the spider demon.
-%o 获得了蜘蛛首领的敬畏。
+%o 获得了蜘蛛首脑的敬畏。
 ; ;%o はスパイダーデーモンに恐れをなした。
 
 > OB_BABY
@@ -1431,7 +1397,7 @@ Energy Cells
 
 > OB_CYBORG
 %o was splattered by a cyberdemon.
-%o 被电子魔轰成了肉泥。
+%o 被机械恶魔轰成了肉泥。
 ; ;%o はサイバーデーモンにバラバラにされた。
 
 > OB_WOLFSS
@@ -1481,13 +1447,12 @@ Energy Cells
 
 > OB_MPR_SPLASH
 %o almost dodged %k's rocket.
-%o 差点就躲开了 %k 发射的火箭。
+%o 差点就躲开了 %k 发射的火箭弹。
 ; ;%o は %k のロケットをあと少しで避けられそうだった。
 
 > OB_MPPLASMARIFLE
 %o was melted by %k's plasma gun.
 %o 被 %k 的电浆步枪融化了。
-; ;%o は %k のプラズマガンに溶かされた。
 
 > OB_MPBFG_BOOM
 %o was splintered by %k's BFG.
@@ -3954,11 +3919,11 @@ Hey, not too rough.
 
 > SKILL_NORMAL
 Hurt me plenty.
-用力打我啊。
+用力打我。
 
 > SKILL_HARD
 Ultra-Violence.
-极其暴力。
+超暴力。
 
 > SKILL_NIGHTMARE
 Nightmare!
