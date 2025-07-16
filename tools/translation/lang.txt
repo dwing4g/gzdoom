@@ -153,7 +153,7 @@ Then, thou hast lost an eighth!"""
 
 > QUITMSG9
 ; A “dimensional shambler” is a creature appearing in the works of H. P. Lovecraft.
-"""Don't go now, there's a
+"""Don't go now, there's a 
 dimensional shambler waiting
 at the DOS prompt!"""
 """先别走，DOS提示符那里
@@ -166,7 +166,7 @@ to your boring programs."""
 无聊的程序去吧。"""
 
 > QUITMSG11
-"""If I were your boss, I'd
+"""If I were your boss, I'd 
 deathmatch ya in a minute!"""
 """我要是你的老板，
 我立马就跟丫决斗！"""
@@ -228,7 +228,7 @@ but you can't hide..."""
 > QUITMSG22
 """Whaaa, what's the matter?
 Mommy says dinnertime?"""
-"""哇，怎么了？
+"""哇，怎么啦？
 妈妈喊你回家吃饭？"""
 
 > QUITMSG23
@@ -1176,7 +1176,7 @@ Cyberdemon
 
 > FN_WOLFSS
 Nazi
-纳粹
+纳粹兵
 
 > FN_DOG
 Dog
@@ -1238,217 +1238,174 @@ Energy Cells
 > OB_STEALTHBABY
 %o thought %g saw an arachnotron.
 %o 以为 %g 看到了机械蜘蛛。
-; ;%o がアラクノトロンを見た気がした。
 
 > OB_STEALTHVILE
 %o thought %g saw an archvile.
 %o 以为 %g 看到了恶魔召唤师。
-; ;%o がアーチバイルを見た気がした。
 
 > OB_STEALTHBARON
 %o thought %g saw a Baron of Hell.
 %o 以为 %g 看到了地狱男爵。
-; ;%o がバロンを見た気がした。
 
 > OB_STEALTHCACO
 %o thought %g saw a cacodemon.
 %o 以为 %g 看到了独眼魔。
-; ;%o がカコデーモンを見た気がした。
 
 > OB_STEALTHCHAINGUY
 %o thought %g saw a chaingunner.
 %o 以为 %g 看到了机枪突击手。
-; ;%o がチェインガンナーを見た気がした。
 
 > OB_STEALTHDEMON
 %o thought %g saw a demon.
 %o 以为 %g 看到了粉红魔。
-; ;%o がデーモンを見た気がした。
 
 > OB_STEALTHKNIGHT
 %o thought %g saw a Hell Knight.
 %o 以为 %g 看到了地狱骑士。
-; ;%o がヘルナイトを見た気がした。
 
 > OB_STEALTHIMP
 %o thought %g saw an imp.
 %o 以为 %g 看到了幼魔。
-; ;%o がインプを見た気がした。
 
 > OB_STEALTHFATSO
 %o thought %g saw a mancubus.
 %o 以为 %g 看到了肥球。
-; ;%o がマンキュバスを見た気がした。
 
 > OB_STEALTHUNDEAD
 %o thought %g saw a revenant.
 %o 以为 %g 看到了亡魂。
-; ;%o がレバナントを見た気がした。
 
 > OB_STEALTHSHOTGUNGUY
 %o thought %g saw a sergeant.
 %o 以为 %g 看到了霰弹枪军士。
-; ;%o が軍曹を見た気がした。
 
 > OB_STEALTHZOMBIE
 %o thought %g saw a zombieman.
 %o 以为 %g 看到了僵尸兵。
-; ;%o がゾンビ兵を見た気がした。
 
 > OB_UNDEADHIT
 %o was punched by a revenant.
 %o 被亡魂锤爆了。
-; ;%o はレバナントに殴られた。
 
 > OB_IMPHIT
 %o was slashed by an imp.
 %o 被幼魔撕碎了。
-; ;%o はインプに切り裂かれた。
 
 > OB_CACOHIT
 %o got too close to a cacodemon.
 %o 离独眼魔太近了。
-; ;%o はカコデーモンに近づきすぎた。
 
 > OB_DEMONHIT
 %o was bit by a demon.
 %o 被粉红魔咬碎了。
-; ;%o はデーモンに噛まれた。
 
 > OB_SPECTREHIT
 %o was eaten by a spectre.
 %o 被幽灵吞下去了。
-; ;%o はスペクトルに喰われた。
 
 > OB_BARONHIT
 %o was ripped open by a Baron of Hell.
-%o 被地狱男爵开膛破肚。
-; ;%o はバロンオブヘルに体を抉じ開けられた。
+%o 被地狱男爵开膛破肚了。
 
 > OB_KNIGHTHIT
 %o was gutted by a Hell Knight.
 %o 被地狱骑士肢解了。
-; ;%o はヘルナイトに内臓を抉られた。
 
 > OB_ZOMBIE
 %o was killed by a zombieman.
-%o 被僵尸兵射杀了。
-; ;%o はゾンビ兵に殺された。
+%o 被僵尸兵杀了。
 
 > OB_SHOTGUY
 %o was shot by a sergeant.
-%o 被霰弹枪军士打成了筛子。
-; ;%o はゾンビ軍曹に撃たれた。
+%o 被霰弹枪军士射成了筛子。
 
 > OB_VILE
 %o was incinerated by an archvile.
 %o 被恶魔召唤师烧成了灰。
-; ;%o はアーチバイルに焼き尽くされた。
 
 > OB_UNDEAD
 %o couldn't evade a revenant's fireball.
-%o 躲不开亡魂的炮火。
-; ;%o はレバナントのファイアボールを回避できなかった。
+%o 没躲开亡魂的火炮。
 
 > OB_FATSO
 %o was squashed by a mancubus.
-%o 被肥球挤烂了。
-; ;%o はマンキュバスに潰された。
+%o 被肥球压烂了。
 
 > OB_CHAINGUY
 %o was perforated by a chaingunner.
 %o 被机枪突击手打的浑身是洞。
-; ;%o はチェインガンナーに蜂の巣にされた。
 
 > OB_SKULL
 %o was spooked by a lost soul.
 %o 被丧魂吓死了。
-; ;%o はロストソウルにビビらされた。
 
 > OB_IMP
 %o was burned by an imp.
 %o 被幼魔烧死了。
-; ;%o はインプに焼かれた。
 
 > OB_CACO
 %o was smitten by a cacodemon.
 %o 被独眼魔轰死了。
-; ;%o はカコデーモンに裁きを受けた。
 
 > OB_BARON
 %o was bruised by a Baron of Hell.
-%o 遭到了地狱男爵的重击。
-; ;%o はバロンオブヘルに痛めつけられた。
+%o 被地狱男爵的重击了。
 
 > OB_KNIGHT
 %o was splayed by a Hell Knight.
-%o 遭到了地狱骑士的分尸。
-; ;%o はヘルナイトにバラ撒かれた。
+%o 被地狱骑士的分尸了。
 
 > OB_SPIDER
 %o stood in awe of the spider demon.
-%o 获得了蜘蛛首脑的敬畏。
-; ;%o はスパイダーデーモンに恐れをなした。
+%o 对蜘蛛首脑产生了敬畏。
 
 > OB_BABY
 %o let an arachnotron get %h.
 %o 被机械蜘蛛逮了个正着。
-; ;%o が アラクノトロンに討ち取られた。
 
 > OB_CYBORG
 %o was splattered by a cyberdemon.
 %o 被机械恶魔轰成了肉泥。
-; ;%o はサイバーデーモンにバラバラにされた。
 
 > OB_WOLFSS
 %o met a Nazi.
-%o 遭遇了纳粹。
-; ;%o はナチ兵と遭遇した。
+%o 遭遇了纳粹兵。
 
 > OB_DOG
 %o was mauled by a dog.
-%o 遭到了军犬的撕咬。
-; ;%o は犬に引き裂かれた。
+%o 被军犬撕咬了。
 
 > OB_MPFIST
 %o chewed on %k's fist.
-%o 被 %k's 的拳头锤死了。
-; ;%o は %k の拳を顔面に受けた。
+%o 被 %k 的拳头锤死了。
 
 > OB_MPCHAINSAW
 %o was mowed over by %k's chainsaw.
-%o 被 %k's 的电锯捅了个对穿。
-; ;%o は %k のチェーンソーで刈り取られた。
+%o 被 %k 的电锯捅穿了。
 
 > OB_MPPISTOL
 %o was tickled by %k's pea shooter.
-%o 被 %k 的糖豆枪点死了。
-; ;%o は %k の豆鉄砲でくすぐられた。
+%o 被 %k 的豌豆射手逗死了。
 
 > OB_MPSHOTGUN
 %o chewed on %k's boomstick.
 %o 吃了一发 %k 的火枪。
-; ;%o は %k のブームスティックを顔面に受けた。
 
 > OB_MPSSHOTGUN
 %o was splattered by %k's super shotgun.
-%o 被 %k 的超级霰弹枪打成了肉泥。
-; ;%o は %k のスーパーショットガンでバラバラにされた。
+%o 被 %k 的超级霰弹枪喷成了肉泥。
 
 > OB_MPCHAINGUN
 %o was mowed down by %k's chaingun.
 %o 被 %k 的机枪打成了筛子。
-; ;%o は %k のチェーンガンで蜂の巣にされた。
 
 > OB_MPROCKET
 %o rode %k's rocket.
-%o 骑着 %k 发射的火箭弹旅行。
-; ;%o は %k のロケットに乗ってしまった。
+%o 骑上了 %k 火箭弹。
 
 > OB_MPR_SPLASH
 %o almost dodged %k's rocket.
-%o 差点就躲开了 %k 发射的火箭弹。
-; ;%o は %k のロケットをあと少しで避けられそうだった。
+%o 差点躲开了 %k 火箭弹。
 
 > OB_MPPLASMARIFLE
 %o was melted by %k's plasma gun.
@@ -1457,22 +1414,18 @@ Energy Cells
 > OB_MPBFG_BOOM
 %o was splintered by %k's BFG.
 %o 被 %k 的BFG打爆了。
-; ;%o は %k のBFGで木っ端微塵にされた。
 
 > OB_MPBFG_SPLASH
 %o couldn't hide from %k's BFG.
-%o 面对 %k 的BFG无处躲藏。
-; ;%o は %k のBFGから隠れることはできなかった。
+%o 无法躲藏 %k 的BFG。
 
 > OB_RAILGUN
 %o was railed by %k.
-%o 被 %k 干死了。
-; ;%o は %k のレールガンで死亡した。
+%o 死于 %k 的轨道枪。
 
 > OB_MPBFG_MBF
 %o was burned by %k's BFG.
 %o 被 %k 的BFG烧死了。
-; ;%o は %k のBFGで焼き殺された。
 
 ; Heretic
 
@@ -1552,15 +1505,15 @@ Map Scroll
 
 > TXT_AMMOGOLDWAND1
 Wand Crystal
-魔杖水晶
+法杖水晶
 
 > TXT_AMMOGOLDWAND2
 Crystal Geode
-结晶原石
+水晶原石
 
 > TXT_AMMOMACE1
 Mace Spheres
-战锤球
+战锤之球
 
 > TXT_AMMOMACE2
 Pile of Mace Spheres
@@ -1576,11 +1529,11 @@ Quiver of Ethereal Arrows
 
 > TXT_AMMOBLASTER1
 Claw Orb
-利爪球
+魔爪宝珠
 
 > TXT_AMMOBLASTER2
 Energy Orb
-能量球
+能量宝珠
 
 > TXT_AMMOSKULLROD1
 Lesser Runes
@@ -1592,15 +1545,15 @@ Greater Runes
 
 > TXT_AMMOPHOENIXROD1
 Flame Orb
-火球
+火焰宝珠
 
 > TXT_AMMOPHOENIXROD2
 Inferno Orb
-地狱火球
+地狱火珠
 
 > TXT_WPNGOLDWAND
 Gold Wand
-黄金魔杖
+黄金法杖
 
 > TXT_WPNMACE
 Firemace
@@ -1644,12 +1597,12 @@ You need a yellow key to open this door
 
 > FN_CHICKEN
 Chicken
-鸡
+小鸡
 
 > FN_BEAST
 ; Wordplay: werewolf
 Weredragon
-ウェア ドラゴン
+龙人
 
 > FN_CLINK
 ; Wordplay: sabre-tooth
@@ -1658,63 +1611,63 @@ Sabreclaw
 
 > FN_DSPARIL
 D'Sparil
-デ'スパリル
+迪萨魔
 
 > FN_HERETICIMP
 Gargoyle
-ガーゴイル
+石像鬼
 
 > FN_IRONLICH
 Ironlich
-アイアンリッチ
+铁巫妖
 
 > FN_BONEKNIGHT
 Undead Warrior
-アンデット兵
+亡灵战士
 
 > FN_MINOTAUR
 Maulotaur
-マウロタウロス
+牛头锤
 
 > FN_MUMMY
 Golem
-ゴーレム
+魔像
 
 > FN_MUMMYLEADER
 Nitrogolem
-ニトロゴーレム
+爆裂魔像
 
 > FN_SNAKE
 Ophidian
-オフィディアン
+蛇妖
 
 > FN_WIZARD
 Wizard
-ウィザード
+巫师
 
 > AMMO_GOLDWAND
 Wand Crystals
-ワンド クリスタル
+法杖水晶
 
 > AMMO_CROSSBOW
 Ethereal Arrows
-イセリアルの矢
+空灵箭矢
 
 > AMMO_BLASTER
 Claw Orbs
-クロー オーブ
+魔爪宝珠
 
 > AMMO_MACE
 Mace Spheres
-メイス スフィア
+战锤之球
 
 > AMMO_SKULLROD
 Hellstaff Runes
-ヘルスタッフ ルーン
+冥杖符文
 
 > AMMO_PHOENIXROD
 Flame Orbs
-フレイム オーブ
+火焰宝珠
 
 > TAG_STAFF
 Staff
@@ -1722,7 +1675,7 @@ Staff
 
 > TAG_GOLDWAND
 Elven Wand
-エルフのワンド
+精灵法杖
 
 ; Obituaries
 
@@ -1732,145 +1685,143 @@ Elven Wand
 
 > OB_BEAST
 %o was charred by a weredragon.
-%o 被一只Weredragon烧焦了。
-; ;%o はウェアドラゴンに黒焦げにされた。
+%o 被龙人烧焦了。
 
 > OB_CLINK
 %o was slashed by a sabreclaw.
-%o 被sabreclaw割裂了。
-; ;%o はサーベルクローに切り裂かれた。
+%o 被剑爪割裂了。
 
 > OB_DSPARIL1
 %o was scalded by D'Sparil's serpent.
-%o はデ'スパリルのサーペントに火傷を負わされた。
+%o 被迪萨魔之蛇烧死了。
 
 > OB_DSPARIL1HIT
 %o was chewed up by D'Sparil's serpent.
-%o はデ'スパリルのサーペントに噛み砕かれた。
+%o 被迪萨魔之蛇咬碎了。
 
 > OB_DSPARIL2
 %o was no match for D'Sparil.
-%o はデ'スパリルには全く歯が立たなかった。
+%o 打不过迪萨魔。
 
 > OB_DSPARIL2HIT
 %o was smacked down by D'Sparil.
-%o はデ'スパリルに打ち負かされた。
+%o 被迪萨魔打倒了。
 
 > OB_HERETICIMP
 %o was scarred by a gargoyle.
-%o はガーゴイルに傷を負わされた。
+%o 被石像鬼打得伤痕累累。
 
 > OB_HERETICIMPHIT
 %o was hacked by a gargoyle.
-%o はガーゴイルに切り刻まれた。
+%o 被石像鬼砍死了。
 
 > OB_IRONLICH
 %o was devastated by an ironlich.
-%o はアイアンリッチに吹き飛ばされた。
+%o 被铁巫妖摧毁了。
 
 > OB_IRONLICHHIT
 %o got up-close and personal with an ironlich.
-%o はアイアンリッチと密接に関わった。
+%o 跟铁巫妖近距离亲密接触了。
 
 > OB_BONEKNIGHT
 %o was axed by an undead warrior.
-%o はアンデッド兵の斧でやられた。
+%o 被亡灵战士劈死了。
 
 > OB_BONEKNIGHTHIT
 %o was slain by an undead warrior.
-%o はアンデッド兵の手で葬られた。
+%o 被亡灵战士杀死了。
 
 > OB_MINOTAUR
 %o was blasted into cinders by a Maulotaur.
-%o はマウロタウロスに燃やされ炭化した。
+%o 被牛头锤炸成了灰烬。
 
 > OB_MINOTAURHIT
 %o was pulped by a Maulotaur.
-%o はマウロタウロスにグシャグシャにされた。
+%o 被牛头锤捣成了浆糊。
 
 > OB_MUMMY
 %o was smashed by a golem.
-%o はゴーレムに叩きのめされた。
+%o 被魔像撞死了。
 
 > OB_MUMMYLEADER
 %o was shrieked to death by a nitrogolem.
-%o はニトロゴーレムに脅かされた。
+%o 被爆裂魔像吼死了。
 
 > OB_SNAKE
 %o was rattled by an ophidian.
-%o はオフィディアンに動揺した。
+%o 被蛇妖吓死了。
 
 > OB_WIZARD
 %o was cursed by a wizard.
-%o はウィザードに呪われた。
+%o 被巫师咒死了。
 
 > OB_WIZARDHIT
 %o was palpated by a wizard.
-%o はウィザードに触診されてしまった。
+%o 被巫师触死了。
 
 > OB_MPSTAFF
 %o got staffed by %k.
-%o は %k の棒でぶん殴られた。
+%o 被 %k 的法杖捅死了。
 
 > OB_MPGAUNTLETS
 %o got a shock from %k's gauntlets.
-%o は %k の篭手からショックを受けた。
+%o 被 %k 铁手套电死了。
 
 > OB_MPGOLDWAND
 %o waved goodbye to %k's elven wand.
-%o は %k のエルフのワンドに別れの挨拶をした。
+%o 向 %k 的精灵法杖挥手拜拜。
 
 > OB_MPCROSSBOW
 %o was pegged by %k's ethereal crossbow.
-%o は %k のイセリアルクロスボウで釘付けにされた。
+%o 被 %k 的空灵之弩钉死了。
 
 > OB_MPBLASTER
 %o was blasted a new one by %k's dragon claw.
-%o は %k のドラゴンクローで発破体験した。
+%o 被 %k 的龙爪轰到了转世。
 
 > OB_MPSKULLROD
 %o got sent down under by %k's hellstaff.
-%o は %k のヘルスタッフで冥界に送られた。
+%o 被 %k 的地狱法杖送到了下界。
 
 > OB_MPPHOENIXROD
 %o was scorched to cinders by %k's phoenix rod.
-%o は %k のフェニックスロッドで焼かれた。
+%o 被 %k 的凤凰法杖烧成了灰烬。
 
 > OB_MPMACE
 %o was bounced by %k's firemace.
-%o は %k のファイアメイスで飛ばされた。
+%o 被 %k 的火焰战锤弹飞了。
 
 > OB_MPPSTAFF
 %o got clapped by %k's charged staff.
-%o は %k の魔力を帯びた棒で暖かく迎えられた。
+%o 被 %k 的充能法杖热烈迎接了。
 
 > OB_MPPGAUNTLETS
 %o was bled dry by %k's gauntlets.
-%o は %k の篭手で血を絞り取られた。
+%o 被 %k 的铁手套榨干了。
 
 > OB_MPPGOLDWAND
 %o was assaulted by %k's elven wand.
-%o は %k のエルフのワンドで襲われた。
+%o 被 %k 的精灵法杖暗杀了。
 
 > OB_MPPCROSSBOW
 %o was shafted by %k's ethereal crossbow.
-%o は %k のイセリアルクロスボウで押された。
+%o 被 %k 的空灵之弩欺诈了。
 
 > OB_MPPBLASTER
 %o was ripped apart by %k's dragon claw.
-%o は %k のドラゴンの鉤爪でバラバラに引き裂かれた。
+%o 被 %k 的龙爪撕裂了。
 
 > OB_MPPSKULLROD
 %k poured the hellstaff on %o.
-%o は %k にヘルスタッフを %p 注ぎ込まれた。
+%o 被 %k 的地狱法杖喷死了。
 
 > OB_MPPPHOENIXROD
 %o was burned down by %k's phoenix staff.
-%o は %k のフェニックスロッドで焼き滅ぼされた。
+%o 被 %k 的凤凰法杖烧成了灰烬。
 
 > OB_MPPMACE
 %o was squished by %k's giant mace sphere.
-%o は %k の巨大なメイススフィアで潰された。
+%o 被 %k 巨大的战锤之球压死了。
 
 ; Hexen
 
@@ -1886,7 +1837,7 @@ Green Mana
 
 > TXT_MANA_BOTH
 Combined Mana
-复合魔能
+全魔能
 
 > TXT_KEY_STEEL
 Steel Key
@@ -1934,23 +1885,23 @@ Castle Key
 
 > TXT_ARTIINVULNERABILITY2
 Icon of the Defender
-守護者の像
+守护者圣像
 
 > TXT_ARTISUMMON
 Dark Servant
-闇の従者
+黑暗仆从
 
 > TXT_ARTIEGG2
 Porkalator
-ポークレイター
+猪化器
 
 > TXT_ARTIPOISONBAG
 Flechette
-フレチェット
+弹瓶
 
 > TXT_ARTITELEPORTOTHER
 Banishment Device
-追放のデバイス
+放逐器
 
 > TXT_ARTISPEED
 Boots of Speed
@@ -1958,534 +1909,533 @@ Boots of Speed
 
 > TXT_ARTIBOOSTMANA
 Krater of Might
-魔力の盃
+魔力之杯
 
 > TXT_ARTIBOOSTARMOR
 Dragonskin Bracers
-竜皮の小手
+龙皮之酒
 
 > TXT_ARTIBLASTRADIUS
 Disc of Repulsion
-反発の円盤
+排斥之盘
 
 > TXT_ARTIHEALINGRADIUS
 Mystic Ambit Incant
-魅知国の秘法
+奥域法咒
 
 > TXT_ARTIPUZZSKULL
 Yorick's Skull
-ヨリックの髑髏
+约里克的头骨
 
 > TXT_ARTIPUZZGEMBIG
 Heart of D'sparil
-デ'スパリルの心
+迪萨魔之心
 
 > TXT_ARTIPUZZGEMRED
 Ruby Planet
-ルビーの宝石
+红宝石之星
 
 > TXT_ARTIPUZZGEMGREEN1
 Emerald Planet
-エメラルドの宝石
+翡翠之星
 
 > TXT_ARTIPUZZGEMGREEN2
 Emerald Planet
-エメラルドの宝石
+翡翠之星
 
 > TXT_ARTIPUZZGEMBLUE1
 Sapphire Planet
-サファイアの宝石
+蓝宝石之星
 
 > TXT_ARTIPUZZGEMBLUE2
 Sapphire Planet
-サファイアの宝石
+蓝宝石之星
 
 > TXT_ARTIPUZZBOOK1
 Daemon Codex
-デーモンの写本
+恶魔之典
 
 > TXT_ARTIPUZZBOOK2
 Liber Oscura
-オスキュラ公文書
+晦暗秘典
 
 > TXT_ARTIPUZZSKULL2
 Flame Mask
-炎の仮面
+火焰面具
 
 > TXT_ARTIPUZZFWEAPON
 Glaive Seal
-グレイブシール
+长刀印记
 
 > TXT_ARTIPUZZCWEAPON
 Holy Relic
-聖遺物
+神圣遗物
 
 > TXT_ARTIPUZZMWEAPON
 Sigil of the Magus
-メイガスの印章
+麦伽斯的印章
 
 > TXT_ARTIPUZZGEAR
 Clock Gear
-時計の歯車
+时钟齿轮
 
 > TXT_USEPUZZLEFAILED
 You Cannot Use This Here
-ここでは使用できない
+你无法在这使用
 
 > TXT_ARMOR1
 Mesh Armor
-鎖帷子
+锁子甲
 
 > TXT_ARMOR2
 Falcon Shield
-鷹の盾
+鹰盾
 
 > TXT_ARMOR3
 Platinum Helmet
-白金の兜
+白金头盔
 
 > TXT_ARMOR4
 Amulet of Warding
-回避の護符
+回避护符
 
 > TXT_WEAPON_F2
 Timon's Axe
-タイモンの斧
+泰蒙之斧
 
 > TXT_WEAPON_F3
 Hammer of Retribution
-報復の金槌
+报复之锤
 
 > TXT_WEAPON_F4
 Quietus Assembled
-組み立てた 死滅の剣
+已组装的安息神剑
 
 > TXT_WEAPON_C2
 Serpent Staff
-蛇の杖
+蛇杖
 
 > TXT_WEAPON_C3
 Firestorm
-ファイアストーム
+火风暴
 
 > TXT_WEAPON_C4
 Wraithverge Assembled
-組み立てた レイスバージ
+已组装的幽魂权杖
 
 > TXT_WEAPON_M2
 Frost Shards
-フロスト シャード
+冰霜碎片
 
 > TXT_WEAPON_M3
 Arc of Death
-死の円弧
+死亡电弧
 
 > TXT_WEAPON_M4
 Bloodscourge Assembled
-組み立てた 天罰
+已组装的血腥浩劫
 
 > TXT_WEAPONPIECE
 A weapon piece! This is your lucky day!
-武器碎片！今天是你的幸运日！
+武器部件！今天是你的幸运日！
 
 > TXT_QUIETUS_PIECE
 Segment of Quietus
-死滅の剣の切片
+安息神剑部件
 
 > TXT_WRAITHVERGE_PIECE
 Segment of Wraithverge
-レイスバージの切片
+幽魂权杖部件
 
 > TXT_BLOODSCOURGE_PIECE
 Segment of Bloodscourge
-天罰の切片
+血腥浩劫部件
 
 ; Locks
 
 > TXT_NEED_KEY_STEEL
 You need the Steel Key
-鋼の鍵が必要だ
+你需要钢钥匙
 
 > TXT_NEED_KEY_CAVE
 You need the Cave Key
-洞窟の鍵が必要だ
+你需要洞穴钥匙
 
 > TXT_NEED_KEY_AXE
 You need the Axe Key
-斧の鍵が必要だ
+你需要斧钥匙
 
 > TXT_NEED_KEY_FIRE
 You need the Fire Key
-炎の鍵が必要だ
+你需要火钥匙
 
 > TXT_NEED_KEY_EMERALD
 You need the Emerald Key
-翠玉の鍵が必要だ
+你需要翡翠钥匙
 
 > TXT_NEED_KEY_DUNGEON
 You need the Dungeon Key
-迷宮の鍵が必要だ
+你需要地牢钥匙
 
 > TXT_NEED_KEY_SILVER
 You need the Silver Key
-銀の鍵が必要だ
+你需要银钥匙
 
 > TXT_NEED_KEY_RUSTED
 You need the Rusted Key
-錆びた鍵が必要だ
+你需要锈钥匙
 
 > TXT_NEED_KEY_HORN
 You need the Horn Key
-角の鍵が必要だ
+你需要角钥匙
 
 > TXT_NEED_KEY_SWAMP
 You need the Swamp Key
-沼の鍵が必要だ
+你需要沼泽钥匙
 
 > TXT_NEED_KEY_CASTLE
 You need the Castle Key
-城の鍵が必要だ
+你需要城堡钥匙
 
 ; Actor tag names
 
 > FN_FIREDEMON
 Afrit
-アフリート
+火魔
 
 > FN_DEMON1
 Serpent
-サーペント
+巨蛇
 
 > FN_ETTIN
 Ettin
-エティン
+双头魔
 
 > FN_CENTAUR
 Centaur
-ケンタウロス
+半人马
 
 > FN_SLAUGHTAUR
 Slaughtaur
-スロアタウル
+嗜血半人马
 
 > FN_BISHOP
 Bishop
-ビショップ
+主教
 
 > FN_ICEGUY
 Wendigo
-ウェンディゴ
+温迪戈
 
 > FN_SERPENT
 Stalker
-ストーカー
+潜伏者
 
 > FN_WRAITH
 Reiver
-レイバー
+劫掠者
 
 > FN_DRAGON
 Death Wyvern
-デス ワイバーン
+死亡飞龙
 
 > FN_KORAX
 Korax
-唯一神コラックス
+科拉克斯
 
 > FN_FBOSS
 Zedek
-ゼデク
+泽德克
 
 > FN_MBOSS
 Menelkir
-メネルキル
+梅内尔基尔
 
 > FN_CBOSS
 Traductus
-トラダクタス
+特拉杜克塔斯
 
 > FN_HERESIARCH
 Heresiarch
-ヘレシアーク
+异端首领
 
 > AMMO_MANA1
 Blue Mana
-ブルーマナ
+蓝魔能
 
 > AMMO_MANA2
 Green Mana
-グリーンマナ
+绿魔能
 
 > TAG_CWEAPMACE
 Mace of Contrition
-懺悔のメイス
+忏悔钉锤
 
 > TAG_CWEAPSTAFF
 Serpent Staff
-蛇の杖
+蛇杖
 
 > TAG_CWEAPFLAME
 Firestorm
-ファイアストーム
+火风暴
 
 > TAG_CWEAPWRAITHVERGE
 Wraithverge
-レイスバージ
+幽魂权杖
 
 > TAG_FWEAPFIST
 Spiked Gauntlets
-スパイク ガントレット
+尖刺护手
 
 > TAG_FWEAPAXE
 Timon's Axe
-タイモンの斧
+泰蒙之斧
 
 > TAG_FWEAPHAMMER
 Hammer of Retribution
-報復の金槌
+报复之锤
 
 > TAG_FWEAPQUIETUS
 Quietus
-死滅の剣
+安息神剑
 
 > TAG_MWEAPWAND
 Sapphire Wand
-サファイア ワンド
+蓝宝石法杖
 
 > TAG_MWEAPFROST
 Frost Shards
-フロスト シャード
+冰霜碎片
 
 > TAG_MWEAPLIGHTNING
 Arcs of Death
-死の円弧
+死亡电弧
 
 > TAG_MWEAPBLOODSCOURGE
 Bloodscourge
-天罰
+血腥浩劫
 
 > TAG_ARTIBLASTRADIUS
 Disc of Repulsion
-反発の円盤
+排斥之盘
 
 > TAG_ARTIBOOSTARMOR
 Dragonskin Bracers
-竜皮の小手
+龙皮之酒
 
 > TAG_ARTIBOOSTMANA
 Krater of Might
-魔力の盃
+魔力之杯
 
 > TAG_ARTIPOISONBAG
 Flechette
-フレシェット
+弹瓶
 
 > TAG_ARTIPOISONBAG1
 Poison Cloud Flechette
-毒ガス フレシェット
+毒云弹瓶
 
 > TAG_ARTIPOISONBAG2
 Timebomb Flechette
-時限爆弾フレシェット
+定时炸弹瓶
 
 > TAG_ARTIPOISONBAG3
 Grenade Flechette
-グレネードフレシェット
+榴弹瓶
 
 > TAG_ARTIHEALINGRADIUS
 Mystic Ambit Incant
-魅知国の秘法
+奥域法咒
 
 > TAG_ARTIDEFENDER
 Icon of the Defender
-守護者の像
+守护者圣像
 
 > TAG_ARTIPORK
 Porkalator
-ポークレイター
+猪化器
 
 > TAG_ARTISPEED
 Boots of Speed
-素早さの靴
+速度之靴
 
 > TAG_ARTISUMMON
 Dark Servant
-闇の従者
+黑暗仆从
 
 > TAG_ARTITELEPORTOTHER
 Banishment Device
-追放のデバイス
+放逐器
 
 > TAG_ARTIPUZZSKULL
 Yorick's Skull
-ヨリックの髑髏
+约里克的头骨
 
 > TAG_ARTIPUZZGEMBIG
 Heart of D'Sparil
-デ'スパリルの心
+迪萨魔之心
 
 > TAG_ARTIPUZZGEMRED
 Ruby Planet
-ルビーの宝石
+红宝石之星
 
 > TAG_ARTIPUZZGEMGREEN1
 Emerald Planet (1)
-エメラルドの宝石1
+翡翠之星(1)
 
 > TAG_ARTIPUZZGEMGREEN2
 Emerald Planet (2)
-エメラルドの宝石2
+翡翠之星(2)
 
 > TAG_ARTIPUZZGEMBLUE1
 Sapphire Planet (1)
-サファイアの宝石1
+蓝宝石之星(1)
 
 > TAG_ARTIPUZZGEMBLUE2
 Sapphire Planet (2)
-サファイアの宝石2
+蓝宝石之星(2)
 
 > TAG_ARTIPUZZBOOK1
 Daemon Codex
-デーモンの写本
+恶魔之典
 
 > TAG_ARTIPUZZBOOK2
 Liber Oscura
-オスキュラ公文書
+晦暗秘典
 
 > TAG_ARTIPUZZSKULL2
 Flame Mask
-炎の仮面
+火焰面具
 
 > TAG_ARTIPUZZFWEAPON
 Glaive Seal
-グレイブシール
+长刀印记
 
 > TAG_ARTIPUZZCWEAPON
 Holy Relic
-聖遺物
+神圣遗物
 
 > TAG_ARTIPUZZMWEAPON
 Sigil of the Magus
-メイガスの印章
+麦伽斯的印章
 
 > TAG_ARTIPUZZGEAR1
 Iron gear
-鉄の歯車
+铁齿轮
 
 > TAG_ARTIPUZZGEAR2
 Brass gear
-真鍮のギア
+铜齿轮
 
 > TAG_ARTIPUZZGEAR3
 Brass and iron gear
-鉄と真鍮のギア
+铜铁齿轮
 
 > TAG_ARTIPUZZGEAR4
 Silver and brass gear
-銀と真鍮のギア
+银铜齿轮
 
 ; Obituaries
 
 > OB_FIREDEMON
 %o tasted an Afrit's fire.
-%o 尝到了烈火的滋味。
+%o 尝到了火魔之火。
 
 > OB_DEMON1
 %o was scalded by a Serpent.
-%o はサーペントに火傷を負わされた。
+%o 被巨蛇烧死了。
 
 > OB_DEMON2
 %o was poisoned by a Serpent.
-%o はサーペントの毒にやられた。
+%o 被巨蛇毒死了。
 
 > OB_ETTIN
 %o was mashed by an Ettin.
-%o はエティンに潰された。
+%o 被双头魔捣碎了。
 
 > OB_CENTAUR
 %o was cut up by a Centaur.
-%o はケンタウロスに切り刻まれた。
+%o 被半人马切开了。
 
 > OB_SLAUGHTAURHIT
 %o was cut up by a Slaughtaur.
-%o はスロアタウルに切り刻まれた。
+%o 被嗜血半人马切开了。
 
 > OB_SLAUGHTAUR
 %o was struck down by a Slaughtaur's fireball.
-%o はスロアタウルの火玉に倒された。
+%o 被嗜血半人马的火球击倒了。
 
 > OB_BISHOP
 %o succumbed to a Bishop's dark power.
-%o はビショップの闇の力に屈した。
+%o 屈服于主教的黑暗力量。
 
 > OB_ICEGUY
 %o was frozen solid by a Wendigo.
-%o はウェンディゴによって固められた。
+%o 被温迪戈冰冻得结结实实。
 
 > OB_SERPENTHIT
 %o was mauled by a Stalker.
-%o はストーカーに引っ掻かれた。
+%o 被潜伏者撕咬了。
 
 > OB_SERPENT
 %o was melted by a Stalker.
-%o はストーカーに溶かされた。
+%o 被潜伏者溶解了。
 
 > OB_WRAITH
 %o was charred by a Reiver.
-%o はレイバーに黒焦げにされた。
+%o 被劫掠者烧焦了。
 
 > OB_WRAITHHIT
 %o had %p life stolen by a Reiver.
-%o はレイバーに命を %p盗まれた。
+%o 的生命被劫掠者偷取了。
 
 > OB_DRAGON
 %o was incinerated by the Death Wyvern.
-%o はダークワイバーンに焼却された。
+%o 被死亡飞龙烧成了灰。
 
 > OB_KORAX
 %o was swept from the board by Korax.
-%o は唯一神の怒りに触れた。
+%o 被科拉克斯从台上扫了下去。
 
 > OB_FBOSS
 %o was slain by Zedek.
-%o はゼデクに討ち取られた。
+%o 被泽德克杀死了。
 
 > OB_MBOSS
 %o couldn't absorb Menelkir's Mana.
-%o はメネルキルのマナを吸収できなかった。
+%o 无法再吸收梅内尔基尔的魔力了。
 
 > OB_CBOSS
 %o was baptized by Traductus.
-%o はトラダクタスの洗礼を受けた。
+%o 受到了特拉杜克塔斯的洗礼。
 
 > OB_HERESIARCH
 %o had %p bones rolled by the Heresiarch.
-%o はヘレシアークに骨を %p本 撒き散らされた。
+%o 的骨头被异端首领撒了一地。
 
 > OB_MPFWEAPFIST
 %o was beaten to a pulp by %k's bare fists.
-%o は %k に素手でボコボコにされた。
+%o 被 %k 的赤手空拳打成稀烂。
 
 > OB_MPFWEAPAXE
 %o got the axe from %k.
-%o は %k から斧を受けた。
+%o 尝到了 %k 的斧子。
 
 > OB_MPFWEAPHAMMERM
 %o had %p head caved in by %k's hammer.
-%o は %k のハンマーで頭に空洞を開けられた。
+%o 的头被 %k 的锤子敲了个洞。
 
 > OB_MPFWEAPHAMMERR
 %o's soul was forged anew by %k's hammer.
-%o 的灵魂被 %k 的锤子重新锻造。
-; ;%o の魂は %k のハンマーで一から鍛え直された。
+%o 的灵魂被 %k 的锤子重新锻造了。
 
 > OB_MPFWEAPQUIETUS
 %o was silenced by %k's mighty Quietus.
-%o は %k の強靭なクワイエタスで静かにされた。
+%o 被 %k 强大的安息神剑陷入了沉默。
 
 > OB_MPCWEAPMACE
 %o got a mace to the face from %k.
-%o は自らの顔に %k のメイスを受けた。
+%o 的脸挨了 %k 一钉锤。
 
 > OB_MPCWEAPSTAFFM
 %o was bitten by %k's serpent staff.
@@ -3911,7 +3861,7 @@ Choose Skill Level:
 
 > SKILL_BABY
 I'm too young to die.
-我还年轻不想死。
+我太年轻不想死。
 
 > SKILL_EASY
 Hey, not too rough.
@@ -3931,27 +3881,23 @@ Nightmare!
 
 > CSKILL_BABY
 Easy does it
-爸爸我可以玩吗？
-; ;やさしくして
+小菜一碟
 
 > CSKILL_EASY
 Not so sticky
-放轻松就行了
-; ;ダラダラしない
+小试牛刀
 
 > CSKILL_NORMAL
 Gobs of goo
-"""カッチカチスライム
-"""
+黏液涌现
 
 > CSKILL_HARD
 Extreme Ooze
-"""かげきなウーズ
-"""
+极限黏液
 
 > CSKILL_NIGHTMARE
 Super Slimey!
-ちょうベトベト!
+超级黏滞！
 
 > SSKILL_BABY
 Training
@@ -3975,32 +3921,27 @@ Bloodbath
 
 > MNU_WETNURSE
 Thou needeth a Wet-Nurse
-你需要一个奶妈
-; ;汝は乳母を欲する
+汝需乳娘
 
 > MNU_YELLOWBELLIES
 Yellowbellies-R-Us
-我们才是胆小鬼
-; ;我等こそが臆病者
+懦夫之地
 
 > MNU_BRINGEST
 Bringest Them Oneth
-招かれし者共
+放马过来
 
 > MNU_SMITE
 Thou art a Smite-Meister
-你是艺术的屠杀者
-; ;汝は芸術的殺戮者
+汝乃猛将
 
 > MNU_BLACKPLAGUE
 Black Plague Possesses Thee
-黑死病占据了你
-; ;汝に憑した黒死病
+黑死附体
 
 > MNU_SQUIRE
 Squire
-见习骑士
-; ;見習い騎士
+卫士
 
 > MNU_KNIGHT
 Knight
@@ -4020,23 +3961,19 @@ Titan
 
 > MNU_ALTARBOY
 Altar Boy
-祭坛男孩
-; ;堂役
+祭童
 
 > MNU_ACOLYTE
 Acolyte
-辅祭
-; ;侍祭
+祭从
 
 > MNU_PRIEST
 Priest
 祭司
-; ;司祭
 
 > MNU_CARDINAL
 Cardinal
-红衣主教
-; ;枢機卿
+主教
 
 > MNU_POPE
 Pope
@@ -4045,22 +3982,18 @@ Pope
 > MNU_APPRENTICE
 Apprentice
 学徒
-; ;入門者
 
 > MNU_ENCHANTER
 Enchanter
-妖术士
-; ;妖術士
+附魔师
 
 > MNU_SORCERER
 Sorcerer
-魔术师
-; ;魔術士
+术士
 
 > MNU_WARLOCK
 Warlock
-黑魔术师
-; ;黒魔術士
+巫师
 
 > MNU_ARCHMAGE
 Archmage
@@ -4104,16 +4037,15 @@ Hell's Maw
 
 > MNU_DOME
 The Dome of D'Sparil
-デ'スパリルの穹窿
+迪萨魔的穹顶
 
 > MNU_OSSUARY
 The Ossuary
 纳骨堂
-; ;納骨堂
 
 > MNU_DEMESNE
 The Stagnant Demesne
-澱んだ荘園
+死寂领地
 
 ; Gameplay menus
 
@@ -4798,7 +4730,7 @@ You
 
 > MAPCOLORMNU_EFWALLCOLOR
 2-sided walls with 3D floors
-三维地面的双面墙
+3D地面的双面墙
 
 > MAPCOLORMNU_GRIDCOLOR
 Map grid
@@ -6281,8 +6213,7 @@ Rendering quality
 
 > GLPREFMNU_VRMODE
 Stereo 3D VR
-立体3d VR
-; ;ステレオ3DのVR
+立体3D VR
 
 > GLPREFMNU_VRQUADSTEREO
 Enable Quad Stereo
@@ -6641,7 +6572,7 @@ Screen Blend Options
 
 > GLMNU_3DMODE
 3D mode
-三维模式
+3D模式
 
 > HUDMNU_CROSSHAIRON
 Crosshair

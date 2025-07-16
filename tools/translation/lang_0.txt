@@ -1408,6 +1408,7 @@ DMX (Accurate, with AM bug)
 DMX(精确的，带AM bug)
 
 > ADLVLMODEL_APOGEE
+Apogee (Accurate, with AM bug)
 Apogee(精确的，带AM bug)
 
 > ADLVLMODEL_WIN9X

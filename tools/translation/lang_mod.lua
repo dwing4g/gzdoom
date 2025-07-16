@@ -2,9 +2,9 @@ local csvs = {
 	{ '../../wadsrc/static/language.0',         'lang_0.txt' },
 	{ '../../wadsrc/static/language.csv',       'lang.txt' },
 	{ '../../wadsrc_extra/static/language.csv', 'lang_extra.txt' },
-	{ '../../wadsrc_extra/static/filter/chex.chex3/language.csv',            'lang_chex3.txt' },
-	{ '../../wadsrc_extra/static/filter/hacx.hacx1/after_iwad/language.csv', 'lang_hacx1_after.txt' },
-	{ '../../wadsrc_extra/static/filter/harmony/language.csv',               'lang_harmony.txt' },
+--	{ '../../wadsrc_extra/static/filter/chex.chex3/language.csv',            'lang_chex3.txt' },
+--	{ '../../wadsrc_extra/static/filter/hacx.hacx1/after_iwad/language.csv', 'lang_hacx1_after.txt' },
+--	{ '../../wadsrc_extra/static/filter/harmony/language.csv',               'lang_harmony.txt' },
 }
 
 local lang = 'chs'
@@ -93,7 +93,7 @@ for _, p in ipairs(csvs) do
 					if t[k] then
 						print('WARN: duplicated id: "' .. k .. '"')
 					end
-					t[k] = {}
+					t[k] = {e or '', v}
 				end
 				k, e, v = nil, nil, nil
 			end
@@ -121,13 +121,20 @@ for _, p in ipairs(csvs) do
 
 	for i, line in ipairs(lines) do
 		if i > 1 then
+			local en = line[1] or '' -- default
 			local id = line[2] or '' -- Identifier
 			if line[4] and line[4] ~= '' then
 				id = id .. ' ' .. line[4] -- Filter
 			end
 			id = id:gsub('\r', ''):gsub('\n', '\\n')
-			if id ~= '' and not t[id] then
-				print('WARN: not found id: "' .. id .. '"')
+			if id ~= '' then
+				if t[id] then
+					if t[id][1] ~= en then
+						print('WARN: unmatched default: "' .. id .. '":\n"""' .. en .. '"""\n"""' .. (t[id][1] or '<nil>') .. '"""')
+					end
+				else
+					print('WARN: not found id: "' .. id .. '"')
+				end
 			end
 			line[colId] = id and t[id] and t[id][2] or line[colId] or ''
 		end
