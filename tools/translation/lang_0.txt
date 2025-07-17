@@ -263,11 +263,11 @@ Jump
 
 > CNTRLMNU_CROUCH
 Crouch
-下蹲(按住)
+按住下蹲
 
 > CNTRLMNU_TOGGLECROUCH
 Crouch Toggle
-下蹲(切换状态)
+切换下蹲
 
 > CNTRLMNU_MOUSELOOK
 Mouse look
@@ -288,19 +288,19 @@ Center view
 
 > CNTRLMNU_RUN
 Run
-奔跑(按住)
+按住奔跑
 
 > CNTRLMNU_TOGGLERUN
 Toggle Run
-奔跑(切换状态)
+切换奔跑
 
 > CNTRLMNU_STRAFE
 Strafe
-平移(按住)
+按住平移
 
 > CNTRLMNU_SCOREBOARD
 Show Scoreboard
-显示分数板(按住)
+按住显示分数板
 
 > CNTRLMNU_ACTION
 Action

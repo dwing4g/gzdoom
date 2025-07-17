@@ -169,7 +169,7 @@ to your boring programs."""
 """If I were your boss, I'd 
 deathmatch ya in a minute!"""
 """我要是你的老板，
-我立马就跟丫决斗！"""
+我立马就跟丫死斗！"""
 
 > QUITMSG12
 """Look, bud. you leave now
@@ -1627,7 +1627,7 @@ Undead Warrior
 
 > FN_MINOTAUR
 Maulotaur
-牛头锤
+牛头怪
 
 > FN_MUMMY
 Golem
@@ -1733,11 +1733,11 @@ Elven Wand
 
 > OB_MINOTAUR
 %o was blasted into cinders by a Maulotaur.
-%o 被牛头锤炸成了灰烬。
+%o 被牛头怪炸成了灰烬。
 
 > OB_MINOTAURHIT
 %o was pulped by a Maulotaur.
-%o 被牛头锤捣成了浆糊。
+%o 被牛头怪捣成了浆糊。
 
 > OB_MUMMY
 %o was smashed by a golem.
@@ -4103,8 +4103,7 @@ Items respawn
 
 > GMPLYMNU_SUPERRESPAWN
 Big powerups respawn
-启用自动刷新强化道具
-; ;強力なパワーアップアイテムを復活
+自动刷新大幅能力提升的物品
 
 > GMPLYMNU_FASTMONSTERS
 Fast monsters
@@ -4112,12 +4111,11 @@ Fast monsters
 
 > GMPLYMNU_INSTANTREACTION
 Monsters Nightmare Reflexes
-敵が悪夢と同じ機敏さ
+怪物有噩梦级的反应
 
 > GMPLYMNU_DEGENERATION
 Degeneration
-玩家HP超过100时逐渐流失HP
-; ;プレイヤーの自動体力減少
+退化(玩家生命自动逐渐减少)
 
 > GMPLYMNU_NOAUTOAIM
 Allow Autoaim
@@ -4153,33 +4151,27 @@ Allow automap
 
 > GMPLYMNU_AUTOMAPALLIES
 Automap allies
-允许地图上显示友方
-; ;オートマップに味方を表示
+地图上显示友方
 
 > GMPLYMNU_ALLOWSPYING
 Allow spying
-允许死亡时监视其他玩家视角
-; ;死亡時の他プレイヤー観戦を許可
+允许监视(死亡时观战其他玩家)
 
 > GMPLYMNU_CHASECAM
 Chasecam cheat
-允许使用第三人称视角
-; ;チェイスカメラチート有効化
+跟随视角作弊
 
 > GMPLYMNU_DONTCHECKAMMO
 Check ammo for weapon switch
-仅在还有剩余相关弹药时才能切换出武器
-; ;武器切替時に弾の有無を確認
+武器切换时检查武器弹药
 
 > GMPLYMNU_KILLBOSSSPAWNS
 Icon's death kills its spawns
-Icon of sins死亡时消灭其产生的敌人
-; ;最終ボスを殺した際に召喚モンスターも殺す
+罪恶之像(最终BOSS)死亡时杀死其刷出来的怪物
 
 > GMPLYMNU_NOCOUNTENDMONSTER
 End sector counts for kill %
-放置在伤害死亡地板中的怪物不计入总数
-; ;最終セクターの敵もキルに含む
+(关底)最终区域的怪物数也计入击杀
 
 > GMPLYMNU_DEATHMATCH
 Deathmatch Settings
@@ -4187,386 +4179,311 @@ Deathmatch Settings
 
 > GMPLYMNU_WEAPONSSTAY
 Weapons stay
-武器被捡起后还会在地板上
-; ;武器を取得時も残す
+武器保留(拾取后留在原地)
 
 > GMPLYMNU_ALLOWPOWERUPS
 Allow powerups
-允许强化道具出现
-; ;パワーアップアイテムを出現させる
+允许出现能力提升物品
 
 > GMPLYMNU_ALLOWHEALTH
 Allow health
-允许生命恢复道具出现
-; ;回復アイテムを出現させる
+允许出现生命恢复物品
 
 > GMPLYMNU_ALLOWARMOR
 Allow armor
-允许护甲出现
-; ;アーマーを出現させる
+允许出现护甲
 
 > GMPLYMNU_SPAWNFARTHEST
 Spawn farthest
 玩家以离其他玩家最远的重生点复活
-; ;他のプレイヤーから最遠の場所に復活
 
 > GMPLYMNU_SAMEMAP
 Same map
-下次重复游玩当前地图
-; ;同じMAPを繰り返す
+重复游玩当前地图
 
 > GMPLYMNU_FORCERESPAWN
 Force respawn
-强制统一复活时间
-; ;死亡後に強制復活
+(死亡后)强制重生
 
 > GMPLYMNU_ALLOWEXIT
 Allow exit
-允许通过过关机关离开当前关卡
-; ;出口の使用を許可
+允许通过关卡出口离开
 
 > GMPLYMNU_BARRELSRESPAWN
 Barrels respawn
-允许油桶爆炸后重置
-; ;爆発バレルを復活させる
+油桶爆炸后重生
 
 > GMPLYMNU_RESPAWNPROTECTION
 Respawn protection
-重生保护
-; ;復活したばかりのプレイヤーを保護
+刚重生时受保护
 
 > GMPLYMNU_LOSEFRAG
 Lose frag if fragged
-被击杀时失去击杀计数
-; ;キルされた場合は得点を失う
+被杀时失去击杀数
 
 > GMPLYMNU_KEEPFRAGS
 Keep frags gained
-被击杀时不会失去击杀计数
-; ;MAP変更後も得点を保持する
+(换地图时)保留击杀数
 
 > GMPLYMNU_NOTEAMSWITCH
 No team switching
-比赛开始后不能改变队伍
-; ;チーム変更を禁止
+(比赛时)不能改变队伍
 
 > GMPLYMNU_COOPERATIVE
 Cooperative Settings
-联机合作设置
-; ;協力モードの設定
+合作设置
 
 > GMPLYMNU_MULTIPLAYERWEAPONS
 Spawn multiplayer weapons
-禁用多人模式独占武器
-; ;マルチプレイ用の武器を出現させる
+刷出多人游戏的专用武器
 
 > GMPLYMNU_LOSEINVENTORY
 Lose entire inventory
-失去全部物品
-; ;死亡時に全ての所持品を失う
+(死亡时)失去全部物品
 
 > GMPLYMNU_KEEPKEYS
 Keep keys
-保留钥匙
-; ;死亡後もキーを保持する
+(死亡时)保留钥匙
 
 > GMPLYMNU_KEEPWEAPONS
 Keep weapons
-保留武器
-; ;死亡後も武器を保持する
+(死亡时)保留武器
 
 > GMPLYMNU_KEEPARMOR
 Keep armor
-失去护甲
-; ;死亡後もアーマーを保持する
+(死亡时)保留护甲
 
 > GMPLYMNU_KEEPPOWERUPS
 Keep powerups
-保留升级道具
-; ;死亡後もパワーアップを保持する
+(死亡时)保留能力提升效果
 
 > GMPLYMNU_KEEPAMMO
 Keep ammo
-保留所有弹药
-; ;死亡後も弾薬を保持する
+(死亡时)保留弹药
 
 > GMPLYMNU_LOSEHALFAMMO
 Lose half ammo
-失去一半弹药
-; ;死亡時に弾を半分失う
+(死亡时)失去一半弹药
 
 > GMPLYMNU_SPAWNWHEREDIED
 Spawn where died
-在死亡地点复活
-; ;死亡したその場で復活
+在死亡地点重生
 
 > GMPLYMNU_ALWAYSSPAWNMULTI
 Always spawn multiplayer objects
-总是生成多人游戏对象
-; ;常にマルチプレイ用の物を出現
+总是刷出多人游戏专用物体
 
 > GMPLYMNU_NOVERTSPREAD
 Allow Vertical Bullet Spread
-垂直方向への散弾を許可
+允许垂直方向的子弹散射
 
 > GMPLYMNU_NOEXTRAAMMO
 Weapons give extra ammo (DM)
-武器に追加弾薬を付与 (DMのみ)
+给武器增加更多弹药 (DM)
 
 > OPTMNU_COMPATIBILITY
 Compatibility Options
 兼容性选项
-; ;互換性 オプション
 
 > CMPTMNU_TITLE
 Compatibility Options
 兼容性选项
-; ;互換性 オプション
 
 > CMPTMNU_MODE
 Compatibility mode
-兼容性模式
-; ;互換性モード
+兼容模式
 
 > CMPTMNU_ACTORBEHAVIOR
 Actor Behavior
-角色特性
-; ;アクターの挙動
+角色行为
 
 > CMPTMNU_NOBLOCKFRIENDS
 Friendly monsters aren't blocked
-友军怪物不会被怪物阻挡线阻挡
-; ;仲間キャラは敵通行不可ラインの影響を受けない
+友军怪物不会被阻挡
 
 > CMPTMNU_LIMITPAIN
 Limit Pain Elementals' Lost Souls
-限制痛苦元素制造的失落灵魂数量（21个）
-; ;ペインエレメンタルのロストソウル制限
+限制痛苦元素招出的丧魂数量
 
 > CMPTMNU_MBFMONSTERMOVE
 Monster movement is affected by effects
-怪物运动受到扇区摩擦，风和推动/拉动效果的影响
-; ;敵の移動が床の影響を受ける
+怪物移动受各种效果的影响
 
 > CMPTMNU_CROSSDROPOFF
 Monsters cannot cross dropoffs
-怪物不能从高处平台掉落
-; ;敵はdropoffを横切れない
+怪物不能从高处掉落
 
 > CMPTMNU_DROPOFF
 Monsters get stuck over dropoffs
-怪物越过掉落时被卡住
-; ;敵がdropoffにスタックする
+怪物遇到掉落时被卡住
 
 > CMPTMNU_INVISIBILITY
 Monsters see invisible players
-怪物能看见隐身中的玩家
-; ;敵が透明を見破る
+怪物能看见隐身玩家
 
 > CMPTMNU_MINOTAUR
 No Minotaur floor flames in water
-牛头怪在地面上的火焰不会出现在水中
-; ;ミノタウロスの攻撃が水を通過しない
+牛头怪发出的地面火焰不会穿过水面
 
 > CMPTMNU_NOTOSSDROPS
 Spawn item drops on the floor
-生成的道具掉落在地面上
-; ;アイテムドロップが床に出る
+刷出的道具会掉落到地面上
 
 > CMPTMNU_DEHACKEDBEHAVIOR
 DehackEd Behavior
-编辑器特性
-; ;DehackEdの挙動
+DehackEd行为
 
 > CMPTMNU_DEHHEALTH
 DEH health settings like Doom2.exe
-编辑器修改生命值上限
-; ;Doom2.exe式のDEHヘルス設定
+DEH生命设置同Doom2.exe
 
 > CMPTMNU_MUSHROOM
 Original A_Mushroom speed in DEH mods
-在编辑器模式中采用原版弹丸飞行速度
-; ;DEH Modでの元のA_Mushroom速度
+DEH模组中采用原版A_Mushroom速度
 
 > CMPTMNU_MAPACTIONBEHAVIOR
 Map/Action Behavior
-地图/动作表现
-; ;マップ/アクションの挙動
+地图/动作行为
 
 > CMPTMNU_USEBLOCKING
 All special lines can block <use>
-所有特效线能阻挡
-; ;全てのSpecial Linesが<use>をブロック
+所有特殊线都能阻止<use>
 
 > CMPTMNU_ANYBOSSDEATH
 Allow any bossdeath for level special
-允许BOSS死亡时开启关卡特效
-; ;いずれのBossdeathでもlevel specialを許可
+允许所有关卡特殊的BOSS死法
 
 > CMPTMNU_NODOORLIGHT
 Disable BOOM door light effect
-禁用BOOM型开关门光效
-; ;BOOMドアライト エフェクトを無効化
+禁用BOOM门光效
 
 > CMPTMNU_LIGHT
 Find neighboring light like Doom
-用旧DOOM方式搜索临近区域亮度
-; ;DOOM式の最寄りライト検知
+像DOOM那样寻找临近区域的光照
 
 > CMPTMNU_SHORTTEX
 Find shortest textures like Doom
-用旧DOOM方式搜索首个材质文件
-; ;DOOM式の最短テクスチャー検知
+像DOOM那样寻找最短纹理
 
 > CMPTMNU_STAIRS
 Use buggier stair building
-使用刻意添加Bug的楼梯生成机制
-; ;バグだらけの階段生成を使用
+使用带bug的楼梯生成
 
 > CMPTMNU_FLOORMOVE
 Use Doom's floor motion behavior
-使用旧DOOM的共线点算法
-; ;DOOMでの床の動作挙動を使用
+使用DOOM的地面移动算法
 
 > CMPTMNU_POINTONLINE
 Use Doom's point-on-line algorithm
-使用旧DOOM的共线点算法
-; ;DOOMでのポイントライン アルゴリズム を使用
+使用DOOM的判断点在线上算法
 
 > CMPTMNU_MULTIEXIT
 Level exit can be triggered more than once
-可多次触发过关出口
-; ;Exitを複数回起動出来る
+可以多次触发关卡出口
 
 > CMPTMNU_PHYSICSBEHAVIOR
 Physics Behavior
-物理特性
-; ;物理の挙動
+物理行为
 
 > CMPTMNU_NOPASSOVER
 Actors are infinitely tall
-角色的高度无限
-; ;アクターの上下には入れない
+角色都是无限高度
 
 > CMPTMNU_BOOMSCROLL
 Boom scrollers are additive
-增加BOOM型滚动材质
-; ;BOOM型スクロール床を適用
+BOOM型的地面滚动是叠加的
 
 > CMPTMNU_BADANGLES
 Cannot travel straight NSEW
-出生和传送后不会出现视角偏移
-; ;NSEW直進走法の不許可
+不允许沿NSEW方向的直线走法
 
 > CMPTMNU_WALLRUN
 Enable wall running
-允许Wall running
-; ;壁伝い走行を許可
+允许沿墙壁跑
 
 > CMPTMNU_RAVENSCROLL
 Raven scrollers use original speed
-Raven游戏中滚动地面设为原始速度
-; ;Raven式スクロール床を原作準拠にする
+Raven游戏中的地面滚动使用原始速度
 
 > CMPTMNU_TRACE
 Self ref. sectors don't block shots
-自我识别区域不再阻挡子弹
-; ;Self ref.Sectorsは射撃を阻害しない
+自我参照的区域不会阻挡射击
 
 > CMPTMNU_HITSCAN
 Use Doom code for hitscan checks
-使用旧DOOM的hitscan检定
-; ;DOOM式の即着弾判定を使用
+使用DOOM代码做瞬间击中判定检测
 
 > CMPTMNU_MISSILECLIP
 Use Doom heights for missile clipping
-使用旧DOOM的投掷物高度碰撞判定
-; ;ミサイル通過にDOOM heightsを使用
+使用DOOM高度做炮弹碰撞判定
 
 > CMPTMNU_RENDERINGBEHAVIOR
 Rendering Behavior
-渲染方式
-; ;レンダリングの挙動
+渲染行为
 
 > CMPTMNU_POLYOBJ
 Draw polyobjects like Hexen
-用HEXEN方式生成滑槽门
-; ;Hexen式のPolyObjects描画
+像Hexen那样绘制多物体
 
 > CMPTMNU_MASKEDMIDTEX
 Ignore Y offsets on masked midtextures
-忽略透明通道中层材质的Y轴补偿
-; ;マスクされた中間テクスチャーのY軸ずれを無効
+忽略透明通道中层纹理的Y轴偏移
 
 > CMPTMNU_SPRITESORT
 Invert sprite sorting
-反转sprite排序
-; ;反転スプライトの並び替え
+反转精灵排序
 
 > CMPTMNU_SOUNDBEHAVIOR
 Sound Behavior
-音效特性
-; ;音の挙動
+音效行为
 
 > CMPTMNU_SOUNDSLOTS
 Cripple sound for silent BFG trick
-砍掉BFG的静音技巧
-; ;消音BFG技の為にサウンドを重複させない
+为BFG的安静技巧而消音
 
 > CMPTMNU_SILENTPICKUP
 Don't let others hear your pickups
-不允许他人听到拾取音效
-; ;他人にピックアップ音を聞かせない
+不让别人听到你拾取的声音
 
 > CMPTMNU_SILENTINSTANTFLOORS
 Inst. moving floors are not silent
-瞬间活动的平台不再静音
-; ;即時稼働するFloorsの音を鳴らさない
+会瞬移的地板不再静音
 
 > CMPTMNU_SECTORSOUNDS
 Sector sounds use center as source
-用原版的方式在区域中心生成环境音效
-; ;Sectorサウンドをフロア中央で鳴らす
+区域音效用中心位置作为声源
 
 > CMPTMNU_SOUNDCUTOFF
 Sounds stop when actor vanishes
-角色消失时音效停止
-; ;アクター消滅で音を止める
+角色消失时停止音效
 
 > CMPTMNU_SOUNDTARGET
 Use original sound target handling
-使用原版的“怪物惊动声”处理方式
-; ;元のサウンドターゲット処理を使用
+使用原版的声音目标处理方式
 
 > CMPTMNU_TELEPORT
 Scripted teleports don't trigger sector actions
-剧本传送不再触发区域事件
-; ;スクリプトテレポートではSector actionsを起こさない
+剧本传送不再触发区域动作
 
 > CMPTMNU_PUSHWINDOW
 Non-blocking lines can be pushed
-无碰撞的线可以被玩家互动开启
-; ;Non-bloking linesを押せる
+无阻挡的线可以被按下(交互)
 
 > CMPTMNU_CHECKSWITCHRANGE
 Enable buggy CheckSwitchRange behavior
-允许有bug的“开关范围检定”特效
-; ;バグのあるCheckSwitchRangeを許可
+允许有bug的开关范围检测行为
 
 > CMPTMNU_RAILINGHACK
 Enable buggy Strife railing
-允许有bug的Strife railing
-; ;バグのあるStrife railingを許可
+允许有bug的Strife栏杆
 
 > CMPTMNU_EXPLODE1
 No vertical thrust from explosions
-没有爆炸产生的垂直推力
-; ;爆風は垂直方向全域に影響しない
+爆炸不会有垂直方向的冲击
 
 > CMPTMNU_EXPLODE2
 Use original Doom explosion behavior
-使用原始DOOM爆炸
-; ;Doom本来の爆発動作を使用する
+使用原始DOOM的爆炸行为
 
 ; player
 
@@ -5273,7 +5190,7 @@ Classic Transparency
 
 > DSPLYMNU_TRANSSOUL
 Lost Soul translucency
-失落灵魂透明度
+丧魂透明度
 ; ;ロストソウルの透明度
 
 > DSPLYMNU_FAKECONTRAST
