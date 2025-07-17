@@ -2439,35 +2439,35 @@ Silver and brass gear
 
 > OB_MPCWEAPSTAFFM
 %o was bitten by %k's serpent staff.
-%o は %k の蛇の杖に噛まれた。
+%o 被 %k 的蛇杖咬了。
 
 > OB_MPCWEAPSTAFFR
 %o choked on %k's serpent staff.
-%o は %k の蛇の杖に息の根を止められた。
+%o 被 %k 的蛇杖缠住了喉咙。
 
 > OB_MPCWEAPFLAME
 %o was lit up by %k's flames.
-%o は %k によって炎を灯された。
+%o 被 %k 的火焰照亮了。
 
 > OB_MPCWEAPWRAITHVERGE
 %o was cleansed by %k's Wraithverge.
-%o は %k のレイスバージによって浄化された。
+%o 被 %k 的幽魂权杖净化了。
 
 > OB_MPMWEAPWAND
 %o took one too many sapphire beams from %k.
-%o は %k から多量のサファイアビームを受け取った。
+%o 受到了 %k 太多的蓝宝石射线。
 
 > OB_MPMWEAPFROST
 %o was turned into a frosty fellow by %k.
-%o は %k によって冷ややかな輩になった。
+%o 被 %k 冻成了一个冷冰冰的家伙。
 
 > OB_MPMWEAPLIGHTNING
 %o received a shocking revelation from %k.
-%o は %k から衝撃的な啓示を受けた。
+%o 收到了 %k 的一个令人震惊的启示。
 
 > OB_MPMWEAPBLOODSCOURGE
 %o was wiped off the face of the universe by %k's Bloodscourge.
-%o は %k の天罰によりこの世から一掃された。
+%o 被 %k 的血腥浩劫从宇宙中抹掉了。
 
 ; Strife
 
@@ -4063,7 +4063,7 @@ Smart Autoaim
 
 > GMPLYMNU_FALLINGDAMAGE
 Falling damage
-掉落伤害
+跌落伤害
 
 > GMPLYMNU_DROPWEAPON
 Drop weapon
