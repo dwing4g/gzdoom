@@ -93,6 +93,9 @@ for _, p in ipairs(csvs) do
 					if t[k] then
 						print('WARN: duplicated id: "' .. k .. '"')
 					end
+					if e and not v then
+						print('WARN: not translated id: "' .. k .. '"')
+					end
 					t[k] = {e or '', v}
 				end
 				k, e, v = nil, nil, nil

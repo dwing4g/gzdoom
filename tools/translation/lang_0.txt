@@ -960,23 +960,30 @@ Music enabled
 
 > OPTVAL_4000HZ
 4000 Hz
+4000 Hz
 
 > OPTVAL_8000HZ
+8000 Hz
 8000 Hz
 
 > OPTVAL_11025HZ
 11025 Hz
+11025 Hz
 
 > OPTVAL_22050HZ
+22050 Hz
 22050 Hz
 
 > OPTVAL_32000HZ
 32000 Hz
+32000 Hz
 
 > OPTVAL_44100HZ
 44100 Hz
+44100 Hz
 
 > OPTVAL_48000HZ
+48000 Hz
 48000 Hz
 
 > OPTVAL_64SAMPLES
@@ -1121,6 +1128,7 @@ Sample rate
 
 > ADVSNDMNU_HRTF
 HRTF
+HRTF
 
 > ADVSNDMNU_OPLSYNTHESIS
 OPL Synthesis
@@ -1143,6 +1151,7 @@ MIDI voices
 MIDI语音
 
 > ADVSNDMNU_FLUIDSYNTH
+FluidSynth
 FluidSynth
 
 > ADVSNDMNU_GLOBAL
@@ -1179,11 +1188,14 @@ Chorus
 
 > ADVSNDMNU_TIMIDITY
 Timidity++
+Timidity++
 
 > ADVSNDMNU_ADLMIDI
 ADLMidi
+ADLMidi
 
 > ADVSNDMNU_OPNMIDI
+OPNMidi
 OPNMidi
 
 > ADVSNDMNU_TIMIDITYCONFIG
@@ -1195,6 +1207,7 @@ Relative volume
 相对音量
 
 > ADVSNDMNU_WILDMIDI
+WildMidi
 WildMidi
 
 > ADVSNDMNU_WILDMIDICONFIG
@@ -1210,6 +1223,7 @@ Advanced Resampling
 高级重采样
 
 > ADVSNDMNU_OPLBANK
+OPL Bank
 OPL Bank
 
 > ADVSNDMNU_ADLOPLCORES
@@ -1347,8 +1361,10 @@ Volume ramping
 
 > OPTVAL_LIBXMP
 libXMP
+libXMP
 
 > OPTVAL_DUMB
+Dumb
 Dumb
 
 > MODMNU_CHIPOMATIC
@@ -1357,38 +1373,50 @@ Chip-o-matic
 
 > OPTVAL_MAMEOPL2
 MAME OPL2
+MAME OPL2
 
 > OPTVAL_DOSBOXOPL3
+DOSBox OPL3
 DOSBox OPL3
 
 > OPTVAL_JAVAOPL3
 Java OPL3
+Java OPL3
 
 > OPTVAL_NUKEDOPL3
+Nuked OPL3
 Nuked OPL3
 
 > OPTVAL_MAMEOPN2
 MAME YM2612
+MAME YM2612
 
 > OPTVAL_NP2OPNA
+Neko Project II Kai OPNA
 Neko Project II Kai OPNA
 
 > OPTVAL_MAMEOPNA
 MAME YM2608
+MAME YM2608
 
 > OPTVAL_PMDWINOPNA
+PMDWin OPNA
 PMDWin OPNA
 
 > OPTVAL_OPALOPL3
 Opal OPL3
+Opal OPL3
 
 > OPTVAL_NUKEDOPL3174
+Nuked OPL3 v1.7.4
 Nuked OPL3 v1.7.4
 
 > OPTVAL_NUKEDOPN2
 Nuked OPN2
+Nuked OPN2
 
 > OPTVAL_GENSOPN2
+GENS YM2612
 GENS YM2612
 
 > ADLVLMODEL_AUTO
@@ -1445,25 +1473,32 @@ Unlimited
 
 > OPTVAL_256K
 256K
+256K
 
 > OPTVAL_512K
+512K
 512K
 
 > OPTVAL_768K
 768K
+768K
 
 > OPTVAL_1024K
+1024K
 1024K
 
 ; Postprocessing
 
 > OPTVAL_UNCHARTED2
 Uncharted 2
+Uncharted 2
 
 > OPTVAL_HEJLDAWSON
 Hejl Dawson
+Hejl Dawson
 
 > OPTVAL_REINHARD
+Reinhard
 Reinhard
 
 > OPTVAL_PALETTE
@@ -1586,11 +1621,11 @@ Anisotropic filter
 
 > OPTVAL_NONENEARESTMIPMAP
 None (nearest mipmap)
-无(mipmap使用最邻近)
+无(mip映射使用最邻近)
 
 > OPTVAL_NONELINEARMIPMAP
 None (linear mipmap)
-无(mipmap使用双线性)
+无(mip映射使用双线性)
 
 > OPTVAL_NONETRILINEAR
 None (trilinear)
@@ -1606,17 +1641,22 @@ Trilinear
 
 > OPTVAL_2X
 2x
+2x
 
 > OPTVAL_4X
+4x
 4x
 
 > OPTVAL_8X
 8x
+8x
 
 > OPTVAL_16X
 16x
+16x
 
 > OPTVAL_32X
+32x
 32x
 
 > GLTEXMNU_TITLE
@@ -1822,12 +1862,15 @@ Preferred Rendering API
 
 > OPTVAL_OPENGL
 OpenGL
+OpenGL
 
 > OPTVAL_VULKAN
+Vulkan
 Vulkan
 
 > OPTVAL_OPENGLES
 ; Rendering backend
+OpenGL ES
 OpenGL ES
 
 ; Miscellaneous Options
@@ -2086,8 +2129,10 @@ Name
 
 > REVMNU_ID_1
 ID #1
+ID #1
 
 > REVMNU_ID_2
+ID #2
 ID #2
 
 > REVMNU_Create
@@ -2145,17 +2190,22 @@ Select Vulkan Device
 
 > OPTVAL_SCALENX
 ScaleNx
+ScaleNx
 
 > OPTVAL_NORMALNX
+NormalNx
 NormalNx
 
 > OPTVAL_HQNX
 hqNx
+hqNx
 
 > OPTVAL_HQNXMMX
 hqNx MMX
+hqNx MMX
 
 > OPTVAL_NXBRZ
+xBRZ
 xBRZ
 
 > OPTVAL_OLD_NXBRZ
@@ -2377,6 +2427,7 @@ Unknown
 未知
 
 > OPTVAL_HUD
+HUD
 HUD
 
 > OPTVAL_AUTOMAP

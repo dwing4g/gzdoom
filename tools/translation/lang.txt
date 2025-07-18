@@ -972,7 +972,7 @@ A chainsaw! Find some meat!
 
 > GOTLAUNCHER
 You got the rocket launcher!
-你获得了火箭发射器！
+你获得了火箭炮！
 
 > GOTPLASMA
 You got the plasma gun!
@@ -1110,7 +1110,7 @@ Lost Soul
 
 > CC_CACO
 Cacodemon
-独眼魔
+巨脑魔
 
 > CC_HELL
 Hell Knight
@@ -1146,7 +1146,7 @@ The Spider Mastermind
 
 > CC_CYBER
 The Cyberdemon
-机械恶魔
+机械巨魔
 
 > CC_HERO
 Our Hero
@@ -1164,7 +1164,7 @@ Chaingunner
 
 > FN_SPECTRE
 Spectre
-幽灵
+幽鬼
 
 > FN_SPIDER
 Spider Mastermind
@@ -1172,7 +1172,7 @@ Spider Mastermind
 
 > FN_CYBER
 Cyberdemon
-机械恶魔
+机械巨魔
 
 > FN_WOLFSS
 Nazi
@@ -1208,13 +1208,14 @@ Chaingun
 
 > TAG_ROCKETLAUNCHER
 Rocket Launcher
-火箭发射器
+火箭炮
 
 > TAG_PLASMARIFLE
 Plasma Rifle
 电浆步枪
 
 > TAG_BFG9000
+BFG 9000
 BFG 9000
 
 > AMMO_CLIP
@@ -1249,7 +1250,7 @@ Energy Cells
 
 > OB_STEALTHCACO
 %o thought %g saw a cacodemon.
-%o 以为 %g 看到了独眼魔。
+%o 以为 %g 看到了巨脑魔。
 
 > OB_STEALTHCHAINGUY
 %o thought %g saw a chaingunner.
@@ -1293,7 +1294,7 @@ Energy Cells
 
 > OB_CACOHIT
 %o got too close to a cacodemon.
-%o 离独眼魔太近了。
+%o 离巨脑魔太近了。
 
 > OB_DEMONHIT
 %o was bit by a demon.
@@ -1301,7 +1302,7 @@ Energy Cells
 
 > OB_SPECTREHIT
 %o was eaten by a spectre.
-%o 被幽灵吞下去了。
+%o 被幽鬼吞下去了。
 
 > OB_BARONHIT
 %o was ripped open by a Baron of Hell.
@@ -1325,7 +1326,7 @@ Energy Cells
 
 > OB_UNDEAD
 %o couldn't evade a revenant's fireball.
-%o 没躲开亡魂的火炮。
+%o 没躲开亡魂的火球。
 
 > OB_FATSO
 %o was squashed by a mancubus.
@@ -1345,7 +1346,7 @@ Energy Cells
 
 > OB_CACO
 %o was smitten by a cacodemon.
-%o 被独眼魔轰死了。
+%o 被巨脑魔轰死了。
 
 > OB_BARON
 %o was bruised by a Baron of Hell.
@@ -1365,7 +1366,7 @@ Energy Cells
 
 > OB_CYBORG
 %o was splattered by a cyberdemon.
-%o 被机械恶魔轰成了肉泥。
+%o 被机械巨魔轰成了肉泥。
 
 > OB_WOLFSS
 %o met a Nazi.
@@ -2475,308 +2476,308 @@ Silver and brass gear
 
 > TXT_METALARMOR
 You picked up the Metal Armor.
-メタルアーマー 入手。
+你拾取了金属护甲。
 
 > TXT_LEATHERARMOR
 You picked up the Leather Armor.
-レザーアーマー 入手。
+你拾取了皮革护甲。
 
 > TXT_MEDPATCH
 You picked up the Med patch.
-医薬パッチ 入手。
+你拾取了治疗贴。
 
 > TXT_MEDICALKIT
 You picked up the Medical kit.
-医療用キット 入手。
+你拾取了医疗工具。
 
 > TXT_SURGERYKIT
 You picked up the Surgery Kit.
-手術キット 入手。
+你拾取了手术工具。
 
 > TXT_STRIFEMAP
 You picked up the map.
-マップ 取得。
+你拾取了地图。
 
 > TXT_BELDINSRING
 You picked up the ring.
-指輪 取得。
+你拾取了戒指。
 
 > TXT_OFFERINGCHALICE
 You picked up the Offering Chalice.
-寄贈された聖杯 取得。
+你拾取了供品圣杯。
 
 > TXT_EAR
 You picked up the ear.
-耳 取得。
+你拾取了耳朵。
 
 > TXT_BROKENCOUPLING
 You picked up the broken power coupling.
-壊れたパワーカップリング 取得。
+你拾取了损坏的能量连接器。
 
 > TXT_SHADOWARMOR
 You picked up the Shadow armor.
-シャドウアーマー 入手。
+你拾取了暗影护甲。
 
 > TXT_ENVSUIT
 You picked up the Environmental Suit.
-耐環境スーツ 入手。
+你拾取了防护套装。
 
 > TXT_GUARDUNIFORM
 You picked up the Guard Uniform.
-守衛の制服 入手。
+你拾取了守卫制服。
 
 > TXT_OFFICERSUNIFORM
 You picked up the Officer's Uniform.
-士官の制服 入手。
+你拾取了士官制服。
 
 > TXT_FTHROWERPARTS
 You picked up the flame thrower parts.
-火炎放射器の部品 入手。
+你拾取了火焰喷射部件。
 
 > TXT_REPORT
 You picked up the report.
-報告書 取得。
+你拾取了报告。
 
 > TXT_INFO
 You picked up the info.
-情報 取得。
+你拾取了情报。
 
 > TXT_TARGETER
 You picked up the Targeter.
-照準器 入手。
+你拾取了瞄准器。
 
 > TXT_COMMUNICATOR
 You picked up the Communicator.
-コミュニケーター 取得。
+你拾取了通讯器。
 
 > TXT_COIN
 You picked up the coin.
-コイン 入手。
+你拾取了硬币。
 
 > TXT_XGOLD
 You picked up %d gold.
-%d ゴールド 入手。
+你拾取了 %d 金币。
 
 > TXT_BEACON
 You picked up the Teleporter Beacon.
-テレポータービーコン 取得。
+你拾取了传送器信标。
 
 > TXT_DEGNINORE
 You picked up the Degnin Ore.
-デグニン鉱石 取得。
+你拾取了德宁矿石。
 
 > TXT_SCANNER
 You picked up the scanner.
-スキャナー 入手。
+你拾取了扫描器。
 
 > TXT_NEEDMAP
 """The scanner won't work without a map!
 """
-マップが無ければ スキャナーは機能しない!
+没有地图扫描器无法工作！
 
 > TXT_PRISONPASS
 You picked up the Prison pass.
-刑務所の許可証 取得。
+你拾取了监狱许可证。
 
 > TXT_STRIFECROSSBOW
 You picked up the crossbow.
-クロスボウ 入手。
+你拾取了十字弓。
 
 > TXT_ASSAULTGUN
 You picked up the assault gun.
-アサルトガン 入手。
+你拾取了突击枪。
 
 > TXT_MMLAUNCHER
 You picked up the mini missile launcher.
-ミニミサイル ランチャー入手。
+你拾取了迷你导弹发射器。
 
 > TXT_FLAMER
 You picked up the flame thrower.
-火炎放射器 入手。
+你拾取了火焰喷射器。
 
 > TXT_MAULER
 You picked up the mauler.
-マウラー 入手。
+你拾取了毛勒。
 
 > TXT_GLAUNCHER
 You picked up the Grenade launcher.
-グレネードランチャー 入手。
+你拾取了榴弹发射器。
 
 > TXT_SIGIL
 You picked up the SIGIL.
-シジル 取得。
+你拾取了印记。
 
 > TXT_BASEKEY
 You picked up the Base Key.
-基地のキー 取得。
+你拾取了基地钥匙。
 
 > TXT_GOVSKEY
 You picked up the Govs Key.
-政府のキー 取得。
+你拾取了政府钥匙。
 
 > TXT_PASSCARD
 You picked up the Passcard.
-パスカード 取得。
+你拾取了通行卡。
 
 > TXT_IDBADGE
 You picked up the ID Badge.
-IDバッジ 取得。
+你拾取了ID章。
 
 > TXT_PRISONKEY
 You picked up the Prison Key.
-刑務所のキー 取得。
+你拾取了监狱钥匙。
 
 > TXT_SEVEREDHAND
 You picked up the Severed Hand.
-切り取った手 取得。
+你拾取了切断的手。
 
 > TXT_POWER1KEY
 You picked up the Power1 Key.
-パワー1キー 取得。
+你拾取了能量1钥匙。
 
 > TXT_POWER2KEY
 You picked up the Power2 Key.
-パワー2キー 取得。
+你拾取了能量2钥匙。
 
 > TXT_POWER3KEY
 You picked up the Power3 Key.
-パワー3キー 取得。
+你拾取了能量3钥匙。
 
 > TXT_GOLDKEY
 You picked up the Gold Key.
-ゴールドキー 取得。
+你拾取了金钥匙。
 
 > TXT_IDCARD
 You picked up the ID Card.
-IDカード 取得。
+你拾取了ID卡。
 
 > TXT_SILVERKEY
 You picked up the Silver Key.
-シルバーキー 取得。
+你拾取了银钥匙。
 
 > TXT_ORACLEKEY
 You picked up the Oracle Key.
-オラクルキー 取得。
+你拾取了神谕钥匙。
 
 > TXT_MILITARYID
 You picked up the Military ID.
-ミリタリーID 取得。
+你拾取了军事ID。
 
 > TXT_ORDERKEY
 You picked up the Order Key.
-オーダーキー 取得。
+你拾取了社团钥匙。
 
 > TXT_WAREHOUSEKEY
 You picked up the Warehouse Key.
-倉庫のキー 取得。
+你拾取了仓库钥匙。
 
 > TXT_BRASSKEY
 You picked up the Brass Key.
-ブラスキー 取得。
+你拾取了铜钥匙。
 
 > TXT_REDCRYSTAL
 You picked up the Red Crystal Key.
-赤水晶のキー 取得。
+你拾取了红水晶钥匙。
 
 > TXT_BLUECRYSTAL
 You picked up the Blue Crystal Key.
-青水晶のキー 取得。
+你拾取了蓝水晶钥匙。
 
 > TXT_CHAPELKEY
 You picked up the Chapel Key.
-チャペルキー 取得。
+你拾取了教堂钥匙。
 
 > TXT_CATACOMBKEY
 You picked up the Catacomb Key.
-カタコンベキー 取得。
+你拾取了墓穴钥匙。
 
 > TXT_SECURITYKEY
 You picked up the Security Key.
-警備のキー 取得。
+你拾取了安保钥匙。
 
 > TXT_COREKEY
 You picked up the Core Key.
-コアキー 取得。
+你拾取了核心钥匙。
 
 > TXT_MAULERKEY
 You picked up the Mauler Key.
-マウラーキー 取得。
+你拾取了毛勒钥匙。
 
 > TXT_FACTORYKEY
 You picked up the Factory Key.
-工場のキー 取得。
+你拾取了工厂钥匙。
 
 > TXT_MINEKEY
 You picked up the Mine Key.
-鉱山のキー 取得。
+你拾取了矿场钥匙。
 
 > TXT_NEWKEY5
 You picked up the New Key5.
-ニューキー5 取得。
+你拾取了新钥匙5。
 
 > TXT_ORACLEPASS
 You picked up the Oracle Pass.
-オラクルパス 取得。
+你拾取了神谕通行证。
 
 > TXT_HEGRENADES
 You picked up the HE-Grenade Rounds.
-HEグレネード弾 入手。
+你拾取了HE榴弹。
 
 > TXT_PHGRENADES
 You picked up the Phosphorus-Grenade Rounds.
-白リングレネード弾 入手。
+你拾取了磷榴弹。
 
 > TXT_CLIPOFBULLETS
 You picked up the clip of bullets.
-銃弾倉 入手。
+你拾取了子弹夹。
 
 > TXT_BOXOFBULLETS
 You picked up the box of bullets.
-弾薬箱 入手。
+你拾取了子弹盒。
 
 > TXT_MINIMISSILES
 You picked up the mini missiles.
-ミニミサイル 入手。
+你拾取了迷你导弹。
 
 > TXT_CRATEOFMISSILES
 You picked up the crate of missiles.
-ミサイルの箱 入手。
+你拾取了导弹箱。
 
 > TXT_ENERGYPOD
 You picked up the energy pod.
-エネルギーポット 入手。
+你拾取了能量荚。
 
 > TXT_ENERGYPACK
 You picked up the energy pack.
-エネルギーパック 入手。
+你拾取了能量包。
 
 > TXT_POISONBOLTS
 You picked up the poison bolts.
-ポイズンボルト 入手。
+你拾取了毒箭。
 
 > TXT_ELECTRICBOLTS
 You picked up the electric bolts.
-エレクトリックボルト 入手。
+你拾取了电击箭。
 
 > TXT_AMMOSATCHEL
 You picked up the ammo satchel.
-弾薬鞄 入手。
+你拾取了弹药背包。
 
 > MSG_TALISMANRED
 You have a feeling that it wasn't to be touched...
-己の勘が 触れてはならない物だと訴えている...
+你有种直觉它不能碰……
 
 > MSG_TALISMANGREEN
 Whatever it is, it doesn't belong in this world...
-何であろうと、この世には属さない物だ...
+不管是什么，它都不属于这个世界……
 
 > MSG_TALISMANBLUE
 It must do something...
-何かを成し遂げなければならない...
+必须做点什么……
 
 > MSG_TALISMANPOWER
 You have super strength!
-豪剛なる力を得た!
+你得到了超级力量！
 
 ; Locks
 
@@ -3603,7 +3604,6 @@ LAZ Device
 > OB_CYCLOPTIS
 %o was slimed by a cycloptis.
 %o 被一只独眼巨人粘住了。
-; ;%o はサイクロプティスにベトベトにされた。
 
 > OB_FLEMBRANE
 %o was defeated by the Flembrane.
@@ -4167,7 +4167,7 @@ Check ammo for weapon switch
 
 > GMPLYMNU_KILLBOSSSPAWNS
 Icon's death kills its spawns
-罪恶之像(最终BOSS)死亡时杀死其刷出来的怪物
+罪恶圣象(最终BOSS)死亡时杀死其刷出来的怪物
 
 > GMPLYMNU_NOCOUNTENDMONSTER
 End sector counts for kill %
@@ -4509,20 +4509,19 @@ Skin
 
 > PLYRMNU_SWITCHONPICKUP
 Switch on pickup
-捡起武器时直接替换
-; ;武器取得時に持ち替え
+拾取新武器时自动切换
 
 > PLYRMNU_PRESSSPACE
 Press \cjSPACE
-按\cj空格键
+按 \cj空格键
 
 > PLYRMNU_SEEFRONT
 to see front
-显示前方
+看前面
 
 > PLYRMNU_SEEBACK
 to see back
-显示后方
+看后面
 
 > PLYRMNU_VERTSPREAD
 Vertical Bullet Spread
@@ -4564,7 +4563,7 @@ Stop flying
 
 > CNTRLMNU_KEYBOARDLOOK
 Keyboard look
-使用键盘控制视角
+用键盘控制视角
 
 > CNTRLMNU_POPUPS_TITLE
 Strife Popup Screens Controls
@@ -4592,8 +4591,7 @@ Other
 
 > CNTRLMNU_COOPSPY
 Coop spy
-查看联机时其他玩家的实时屏幕，但HUD还是你自己的
-; ;他者視点
+查看其他玩家视角
 
 > CNTRLMNU_POPUPS
 Strife Popup Screens
@@ -4663,42 +4661,35 @@ Not-yet-seen walls
 
 > MAPCOLORMNU_LOCKEDCOLOR
 Locked doors
-已上锁的门
+上锁的门
 
 > MAPCOLORMNU_INTRALEVELCOLOR
 Teleporter to the same map
 去同一地图的传送点
-; ;テレポーター
 
 > MAPCOLORMNU_INTERLEVELCOLOR
 Teleporter to a different map
 去不同地图的传送点
-; ;別マップへのテレポーター
 
 > MAPCOLORMNU_SECRETSECTORCOLOR
 Secret sector
-隐藏点部分
-; ;シークレット
+秘密区域
 
 > MAPCOLORMNU_UNEXPLOREDSECRETCOLOR
 Unexplored secret
-未找到的隐藏点
-; ;未知のシークレット
+未发现的秘密
 
 > MAPCOLORMNU_SPECIALWALLCOLOR
 Special trigger lines
 特殊触发线
-; ;特殊トリガー
 
 > MAPCOLORMNU_CHEATMODE
 Cheat Mode
 作弊模式
-; ;チートモード時
 
 > MAPCOLORMNU_TSWALLCOLOR
 Invisible 2-sided walls
 隐形双面墙
-; ;表示されないline
 
 > MAPCOLORMNU_SECRETWALLCOLOR
 Secret walls
@@ -4715,7 +4706,6 @@ Monsters
 > MAPCOLORMNU_NONCOUNTINGMONSTERCOLOR
 Non-counting Monsters
 非计数怪物
-; ;非カウントモンスター
 
 > MAPCOLORMNU_FRIENDCOLOR
 Friends
@@ -4769,13 +4759,11 @@ Message Colors
 
 > MSGMNU_ITEMPICKUP
 Item Pickup
-拾起物品
-; ;アイテム取得
+物品拾取
 
 > MSGMNU_OBITUARIES
 Obituaries
 被击杀
-; ;死亡時メッセージ
 
 > MSGMNU_CRITICALMESSAGES
 Critical Messages
@@ -4810,480 +4798,386 @@ Developer message mode
 > AUTOMAPMNU_COLORSET
 Map color set
 地图颜色设置
-; ;地図色セット
 
 > AUTOMAPMNU_CUSTOMCOLORS
 Allow map defined colors
 允许地图定义颜色
-; ;定義したマップ色の許可
 
 > AUTOMAPMNU_SETCUSTOMCOLORS
 Set custom colors
 设置自定义颜色
-; ;カスタム色を決める
 
 > AUTOMAPMNU_CONTROLS
 Customize map controls
-旋转地图
-; ;マップコントロール カスタマイズ
+自定义地图控制
 
 > AUTOMAPMNU_OVERLAY
 Overlay automap
-叠放地图
-; ;オートマップを重ねる
+重叠地图
 
 > AUTOMAPMNU_TEXTURED
 Enable textured display
 启用纹理显示
-; ;床テクスチャ表示を許可
 
 > AUTOMAPMNU_SHOWITEMS
 Show item counts
 显示物品计数
-; ;アイテム数 表示
 
 > AUTOMAPMNU_SHOWMONSTERS
 Show monster counts
-显示敌人计数
-; ;モンスター数 表示
+显示怪物计数
 
 > AUTOMAPMNU_SHOWSECRETS
 Show secret counts
-显示隐藏地点计数
-; ;シークレット数 表示
+显示秘密计数
 
 > AUTOMAPMNU_SHOWTIME
 Show time elapsed
 显示本关用时
-; ;経過時間 表示
 
 > AUTOMAPMNU_SHOWTOTALTIME
 Show total time elapsed
 显示游戏总用时
-; ;統計時間 表示
 
 > AUTOMAPMNU_MAPSECRETS
 Show secrets on map
-在地图上显示隐藏点
-; ;シークレットを地図に表示
+在地图上显示秘密地点
 
 > AUTOMAPMNU_SHOWMAPLABEL
 Show map label
 显示地图标签
-; ;マップ名 表示
 
 > AUTOMAPMNU_DRAWMAPBACK
 Draw map background
 绘制地图背景
-; ;マップの背景 描写
 
 > AUTOMAPMNU_SHOWKEYS
 Show keys (cheat)
 显示钥匙（作弊）
-; ;鍵 表示(チート時)
 
 > AUTOMAPMNU_SHOWTRIGGERLINES
 Show trigger lines
 显示触发线
-; ;トリガーライン 表示
 
 > AUTOMAPMNU_SHOWTHINGSPRITES
 Show things as sprites
 以精灵图表现物体
-; ;thingsのスプライト表示
 
 > AUTOMAPMNU_PTOVERLAY
 Overlay portals
-叠放传送点
-; ;オーバーレイ ポータルズ
+重叠传送点
 
 > AUTOMAPMNU_EMPTYSPACEMARGIN
 Empty space margin
 空白空间边距
-; ;空間の余白
 
 > AUTOMAPMNU_MARKFONT
 Mark font
 标记字体
-; ;マークフォント
 
 > AUTOMAPMNU_MARKCOLOR
 Mark color
 标记颜色
-; ;マーク色
 
 > MAPCNTRLMNU_SETMARK
 Set mark
-建立标记
-; ;マークを置く
+设置标记
 
 > MAPCNTRLMNU_CLEARMARK
 Clear mark
 清除标记
-; ;マーククリア
 
 ; Scoreboard
 
 > DSPLYMNU_SCOREBOARD
 Scoreboard Options
-计分板选项
-; ;スコアボード オプション
+分数板选项
 
 > SCRBRDMNU_TITLE
 Scoreboard Options
-计分板选项
-; ;スコアボード オプション
+分数板选项
 
 > SCRBRDMNU_COOPERATIVE
 Cooperative Options
-合作联机选项
-; ;協力モードの設定
+联机合作选项
 
 > SCRBRDMNU_ENABLE
 Enable Scoreboard
-开启计分板
-; ;スコアボード表示
+启用分数板
 
 > SCRBRDMNU_HEADERCOLOR
 Header Color
 标题颜色
-; ;ヘッダー色
 
 > SCRBRDMNU_YOURCOLOR
 Your Player Color
-你的玩家颜色
-; ;自分の色
+自身玩家的颜色
 
 > SCRBRDMNU_OTHERPLAYERCOLOR
 Other Players' Color
 其他玩家的颜色
-; ;他者の色
 
 > SCRBRDMNU_DEATHMATCH
 Deathmatch Options
 死斗选项
-; ;デスマッチの設定
 
 > SCRBRDMNU_TEAMDEATHMATCH
 Team Deathmatch Options
 团队死斗选项
-; ;チームデスマッチの設定
 
 ; Alt HUD
 
 > ALTHUDMNU_TITLE
 Alternative HUD
-可选 HUD
-; ;オルタナティブHUD
+替换的HUD
 
 > ALTHUDMNU_ENABLE
 Enable alternative HUD
-开启可选 HUD
-; ;オルタナティブHUD有効
+启用替换的HUD
 
 > ALTHUDMNU_SHOWSECRETS
 Show secret count
-显示隐藏地点计数
-; ;シークレット数 表示
+显示秘密计数
 
 > ALTHUDMNU_SHOWMONSTERS
 Show monster count
-显示敌人计数
-; ;モンスター数 表示
+显示怪物计数
 
 > ALTHUDMNU_SHOWITEMS
 Show item count
 显示物品计数
-; ;アイテム数の表示
 
 > ALTHUDMNU_SHOWSTATS
 Show stamina and accuracy
 显示耐力和准确度
-; ;スタミナと精度の表示
 
 > ALTHUDMNU_SHOWBERSERK
 Show berserk
 显示狂战包
-; ;バーサーク表示
 
 > ALTHUDMNU_SHOWWEAPONS
 Show weapons
 显示武器
-; ;武器表示
 
 > ALTHUDMNU_SHOWAMMO
 Show ammo for
 显示弹药
-; ;弾薬等の表示
 
 > ALTHUDMNU_SHOWTIME
 Show time
 显示时间
-; ;時間の表示
 
 > ALTHUDMNU_TIMECOLOR
 Time color
 时间颜色
-; ;時間の字色
 
 > ALTHUDMNU_SHOWLAG
 Show network latency
 显示网络延迟
-; ;ネットのラグ表示
 
 > ALTHUDMNU_AMMOORDER
 Ammo display order
 弹药显示顺序
-; ;弾薬表示順
 
 > ALTHUDMNU_AMMORED
 Red ammo display below %
-弹药数在多少以下时显示为红色
-; ;弾薬の赤色表示%
+弹药在百分之多少以下时显示成红色
 
 > ALTHUDMNU_AMMOYELLOW
 Yellow ammo display below %
-弹药数在多少以下时显示为黄色
-; ;弾薬の黄色表示%
+弹药在百分之多少以下时显示成黄色
 
 > ALTHUDMNU_HEALTHRED
 Red health display below
-血量在多少以下时显示为红色
-; ;体力の赤色表示%
+生命在多少以下时显示成红色
 
 > ALTHUDMNU_HEALTHYELLOW
 Yellow health display below
-血量在多少以下时显示为黄色
-; ;体力の黄色表示%
+生命在多少以下时显示成黄色
 
 > ALTHUDMNU_HEALTHGREEN
 Green health display below
-血量在多少以下时显示为绿色
-; ;体力の緑色表示%
+生命在多少以下时显示成绿色
 
 > ALTHUDMNU_ARMORRED
 Red armor display below
-护甲在多少以下时显示为红色
-; ;防具の赤色表示%
+护甲在多少以下时显示成红色
 
 > ALTHUDMNU_ARMORYELLOW
 Yellow armor display below
-护甲在多少以下时显示为黄色
-; ;防具の黄色表示%
+护甲在多少以下时显示成黄色
 
 > ALTHUDMNU_ARMORGREEN
 Green armor display below
-护甲在多少以下时显示为绿色
-; ;防具の緑色表示%
+护甲在多少以下时显示成绿色
 
 > ALTHUDMNU_AUTOMAPHUD
 Alternative Automap HUD
-可选地图 HUD
-; ;オルタナティブ オートマップHUD
+替换地图HUD
 
 > ALTHUDMNU_TITLECOLOR
 Map title color
 地图标题颜色
-; ;マップ名の色
 
 > ALTHUDMNU_MAPTIMECOLOR
 Map time color
-轮廓时间颜色
-; ;経過時間の色
+地图内时间颜色
 
 > ALTHUDMNU_HUBTIMECOLOR
 Hub time color
-地图时间颜色
-; ;区間経過時間の色
+枢纽内时间颜色
 
 > ALTHUDMNU_TOTALTIMECOLOR
 Total time color
 总时间颜色
-; ;合計経過時間の色
 
 > ALTHUDMNU_COORDINATECOLOR
 Coordinate color
 坐标颜色
-; ;座標色
 
 > ALTHUDMNU_COORDINATEMODE
 Coordinate mode
 坐标模式
-; ;座標モード
 
 > ALTHUDMNU_STATSNAMECOLOR
 Statistics name color
 统计名称颜色
-; ;統計名の色
 
 > ALTHUDMNU_STATSCOLOR
 Statistics color
 统计颜色
-; ;統計の色
 
 ; Display (game related)
 
 > DSPLYMNU_CAPFPS
 Rendering Interpolation
 渲染插值
-; ;レンダリング補間
 
 > DSPLYMNU_BLENDMETHOD
 Transparency render mode
 透明渲染模式
-; ;レンダリング透過モード
 
 > DSPLYMNU_WIPETYPE
 Screen wipe style
 屏幕擦拭样式
-; ;スクリーンワイプモード
 
 > DSPLYMNU_SHOWENDOOM
 Show ENDOOM screen
-显示退出游戏画面（不一定有效）
-; ;ENDOOM画面を表示
+显示ENDOOM画面
 
 > DSPLYMNU_BLOODFADE
 Blood Flash Intensity
-受伤闪光强度
-; ;血粉の濃度
+受伤闪烁强度
 
 > DSPLYMNU_PICKUPFADE
 Pickup Flash Intensity
-捡起物品闪光强度
-; ;取得の視界色濃度
+拾取闪烁强度
 
 > DSPLYMNU_WATERFADE
 Underwater Blend Intensity
 水下混合强度
-; ;水中反響音の濃度
 
 > DSPLYMNU_SKYMODE
 Sky render mode
 天空渲染模式
-; ;空の表示方法
 
 > DSPLYMNU_LINEARSKY
 Linear skies
 线性天空
-; ;空の歪み
 
 > DSPLYMNU_GZDFULLBRIGHT
 Fullbright overrides sector color
-全亮覆盖扇区颜色
-; ;明るさ最大時にsector color塗り替え
+全亮覆盖区域颜色
 
 > DSPLYMNU_SCALEFUZZ
 Scale fuzz effect
 缩放模糊效果
-; ;ファズエフェクトサイズ
 
 > DSPLYMNU_DRAWFUZZ
 Use fuzz effect
 使用模糊效果
-; ;ファズエフェクトを使用
 
 > DSPLYMNU_OLDTRANS
 Classic Transparency
 经典透明度
-; ;旧式の透明度
 
 > DSPLYMNU_TRANSSOUL
 Lost Soul translucency
 丧魂透明度
-; ;ロストソウルの透明度
 
 > DSPLYMNU_FAKECONTRAST
 Use fake contrast
 使用虚假对比度
-; ;フェイクコントラストを使用
 
 > DSPLYMNU_ROCKETTRAILS
 Rocket Trails
-火箭飞行尾迹
-; ;ロケットの軌跡
+火箭弹尾迹
 
 > DSPLYMNU_BLOODTYPE
 Blood Type
 血迹类型
-; ;血の種類
 
 > DSPLYMNU_PUFFTYPE
 Bullet Puff Type
-着弹效果类型
-; ;弾煙の種類
+子弹烟雾类型
 
 > DSPLYMNU_MAXPARTICLES
 Number of particles
 粒子数量
-; ;パーティクルの最大数
 
 > DSPLYMNU_MAXDECALS
 Number of decals
 贴花数量
-; ;デカールの最大数
 
 > DSPLYMNU_PLAYERSPRITES
 Show player sprites
-显示玩家sprites
-; ;プレイヤーの武器の表示
+显示玩家(武器)精灵
 
 > DSPLYMNU_DEATHCAM
 Death camera
-玩家死亡时镜头转为第三人称
-; ;死亡時の三人称視点
+死亡时(第三人称)镜头
 
 > DSPLYMNU_TELEZOOM
 Teleporter zoom
-传送后视角放大特效
-; ;テレポーター使用時のズーム
+传送时缩放视角
 
 > DSPLYMNU_QUAKEINTENSITY
 Earthquake shake intensity
-地震时屏幕震动强度
-; ;地震エフェクトの激しさ
+地震时(画面)震动强度
 
 > DSPLYMNU_NOMONSTERINTERPOLATION
 Interpolate monster movement
-是否插入额外怪物移动帧数
-; ;モンスターの移動補間
+怪物移动插值
 
 > DSPLYMNU_MENUDIM
 Menu dim
-菜单暗化
-; ;メニュー背景
+暗化菜单(背景)
 
 > DSPLYMNU_DIMCOLOR
 Dim color
-暗化色彩
-; ;背景色
+暗化颜色
 
 > DSPLYMNU_MOVEBOB
 View bob amount while moving
-移动时视角上下移动的强度
-; ;視点揺れする移動値
+移动时视角上下晃动量
 
 > DSPLYMNU_STILLBOB
 View bob amount while not moving
-不移动时视角上下移动的强度
-; ;視点揺れしない移動値
+不移动时视角上下晃动量
 
 > DSPLYMNU_BOBSPEED
 Weapon bob speed
-武器动画上下移动的强度
-; ;武器揺れ速度
+武器上下晃动速度
 
 ; Scaling
 
 > SCALEMNU_TITLE
 Scaling Options
 缩放选项
-; ;スケーリング オプション
 
 > SCALEMNU_OVERRIDE
 Overrides for above setting
-覆盖上面的选项
-; ;設定の上書き
+覆盖以上设置
 
 > SCALEMNU_MESSAGES
 Messages
@@ -5308,7 +5202,6 @@ Alternative HUD
 > SCALEMNU_HUDASPECT
 HUD preserves aspect ratio
 HUD保持纵横比
-; ;HUDのアスペクト比維持
 
 > SCALEMNU_USEUI
 Use default scale
@@ -5320,7 +5213,7 @@ Scale to fullscreen
 
 > SCALEMNU_ADAPT
 Adapt to screen size
-调整屏幕大小
+适应屏幕大小
 
 ; HUD
 
@@ -5346,43 +5239,35 @@ Force default crosshair
 
 > HUDMNU_GROWCROSSHAIR
 Grow crosshair when picking up items
-捡起物品时准星暂时放大
-; ;アイテム取得時に照準を大きくする
+拾取物品时准星放大
 
 > HUDMNU_NAMETAGS
 Display nametags
 显示名字标签
-; ;ディスプレイネームタグ
 
 > HUDMNU_NAMETAGCOLOR
 Nametag color
 名字标签颜色
-; ;ネームタグ色
 
 > HUDMNU_OLDOUCH
 Use old ouch mug shot formula
-使用旧的头像
-; ;旧式ouch mug shotを使用
+使用旧的头像方式
 
 > HUDMNU_HEXENFLASHES
 Hexen weapon flashes
-Hexen 武器闪光
-; ;Hexen武器の視界色
+Hexen武器闪光
 
 > HUDMNU_POISONFLASHES
 Poison damage flashes
-毒伤害闪光
-; ;毒ダメージの視界色
+毒药伤害闪光
 
 > HUDMNU_ICEFLASHES
 Ice death flashes
 冰冻死亡闪光
-; ;氷結死の視界色
 
 > HUDMNU_HAZARDFLASHES
 Poison Buildup flashes
-建立毒时闪光
-; ;蓄積毒の視界色
+毒药堆积闪光
 
 > HUDMNU_SCALEOPT
 Scaling Options
@@ -5390,35 +5275,29 @@ Scaling Options
 
 > MISCMNU_QUERYIWAD
 Show IWAD selection dialog
-显示 IWAD 选择对话框
-; ;IWADの選択画面を表示
+显示IWAD选择对话框
 
 > MISCMNU_ALLCHEATS
 Enable cheats from all games
-在所有游戏中允许作弊
-; ;全ゲームでチート使用可にする
+所有游戏都启用作弊
 
 ; Option Menus
 
 > MISCMNU_ENABLESCRIPTSCREENSHOTS
 Enable making screenshots by scripts
 启用通过脚本制作屏幕截图
-; ;スクリプトからのスクショ作成を有効化
 
 > MISCMNU_DEHLOAD
 Load *.deh/*.bex lumps
-加载 *.deh/*.bex块
-; ;.deh/.bexファイルを読み込む
+加载*.deh/*.bex块
 
 > MISCMNU_CACHENODES
 Cache nodes
-节点缓存
-; ;ノードキャッシュ
+缓存节点
 
 > MISCMNU_CACHETIME
 Time threshold for node caching
 节点缓存的时间阈值
-; ;ノードキャッシュ時間の閾値
 
 > MISCMNU_CLEARNODECACHE
 Clear node cache
@@ -5426,8 +5305,7 @@ Clear node cache
 
 > MISCMNU_INTERSCROLL
 Allow skipping of intermission scrollers
-开启跳过统计结果
-; ;クリア結果集計のスキップを許可
+允许跳过结算(画面)
 
 > NETMNU_TITLE
 Network Options
@@ -5443,18 +5321,15 @@ Movement prediction
 
 > NETMNU_LINESPECIALPREDICTION
 Predict line actions
-预测line actions
-; ;line actionsを予測する
+预测线动作
 
 > NETMNU_PREDICTIONLERPSCALE
 Prediction Lerp Scale
-预测Lerp Scale
-; ;リープスケール予測
+预测插值缩放
 
 > NETMNU_LERPTHRESHOLD
 Lerp Threshold
-Lerp阈值
-; ;リープしきい値
+插值阈值
 
 > NETMNU_HOSTOPTIONS
 Host options
@@ -5502,18 +5377,15 @@ Sprites & Particles
 
 > OPTVAL_MELT
 Melt
-柔化
-; ;メルト
+融化
 
 > OPTVAL_BURN
 Burn
-加深
-; ;バーン
+燃烧
 
 > OPTVAL_CROSSFADE
 Crossfade
-淡化
-; ;クロスフェード
+淡入淡出
 
 > OPTVAL_SMOOTH_1
 ; This setting is duplicated in order to allow for different grammatical gender endings in the Russian language (and any other language that depends on a grammatical gender system). In English, due to the lack of a grammatical gender system, both option values are the same.
@@ -5550,8 +5422,10 @@ Both
 
 > OPTVAL_ZDOOM
 ZDoom
+ZDoom
 
 > OPTVAL_STRIFE
+Strife
 Strife
 
 > OPTVAL_PLAYER
@@ -5660,53 +5534,43 @@ Traditional Raven
 
 > OPTVAL_ONLYWHENFOUND
 Only when found
-仅限发现后
-; ;発見時のみ
+仅发现时
 
 > OPTVAL_ONFOROVERLAYONLY
 On for overlay only
 仅在覆盖时开启
-; ;オーバーレイ専用
 
 > OPTVAL_OVERLAYNORMAL
 Overlay+Normal
 覆盖+普通
-; ;オーバーレイ+通常
 
 > OPTVAL_OVERLAYONLY
 Overlay Only
-仅限覆盖
-; ;オーバーレイのみ
+仅覆盖
 
 > OPTVAL_NOTFORHUBS
 Not for hubs
 不针对枢纽
-; ;区間では出さない
 
 > OPTVAL_FRONT
 Front
 前面
-; ;画像
 
 > OPTVAL_ANIMATED
 Animated
-可动的
-; ;動作
+动画的
 
 > OPTVAL_ROTATED
 Rotated
 旋转的
-; ;回転
 
 > OPTVAL_MAPDEFINEDCOLORSONLY
 Map defined colors only
-仅限贴图设定的颜色
-; ;指定した色のみ
+仅映射指定的颜色
 
 > OPTVAL_NODOORS
 All except doors
-除了所有的门
-; ;ドア以外全て
+除了门以外
 
 > OPTVAL_DOUBLE
 Double
@@ -5735,7 +5599,6 @@ Critical Messages
 > OPTVAL_NEVERFRIENDS
 Never friends
 友军除外
-; ;フレンド以外
 
 > OPTVAL_ONLYMONSTERS
 Only monsters
@@ -5743,12 +5606,14 @@ Only monsters
 
 > OPTVAL_HEXEN
 Hexen
+毁灭巫师
 
 > OPTVAL_OLD
 Old
-旧式
+旧
 
 > OPTVAL_DOOM
+Doom
 Doom
 
 > OPTVAL_DOOMSTRICT
@@ -5757,12 +5622,14 @@ Doom(严格)
 
 > OPTVAL_BOOM
 Boom
+Boom
 
 > OPTVAL_BOOMSTRICT
 Boom (strict)
 Boom(严格)
 
 > OPTVAL_MBF
+MBF
 MBF
 
 > OPTVAL_MBFSTRICT
@@ -5771,6 +5638,7 @@ MBF(严格)
 
 > OPTVAL_MBF21
 MBF21
+MBF21
 
 > OPTVAL_MBF21STRICT
 MBF21 (strict)
@@ -5778,11 +5646,11 @@ MBF21(严格)
 
 > OPTVAL_ZDOOM2063
 ZDoom 2.0.63
+ZDoom 2.0.63
 
 > OPTVAL_ALLUNACKNOWLEDGED
 All unacknowledged
 所有未确认的
-; ;未確認全て
 
 > OPTVAL_ERRORS
 Errors
@@ -5854,139 +5722,115 @@ Console
 
 > C_BRICK
 \caBrick
-\ca豆沙色
-; ;\ca丹
+\ca砖红色
 
 > C_TAN
 \cbTan
 \cb褐色
-; ;\cb香
 
 > C_GRAY
 \ccGray
 \cc灰色
-; ;\cc灰
 
 > C_GREEN
 \cdGreen
 \cd绿色
-; ;\cd緑
 
 > C_BROWN
 \ceBrown
 \ce棕色
-; ;\ce茶
 
 > C_GOLD
 \cfGold
 \cf金色
-; ;\cf金
 
 > C_RED
 \cgRed
 \cg红色
-; ;\cg赤
 
 > C_BLUE
 \chBlue
 \ch蓝色
-; ;\ch青
 
 > C_ORANGE
 \ciOrange
-\ci橘色
-; ;\ci橙
+\ci橙色
 
 > C_WHITE
 \cjWhite
 \cj白色
-; ;\cj白
 
 > C_YELLOW
 \ckYellow
 \ck黄色
-; ;\ck黄
 
 > C_DEFAULT
 \clDefault
 \cl默认
-; ;\cl初期
 
 > C_BLACK
 \cmBlack
 \cm黑色
-; ;\cm黒
 
 > C_LIGHTBLUE
 \cnLight blue
-\cn淡蓝
-; ;\cn空
+\cn淡蓝色
 
 > C_CREAM
 \coCream
 \co奶油色
-; ;\co肉
 
 > C_OLIVE
 \cpOlive
 \cp橄榄色
-; ;\cp泥
 
 > C_DARKGREEN
 \cqDark green
-\cq暗绿
-; ;\cq深
+\cq暗绿色
 
 > C_DARKRED
 \crDark red
-\cr暗褐
-; ;\cr朱
+\cr暗红色
 
 > C_DARKBROWN
 \csDark brown
-\cs暗棕
-; ;\cs焦
+\cs暗棕色
 
 > C_PURPLE
 \ctPurple
 \ct紫色
-; ;\ct紫
 
 > C_DARKGRAY
 \cuDark gray
-\cu暗灰
-; ;\cu鉛
+\cu暗灰色
 
 > C_CYAN
 \cvCyan
 \cv青色
-; ;\cv天
 
 > C_ICE
 \cwIce
-\cw冰
-; ;\cw氷
+\cw冰色
 
 > C_FIRE
 \cxFire
-\cx火
-; ;\cx炎
+\cx火色
 
 > C_SAPPHIRE
 \cySapphire
-\cy宝蓝
-; ;\cy藍
+\cy天蓝色
 
 > C_TEAL
 \czTeal
-\cz蓝绿
-; ;\cz碧
+\cz蓝绿色
 
 > OPTSTR_HERETIC
 Heretic
+异教徒
 
 > OPTSTR_CHEX
 Chex
+奇克斯
 
 > OPTSTR_NOSOUND
 No Sound
@@ -6001,6 +5845,7 @@ Spline
 样条函数
 
 > OPTSTR_OPENAL
+OpenAL
 OpenAL
 
 > DSPLYMNU_GLOPT
@@ -6041,33 +5886,27 @@ Dynamic Lights (Hardware)
 
 > GLLIGHTMNU_LIGHTDEFS
 Enable light definitions
-允许光源定义
-; ;ライト定義 許可
+启用光照定义
 
 > GLLIGHTMNU_LIGHTSPRITES
 Lights affect sprites
-光效可影响贴图
-; ;ライトがスプライトに影響
+光源影响精灵
 
 > GLLIGHTMNU_LIGHTPARTICLES
 Lights affect particles
-光效可影响粒子
-; ;ライトがパーティクルに影響
+光源影响粒子
 
 > GLLIGHTMNU_LIGHTSHADOWMAP
 Light shadowmaps
-光效可影响阴影贴图
-; ;ライトのシャドウマッピング
+光照阴影贴图
 
 > GLLIGHTMNU_LIGHTSHADOWMAPQUALITY
 Shadowmap quality
 阴影贴图质量
-; ;シャドウマップ 品質
 
 > GLLIGHTMNU_LIGHTSHADOWMAPFILTER
 Shadowmap filter
 阴影贴图过滤器
-; ;シャドウマップ フィルター
 
 > GLPREFMNU_FOGMODE
 Fog mode
@@ -6075,33 +5914,27 @@ Fog mode
 
 > GLPREFMNU_FOGFORCEFULLBRIGHT
 Fog forces fullbright
-将尘雾调整为最高亮度
-; ;濃霧は明るさ最大
+雾效强制使用全亮度
 
 > GLPREFMNU_WPNLIGHTSTR
 Weapon light strength
-武器光效强度
-; ;武器ライトの強さ
+武器光照强度
 
 > GLPREFMNU_ENVIRONMENTMAPMIRROR
 Environment map on mirrors
-镜像材质环境贴图
-; ;マップオンミラーの画像表示
+镜面使用环境映射
 
 > GLPREFMNU_ENV
 Enhanced night vision mode
-允许夜视模式
-; ;バイザーを暗視装置調にする
+增强夜视模式
 
 > GLPREFMNU_ENVSTEALTH
 ENV shows stealth monsters
-夜视模式下显示隐身怪物
-; ;暗視バイザーが透明を見破る
+夜视时显示隐身怪物
 
 > GLPREFMNU_SPRCLIP
 Adjust sprite clipping
-调节贴图剪裁
-; ;スプライトのずらしを調整する
+调整精灵剪裁
 
 > GLPREFMNU_SPRBLEND
 Smooth sprite edges
@@ -6117,8 +5950,7 @@ Sprite billboard
 
 > GLPREFMNU_SPRBILLFACECAMERA
 Sprites face camera
-贴图面向玩家视角
-; ;スプライトのフェイスカメラ
+精灵面部相机
 
 > GLPREFMNU_PARTICLESTYLE
 Particle style
@@ -6134,23 +5966,19 @@ Stereo 3D VR
 
 > GLPREFMNU_VRQUADSTEREO
 Enable Quad Stereo
-开启四倍立体
-; ;クァッドステレオを有効
+启用四倍立体
 
 > GLPREFMNU_SWLMBANDED
 Banded SW Lightmode
-Banded SW 光效模式
-; ;バンデドSWライトモード
+层级式软件光照模式
 
 > GLPREFMNU_VRIPD
 Distance Between Your Eyes
-两眼之间的距离
-; ;自分の目との距離
+你的两眼之间距离
 
 > GLPREFMNU_VRSCREENDIST
 Distance From Your Screen
-与画面的距离
-; ;画面からの距離
+从你的屏幕距离
 
 > OPTVAL_SMART
 Smart
@@ -6163,22 +5991,18 @@ Smarter
 > OPTVAL_INFRAREDONLY
 Infrared only
 仅红外线
-; ;赤外線のみ
 
 > OPTVAL_INFRAREDANDTORCH
 Infrared and torch
 红外线和火炬
-; ;赤外線と松明
 
 > OPTVAL_ANYFIXEDCOLORMAP
 Any fixed colormap
-任何修复的色图
-; ;任意の固定カラーマップ
+任何修复的彩色图
 
 > OPTVAL_USEASPALETTE
 Use as palette
-作为主色调
-; ;パレットとして使用
+用作调色盘
 
 > OPTVAL_BLEND
 Blend
@@ -6187,16 +6011,15 @@ Blend
 > OPTVAL_BRIGHT
 Bright
 明亮
-; ;明るい
 
 > OPTVAL_DARK
 Dark
 黑暗
-; ;暗い
 
 > OPTVAL_LEGACY
 ; This refers to the Doom Legacy port, not a legacy lighting style!
 Doom Legacy
+Doom遗产
 
 > OPTVAL_SOFTWARE
 Software
@@ -6256,18 +6079,15 @@ Jagged fuzz
 
 > OPTVAL_GREENMAGENTA
 Green/Magenta
-绿/红
-; ;緑/紫
+绿/洋红
 
 > OPTVAL_REDCYAN
 Red/Cyan
 红/青
-; ;赤/空
 
 > OPTVAL_AMBERBLUE
 Amber/Blue
-琥珀色/蓝色
-; ;黄/青
+琥珀/蓝
 
 > OPTVAL_LEFTEYE
 Left Eye
@@ -6280,32 +6100,26 @@ Right Eye
 > OPTVAL_SBSFULL
 Side-by-side Full
 完全并排
-; ;両サイド フル
 
 > OPTVAL_SBSNARROW
 Side-by-side Narrow
 狭窄并排
-; ;両サイド ナロー
 
 > OPTVAL_TOPBOTTOM
 Top/Bottom
 顶部/底部
-; ;天/底
 
 > OPTVAL_ROWINTERLEAVED
 Row Interleaved
-行交叉
-; ;行インターリーブ
+行交错
 
 > OPTVAL_COLUMNINTERLEAVED
 Column Interleaved
 列交错
-; ;列インターリーブ
 
 > OPTVAL_CHECKERBOARD
 Checkerboard
 棋盘
-; ;市松模様
 
 > OPTVAL_QUADBUFFERED
 Quad-buffered
@@ -6325,18 +6139,15 @@ True color output
 
 > TCMNU_MINFILTER
 Linear filter when downscaling
-缩小时采用线性过滤
-; ;縮小時のリニアフィルター
+缩小时用线性过滤
 
 > TCMNU_MAGFILTER
 Linear filter when upscaling
-放大时采用线性过滤
-; ;拡大時のリニアフィルター
+放大时用线性过滤
 
 > TCMNU_MIPMAP
 Use mipmapped textures
-使用mip mapping材质
-; ;ミップマップテクスチャを使用
+使用mip映射纹理
 
 > TCMNU_DYNLIGHTS
 Dynamic lights (Software)
@@ -6370,101 +6181,81 @@ Always show keys
 
 > TXT_NO_TEAM_CHANGE
 Team changing has been disabled!
-切换队伍功能已被禁止！
-; ;チームの変更は受け付けない!
+更换队伍已被禁止！
 
 > TXT_JOINED_TEAM
 ; %s is the player and gender sensitive
 %s joined the %t team
-%s 加入了 %t队伍。
-; ;%s は %t のチームに入隊した
+%s 加入了 %t 的队伍
 
 > TXT_LONER
 %s is now a loner.
-%s 现在是一匹孤狼了。
-; ;%s は今 一匹狼だ。
+%s 现在孤独一人了。
 
 > TXT_LEFTWITHFRAGS
 %s left the game with %d frags
-%s 以%d 的分数离开了游戏。
-; ;"""%s が逃げ出したので %d に点が入った
-; ;"""
+%s 以 %d 的分数离开了游戏。
 
 > TXT_LEFTTHEGAME
 %s left the game
 %s 离开了游戏。
-; ;%s は退出した
 
 > TXT_COULDNOTREAD
 Could not read savegame '%s'.
-无法读取此存档'%s'
-; ;%s' のセーブデータを読み込めなかった。
+无法读取存档“%s”。
 
 > TXT_NOINFOJSON
 %s' is not a valid savegame: Missing 'info.json'.
-%s' 并不是有效存档，缺失'info.json'
-; ;%s' は有効なセーブデータ ではない: 'info.json'が不明。
+%s' 不是有效存档：缺失“info.json”。
 
 > TXT_FAILEDTOREADSG
 Failed to access savegame info in '%s'.
-未成功存档 '%s'。
-; ;%s' のセーブデータにアクセス出来なかった。
+访问存档“%s”的信息失败。
 
 > TXT_INCOMPATIBLESG
 Savegame '%s' is from an incompatible version.
-'%s'的版本不兼容。
-; ;%s' は互換性の無いバージョンのセーブデータだ。
+存档“%s”的版本不兼容。
 
 > TXT_OTHERENGINESG
 Savegame '%s' is from another ZDoom-based engine:
-%s' 是来自另一个zdoom系引擎:
-; ;%s' は別のZDoom型のセーブデータだ。
+存档“%s”来自另一种基于ZDoom的引擎：
 
 > TXT_TOOOLDSG
 Savegame '%s' is from an older version: %d (%e is the oldest supported)
-'%s' 来自旧版本: %d (最低支持到 %e )
-; ;%s' はバージョンが合わないセーブデータだ: %d(%e は旧式版の物)
+存档“%s”来自旧版本：%d (最低支持到 %e)
 
 > TXT_TOONEWSG
 ; Shouldn’t this say “%e is the newest supported”?\n\n— Undead\n\nAsk Randi: The text is old. I won't change it.
 Savegame '%s' is from a newer version: %d (%e is the highest supported)
-'%s' 来自更高级的额版本: %d (最高支持到%e)
-; ;%s' はバージョンが合わないセーブデータだ: %d(%e は最新版の物)
+存档“%s”来自新版本：%d (最高支持到 %e)
 
 > TXT_NOMAPSG
 Savegame '%s' is missing the current map.
-'%s' 丢失了当前地图。
-; ;セーブデータ '%s'に現在のマップはない。
+存档“%s”的当前地图找不到了。
 
 > TXT_NOGLOBALSJSON
 %s' is not a valid savegame: Missing 'globals.json'.
-%s' 不是有效存档: 缺失 'globals.json'。
-; ;%s' は有効なセーブデータではない: 'globals.json'が不明。
+%s' 不是有效存档：缺失“globals.json”。
 
 > TXT_SGINFOERR
 Failed to access savegame info in '%s'
-%s' 无法读取存档信息。
-; ;%s' のセーブデータにアクセス出来なかった
+访问存档“%s”的信息失败
 
 > TXT_SAVEPENDING
 A game save is still pending.
-待存档。
-; ;セーブ中だ
+已经有存档在保存中了。
 
 > TXT_NOTSAVEABLE
 Not in a saveable game.
-非可存档游戏。
-; ;セーブ可能なゲームではない
+这是不可存档的游戏。
 
 > TXT_NOTINLEVEL
 Not in a level
-未进入关卡。
-; ;レベル内ではない
+还没进入关卡
 
 > TXT_SPPLAYERDEAD
 Player is dead in a single-player game
-玩家在单人模式下死亡。
-; ;シングルプレイでプレイヤーが死んだ
+玩家在单人模式下死亡
 
 > TXT_SAVEFAILED
 Save failed
@@ -6502,7 +6293,6 @@ Subtitles
 > GLPREFMNU_PALTONENOGREY
 Prevent gray shadows
 防止灰色阴影
-; ;グレイシャドウを防ぐ
 
 > HUDMNU_FONTOPTIONS
 Font Options
@@ -6511,12 +6301,10 @@ Font Options
 > FONTMNU_LOG
 Use standard font for log display
 使用标准字体显示日志
-; ;ログ表示に標準フォントを使用
 
 > FONTMNU_DLG
 Use standard font for dialogues
-对话框中使用默认字体
-; ;ダイアログに標準フォントを使用
+使用标准字体显示对话
 
 > MISCMNU_QUICKEXIT
 Quick Exit
@@ -6524,60 +6312,51 @@ Quick Exit
 
 > DSPLYMNU_CUSTOMINVERTMAP
 Custom Inverse Map
-自定义反转贴图
-; ;マップ反転色カスタム
+自定义反色地图
 
 > DSPLYMNU_CUSTOMINVERTC1
 """Custom Inverse Color Dark
 """
-自定义反转颜色 深色
-; ;反転色カスタム 暗
+自定义反色 深色
 
 > DSPLYMNU_CUSTOMINVERTC2
 Custom Inverse Color Light
-自定义反转颜色 明亮
-; ;反転色カスタム 明
+自定义反色 亮色
 
 > DSPLYMNU_BOBFIRE
 Weapon bob amount when firing
-攻击时的视点波动值
-; ;射撃時の武器スイング
+攻击时武器上下晃动量
 
 > SCALEMNU_SCALECLASSIC
 ; HUD->Scaling Options
 Intermission and Screen Border Classic Scaling
-暂停和屏幕边框经典缩放
-; ;旧式スケールのクリア結果と画面ボーダー
+关卡间歇时及画面边框使用经典缩放
 
 > SCALEMNU_INTER
 Intermission background
-暂停背景
-; ;クリア結果の背景
+关卡间歇时的背景
 
 > SCALEMNU_BORDER
 Screen border
-屏幕边框
-; ;画面ボーダー
+画面边框
 
 > SCALEMNU_FACTOR
 Scaling factor
-缩放比例
-; ;スケーリング倍率
+缩放因子
 
 > SCALEMNU_RATIO
 Aspect ratio
-纵横比
-; ;アスペクト比
+宽高比
 
 > OPTVAL_BUILD
 ; as in "Build engine". This should not be translated unless there is a translated name for the engine
+Build
 Build
 
 > MISCMNU_ALWAYSTALLY
 ; sv_alwaystally
 Show Tally Screen On Level Exit
 在关卡出口显示统计画面
-; ;Exit時にタリー画面を表示
 
 > OPTVAL_MODDEFINED
 ; this is '==0'
@@ -6586,18 +6365,15 @@ Mod Defined
 
 > OPTVAL_NOTHUBS
 Always, except within hubs
-总是，除了hubs
-; ;区間を除き、常に
+总是，除了枢纽
 
 > OPTVAL_WITHHUBS
 Always, even within hubs
-总是，既是是hubs
-; ;区間内でも、常に
+总是，包括枢纽
 
 > CNTRLMNU_LAYOUT
 Preferred keyboard layout
 首选键盘布局
-; ;優先するキー配列
 
 > OPTVAL_CLASSICZ
 Classic ZDoom
@@ -6634,16 +6410,16 @@ Citizen
 
 > TAG_CEILINGTURRET
 Ceiling Turret
-警備システム
+天花板炮塔
 
 > TAG_CRUSADER
 ; Names need to match the obituaries!
 Crusader
-クルセーダー
+圣战士
 
 > TAG_INQUISITOR
 Inquisitor
-審問官
+审判官
 
 > TAG_PEASANT
 Peasant
@@ -6655,15 +6431,15 @@ Reaver
 
 > TAG_SENTINEL
 Sentinel
-センティネル
+哨兵
 
 > TAG_STALKER
 Stalker
-ストーカー
+跟踪者
 
 > TAG_BISHOP
 The Bishop
-ビショップ
+主教
 
 > TAG_ENTITY
 The One God
@@ -6671,152 +6447,163 @@ The One God
 
 > TAG_PROGRAMMER
 The Programmer
-プログラマー
+程序员
 
 > TAG_ALIENSPECTRE
 The Spectre
-スペクトル
+幽灵
 
 > TAG_KNEELINGGUY
 Kneeling Guy
-礼拝者
+祈祷者
 
 > GMPLYMNU_MULTIPLAYERTHINGS
 Spawn multiplayer things in coop
-協力モードでマルチ用thingsを出す
+合作模式中刷出多人专用物体
 
 > DSPLYMNU_SPRITESHADOW
 Sprite shadows
-スプライト シャドウ
+精灵阴影
 
 > OPTVAL_SPRSHADALWAYS
 ; Will enable sprite shadows for monster and player sprites
 Monsters and players
-敵とプレイヤー
+怪物和玩家
 
 > DSPLYMNU_FOV
 ; the FOV slider
 FOV
+FOV
 
 > CMPTMNU_NOMBF21
 Disable MBF21 features
-MBF21機能を無効
+禁用MBF21特性
 
 > ALTHUDMNU_SHOWTIMESTAT
 Show time widget
-ウィジットタイマーの表示
+显示事件部件
 
 > OPTVAL_MBF21
+MBF21
 MBF21
 
 > CMPTMNU_VILEGHOSTS
 Crushed monsters get resurrected as ghosts
-圧死した敵が蘇生でゴースト化
+压死的怪物能复活成鬼魂
 
 > MISCMNU_FVIEWBOB
 View bobbing while flying
-飛行中の視点揺れ
+飞行中视角晃动
 
 > OB_DEMON1HIT
 %o was maimed by a Serpent.
-%o はサーペントに斬り捨てられた。
+%o 被巨蛇重伤了。
 
 > AUTOMAPMNU_LINEANTIALIASING
 Antialias Lines
-Linesのアンチエイリアス
+线条反锯齿
 
 > GMPLYMNU_NOPLAYERCLIP
 Move and shoot through other players
-移動と攻撃が他プレイヤーを通過
+移动和射击能穿过其他玩家
 
 > GMPLYMNU_SHAREKEYS
 Share keys with all players
-全プレイヤーにキーを共有
+所有玩家共享钥匙
 
 > GLPREFMNU_SPRBILLFACECAMERAFORCE
 Disallow override of camera facing mode
-Facing modeのカメラをオーバーライドしない
+不允许覆盖面向摄像机的模式
 
 > ALTHUDMNU_SWAPHEALTHARMOR
 Swap health and armor
-体力とアーマーをスワップ
+交换生命和护甲
 
 > SCALEMNU_HUD_OLDSCALE
 ; hud_oldscale
 Use classic HUD scaling
-旧式HUDスケーリングを使う
+使用经典的HUD缩放
 
 > SCALEMNU_HUD_SCALEFACTOR
 ; hud_scalefactor
 HUD scale factor
-HUDスケール倍率
+HUD缩放因子
 
 > GMPLYMNU_COOPTHINGS
 ; Any Actor that only appears in co-op is disabled
 Spawn co-op only things in multiplayer
-マルチで協力モード限定thingsを出す
+多人游戏中只刷出合作专用物体
 
 > GMPLYMNU_COOPITEMS
 ; Items that only appear in co-op are disabled
 Spawn co-op only pickup items in multiplayer
-マルチで協力モード限定アイテムを出す
+多人游戏中只刷出合作专用的拾取物品
 
 > GMPLYMNU_LOCALITEMS
 ; Items are picked up client-side rather than fully taken by the client who picked it up
 Players pick up their own copy of items in multiplayer
-マルチでプレイヤー達は複製アイテムを拾う
+多人游戏中玩家只拾取物品的自身所属复制品
 
 > GMPLYMNU_NOLOCALDROP
 ; Drops from Actors aren't picked up locally
 Disable client-side pick ups on dropped items
-クライアント側で落としたアイテムを拾わせない
+禁用客户端侧拾取丢弃的物品
 
 > MISCMNU_RESTARTONDEATH
 ; Disables autoloading save on death
 Restart level on Death
-リスタート時に死亡する
+死亡时重新开始关卡
 
 > GMPLYMNU_PISTOLSTART
 ; Resets inventory on every map
 Pistol Start
-ピストルスタート
+以手枪开局
 
 > CMPTMNU_VOODOOZOMBIES
 Allow creation of zombie players
-ゾンビプレイヤーの生成許可
+允许创建僵尸玩家
 
 > CMPTMNU_FDTELEPORT
 ignore floor z when teleporting
-テレポート時にfloor z値を無視する
+传送时无视地板z值
 
 > OPTVAL_ANAMORPHIC
 ; Hardware Sprite Clipping mode that gives the illusion of a sprite being in a different position than it really is, allowing it to be rendered under the floor despite clipping
 Forced-Perspective
+强制主视角
 
 > SNDMENU_FOOTSTEPVOLUME
 Footstep Volume
+脚步音量
 
 > ID24_GOTINCINERATOR
 You got the incinerator!
+你取得了焚化炉！
 
 > ID24_GOTCALAMITYBLADE
 You got the calamity blade!  Hot damn!
+你得到了灾难之刃！真厉害！
 
 > ID24_GOTFUELCAN
 Picked up a fuel can.
+拾取了一个燃料罐。
 
 > ID24_GOTFUELTANK
 Picked up a fuel tank.
+拾取了一个燃料桶。
 
 > TAG_ID24INCINERATOR
 Incinerator
+焚化炉
 
 > TAG_ID24CALAMITYBLADE
 Calamity Blade
+灾难之刃
 
 > AMMO_ID24FUEL
 Fuel Can
+燃料罐
 
 > AMMO_ID24FUELTANK
 Fuel Tank
-
+燃料桶
