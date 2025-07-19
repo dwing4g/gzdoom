@@ -2,41 +2,41 @@
 
 > TXT_D1E1
 Knee-Deep in the Dead
-膝元迫る亡者
+深陷死域
 
 > TXT_D1E2
 The Shores of Hell
-地獄の瀬戸際
+地狱海岸
 
 > TXT_D1E3
 Inferno
-インフェルノ
+炼狱
 
 > TXT_D1E4
 ; The episode and levels' names in E4 are taken from the Bible.\n\nProverbs 5:11
 Thy Flesh Consumed
-滅びし汝の身
+吞噬汝身
 
 > TXT_D2E1
 Hell On Earth
-第三惑星:地獄
+人间地狱
 
 > TXT_D2E2
 ; References "No rest for the wicked" in Isaiah 48:22
 No Rest for the Living
-休息なき生計
+生者无休
 
 > TXT_PLUT_EP
 The Plutonia Experiment
-プルトニア記
+冥王星实验
 
 > TXT_TNT_EP
 TNT: Evilution
-TNT:邪神化
+TNT：邪恶进化
 
 > TXT_CHEX_EP
 Chex Quest
-チェックス クエスト
+奇克斯任务
 
 ; Level names
 
@@ -44,39 +44,39 @@ Chex Quest
 
 > HUSTR_E1M1
 E1M1: Hangar
-E1M1: 格納庫
+E1M1: 机库
 
 > HUSTR_E1M2
 E1M2: Nuclear Plant
-E1M2: 原子力発電所
+E1M2: 核电站
 
 > HUSTR_E1M3
 E1M3: Toxin Refinery
-E1M3: 毒素精錬所 
+E1M3: 毒素精炼厂
 
 > HUSTR_E1M4
 E1M4: Command Control
-E1M4: 指令管制塔
+E1M4: 指挥控制
 
 > HUSTR_E1M5
 E1M5: Phobos Lab
-E1M5: フォボス研究所
+E1M5: 福伯斯实验室
 
 > HUSTR_E1M6
 E1M6: Central Processing
-E1M6: 中央処理施設
+E1M6: 中央处理区
 
 > HUSTR_E1M7
 E1M7: Computer Station
-E1M7: コンピューターステーション
+E1M7: 计算机站
 
 > HUSTR_E1M8
 E1M8: Phobos Anomaly
-E1M8: フォボス アノマリー
+E1M8: 福伯斯异常区
 
 > HUSTR_E1M9
 E1M9: Military Base
-E1M9: 軍事基地
+E1M9: 军事基地
 
 > HUSTR_E1M10
 E1M10: Sewers
@@ -84,68 +84,68 @@ E1M10: 下水道
 
 > HUSTR_E2M1
 E2M1: Deimos Anomaly
-E2M1: 異常なるダイモス
+E2M1: 迪莫斯异常区
 
 > HUSTR_E2M2
 E2M2: Containment Area
-E2M2: 収容エリア
+E2M2: 抑制区
 
 > HUSTR_E2M3
 E2M3: Refinery
-E2M3: 精製所
+E2M3: 精炼厂
 
 > HUSTR_E2M4
 E2M4: Deimos Lab
-E2M4: ダイモス研究所
+E2M4: 迪莫斯实验室
 
 > HUSTR_E2M5
 E2M5: Command Center
-E2M5: 指令本部
+E2M5: 指挥中心
 
 > HUSTR_E2M6
 E2M6: Halls of the Damned
-E2M6: ダムドの会堂
+E2M6: 恶灵殿堂
 
 > HUSTR_E2M7
 E2M7: Spawning Vats
-E2M7: 産卵桶
+E2M7: 孵化桶
 
 > HUSTR_E2M8
 E2M8: Tower of Babel
-E2M8: バベルの塔
+E2M8: 巴别塔
 
 > HUSTR_E2M9
 E2M9: Fortress of Mystery
-E2M9: 神秘の要塞
+E2M9: 神秘堡垒
 
 > HUSTR_E3M1
 E3M1: Hell Keep
-E3M1: 牢獄
+E3M1: 地狱要塞
 
 > HUSTR_E3M2
 E3M2: Slough of Despair
-E3M2: 絶望の大地
+E3M2: 绝望泥潭
 
 > HUSTR_E3M3
 E3M3: Pandemonium
-E3M3: 伏魔殿
+E3M3: 骚动
 
 > HUSTR_E3M4
 E3M4: House of Pain
-E3M4: 苦痛の館
+E3M4: 痛苦之屋
 
 > HUSTR_E3M5
 E3M5: Unholy Cathedral
-E3M5: 邪教の大聖堂
+E3M5: 邪恶大教堂
 
 > HUSTR_E3M6
 ; Volcano in Antarctica
 E3M6: Mt. Erebus
-E3M6: エレボス山
+E3M6: 埃里伯斯山
 
 > HUSTR_E3M7
 E3M7: Limbo
-E3M7: 忘却の地
+E3M7: 境地
 
 > HUSTR_E3M8
 ; Based on the City of Dis, located on the sixth circle of Hell, according to Dante Alighieri's The Divine Comedy
@@ -154,51 +154,51 @@ E3M8: 死
 
 > HUSTR_E3M9
 E3M9: Warrens
-E3M9: 兎小屋
+E3M9: 兔子窝
 
 > HUSTR_E4M1
 ; Proverbs 15:24
 E4M1: Hell Beneath
-E4M1: 地獄の下へ
+E4M1: 地狱之下
 
 > HUSTR_E4M2
 ; Psalm 139:22
 E4M2: Perfect Hatred
-E4M2: 完全なる憎悪
+E4M2: 完美憎恨
 
 > HUSTR_E4M3
 ; Matthew 13:49
 E4M3: Sever The Wicked
-E4M3: 邪悪を絶つ
+E4M3: 斩断恶人
 
 > HUSTR_E4M4
 ; James 3:8
 E4M4: Unruly Evil
-E4M4: 手に負えない邪悪
+E4M4: 桀骜邪恶
 
 > HUSTR_E4M5
 ; Luke 16:30
 E4M5: They Will Repent
-E4M5: 奴等に後悔を
+E4M5: 他们将忏悔
 
 > HUSTR_E4M6
 ; Psalm 139:20
 E4M6: Against Thee Wickedly
-E4M6: 汝への悪逆
+E4M6: 以恶制恶
 
 > HUSTR_E4M7
 ; Revelation 6:8
 E4M7: And Hell Followed
-E4M7: そして地獄は従った
+E4M7: 地狱随行
 
 > HUSTR_E4M8
 ; Proverbs 5:9
 E4M8: Unto The Cruel
-E4M8: 容赦なき者へ
+E4M8: 直面残暴
 
 > HUSTR_E4M9
 E4M9: Fear
-E4M9: 恐怖
+E4M9: 恐惧
 
 ; Doom 2
 
@@ -209,61 +209,61 @@ Level 1: 入口
 
 > HUSTR_2
 Level 2: Underhalls
-Level 2: 地下堂
+Level 2: 地下大厅
 
 > HUSTR_3
 ; “a form of punishment in which a person is forced to run between two lines of men facing each other and armed with clubs or whips to beat the victim”
 Level 3: The Gantlet
-Level 3: ガントレット
+Level 3: 严酷考验
 
 > HUSTR_4
 Level 4: The Focus
-Level 4: フォーカス
+Level 4: 焦点
 
 > HUSTR_5
 Level 5: The Waste Tunnels
-Level 5: 廃棄トンネル
+Level 5: 废料隧道
 
 > HUSTR_6
 Level 6: The Crusher
-Level 6: クラッシャー
+Level 6: 粉碎机
 
 > HUSTR_7
 Level 7: Dead Simple
-Level 7: 死ぬほど単純
+Level 7: 简单粗暴
 
 > HUSTR_8
 Level 8: Tricks and Traps
-Level 8: 悪戯と罠
+Level 8: 机关陷阱
 
 > HUSTR_9
 Level 9: The Pit
-Level 9: 大穴
+Level 9: 深坑
 
 > HUSTR_10
 Level 10: Refueling Base
-Level 10: 補給基地
+Level 10: 补给基地
 
 > HUSTR_11
-; Alternative title:\nCircle of Death 
+; Alternative title:\nCircle of Death
 Level 11: 'O' of Destruction!
-Level 11: 破滅の'O'!
+Level 11: 毁灭之环！
 
 > HUSTR_12
 Level 12: The Factory
-Level 12: 工場
+Level 12: 工厂
 
 > HUSTR_13
 Level 13: Downtown
-Level 13: 市内
+Level 13: 市中心
 
 > HUSTR_14
 Level 14: The Inmost Dens
-Level 14: 最深巣窟
+Level 14: 深处巢穴
 
 > HUSTR_15
 Level 15: Industrial Zone
-Level 15: 工業地帯
+Level 15: 工业地带
 
 > HUSTR_16
 Level 16: Suburbs
@@ -271,19 +271,19 @@ Level 16: 郊外
 
 > HUSTR_17
 Level 17: Tenements
-Level 17: 安アパート
+Level 17: 贫民窟
 
 > HUSTR_18
 Level 18: The Courtyard
-Level 18: 中庭
+Level 18: 庭院
 
 > HUSTR_19
 Level 19: The Citadel
-Level 19: 要塞
+Level 19: 城堡
 
 > HUSTR_20
 Level 20: Gotcha!
-Level 20: 捉らえた!
+Level 20: 逮住了!
 
 > HUSTR_21
 Level 21: Nirvana
@@ -291,47 +291,47 @@ Level 21: 涅槃
 
 > HUSTR_22
 Level 22: The Catacombs
-Level 22: 地下悪霊墓所
+Level 22: 地下墓穴
 
 > HUSTR_23
 Level 23: Barrels O' Fun
-Level 23: 戯れのバレル
+Level 23: 桶中作乐
 
 > HUSTR_24
 Level 24: The Chasm
-Level 24: 裂け目
+Level 24: 裂缝
 
 > HUSTR_25
 Level 25: Bloodfalls
-Level 25: 血の滝
+Level 25: 血瀑
 
 > HUSTR_26
 Level 26: The Abandoned Mines
-Level 26: 廃鉱山
+Level 26: 废弃矿山
 
 > HUSTR_27
 Level 27: Monster Condo
-Level 27: モンスターマンション
+Level 27: 怪物公寓
 
 > HUSTR_28
 Level 28: The Spirit World
-Level 28: 悪霊の世界
+Level 28: 恶灵世界
 
 > HUSTR_29
 Level 29: The Living End
-Level 29: 極限の存在
+Level 29: 生命尽头
 
 > HUSTR_30
 Level 30: Icon of Sin
-Level 30: 罪の聖像
+Level 30: 罪恶圣像
 
 > HUSTR_31
 Level 31: Wolfenstein
-Level 31: ウルフェンシュタイン
+Level 31: 德军总部
 
 > HUSTR_32
 Level 32: Grosse
-Level 32: グローシュ
+Level 32: 格罗斯
 
 > HUSTR_31B
 Level 31: IDKFA
@@ -339,11 +339,11 @@ Level 31: IDKFA
 
 > HUSTR_32B
 Level 32: Keen
-Level 32: キーン
+Level 32: 基恩
 
 > HUSTR_33
 Level 33: Betray
-Level 33: 裏切り
+Level 33: 背叛
 
 ; No Rest For The Living
 
@@ -353,93 +353,93 @@ Level 1: 地球基地
 
 > NHUSTR_2
 Level 2: The Pain Labs
-Level 2: 生物工学実験室
+Level 2: 痛苦实验
 
 > NHUSTR_3
 Level 3: Canyon of The Dead
-Level 3: 死の渓谷
+Level 3: 死亡峡谷
 
 > NHUSTR_4
 Level 4: Hell Mountain
-Level 4: 地獄山脈
+Level 4: 地狱山脉
 
 > NHUSTR_5
 Level 5: Vivisection
-Level 5: 生体解剖
+Level 5: 活体解剖
 
 > NHUSTR_6
 Level 6: Inferno of Blood
-Level 6: 血のインフェルノ
+Level 6: 血之炼狱
 
 > NHUSTR_7
 Level 7: Baron's Banquet
-Level 7: バロンの晩餐
+Level 7: 男爵盛宴
 
 > NHUSTR_8
 Level 8: Tomb of Malevolence
-Level 8: 悪意の墓
+Level 8: 恶意之墓
 
 > NHUSTR_9
 Level 9: March of The Demons
-Level 9: デーモンの行進
+Level 9: 恶魔行军
 
 ; Plutonia
 
 > PHUSTR_1
 Level 1: Congo
-Level 1: コンゴ川
+Level 1: 刚果
 
 > PHUSTR_2
 Level 2: Well of Souls
-Level 2: 魂の井戸
+Level 2: 灵魂之井
 
 > PHUSTR_3
 Level 3: Aztec
-Level 3: アステカ
+Level 3: 阿兹特克
 
 > PHUSTR_4
 Level 4: Caged
-Level 4: 檻の中
+Level 4: 囚笼
 
 > PHUSTR_5
 Level 5: Ghost Town
-Level 5: ゴーストタウン
+Level 5: 鬼镇
 
 > PHUSTR_6
 Level 6: Baron's Lair
-Level 6: バロンの隠れ家
+Level 6: 男爵巢穴
 
 > PHUSTR_7
 Level 7: Caughtyard
-Level 7: 囚われの庭
+Level 7: 陷阱场
 
 > PHUSTR_8
 Level 8: Realm
-Level 8: 領地
+Level 8: 领地
 
 > PHUSTR_9
 Level 9: Abattoire
-Level 9: 屠殺場
+Level 9: 屠宰场
 
 > PHUSTR_10
 Level 10: Onslaught
-Level 10: 猛襲
+Level 10: 猛攻
 
 > PHUSTR_11
 Level 11: Hunted
-Level 11: 逃走
+Level 11: 追捕
 
 > PHUSTR_12
 Level 12: Speed
-Level 12: スピード
+Level 12: 速度
 
 > PHUSTR_13
 Level 13: The Crypt
-Level 13: 地下聖堂
+Level 13: 地穴
 
 > PHUSTR_14
 Level 14: Genesis
-Level 14: 創世記
+Level 14: 创世
 
 > PHUSTR_15
 Level 15: The Twilight
@@ -447,52 +447,52 @@ Level 15: 黄昏
 
 > PHUSTR_16
 Level 16: The Omen
-Level 16: 予兆
+Level 16: 预兆
 
 > PHUSTR_17
 Level 17: Compound
-Level 17: 調合
+Level 17: 围地
 
 > PHUSTR_18
 Level 18: Neurosphere
-Level 18: ニューロスフィア
+Level 18: 神经球
 
 > PHUSTR_19
 ; “NME” read out loud means “enemy”, so translators should consider the translation of “enemy” into their language.
 Level 19: NME
-Level 19: 野郎
+Level 19: 敌
 
 > PHUSTR_20
 Level 20: The Death Domain
-Level 20: 死の領域
+Level 20: 死亡领域
 
 > PHUSTR_21
 Level 21: Slayer
-Level 21: スレイヤー
+Level 21: 杀戮者
 
 > PHUSTR_22
 Level 22: Impossible Mission
-Level 22: 不可能な任務
+Level 22: 不可能的任务
 
 > PHUSTR_23
 Level 23: Tombstone
-Level 23: 墓石
+Level 23: 墓碑
 
 > PHUSTR_24
 Level 24: The Final Frontier
-Level 24: 最後のフロンティア
+Level 24: 最后的边境
 
 > PHUSTR_25
 Level 25: The Temple of Darkness
-Level 25: 暗黒の神殿
+Level 25: 黑暗神庙
 
 > PHUSTR_26
 Level 26: Bunker
-Level 26: バンカー
+Level 26: 掩体
 
 > PHUSTR_27
 Level 27: Anti-christ
-Level 27: アンチキリスト
+Level 27: 反基督
 
 > PHUSTR_28
 Level 28: The Sewers
@@ -500,316 +500,316 @@ Level 28: 下水道
 
 > PHUSTR_29
 Level 29: Odyssey of Noises
-Level 29: オデッセイのノイズ
+Level 29: 噪音奥德赛
 
 > PHUSTR_30
 Level 30: The Gateway of Hell
-Level 30: 地獄の関門
+Level 30: 地狱之门
 
 > PHUSTR_31
 Level 31: Cyberden
-Level 31: サイバーの巣
+Level 31: 赛博巢穴
 
 > PHUSTR_32
 Level 32: Go 2 It
-Level 32: 逝ってこい
+Level 32: 放手一搏
 
 ; TNT: Evilution
 
 > THUSTR_1
 Level 1: System Control
-Level 1: 制御システム
+Level 1: 系统控制
 
 > THUSTR_2
 Level 2: Human BBQ
-Level 2: 人肉晩餐会
+Level 2: 人类烧烤
 
 > THUSTR_3
 Level 3: Power Control
-Level 3: 制御室
+Level 3: 能量控制
 
 > THUSTR_4
 Level 4: Wormhole
-Level 4: 虫喰い穴
+Level 4: 虫洞
 
 > THUSTR_5
 ; Not "Hangar"
 Level 5: Hanger
-Level 5: 格納庫
+Level 5: 挂钩
 
 > THUSTR_6
 Level 6: Open Season
-Level 6: 狩猟解禁
+Level 6: 开放狩猎
 
 > THUSTR_7
 Level 7: Prison
-Level 7: 監獄
+Level 7: 监狱
 
 > THUSTR_8
 Level 8: Metal
-Level 8: メタル
+Level 8: 金属
 
 > THUSTR_9
 Level 9: Stronghold
-Level 9: 牙城
+Level 9: 要塞
 
 > THUSTR_10
 Level 10: Redemption
-Level 10: 償還
+Level 10: 救赎
 
 > THUSTR_11
 Level 11: Storage Facility
-Level 11: 貯蔵施設
+Level 11: 储存设施
 
 > THUSTR_12
 Level 12: Crater
-Level 12: 火口
+Level 12: 火山口
 
 > THUSTR_13
 Level 13: Nukage Processing
-Level 13: 核廃棄物加工所
+Level 13: 核辐射处理区
 
 > THUSTR_14
 Level 14: Steel Works
-Level 14: 製鉄所
+Level 14: 钢铁厂
 
 > THUSTR_15
 Level 15: Dead Zone
-Level 15: 危険地帯
+Level 15: 死亡地带
 
 > THUSTR_16
 Level 16: Deepest Reaches
-Level 16: 最深部
+Level 16: 最深处
 
 > THUSTR_17
 Level 17: Processing Area
-Level 17: 処理地帯
+Level 17: 加工区
 
 > THUSTR_18
 Level 18: Mill
-Level 18: 製粉所
+Level 18: 磨坊
 
 > THUSTR_19
 Level 19: Shipping/respawning
-Level 19: 出荷と再生成
+Level 19: 运输/重生
 
 > THUSTR_20
 Level 20: Central Processing
-Level 20: 中央処理所
+Level 20: 中央处理区
 
 > THUSTR_21
 Level 21: Administration Center
-Level 21: 行政センター
+Level 21: 行政中心
 
 > THUSTR_22
 Level 22: Habitat
-Level 22: 生息地
+Level 22: 栖息地
 
 > THUSTR_23
 Level 23: Lunar Mining Project
-Level 23: 月面探鉱計画
+Level 23: 月球采矿工程
 
 > THUSTR_24
 Level 24: Quarry
-Level 24: 採石場
+Level 24: 采石场
 
 > THUSTR_25
 Level 25: Baron's Den
-Level 25: バロンの巣窟
+Level 25: 男爵的巢穴
 
 > THUSTR_26
 Level 26: Ballistyx
-Level 26: バリステュクス
+Level 26: 弹幕
 
 > THUSTR_27
 Level 27: Mount Pain
-Level 27: 苦しみの山
+Level 27: 痛苦山
 
 > THUSTR_28
 Level 28: Heck
-Level 28: 苛立ち
+Level 28: 冥界
 
 > THUSTR_29
 Level 29: River Styx
-Level 29: 三途の川
+Level 29: 冥河
 
 > THUSTR_30
 Level 30: Last Call
-Level 30: 最終指令
+Level 30: 最后通牒
 
 > THUSTR_31
 Level 31: Pharaoh
-Level 31: ファラオ
+Level 31: 法老
 
 > THUSTR_32
 Level 32: Caribbean
-Level 32: カリビアン
+Level 32: 加勒比
 
 ; Heretic
 
 > HHUSTR_E1M1
 The Docks
-埠頭
+码头
 
 > HHUSTR_E1M2
 The Dungeons
-地下牢
+地牢
 
 > HHUSTR_E1M3
 The Gatehouse
-門塔
+门房
 
 > HHUSTR_E1M4
 The Guard Tower
-監視塔
+守卫塔
 
 > HHUSTR_E1M5
 The Citadel
-要塞
+城堡
 
 > HHUSTR_E1M6
 The Cathedral
-大聖堂
+大教堂
 
 > HHUSTR_E1M7
 The Crypts
-地下聖堂
+地穴
 
 > HHUSTR_E1M8
 Hell's Maw
-地獄の肚
+地狱深渊
 
 > HHUSTR_E1M9
 The Graveyard
-墓場
+墓地
 
 > HHUSTR_E2M1
 The Crater
-噴火口
+火山口
 
 > HHUSTR_E2M2
 The Lava Pits
-溶岩の竪穴
+熔岩坑
 
 > HHUSTR_E2M3
 The River of Fire
-火の河
+火焰河
 
 > HHUSTR_E2M4
 The Ice Grotto
-氷の洞窟
+冰窟
 
 > HHUSTR_E2M5
 The Catacombs
-地下墓所
+地下墓穴
 
 > HHUSTR_E2M6
 The Labyrinth
-迷宮
+迷宫
 
 > HHUSTR_E2M7
 The Great Hall
-大公会堂
+大厅
 
 > HHUSTR_E2M8
 The Portals of Chaos
-混沌への門
+混沌之门
 
 > HHUSTR_E2M9
 The Glacier
-氷河
+冰川
 
 > HHUSTR_E3M1
 The Storehouse
-倉庫
+仓库
 
 > HHUSTR_E3M2
 The Cesspool
-汚水層
+污水池
 
 > HHUSTR_E3M3
 The Confluence
-合流点
+汇流处
 
 > HHUSTR_E3M4
 The Azure Fortress
-紺碧の要塞
+蔚蓝堡垒
 
 > HHUSTR_E3M5
 The Ophidian Lair
-オフィディアンの塒
+蛇妖巢穴
 
 > HHUSTR_E3M6
 The Halls of Fear
-恐怖の館
+恐惧之厅
 
 > HHUSTR_E3M7
 The Chasm
-裂け目
+裂缝
 
 > HHUSTR_E3M8
 D'Sparil's Keep
-デ’スパリルの間
+迪萨魔的要塞
 
 > HHUSTR_E3M9
 The Aquifer
-帯水層
+蓄水层
 
 > HHUSTR_E4M1
 Catafalque
-棺台
+灵柩台
 
 > HHUSTR_E4M2
 Blockhouse
-丸太小屋
+碉堡
 
 > HHUSTR_E4M3
 Ambulatory
-遊歩道
+回廊
 
 > HHUSTR_E4M4
 Sepulcher
-埋葬所
+墓室
 
 > HHUSTR_E4M5
 Great Stair
-大階段
+大阶梯
 
 > HHUSTR_E4M6
 Halls of the Apostate
-背教者の館
+叛教者之厅
 
 > HHUSTR_E4M7
 Ramparts of Perdition
-破滅の塁壁
+堕落壁垒
 
 > HHUSTR_E4M8
 Shattered Bridge
-崩落の橋
+断桥
 
 > HHUSTR_E4M9
 Mausoleum
-霊廟
+陵墓
 
 > HHUSTR_E5M1
 Ochre Cliffs
-黄土絶壁
+赭色悬崖
 
 > HHUSTR_E5M2
 Rapids
-奔流
+急流
 
 > HHUSTR_E5M3
 Quay
-岸壁
+港口
 
 > HHUSTR_E5M4
 Courtyard
-中庭
+庭院
 
 > HHUSTR_E5M5
 Hydratyr
-ヒュドラテュール
+水牢
 
 > HHUSTR_E5M6
 Colonnade
@@ -817,304 +817,301 @@ Colonnade
 
 > HHUSTR_E5M7
 Foetid Manse
-悪臭の牧師館
+恶臭宅邸
 
 > HHUSTR_E5M8
 Field of Judgement
-審判之地
+审判场
 
 > HHUSTR_E5M9
 Skein of D'sparil
-デ'スパリルの枷
+迪萨魔之乱
 
 ; Strife
 
 > TXT_STRIFE_MAP01
 AREA 1: Sanctuary
-エリア 1: 聖域
+区域1：圣所
 
 > TXT_STRIFE_MAP02
 AREA 2: Town
-"""エリア 2: 町
-"""
+区域2：城镇
 
 > TXT_STRIFE_MAP03
 AREA 3: Front Base
-エリア 3: フロント基地
+区域3：前线基地
 
 > TXT_STRIFE_MAP04
 AREA 4: Power Station
-エリア 4: 発電所
+区域4：发电站
 
 > TXT_STRIFE_MAP05
 AREA 5: Prison
-エリア 5: 刑務所
+区域5：监狱
 
 > TXT_STRIFE_MAP06
 AREA 6: Sewers
-エリア 6: 下水道
+区域6：下水道
 
 > TXT_STRIFE_MAP07
 AREA 7: Castle
-エリア 7: 城
+区域7：城堡
 
 > TXT_STRIFE_MAP08
 AREA 8: Audience Chamber
-エリア 8: 観客席
+区域8：会客厅
 
 > TXT_STRIFE_MAP09
 AREA 9: Castle: Programmer's Keep
-エリア 9: 城内:プログラマーの間
+区域9：城堡：程序员的居所
 
 > TXT_STRIFE_MAP10
 AREA 10: New Front Base
-エリア 10: 新フロント基地
+区域10：新前线基地
 
 > TXT_STRIFE_MAP11
 AREA 11: Borderlands
-エリア 11: 国境地帯
+区域11：边境地带
 
 > TXT_STRIFE_MAP12
 AREA 12: The Temple of the Oracle
-エリア 12: オラクルの神殿
+区域12：神谕神庙
 
 > TXT_STRIFE_MAP13
 AREA 13: Catacombs
-エリア 13: 地下墓所
+区域13：地下墓穴
 
 > TXT_STRIFE_MAP14
 AREA 14: Mines
-エリア 14: 鉱山
+区域14：矿山
 
 > TXT_STRIFE_MAP15
 AREA 15: Fortress: Administration
-エリア 15: 要塞:管理室
+区域15：堡垒：行政区
 
 > TXT_STRIFE_MAP16
 AREA 16: Fortress: Bishop's Tower
-エリア 16: 要塞:ビショップの塔
+区域16：堡垒：主教塔
 
 > TXT_STRIFE_MAP17
 AREA 17: Fortress: The Bailey
-エリア 17: 要塞:ベイリー
+区域17：堡垒：内堡
 
 > TXT_STRIFE_MAP18
 AREA 18: Fortress: Stores
-エリア 18: 要塞:商店
+区域18：堡垒：商店
 
 > TXT_STRIFE_MAP19
 AREA 19: Fortress: Security Complex
-エリア 19: 要塞:複合警備所
+区域19：堡垒：安全基地
 
 > TXT_STRIFE_MAP20
 AREA 20: Factory: Receiving
-"""エリア 20: 工場:受取所
-"""
+区域20：工厂：接收区
 
 > TXT_STRIFE_MAP21
 AREA 21: Factory: Manufacturing
-エリア 21: 工場:製造機関
+区域21：工厂：制造区
 
 > TXT_STRIFE_MAP22
 AREA 22: Factory: Forge
-エリア 22: 工場:鉄工所
+区域22：工厂：锻造区
 
 > TXT_STRIFE_MAP23
 AREA 23: Order Commons
-エリア 23: オーダーコモンズ
+区域23：社团公共区
 
 > TXT_STRIFE_MAP24
 AREA 24: Factory: Conversion Chapel
-エリア 24: 工場:改宗礼拝堂
+区域24：工厂：改造教堂
 
 > TXT_STRIFE_MAP25
 AREA 25: Catacombs: Ruined Temple
-エリア 25: 地下墓所:没落した寺院
+区域25：地下墓穴：废墟神庙
 
 > TXT_STRIFE_MAP26
 AREA 26: Proving Grounds
-エリア 26: 試練場
+区域26：训练场
 
 > TXT_STRIFE_MAP27
 AREA 27: The Lab
-エリア 27: 研究所
+区域27：实验室
 
 > TXT_STRIFE_MAP28
 AREA 28: Alien Ship
-エリア 28: エイリアンの船
+区域28：外星飞船
 
 > TXT_STRIFE_MAP29
 AREA 29: Entity's Lair
-エリア 29: エンティティの隠れ家
+区域29：实体巢穴
 
 > TXT_STRIFE_MAP30
 AREA 30: Abandoned Front Base
-エリア 30: 放棄された基地
+区域30：废弃前线基地
 
 > TXT_STRIFE_MAP31
 AREA 31: Training Facility
-エリア 31: 研修施設
+区域31：训练设施
 
 > TXT_STRIFE_MAP32
 AREA 1: Sanctuary
-エリア 1: 聖域 
+区域1：圣所
 
 > TXT_STRIFE_MAP33
 AREA 2: Town
-エリア 2: 町
+区域2：城镇
 
 > TXT_STRIFE_MAP34
 AREA 3: Movement Base
-エリア 3: 移転基地
+区域3：移动基地
 
 > TXT_STRIFE_MAP35
 AREA 35: Factory: Production
-エリア 35: 工場 : 生産ライン
+区域35：工厂：生产区
 
 > TXT_STRIFE_MAP36
 AREA 36: Castle Clash
-エリア 36: キャッスルクラッシュ
+区域36：城堡冲突
 
 > TXT_STRIFE_MAP37
 AREA 37: Killing Grounds
-エリア 37: 殺害者の地
+区域37：杀戮场
 
 > TXT_STRIFE_MAP38
 AREA 38: Ordered Chaos
-エリア 38: カオスの秩序
+区域38：有序的混沌
 
 ; Hexen
 
 > TXT_HEXEN_MAP01
 Winnowing Hall
-選抜の間
+风选大厅
 
 > TXT_HEXEN_MAP02
 Seven Portals
-漆之門
+七大传送门
 
 > TXT_HEXEN_MAP03
 Guardian of Ice
-氷の守護者
+冰之守护者
 
 > TXT_HEXEN_MAP04
 Guardian of Fire
-炎の守護者
+火之守护者
 
 > TXT_HEXEN_MAP05
 Guardian of Steel
-鋼の守護者
+钢之守护者
 
 > TXT_HEXEN_MAP06
 Bright Crucible
-光の坩堝
+光明熔炉
 
 > TXT_HEXEN_MAP13
 Shadow Wood
-陰影樹
+暗影森林
 
 > TXT_HEXEN_MAP08
 Darkmere
-暗黒の地
+暗渊
 
 > TXT_HEXEN_MAP09
 Caves of Circe
-キルケーの洞窟
+西瑞斯洞穴
 
 > TXT_HEXEN_MAP10
 Wastelands
-荒野
+荒原
 
 > TXT_HEXEN_MAP11
 Sacred Grove
-神聖なる園
+圣林
 
 > TXT_HEXEN_MAP12
 Hypostyle
-多柱の間
+柱廊
 
 > TXT_HEXEN_MAP27
 Heresiarch's Seminary
-ヘレシアークの神学舎
+异端神学院
 
 > TXT_HEXEN_MAP28
 Dragon Chapel
-ドラゴンの庵寺
+龙之教堂
 
 > TXT_HEXEN_MAP30
 Griffin Chapel
-グリフィンの庵寺
+狮鹫教堂
 
 > TXT_HEXEN_MAP31
 Deathwind Chapel
-デスウィンドの庵寺
+死风教堂
 
 > TXT_HEXEN_MAP32
 Orchard of Lamentations
-哀悼茂る園
+哀歌果园
 
 > TXT_HEXEN_MAP33
 Silent Refectory
-寡黙なる食堂
+静默食堂
 
 > TXT_HEXEN_MAP34
 Wolf Chapel
-狼の庵寺
+狼之教堂
 
 > TXT_HEXEN_MAP21
 Forsaken Outpost
-荒れ果てた前哨地
+遗弃前哨
 
 > TXT_HEXEN_MAP22
 Castle of Grief
-嘆きの城
+哀伤城堡
 
 > TXT_HEXEN_MAP23
 Gibbet
-晒し台
+绞刑架
 
 > TXT_HEXEN_MAP24
 Effluvium
-腐臭漂う残骸
+恶臭
 
 > TXT_HEXEN_MAP25
 Dungeons
-地下牢
+地牢
 
 > TXT_HEXEN_MAP26
 Desolate Garden
-荒涼とした庭
+荒芜花园
 
 > TXT_HEXEN_MAP35
 Necropolis
-ネクロポリス
+墓场
 
 > TXT_HEXEN_MAP36
 Zedek's Tomb
-ゼデクの墓
+泽德克之墓
 
 > TXT_HEXEN_MAP37
 Menelkir's Tomb
-メネルキルの墓
+梅内尔基尔之墓
 
 > TXT_HEXEN_MAP38
 Traductus' Tomb
-トダクティスの墓
+特拉杜克图斯之墓
 
 > TXT_HEXEN_MAP39
 Vivarium
-ビバリウム
+饲养场
 
 > TXT_HEXEN_MAP40
 Dark Crucible
-"""暗黒の坩堝
-"""
+黑暗熔炉
 
 ; Hexen Deathkings
 
 > TXT_HEXDD_MAP41
 Ruined Village
-廃村
+废墟村落
 
 > TXT_HEXDD_MAP42
 Blight
@@ -1122,99 +1119,99 @@ Blight
 
 > TXT_HEXDD_MAP43
 Sump
-汚水槽
+污水坑
 
 > TXT_HEXDD_MAP44
 Catacomb
-カタコンベ
+地下墓穴
 
 > TXT_HEXDD_MAP45
 Badlands
-不毛地帯
+荒地
 
 > TXT_HEXDD_MAP46
 Brackenwood
-ワラビの樹
+蕨木林
 
 > TXT_HEXDD_MAP47
 Pyre
-火葬薪
+火葬场
 
 > TXT_HEXDD_MAP48
 Constable's Gate
-城守達の門
+警卫之门
 
 > TXT_HEXDD_MAP49
 Treasury
-宝庫
+宝库
 
 > TXT_HEXDD_MAP50
 Market Place
-市場
+集市
 
 > TXT_HEXDD_MAP51
 Locus Requiescat
-祈祷師の軌跡
+安息之地
 
 > TXT_HEXDD_MAP52
 Ordeal
-試練
+试炼
 
 > TXT_HEXDD_MAP53
 Armory
-武器庫
+武器库
 
 > TXT_HEXDD_MAP54
 Nave
-身廊
+中殿
 
 > TXT_HEXDD_MAP55
 Chantry
-小礼拝堂
+圣堂
 
 > TXT_HEXDD_MAP56
 Abattoir
-屠殺場
+屠宰场
 
 > TXT_HEXDD_MAP57
 Dark Watch
-闇の刻計
+暗哨
 
 > TXT_HEXDD_MAP58
 Cloaca
-排泄腔
+阴沟
 
 > TXT_HEXDD_MAP59
 Ice Hold
-氷結
+冰堡
 
 > TXT_HEXDD_MAP60
 Dark Citadel
-暗黒の城塞
+黑暗城堡
 
 > TXT_HEXDD_MAP33
 Transit
-変遷
+中途
 
 > TXT_HEXDD_MAP34
 Over'n Under
-天と地
+天与地
 
 > TXT_HEXDD_MAP35
 Deathfog
-死の霧
+死雾
 
 > TXT_HEXDD_MAP36
 Castle of Pain
-苦しみの城
+痛苦城堡
 
 > TXT_HEXDD_MAP37
 Sewer Pit
-地下溝穴
+下水道坑
 
 > TXT_HEXDD_MAP38
 The Rose
-薔薇
+玫瑰
 
 ; Intermission texts
 
@@ -1236,17 +1233,19 @@ To continue the DOOM experience, play
 The Shores of Hell and its amazing
 sequel, Inferno!
 """
-"""火星基地から巨悪をこの手で一掃し
-勝利を収めたはずだ。だがこれはいったい何だ?
-巨額の報酬と帰還チケットは? 
-ふざけやがって、決着はまだついていない!
+"""一旦你打败那些大坏蛋，清理完月球基地，
+你就该赢了，不是吗？不是吗？
+你的丰厚奖赏和回家的票呢？
+这到底是怎么回事？不该这样结束的！
 
-どうやら地獄の泥沼に膝まで浸かってしまい、
-そのまま沈むしかないようだ。
-肉の腐敗臭がする、滅んだダイモス基地に。
+这里臭气熏天，像腐肉一样，
+但看起来像是失落的火卫一基地。
+看来你被困在地狱海岸了。
+唯一的出路就是向前冲。
 
-この運命を受け入れ、地獄の瀬戸際か
-或いは脅威なる インフェルノ へ立ち向かえ!
+要继续《DOOM》的体验，
+就玩《地狱海岸》
+及其精彩的续作《炼狱》！
 """
 
 > E2TEXT
@@ -1268,19 +1267,18 @@ Hell.
 
 Now, it's on to the final chapter of
 DOOM! -- Inferno."""
-"""よくやった! 滅んだダイモス基地を支配していた
-サイバーデーモンはナマクラの鉄屑と化した! 
-だが...ここは一体何処だ?
-外壁の縁をよじ登りその鉄屑にも劣る現実に直面にした。
+"""你成功了！统治着失落的迪莫斯月球
+基地的丑恶机械巨魔领主已被消灭，
+你取得了胜利！但是……你在哪里？
+你爬到月球边缘向下望去，看到了可怕的真相。
 
-ダイモスの大地が地獄に浮いている!
-しかもその眼下では奴等がまだ蠢いてやがる。
+迪莫斯竟漂浮在地狱之上！
+你从未听说过有人能从地狱逃脱，
+但你会让那些混蛋后悔认识你！
+你迅速用绳索滑降到地狱表面。
 
-誰の手も借りず地獄から逃げ出せた人間の話を
-聞いたことも無いが、誰がここへ来たか奴等に思い知らせ、
-後悔させる為にも今すぐ インフェルノ へ降り立て!
-
-"""
+现在，是时候开启《DOOM》的
+最终篇章——《炼狱》了。"""
 
 > E3TEXT
 ; Doom Ep.3
@@ -1301,19 +1299,19 @@ Earth while you were battling evil
 unleashed. It's good that no Hell-
 spawn could have come through that
 door with you ..."""
-"""火星基地の侵略を企て多くの死をもたらした
-忌々しいスパイダーマスターマインドは、
-その権威と共に地に伏した。
+"""那个策划了月球基地入侵并造成无数
+死亡的可恶蜘蛛恶魔已被永远击败。
 
-この屈強さには地獄さえ抗えず死者のように平伏し、
-封鎖されていた地獄の門を正面からくぐり抜けた! 
-まだ緑の豊かさが残っている地球の故郷に遂に辿り着いたのだ。
+一道隐藏的门打开了，你走了进去。
+你证明了自己强大到地狱都无法再将你囚禁，
+现在地狱终于公平行事——
+因为你从门里出来，
+看到了地球那片绿色的田野！终于回家了。
 
-君は魔物共と戦っている間、地球では何が起こったかを
-不思議に思った。地獄からの使者が同じ門をくぐれなかったのは
-幸運なのかもしれない...
-
-"""
+你好奇在你与邪恶势力战斗期间
+地球上发生了什么。
+好在没有地狱的恶魔
+能和你一起从那扇门出来……"""
 
 > E4TEXT
 ; Doom Ep.4
@@ -1333,18 +1331,18 @@ potential pain and gibbitude as a nation
 of demons run amok among our cities.
 
 Next stop, Hell on Earth!"""
-"""スパイダーマスターマインドは恐るべき地獄の軍勢を君との決着の前から
-地球に送り込んでいたに違いない。それでも君は突き進み、
-真の英雄として邪悪な獣たちに永遠の天罰と苦痛を下した。
+"""蜘蛛首脑肯定在你与那来自地狱的可怕野兽的
+最终对决之前就已派出大批地狱恶灵。
+但你挺身而出，像真正的英雄那样，
+给这群恶魔带来了永恒的诅咒和折磨。
 
-それに君のペットのウサギ、デイジーの死の代償は奴等に
-払わせなければいけない。
+而且，总得有人为黛西——
+你的宠物兔子——所遭受的一切付出代价。
 
-仇は取った。しかし今、見渡す限り我々の街は血溜まりと化し
-肉片が撒き散らされ、苦痛をもたらす悪魔が
-さらなる血に狂いひしめいている。
+但现在，你面前展现的是更多的痛苦和残杀，
+恶魔大军在我们的城市中肆虐横行。
 
-次の戦いは「第三惑星 地獄」だ!"""
+下一站，《人间地狱》！"""
 
 > C1TEXT
 ; Doom2 after MAP06
@@ -1360,14 +1358,13 @@ You can penetrate into the haunted heart
 of the starbase and find the controlling
 switch which holds earth's population
 hostage."""
-"""怪物共に蝕まれた宇宙港に足を踏み入れる。だが何かがおかしい。
-奴等の世界から影響を及ぼしてこの地を変異させ宇宙港の機能を
-妨害しているのだ。
+"""你已深入被怪物侵扰的星际港。
+但情况不对劲。怪物带来了它们自己的现实，
+它们的存在正在颠覆星际港的技术。
 
-前方に地獄の前哨、要塞地帯が見える。そこを切り抜け
-宇宙港の中心に辿り着けば生存者を解放する宇宙船のスイッチが
-見つかるはずだ。
-"""
+前方，你看到一片地狱的前哨，一个设防区域。
+若能突破它，你就能深入到被诅咒的星港核心，
+找到控制着地球人口命运的开关。"""
 
 > C2TEXT
 ; Doom2 after MAP11
@@ -1388,18 +1385,17 @@ entry. The alien base is in the heart of
 your own home city, not far from the
 starport." Slowly and painfully you get
 up and return to the fray."""
-"""勝利した!人類をこの世の地獄から脱出させ絶滅の悪夢から救ったのだ。
-そして自分が最後の地球人となった。
-デーモンもとい人食いエイリアン、共食いミュータント、
-くどい怨嗟のゴースト、そして死体だけが隣人だ。
-人類への最善を尽くし、後は座して死ぬ時を待った。
+"""你赢了！你的胜利让人类得以撤离地球，逃离噩梦。
+如今你是这颗星球上唯一的人类。
+食人变异体、食肉外星人和恶灵是你唯一的邻居。
+你坐等死亡，心满意足于自己拯救了人类。
 
-だがその時、地球管理センターが宇宙からの通信を送ってきた。
-''エイリアン達による侵略の拠点をセンサー群が捕捉した。
-そこに向かえば、侵入を阻止出来るかもしれない。
-奴等の基地は宇宙港からはそこまで遠くない、
-君の故郷の街の中央にある位置だ。''
-君は痛みとともに悠然と立ち上がり、戦場へ戻った。"""
+但随后，地球控制中心从太空传来了信息：
+“传感器已定位到外星入侵的源头。
+如果你们前往那里，或许能够阻止他们的入侵。
+外星基地就在你们自己的城市中心，
+离星际港不远。”
+你艰难而痛苦地起身，重新投入战斗。"""
 
 > C3TEXT
 ; Doom 2 after MAP20
@@ -1412,14 +1408,12 @@ teeth and plunge through it.
 There must be a way to close it on the
 other side. What do you care if you've
 got to go through hell to get to it?"""
-"""君は破壊された街の中心部で、殺した敵の死体に囲まれている。
-化け物たちが侵入するための入り口をこちらから破壊することは
-不可能だと判断し君は歯を食いしばり、そこへと突き進んだ。
+"""你身处这座城市的腐败中心，四周都是敌人的尸体。
+你发现无法摧毁这边怪物的入口，
+于是咬紧牙关，纵身一跃冲了进去。
 
-反対側に行けば、これを閉じる方法があるに違いない。
-そのためには地獄に突入しなければいけないが、
-それを躊躇する必要はもはやないはずだ。
-"""
+在另一边肯定有办法把它关上。
+就算得穿过地狱才能到达，你又何必在意？"""
 
 > C4TEXT
 ; Doom2 victory
@@ -1439,17 +1433,18 @@ forehead you begin the long trek back
 home. Rebuilding earth ought to be a
 lot more fun than ruining it was.
 """
-"""剥き出しの脳めがけてロケット弾をぶちこみ続けた後、
-今までに見たこともないほど巨大で醜悪な悪魔の顔面は、
-君の前に崩れ落ちた。
-怪物は生気を失い、死に絶えた。この怪物が死に際に震わした四肢は、
-地獄の広大な大地を波打たせた。 
+"""你朝那颗暴露在外的大脑猛射火箭弹，
+眼前出现的那张你所见过的
+最大的恶魔的可怕面孔瞬间崩塌。
+那怪物萎缩着死去，它抽搐的四肢
+毁掉了地狱表面无数英里的土地。
 
-君は成し遂げた。悪魔の侵略はとうとう終わった。
-地球は救われ、地獄は破壊された。
-悪人どもが死んだ時、奴等はこれからどこに行くのだろうか?
-君は額から汗を拭い、故郷への長い帰路を歩き始めた。
-地球を復興させるのは、滅ぼすよりもずっと楽しいに違いない。"""
+你做到了。入侵结束了。
+地球得救了。地狱一片狼藉。
+你不禁好奇，现在坏人死后会去往何处。
+擦去额头上的汗水，你踏上了漫长的归家之路。
+重建地球应该比毁坏它有趣得多。
+"""
 
 > C5TEXT
 ; Doom2 before MAP31
@@ -1458,9 +1453,9 @@ level! Looks like it's been built by
 Humans, rather than demons. You wonder
 who the inmates of this corner of hell
 will be."""
-"""おめでとう、君は隠しステージを発見した!
-どうやらこの場所は悪魔ではなく、人間たちによって作られたようだ。
-地獄の片隅には、どんな罪人がいるのだろうか?"""
+"""恭喜，你找到了隐藏关卡！
+看起来这是由人类建造的，而非恶魔。
+你不禁好奇，这地狱角落里的囚犯会是谁。"""
 
 > C6TEXT
 ; Doom2 before MAP32
@@ -1468,8 +1463,8 @@ will be."""
 super secret level! You'd better
 blaze through this one!
 """
-"""おめでとう、君はスーパー隠しステージを発見した!
-あのブレイズ坊やが見つかるかもしれないぞ!"""
+"""恭喜，你找到了超级隐藏关卡！
+你最好速战速决！"""
 
 > P1TEXT
 ; Plutonia after MAP06
@@ -1485,15 +1480,15 @@ You must find the prototype, or all your
 struggles will have been wasted. Keep
 moving, keep fighting, keep killing.
 Oh yes, keep living, too."""
-"""蒸し焼きになった地獄の番人を見てほくそ笑み、
-アクセラレーターを遺体の手からもぎ取った。
-駄目だ!1つぐらい稼働している試作機があると思ったが
-全て奴等が奪ったに違いない。
+"""你得意洋洋地盯着那具冒着热气的守护者残骸。
+随着它的死亡，你从地狱那腐臭的爪牙中
+夺回了加速器。你放松下来，环顾四周。
+该死！本应至少有一台能用的原型机，
+可你却看不到。肯定是恶魔们把它拿走了。
 
-どうにかして試作機を見つけなければ今までの闘争が無駄になってしまう。
-とにかく走れ、戦い続け、殺し続けろ。
-ああそうだ、生き続けながらな。
-"""
+你必须找到原型机，否则你所有的努力都将白费。
+继续前进，继续战斗，继续杀戮。
+哦，对了，也要继续活下去。"""
 
 > P2TEXT
 ; Plutonia after MAP11
@@ -1503,12 +1498,11 @@ prototype Accelerator which is soon
 efficiently and permanently deactivated.
 
 You're good at that kind of thing."""
-"""アホチバイル共のイカれた迷路でさえも俺を止める事は出来なかったが、
-ようやく辿り着いたアクセラレイターの試作機が機能しなくなるのを
-止める事も出来なかった。
+"""就连致命的恶魔召唤师迷宫也无法阻挡你，
+而你已经找到了原型加速器，
+它很快就会被高效且永久地关闭。
 
-いつものことじゃねえか。
-"""
+你擅长干这种事。"""
 
 > P3TEXT
 ; Plutonia after MAP20
@@ -1522,14 +1516,14 @@ you know who's worse!
 Grinning evilly, you check your gear, and
 get ready to give the bastard a little Hell
 of your own making!"""
-"""悪魔共の中枢なる掃溜めへと向かう道を切り開いた。
-さあ狩りの時間だ、獲物は地球にクソガキを吐き出し続ける
-老廃物のゲートキーパー。
-悪しき者に相応しい末路を迎えさせるのだ!
+"""你一路杀杀砍砍闯进了恶魔巢穴的核心。
+现在是时候来一场搜剿行动，
+目标是看门人，他的恶毒后代
+正源源不断地涌向地球。
+没错，他很坏。但你知道谁更坏！
 
-ありったけの得物を持ち込んで、邪悪に微笑み、
-奴等が地獄を知るのを楽しみにしながら!
-"""
+你露出邪恶的笑容，检查了一下装备，
+准备给那混蛋一点自创的地狱之苦！"""
 
 > P4TEXT
 ; Plutonia victory
@@ -1545,14 +1539,13 @@ tell your grandkids to put a rocket
 launcher in your coffin. If you go to Hell
 when you die, you'll need it for some
 final cleaning-up ..."""
-"""ゲートキーパーの間抜け面が辺り一面に散らばった。
-亡骸は崩壊を続け、裏返った異次元ゲートが殺し損ねたゴミ共を
-最後のアクセラレータもろとも吸い込んでいった。
-任務は完了した。地獄は元通り悪人を裁く役目を果たすだろう。
-
-なので君には俺の棺桶にロケットランチャーを供えるよう伝えておく。
-いつか死に、デイジーの元に迎え入れなければ、
-あの世のゴミ共へ最後の審判を下す為に..."""
+"""守门人的邪恶面孔四分五裂。
+随着它残破的尸体倒下，一个倒置的传送门形成，
+将最后的原型加速器碎片以及仅存的几个恶魔
+都吸了进去。你成功了。
+地狱又回去惩罚那些坏死人了，而不是好活人。
+记得告诉你的孙辈们在你的棺材里放一把火箭筒。
+要是你死后去了地狱，你还需要它来清理一下……"""
 
 > P5TEXT
 ; Plutonia before MAP31
@@ -1560,20 +1553,19 @@ final cleaning-up ..."""
 got. Hope you have a saved game a level or
 two previous. If not, be prepared to die
 aplenty. For master marines only."""
-"""俺が現在知る中で2番目に困難な場所を見つけてしまった。
-バックアップを取っておくべきだったと思うだろう。
-そうでないなら、虫けらのような扱いを受けるだけだ。
-最悪な一時かもな。
-"""
+"""你找到了我们准备的第二难的关卡。
+希望你之前有存档，至少在前一两关。
+如果没有，做好多次死亡的准备吧。
+只有高手才能通过。"""
 
 > P6TEXT
 ; Plutonia before MAP32
 """Betcha wondered just what WAS the hardest
 level we had ready for ya? Now you know.
 No one gets out alive."""
-"""もっとも困難な場所が何なのか気になっているだろう。
-それを今思い知る。
-大した苦難を受けてなかったことを。"""
+"""你肯定好奇我们为你准备的
+最难关卡到底是什么吧？
+现在你知道了。没人能活着出去。"""
 
 > T1TEXT
 ; TNT after MAP06
@@ -1589,16 +1581,14 @@ swarming with diseased horrors hot to get
 their teeth into you. With luck, the
 complex still has some warlike ordnance
 laying around."""
-"""侵略された研究施設を抜け出すことが出来た。
-UACはまたもやられてしまったようだ。
-最近の大量雇用により、金の無いUACでは
-健康保険を宛がうことも難しいだろう。
+"""你从被感染的实验室内杀出一条血路。
+看来UAC又把这地方吞下去了。
+他们人员流动率那么高，
+可怜的UAC现在买公司健康保险肯定很难吧……
 
-この先にある軍事複合施設には、今は病んだ怪物共が
-その歯を突き立てようと犇めいている。
-だが幸いかな、施設内には御誂え向きの兵器類が
-転がっているようだ。
-"""
+前方就是军事基地，此刻到处都是病态的怪物，
+急切地想要咬你一口。
+但愿基地里还留有一些作战武器。"""
 
 > T2TEXT
 ; TNT after MAP11
@@ -1611,14 +1601,15 @@ you feel about as mean as two thousand
 maniacs packed into one mad killer.
 
 You don't plan to go down easy."""
-"""重工機械の稼働音が鳴っている。
-新しい地獄製造機ではないと願うが、必要とあらば
-そいつらを黙らせる準備をしなければ。
+"""你听到前方传来重型机械的轰鸣声。
+你真心希望他们不是在制造新的恶魔，
+但要是真有大批怪物出现，
+你也做好了杀个痛快的准备。
+他们或许在策划一场血腥盛宴，
+但你觉得自己就像两千个疯子
+汇聚成的一个疯狂杀手，凶残无比。
 
-向こうも虐殺の宴を計画しているだろう、
-2000体の狂人が1人の殺人鬼に詰め込まれたような興奮を覚えた。
-しかし、容易くは無いな。
-"""
+你可不想轻易倒下。"""
 
 > T3TEXT
 ; TNT after MAP20
@@ -1630,14 +1621,12 @@ planning to like it now. The more you
 brood on it, the madder you get.
 Hefting your gun, an evil grin trickles
 onto your face. Time to take some names."""
-"""前方に開けている景色は見飽きたものだ。
-臭いもよく知っている -- 煮えた排泄物のようなヤツ。
-この場所は気に入らないし、気に入る予定もない。
-考えれば考える程、気が滅入る。
-
-武器を持ち上げると、邪悪な笑みが自分の顔に徐々に迫ってきた。
-ぶちのめしてやろうと。
-"""
+"""前方展现的景象看起来真是再熟悉不过了。
+气味也熟悉——就像炸焦的粪便。
+你以前就不喜欢这个地方，
+现在更没打算喜欢上它。你越想越气。
+举起枪，脸上露出邪恶的笑容。
+是时候给这些家伙点颜色瞧瞧了。"""
 
 > T4TEXT
 ; TNT victory
@@ -1652,16 +1641,17 @@ done it. Have you really won?
 Something rumbles in the distance.
 A blue light begins to glow inside the
 ruined skull of the demon-spitter."""
-"""突如、地平線の彼方まで静寂が全てを包んだ。
-地獄から響く苦悶の声は消え去り、悪夢の空は青い夜空へと、
-充満していた悪臭と共に死体の山は蒸発した。
+"""突然，从这一头到那一头，
+一切都安静了下来。
+地狱般的痛苦回声渐渐消失，
+噩梦般的天空变成了蓝色，
+怪物的尸体堆开始蒸发，
+连同弥漫在空气中的恶臭一起。
+天哪，也许你成功了。你真的赢了吗？
 
-あぁ、恐らくやり遂げたのだろう。
-...だが、本当に勝ったのだろうか?
-
-何かが遠くで鼓動している。
-崩壊した痰製造機の頭蓋骨から青い光が灯った...
-"""
+远处传来一阵轰鸣声。
+恶魔喷射器那残破的头颅里，
+一道蓝光开始闪烁。"""
 
 > T5TEXT
 ; TNT before MAP31
@@ -1670,12 +1660,11 @@ of like King Tut's condo. Well,
 whatever's here can't be any worse
 than usual. Can it? Or maybe it's best
 to let sleeping gods lie.."""
-"""今度は何だ? 何もかも別物だ。
-まるでツタンカーメンの国ではないか。
-まぁ、ここにある全ては普段と変わらず悪い所なぞ無い。
-わけあるか? もしくは、眠れる神を放っておくのが
-きっと最善なのだろう...
-"""
+"""这又是什么情况？看起来完全不一样了。
+有点像法老王的公寓。
+不过，不管这里有什么，
+应该也不会比平常更糟吧？
+还是说，最好别去招惹沉睡中的神明……"""
 
 > T6TEXT
 ; TNT before MAP32
@@ -1689,13 +1678,15 @@ buildings, and presumably no Hellspawn.
 
 As you step off the transport, you hear
 the stomp of a cyberdemon's iron shoe."""
-"""休息の時が来た。地獄の中枢を粉砕し
-神は君に休息を与え給うた。君は呟く、
-今度は別の誰かが、地獄に一泡吹かせるだろうと。
-静かな街へ向かおう。流れる水、古風な街並み、地獄の使者の居ない。
+"""该去度假了。
+你已经把地狱搅得天翻地覆，
+该好好休息一下了。你自言自语道，
+也许下次让别人去收拾地狱的烂摊子吧。
+前方是一座宁静的小镇，有潺潺流淌的溪水，
+古色古香的建筑，想必也没有地狱的爪牙。
 
-テレポーターに足を踏み入れた瞬間、あの鋼鉄牛の蹄が
-踏み鳴らされる音が聞こえた。"""
+当你从传送器上下来时，
+听到了机械巨魔的铁鞋重重的踩踏声。"""
 
 > NERVETEXT
 ; NRFTL victory
@@ -1718,20 +1709,23 @@ out through the mess you left of his face.
 This ride is closed.
 
 """
-"""厄介事は君のお気に入りのリゾート地、地獄でまた発生していた... 
-サイバーデーモンのバカが、地獄をヤツの遊び場にできるとでも
-思っていたんだ。そして地球は、そのチケット売り場になる予定だった。
+"""麻烦又在你最钟爱的度假胜地——地狱
+里酝酿起来了……
+有个不知天高地的机械巨魔以为
+能将地狱变成私人游乐场，把地球当作售票亭。
 
-まあ、あの半身ロボットの見世物野郎は、
-一体誰がそのお祭りに来るのかを考えていなかったようだ。
-たくさんの化け物たちを撃ちまくる射撃訓練場みたいに、
-気持ちが良いことはないからな。
+哼，那个半机械怪物杂耍团可没想到会碰上谁。
+没有什么比射击场里满是地狱孽种
+更能让人热血沸腾的了……
 
-そしてサイバーデーモンが倒れ、金属の脚が床に崩れ落ちた。
-この音は、悪魔の迷宮の壁に響き渡った。
-サイバーデーモンの死前喘鳴が、彼の削がれた顔面から漏れてきている。
+此刻，恶魔迷宫的墙壁回荡着
+金属肢体撞击地面的声音。
+他临终的呻吟从你在他脸上留下的
+血肉模糊中咕噜咕噜地冒了出来。
 
-この地獄のアトラクションは、運行休止となった。"""
+此游乐设施已关闭。
+
+"""
 
 > HE1TEXT
 ; Heretic Ep.1
@@ -1753,18 +1747,20 @@ maw from the other side. Of course
 this means you may get stuck in a
 very unfriendly world, but no one
 ever said being a heretic was easy!"""
-"""アイアンリッチとその手下たちが滅ぼされたことにより、
-アンデッドは一匹残らずこの世界から消滅した。
+"""随着铁冰霜巨龙巫妖及其爪牙的覆灭，
+这方位面存在的最后一批亡灵已被肃清。
 
-この怪物達は、別の場所から此処へ来る必要があったらしい、
-故に、地獄の肚と呼ばれる燃え盛るポータルが
-奴等の住処と繋がっているのではという不審感を覚えた。
+那些生物总得来自某个地方，
+而你隐隐觉得，
+地狱之口那熊熊燃烧的传送门，
+正通往它们的家园所在维度。
 
-更なるアンデット(もしくはそれ以上の者)が押し寄せるのを
-阻止する為、そこを通り地獄へのポータルを封印する手段を
-探さなければならない。だがそれで貴方が不倶戴天の世界に
-立往生する事態となっても、異端者と攻め立てる権利は誰にも無い!
-"""
+为了确保不会有更多不死生物
+（甚至更糟糕的东西）涌出，
+你得从另一边封住地狱之口。
+当然，这意味着你可能会被困在
+一个非常不友好的世界里，
+但从来没人说过当异教徒是件容易的事！"""
 
 > HE2TEXT
 ; Heretic Ep.2
@@ -1787,17 +1783,20 @@ more horrific beings through this
 gate? The sweep of a crystal dome
 overhead where the sky should be is
 certainly not a good sign...."""
-"""強靭と自負していたマウロタウロスは貴方に肩を並べるほど
-鍛えていなかったようで、その焼け焦げた牛の死体が
-貴方の満足感を満たした。
+"""强大的牛头怪已被你击溃，
+它们热气腾腾的尸体滑落在地，
+你心中涌起一股冷酷的满足感，
+因为它们已被消灭了。
 
-守護されていたゲートが開き、元の世界に戻る道が出来た。
-しかし通り抜けた瞬間、嘲た笑い声が鳴り響いた。
-何者がマウロタウロスを支配していたか?
-この門の向こうにさらなる脅威が待ち受けるのか?
-頭上に広がる透き通ったクリスタルドームを見るに
-良い兆候は決して訪れないと確信した....
-"""
+他们守卫的门户已然开启，
+露出的正是你所期盼的归家之路。
+然而当你迈步踏入，
+耳边却回荡着嘲弄的笑声。
+
+难道是别的什么力量在控制着这些牛头怪？
+这扇门后面会不会还有更可怕的生物？
+头顶上本应是天空的地方却笼罩着
+一个水晶穹顶，这显然不是什么好兆头……"""
 
 > HE3TEXT
 ; Heretic Ep.3
@@ -1822,18 +1821,21 @@ just have been a scream.
 
 Then again, what about the other
 Serpent Riders?"""
-"""デ'スパリルの死によって魔法による従僕達は解放され
-その風靡なる死の悲鳴に貴方は圧倒された。
-復讐の誓いは成し遂げられ、元の世界へ戻るポータルを
-通った瞬間、ドームが崩壊し数百万の破片と化した。
+"""D'Sparil 的死亡解开了将他的
+那些生物束缚在这一层面的魔法枷锁，
+它们临死前的惨叫淹没了他痛苦的哀号。
 
-だがデ'スパリルの魔力が永久に破壊されたなら
-安全だと思うはずだろう?
-奴の死の直前、呪文のような叫びが最後に聞こえた
-ような?何かが召喚された? 
-もしくはただの悲鳴だったのか?
+你复仇的誓言已达成，
+就在穹顶碎成无数片之前，
+你踏入了通往自己世界的传送门。
 
-それとも、また別のサーペントライダーがいたのか?"""
+但倘若迪斯帕里尔的力量永远被破除了，
+你为何仍觉不安？是临终前那声喊叫，
+那听起来像诅咒的声音？还是召唤？
+你其实也说不准，
+但那或许只是临终的惨叫。
+
+那么，其他那些蛇骑手又怎么样呢？"""
 
 > HE4TEXT
 ; Heretic Ep.4
@@ -1858,20 +1860,17 @@ finding a way out. And somewhere,
 in the darkest corner of D'Sparil's
 demesne, his personal bodyguards
 await your arrival ..."""
-"""貴方はデ'スパリルの死後、元の世界に戻れるはずだったが
-あの死に際の呪文により既に征服され破壊された古蹟へ
-送られてしまった。先程その守護者を打ち倒し、次いで
-要塞への門前に迷わず進み出た。この瞬間まで更なる脅威に
-立ち向かう魔力を疑う余地は持たなかった。
-だがそのポータルを抜けた先には世界侵略を企てる
-諸悪の根源が待ち構えている。デ'スパリルは死んだ、
-しかし彼奴のいた居城はまだ残っている。
-解決策を得る為その門に突入する必要がある。
-
-そして何処か、デ'スパリルの領地で専属の者が
-暗黒の僻地で待ち構えているだろう。
-
-"""
+"""你原以为在 D'Sparil 死后就能回到自己的世界，
+但他临终前的举动却将你放逐到了他的位面。
+在这里，你踏入了 D'Sparil 征服之地的残骸。
+你击败了这些土地上的最后守护者，
+但如今你已站在 D'Sparil 要塞的大门前。
+直到此刻，你从未怀疑过自己面对任何可能遭遇的挑战能力，
+然而在这扇门之后，便是入侵你世界的邪恶之源。
+D'Sparil 或许已死，但他诞生的深渊依旧存在。
+现在你必须进入那深渊，期望能找到一条出路。
+而在 D'Sparil 领地最黑暗的角落里，
+他的亲卫队正等着你的到来……"""
 
 > HE5TEXT
 ; Heretic Ep.5
@@ -1895,19 +1894,19 @@ the courage? You find, in the end,
 that it is not within you to
 surrender without a fight. Eyes
 wide, you go to meet your fate."""
-"""最後のマウロタウロスが死際の咆哮を放った時、
-貴方の所業が無謀ではないと証明された。
-デ'スパリルとその従僕達との闘いでさえ
-絶望的ではなかった。目前の開いた門を眺め
-手下達が自ら帰還するのか、或いは夢にも思わぬ
-恐怖に陥るか疑問に思った。自分にも立ち向かう力が
-あるかわからないが、死と苦痛以外残っていないだろう。
-だが戦う意思がなければ他に何が出来るのか? 
-絶望に直面しても立ち向かう事を強制するか? 
-そんな度胸はあるのか? 
-わかっている、結局のところ、戦い無しに降伏することは
-有り得ないことだ。長い目で見れば己の運命は
-決まっていたと。"""
+"""当最后一只马洛陶尔发出濒死的咆哮，
+你意识到自己从未如此接近毁灭。
+即便是与 D'Sparil 及其门徒的战斗也没有这般绝望。
+你阴沉地盯着面前敞开的大门，
+心想这扇门是通往家的方向，
+还是通向某种未曾想象过的恐怖。
+你不禁怀疑自己是否还有力量继续前行，
+是否只有死亡和痛苦在等着自己。
+但倘若战斗的意志已消逝，
+你还能做什么？在如此绝望面前，
+你能强迫自己继续前行吗？你有这个勇气吗？
+最终你发现自己无法不战而降。
+双眼圆睁，你走向自己的命运。"""
 
 > TXT_HEXEN_CLUS1MSG
 """Having passed the seven portals
@@ -1929,17 +1928,18 @@ And beyond, flickering in the
 distance, the ever-shifting walls
 of the hypostyle seem to mock
 your every effort."""
-"""この地を封印していた漆之門を超えると広大で過酷な荒野が
-目前に広がっている。火、氷、そして鋼が貴方に試練を与えた、
-しかしそれを超える試練は残っている。
-鬱蒼とした森の絡み合いは敵対的な目を隠し視野を狭める。
+"""穿过那七道封锁此地的门户，眼前是一片广袤的荒野。
+烈火、严寒和钢铁已对你进行了考验，
+但前方还有更大的挑战。
+密密麻麻的森林中肯定潜藏着敌意的目光，
+而越过森林之后，情况会更糟。
 
-不毛の砂漠、湿った沼地、そしてカビの生えた洞窟が
-行く先を妨げているが、貴方が例えそれを望んでいても
-己の運命から遠ざけることは出来ない。
+荒芜的沙漠、阴湿的沼泽和潮湿的洞穴阻挡着你的去路，
+但你不能让任何东西阻碍你去面对命运，
+即便你可能会希望有东西能阻挡。
 
-故に、遠くでちらつく、聳え立つ柱の間は貴方のあらゆる
-努力を嘲ている様にも思える。"""
+而在更远处，远处闪烁着的，是那不断变化的柱廊墙，
+似乎在嘲弄着你每一次的努力。"""
 
 > TXT_HEXEN_CLUS2MSG
 """Your mind still reeling from your
@@ -1962,18 +1962,17 @@ By all the gods of death! what place
 have you come to? By all the gods of
 pain, how will you ever find your
 way out?"""
-"""貴方は聳え立つ柱の間での遭遇に動揺したが
-よろめきながら出口らしき所に向かった。
-そして視界がぼやけ始め、物が目まぐるしく回り出す...
-周りの世界が崩れ、転移門の光が貴方を飲み込んだ。
-閃光が輝き、そして疲れ果てていた貴方は足元に座り込んだ。
+"""你的头脑还在为在柱廊内的遭遇而晕头转向，
+你摇摇晃晃地朝着你所期望的出口走去。
+周围的事物似乎移动得越来越快，
+你的视线开始模糊，渐渐暗淡……
+当世界在你周围崩塌，一道传送门的光芒将你吞没。
+一道闪光，然后你疲惫地爬起身来。
 
-高い塔の頂上に出たらしく下層から呪われた者達の悲鳴が
-響いてくる。貴方は一歩踏み出し、その悪魔達の詠唱を聞き
-血の気が引いた。
-
-何処から来たというのだ?死の神々よ!
-苦痛の神々から、どうやって逃げ出せるだろうか?"""
+你站在高塔之巅，下方传来受诅咒者的惨叫。
+你向前迈步，瞬间恶魔的吟唱声令你毛骨悚然。
+以死亡之神的名义！你这是到了什么地方？
+以痛苦之神的名义，你又怎能找到出路？"""
 
 > TXT_HEXEN_CLUS3MSG
 """The mightiest weapons and artifacts
@@ -1997,15 +1996,18 @@ of baleful eyes glaring down upon
 you.
 Somewhere within, your enemies are
 waiting..."""
-"""古代人の強力な武器やアーティファクトはヘレシアークと
-その手下達を倒す程には足り、奴等の残骸は貴方の足元に
-散乱している。貴方は最後の魔力を集め、ヘレシアークの
-秘めた聖域へ通じるポータルに入る準備を始めた。
+"""古时最强大的武器和神器
+都几乎不足以击败邪教领袖及其爪牙，
+然而如今他们那污秽的残骸却散落在你的脚下。
+你积聚起最后的力气，
+准备进入邪教领袖内殿中的传送门。
 
-頭上に巨大な織旗の掛かった城壁が見える。
-無音の塔と剥き出しの壁が黒い石の一本の尖塔を囲んでいる。
-窓から灯った火の影から不気味な何十もの目が貴方に
-向けられている。敵は何処にでも潜んでいるらしい..."""
+在你上方，一座巨大的城堡的城墙若隐若现。
+寂静的塔楼和光秃秃的城墙环绕着一根黑色的石柱，
+它蹲在城堡的中央，宛如沉思的巨人。
+火焰与阴影在敞开的窗户后扭动，
+数十双凶恶的眼睛向下凝视着你。
+在你的内心深处，敌人正在等待着……"""
 
 > TXT_HEXEN_CLUS4MSG
 """"... and he shall journey into the
@@ -2020,15 +2022,15 @@ light, no man knows."
 
 
 Damn."""
-"""...そして彼は絶望の門を越え、死者の国にいる勢力と
-争う為に旅立った。
-しかし、彼が再び光の世界に戻れたかは誰も知らない。'
+"""……他将踏上前往冥界的旅程，
+在那里与黑暗势力交锋，直至绝望之门。
+但他能否重返光明世界，无人知晓。
 
 
 
 
 
-忌々しい。"""
+该死。"""
 
 > TXT_HEXEN_WIN1MSG
 """With a scream of agony you are
@@ -2041,11 +2043,14 @@ with ghostly echoes and menacing
 shadows. In the distance you can
 see a raised dais, and upon it the
 only source of light in this world."""
-"""悲痛な叫びと共に貴方は別の世界に追いやられ
-自分の体が神秘的な炎により癒されていった。
-視界が戻ると、霊の威嚇する声と影が蔓延る壮観な広間に
-立っていた。遠くには盛り上がった大皿が見え、
-その上にこの場所で唯一の光が灯っている。"""
+"""伴随着痛苦的尖叫，
+你被从这个世界强行拽入另一个世界，
+全身都被神秘的火焰所环绕。
+当你的视线逐渐清晰，
+发现自己正站在一个巨大的厅堂里，
+回荡着幽灵般的回声，充斥着令人不安的阴影。
+在远处，你能看到一个高台，
+上面是这个世界唯一的光源。"""
 
 > TXT_HEXEN_WIN2MSG
 """This can only be the chaos sphere,
@@ -2059,19 +2064,21 @@ join the cosmic game of power. Like
 the pawn who is promoted to queen,
 suddenly the very reaches of the
 board seem to be within your grasp."""
-"""カオススフィア、コラックスの魔力の源だ。
-これを使えば世界を創造することが出来る...または破壊することも。
-征服者の権利を得た貴方は震える手をそれに伸ばした。
-恐らく、今、新しい挑戦者が宇宙の権力ゲームに加わった。
-クイーンに成ったポーンの様に突然、世界が貴方の手に
-届く位置にあるのだ。"""
+"""这只能是混沌之球，是科拉克斯力量的源泉。
+有了它，你可以创造世界……也可以毁灭世界。
+凭借战斗和征服的权利，它归你所有，
+你战战兢兢地伸手去抓取它。
+也许，现在，一位新的玩家
+将加入这场宇宙力量的游戏。
+就像被升格为王后的棋子，
+突然间，棋盘的每一个角落似乎都触手可及。"""
 
 > TXT_HEXEN_WIN3MSG
 """\nbut there are other players mightier
 than you, and who can know their
 next moves?"""
-"""\nしかし貴方より上手の挑戦者はいる、
-そして誰が彼らの一手を読めるだろうか?"""
+"""\n但还有比你更强大的玩家，
+谁能知晓他们下一步会怎样？"""
 
 > TXT_HEXDD_CLUS1MSG
 """Wiping a trembling hand across your
@@ -2094,22 +2101,20 @@ enough, doesn't it?
 
 
 doesn't it?"""
-"""傷付き出血した顔を手で拭い、これから先を考える為に
-正気を保とうとした...
+"""你用颤抖的手抹去脸上流淌的鲜血，
+努力让自己清醒，去面对前方的一切……
 
-...背負っているもの事も忘れながら。
+……并且忘掉身后的一切。
 
-遠くで大きな城の複合体の殺風景な城壁が上空を劈く様に
-そして数え切れない程荒らされた墓地から
-死者の腐臭が漂っている。
+远处，一座宏伟城堡的高墙似乎刺破了苍穹，
+无数死者遭亵渎的坟墓散发出阵阵腐臭。
 
-殆ど残っていないアーティファクトを注意深く数え、
-貴方は十分足りるだろうと自分自身を納得させた。
-だが結局、それで間に合うではないか、そうだろう?
-
+你仔细清点着所剩无几的文物，
+试图说服自己这些已经足够了。
+毕竟，它们必须足够，不是吗？
 
 
-そうだろう?"""
+难道不是吗？"""
 
 > TXT_HEXDD_CLUS2MSG
 """Surely the souls of the damned inhabit
@@ -2131,18 +2136,23 @@ lingering death...
 
 
 ...for the fortunate."""
-"""この世界には地獄に堕とされた善人や親切であろう
-人々の魂が居着いている。
+"""毫无疑问，这世上定有被诅咒的灵魂，
+因为任何美好善良的事物都无法在此长久存续。
 
-しかし通過する際には前方を遮る薄いもやでしかない
-暗黒城塞そのものだ。
+但过往的一切都只是如今阻挡你前行的
+那座黑暗城堡的苍白影子。
 
-垣根の要塞が断片的な部分を除いて大聖堂の全てを封鎖しているが、
-見ただけで冷徹な死の低徊が囁かれている。
+那座阴森的大教堂的庞大身躯
+几乎完全遮挡住了城堡的主体，
+只能让人瞥见些许残影，但即便如此，
+所见之处也仿佛在用嘶嘶的低语诉说着冰冷、
+持久的死亡……
 
 
 
-...幸福な者に向けて。"""
+
+
+……为幸运儿准备的。"""
 
 > TXT_HEXDD_WIN1MSG
 """Once again you find yourself in the
@@ -2157,13 +2167,14 @@ by hidden eyes...
 
 ...eyes which shield a malefic
 intent."""
-"""貴方は今一度、あたかも最後の時が止まったままである
-カオススフィアの影の広間に立った。
+"""你又一次置身于混沌球体的宏伟殿堂之中，
+仿佛自上次在这片阴影中穿行以来，时间未曾流逝。
 
-しかしかつては柔らかい囁きによる静かな場所だったが
-何か影から不気味な視線がある。
+但有些东西却诡异得变了样，
+曾经轻柔的低语声如今却是一片死寂，
+仿佛有双隐藏的眼睛在暗中窥视着……
 
-...悪意を遮蔽する目が。"""
+……那双眼睛里藏着邪恶的意图。"""
 
 > TXT_HEXDD_WIN2MSG
 """Once before you grasped the chaos
@@ -2183,22 +2194,23 @@ left unkept.
 
 But then, you never were one to
 back down from a challenge..."""
-"""貴方はカオススフィアを掴む前に、一度震える手を握りしめた。
-今この手は貪欲に何かを超える権力を渇望している。
-スフィアの魔力でさえ貴方を暗黒の軍勢から守護するのに
-十分でないならば、恐らくそれに手を出さなければ、
-契約は破棄されるだろう。
+"""曾经你紧握混沌之球，双手因贪婪而颤抖。
+如今你的双手因恐惧与对权力的渴望交织而战栗。
+
+倘若连这球体的力量都不足以护你周全，
+抵御黑暗势力，或许还是让它保持原样，
+不兑现其承诺为好。
 
 
 
-しかしそれでも、貴方は決して後へ引く事は
-出来なかった..."""
+但话说回来，你从来都不是那种
+面对挑战会退缩的人……"""
 
 > TXT_HEXDD_WIN3MSG
 """\n...and other players await.
 
 """
-"""\n...更なる挑戦者を待ち構えながら。
+"""\n……还有其他选手在等待。
 
 """
 
@@ -2206,419 +2218,418 @@ back down from a challenge..."""
 
 > TXT_ACS_MAP01_5_THEDO
 The door is locked
-扉は施錠されている
+门被锁上了
 
 > TXT_ACS_MAP02_9_GREET
 Greetings, mortal
-御機嫌よう、小僧
+你好，凡人
 
 > TXT_ACS_MAP02_11_AREYO
 Are you ready to die?
-死に急ぐ仕度は整ったか?
+你准备好赴死了吗？
 
 > TXT_ACS_MAP02_20_ADOOR
 A door opened on the Guardian of Ice
-氷の守護者にある扉は開かれた
+冰之守护者的大门打开了
 
 > TXT_ACS_MAP03_12_THISP
 This path is barred
-この道は塞がれている
+这条路被堵住了
 
 > TXT_ACS_MAP04_9_ONEHA
 One half of the puzzle has been solved
-パズルの一つが解かれた
+谜题的一半已经解开了
 
 > TXT_ACS_MAP04_10_ONTHE
 on the Seven Portals
-漆之門に影響を与えた
+位于七大传送门
 
 > TXT_ACS_MAP04_11_ONETH
 One third of the puzzle has been solved
-三種のパズルの一つが解かれた
+谜题的三分之一已经解开了
 
 > TXT_ACS_MAP04_12_STAIR
 Stairs have risen on the Seven Portals
-漆之門に階段が立ち昇った
+七大传送门的楼梯已经升起
 
 > TXT_ACS_MAP05_6_ONETH
 One third of the puzzle has been solved
-三種のパズルの一つが解かれた
+谜题的三分之一已经解开了
 
 > TXT_ACS_MAP05_7_ONTHE
 on the Seven Portals
-漆之門 に影響を与えた
+位于七大传送门
 
 > TXT_ACS_MAP05_8_STAIR
 Stairs have risen on the Seven Portals
-漆之門 に階段が立ち昇った
+七大传送门的楼梯已经升起
 
 > TXT_ACS_MAP05_9_YOUHA
 You have to find another switch...
-他のスイッチも探す必要がある...
+你得再找一个开关……
 
 > TXT_ACS_MAP05_10_STONE
 Stones grind on the Seven Portals
-漆之門 の石壁が砕かれた
+七大传送门上的石块在摩擦
 
 > TXT_ACS_MAP08_6_ONESI
 One sixth of the puzzle has been solved
-六種のパズルの一つが解かれた
+谜题已解开了六分之一
 
 > TXT_ACS_MAP08_7_ONTHE
 on the Shadow Wood
-陰影樹 に少し影響を与えた
+在暗影森林
 
 > TXT_ACS_MAP08_10_THEDO
 The door is barred from the inside
-この扉は内側から塞がれている
+门从里面被闩上了
 
 > TXT_ACS_MAP08_11_YOUHE
 You hear a door open in the distance
-遠くから扉が開く音が聞こえる
+你听到远处有扇门开了
 
 > TXT_ACS_MAP09_6_ONESI
 One sixth of the puzzle has been solved
-六種のパズルの一つが解かれた
+谜题已解开了六分之一
 
 > TXT_ACS_MAP09_7_ONTHE
 on the Shadow Wood
-陰影樹 に少し影響を与えた
+在暗影森林
 
 > TXT_ACS_MAP10_6_ONESI
 One sixth of the puzzle has been solved
-六種のパズルの一つが解かれた
+谜题已解开了六分之一
 
 > TXT_ACS_MAP10_7_ONTHE
 on the Shadow Wood
-陰影樹 に少し影響を与えた
+在暗影森林
 
 > TXT_ACS_MAP11_0_ETTIN
 ; Yellow needs better translation
 \ ettins left
-\ 匹のエティンが残っている
+\ 巨人走了
 
 > TXT_ACS_MAP11_1_YOUWA
 You waited too long, now you die!
-長居をしたな、命を奪うには十分な程に!
+你等得太久了，现在你得死！
 
 > TXT_ACS_MAP11_7_ADOOR
 A door opened on the Forsaken Outpost
-荒れ果てた前哨地 への扉が開いた
+被遗弃的前哨站的大门打开了
 
 > TXT_ACS_MAP12_9_THISD
 This door won't open yet
-扉はまだ開かない
+这扇门现在还打不开
 
 > TXT_ACS_MAP13_11_MYSER
 My servants can smell your blood, human
-我が下僕が貴様の血を嗅ぎ付けた様だぞ、小童
+我的仆人能闻到你的血，人类
 
 > TXT_ACS_MAP21_0_ADOOR
 A door opened in the Gibbet
-晒し台 への扉が開いた
+绞刑架上的一扇门打开了
 
 > TXT_ACS_MAP21_2_THEDO
 The door is barred from the inside
-この扉は内側から塞がれている
+门从里面被闩上了
 
 > TXT_ACS_MAP22_3_APLAT
 A platform has lowered in the tower
-塔内の昇降機が下りた
+塔里有一个平台降了下来
 
 > TXT_ACS_MAP22_27_YOUHA
 You have played this game too long, mortal...
-遊びはここまでだ、小僧
+你玩这个游戏玩得太久了，凡人……
 
 > TXT_ACS_MAP22_29_ITHIN
 I think I shall remove you from the board
-盤上から貴様を排除する
+我想我该把你从棋盘上移走了
 
 > TXT_ACS_MAP23_10_YOUHE
 You hear a door open upstairs
-上層階の扉が開いた
+你听到楼上有一扇门开了
 
 > TXT_ACS_MAP27_8_WORSH
 Worship me, and I may yet be merciful
-我を崇めろ、慈悲を残している内に
+崇拜我，我或许还能仁慈些
 
 > TXT_ACS_MAP27_10_THENA
 Then again, maybe not
-まあ、有り得ないな
+不过话说回来，也许不会
 
 > TXT_ACS_MAP28_6_ONENI
 One ninth of the puzzle has been solved
-九種のパズルの一つが解かれた
+谜题已解开九分之一
 
 > TXT_ACS_MAP28_7_ONTHE
 On the Monastery
-修道院 にわずかに影響を与えた
+在修道院
 
 > TXT_ACS_MAP30_6_ONENI
 One ninth of the puzzle has been solved
-九種のパズルの一つが解かれた
+谜题已解开九分之一
 
 > TXT_ACS_MAP30_7_ONTHE
 On the Monastery
-修道院 にわずかに影響を与えた
+在修道院
 
 > TXT_ACS_MAP34_1_ONENI
 One ninth of the puzzle has been solved
-九種のパズルの一つが解かれた
+谜题已解开九分之一
 
 > TXT_ACS_MAP34_2_ONTHE
 On the Monastery
-修道院 にわずかに影響を与えた
+在修道院
 
 > TXT_ACS_MAP35_0_THEPO
 The portal has been sealed
-ポータルは封印された
+入口已被封印
 
 > TXT_ACS_MAP35_1_CHOOS
 Choose your fate
-運命を撰べ
+选择你的命运
 
 > TXT_ACS_MAP35_3_THEDO
 The door is barred from the inside
-この扉は内側から塞がれている
+门从里面闩上了
 
 > TXT_ACS_MAP35_12_AREYO
 Are you strong enough
-お前がどれだけ強かろうと
+你是否足够强大
 
 > TXT_ACS_MAP35_14_TOFAC
 To face your own masters?
-お前の師に立ち向かえるのか?
+去面对你的主人？
 
 ; Hexen: Deathkings script texts
 
 > TXT_ACS_MAP33_6_YOUDA
 You dare battle in the ready room?
-挑戦する準備は整ったか?
+你竟敢在准备室里战斗？
 
 > TXT_ACS_MAP33_7_FORTH
 For that, you shall die!
-ならば、死へ進め!
+为此，你必死无疑！
 
 > TXT_ACS_MAP41_6_THEWA
 The waterfall is open
-滝 は開いた
+瀑布打开了
 
 > TXT_ACS_MAP41_7_THEWA
 The waterfall is blocked
-滝 は塞がっている
+瀑布被堵住了
 
 > TXT_ACS_MAP41_8_ADOOR
 A door has opened in the chapel
-庵寺 への扉が開いた
+教堂里有一扇门打开了
 
 > TXT_ACS_MAP42_4_NOWTH
 Now that's odd...
-何かがおかしい...
+这可真奇怪……
 
 > TXT_ACS_MAP44_1_THREE
 Three more parts of the puzzle remain
-パズルの部品は残り 3つ
+还有三块拼图未完成
 
 > TXT_ACS_MAP44_2_TWOMO
 Two more parts of the puzzle remain
-パズルの部品は残り 2つ
+还有两块拼图未完成
 
 > TXT_ACS_MAP44_3_ONEMO
 One more part of the puzzle remains
-パズルの部品は残り 1つ
+还有一块拼图未完成
 
 > TXT_ACS_MAP44_4_THEPU
 The puzzle is complete
-パズルは完成した
+拼图完成
 
 > TXT_ACS_MAP44_6_YOUHA
 You have not completed the puzzle
-パズルはまだ完成していない
+你尚未完成拼图
 
 > TXT_ACS_MAP44_8_THEFL
 The floor is not safe!
-この場は安全ではない!
+地板不安全！
 
 > TXT_ACS_MAP44_10_ONETH
 One third of the puzzle is solved
-パズルの 三分の一 が解かれた
+拼图完成了三分之一
 
 > TXT_ACS_MAP44_11_TWOTH
 Two thirds of the puzzle is solved
-パズルの 三分の二 が解かれた
+拼图完成了三分之二
 
 > TXT_ACS_MAP45_1_YOUHE
 You hear a platform moving in the distance
-昇降機の音が遠くで聞こえる
+你听到远处有平台在移动
 
 > TXT_ACS_MAP46_0_ITISD
 It is done...
-これで完了だ...
+完成了……
 
 > TXT_ACS_MAP46_1_YOUHA
 You have not completed the puzzle
-パズルはまだ完成していない
+你尚未完成拼图
 
 > TXT_ACS_MAP46_2_IMWAR
 I'm warning you...
-お前に警告しよう...
+我警告你……
 
 > TXT_ACS_MAP46_3_STUBB
 Stubborn, aren't you?
-頑固だと、自らも思わないか?
+你真固执，不是吗？
 
 > TXT_ACS_MAP46_4_ANDST
 And stupid, too
-そして、あまりにも愚か者だ
+还很愚蠢
 
 > TXT_ACS_MAP46_8_ONEFO
 One fourth of this puzzle is complete
-パズルの 四分の一 が解かれた
+这个拼图完成了四分之一
 
 > TXT_ACS_MAP46_9_BADCH
 Bad choice...
-拙い選択だ...
+糟糕的选择……
 
 > TXT_ACS_MAP47_2_THESY
 The symbols are not aligned
-シンボルが揃っていない
+符号未对齐
 
 > TXT_ACS_MAP48_2_THEDO
 The door won't open from this side
-扉はこちら側から開けられない
+这扇门从这边打不开
 
 > TXT_ACS_MAP50_1_THEDO
 The door is barred from the outside
-この扉は外側から塞がれている
+这扇门从外面被闩上了
 
 > TXT_ACS_MAP51_5_SACRI
 Sacrilege !
-罰当たりが!
+亵渎！
 
 > TXT_ACS_MAP51_6_YOUHA
 You have defiled Eric's tomb !!
-貴様はエリックの墓を荒らしたな!!
+你玷污了埃里克的坟墓！！
 
 > TXT_ACS_MAP51_7_ANDNO
 And now you die !!!
-万死に値する!!!
+现在你死定了！！！
 
 > TXT_ACS_MAP51_8_ONETH
 One third of the puzzle is solved
-パズルの 三分の一 が解かれた
+拼图完成了三分之一
 
 > TXT_ACS_MAP51_9_TWOTH
 Two thirds of the puzzle is solved
-パズルの 三分の二 が解かれた
+拼图完成了三分之二
 
 > TXT_ACS_MAP51_10_THECR
 The crypt is open
-地下聖堂 が開いた
+地穴打开了
 
 > TXT_ACS_MAP51_11_BEWAR
 Beware the spider's tomb
-スパイダーの墓
+小心蜘蛛的坟墓
 
 > TXT_ACS_MAP51_13_YOUHE
 You hear a platform rise outside
-外で昇降機の音が聞こえる
+你听到外面有平台在上升
 
 > TXT_ACS_MAP51_14_DOYOU
 Do you feel lucky?
-運が良かったと思うか?
+你觉得幸运吗？
 
 > TXT_ACS_MAP51_15_YOUGU
 You guessed wrong!
-それは違うな!
+你猜错了！
 
 > TXT_ACS_MAP51_16_GOODG
 Good guess
-良い推測だ
+猜得不错
 
 > TXT_ACS_MAP51_17_CANYO
 Can you do all the scripting for my level?
-この階層を全て書き換える事は可能かな?
+你能为我的关卡写所有脚本吗？
 
 > TXT_ACS_MAP51_18_DONTT
 Don't touch my gloppy
-汚らしい手で触れるな
+别碰我的黏糊糊的东西
 
 > TXT_ACS_MAP51_19_VORPA
 Vorpal ?!?!?!
-ボーパル ?!?!?!
+伏尔帕尔？！？！？
 
 > TXT_ACS_MAP51_20_GIMME
 Gimme some sugar, baby
-砂糖が欲しいかい、ベイビー
+亲我一下，宝贝
 
 > TXT_ACS_MAP51_21_DUHUH
 Duh-uhhh...
-えぇーとぉー...
+呃……
 
 > TXT_ACS_MAP51_22_FILMI
 Film in an hour?
-数時間のフィルム?
+一小时后拍电影？
 
 > TXT_ACS_MAP51_23_IDONT
 I don't even get my own tombstone - cf
-私は自分の墓標すら得られない - cf
+我甚至连自己的墓碑都没有 - cf
 
 > TXT_ACS_MAP51_24_LETNO
 Let no blood be spilt
-血を零さないように
+不要流血
 
 > TXT_ACS_MAP51_25_LETNO
 Let no hand be raised in anger
-怒りで拳を振るわないように
+切勿在愤怒中举手
 
 > TXT_ACS_MAP52_9_WHODA
 Who dares disturb our slumber?
-誰が、我々の眠りを妨げる勇気があるかな?
+谁敢惊扰我们的安眠？
 
 > TXT_ACS_MAP52_10_THEWA
 The way is open
-道は開いた
+道路已敞开
 
 > TXT_ACS_MAP53_2_YOUHA
 You have 
-スイッチはまだ
+你还有
 
 > TXT_ACS_MAP53_3_SWITC
 \x20switches left
-残っている
+\x20开关
 
 > TXT_ACS_MAP53_4_YOUHA
 You have only 
-スイッチは
+你只剩下
 
 > TXT_ACS_MAP53_5_SWITC
 \x20switch left
-"""だけ残っている
-"""
+\x20一个开关了
 
 > TXT_ACS_MAP53_6_THEEX
 The exit is open
-出口が開いた
+出口已开启
 
 > TXT_ACS_MAP54_1_THEDO
 The doors won't open from this side
-扉はこちらから開けない
+这边的门无法打开
 
 > TXT_ACS_MAP54_4_THEDO
 The doors are open...
-ドアは開いている...
+门已敞开……
 
 > TXT_ACS_MAP54_5_IFYOU
 ...if you are ready
-...準備が良いなら
+……只要你准备好
 
 > TXT_ACS_MAP54_9_ADOOR
 A door has opened
-先へ進むドアは開いた
+一扇门已开启
 
 > TXT_ACS_MAP54_10_ONTHE
 on the Chantry
-小礼拝堂 へ向かえ
+在圣堂
 
 > TXT_ACS_MAP54_11_ABRID
 A bridge has been built
@@ -3849,7 +3860,7 @@ Release me, leave an old man alone.
 > TXT_DLG_SCRIPT02_D98540_YOUSE
 ; 〃 (after accepting "messy" chore)
 You seek wisdom, my son? The order has seen to it that we only ask one question, 'Why?'
-"""知恵が欲しそうだな、ボウズ? 
+"""知恵が欲しそうだな、ボウズ?
 オーダーが勘付かないよう一つだけ質問しよう、
 '何故?'"""
 
@@ -7215,7 +7226,7 @@ The sewers hold more than just rats and robots.
 > TXT_RNO0_SCRIPT33_D9096_HEYAG
 ; 〃
 Hey a guy's got to make some money. You think these jokers tip well?
-"""ちょっと男はお金を稼ぐんだ。 
+"""ちょっと男はお金を稼ぐんだ。
 あなたはこれらのジョーカーがうまく傾くと
 思いますか?"""
 
@@ -7432,7 +7443,7 @@ Get out of here!
 ; MAP34: Barracks.
 What a perfect place for us, under the old town hall. The Order thinks they've wiped us out, but all it was is a reminder to us of what can happen when you become careless. 
 """旧市庁舎の下で、
-私たちにとって何という完璧な場所です。 
+私たちにとって何という完璧な場所です。
 秩序は彼らが私たちを消滅させたと考
 えていますが、それがすべてだったのは
 あなたが不注意になったときに起こり得ることを
@@ -8045,7 +8056,7 @@ Listen, this com unit tells me that you're 100% human. I've been ordered to brin
 Listen, this com-unit tells me that you're 100% human. You might be one of us, and maybe we can try and trust each other. Consider this test, there's a flamethrower in the Governor's mansion. Get it, and I'll lead you to us.
 """聞いて、このcom-unitはあなたが100%人間だということを教えてくれます。
 あなたは私たちのうちの一人であるかもしれません、
-そしておそらく私たちは互いに試みて信頼することができます。 
+そしておそらく私たちは互いに試みて信頼することができます。
 このテストを考えてください、知事の邸宅に火炎放射器があります。
 それを手に入れてください"""
 
@@ -8146,7 +8157,7 @@ Way to go my friend. Good work freeing the prisoners. Jump on one of the telepor
 
 > TXT_ILOG22
 Destroy the power crystal that runs the power grid which drives the Order's shields. Go visit Worner, a spy we recruited in the warehouse of the power station.
-"""送電網を動かしているパワークリスタルを破壊してオーダーのシールドを止めろ。 
+"""送電網を動かしているパワークリスタルを破壊してオーダーのシールドを止めろ。
 発電所の倉庫に潜らせたスパイ、ワーナーを訪ねよ。"""
 
 > TXT_ILOG24
@@ -8453,27 +8464,27 @@ Use the Warden's key to get into the prison cell blocks and find a way to free t
 > TXT_ILOG1011
 ; MAP03: After accepting Macil's second mission.
 Destroy the power crystal that runs the power grid which drives the Order's shields. Go visit Worner, a spy we recruited in the warehouse of the power station. Don't forget to visit the medic and the weapons trainer before you go.
-"""送電網を動かしているパワークリスタルを破壊してオーダーのシールドを止める。 
+"""送電網を動かしているパワークリスタルを破壊してオーダーのシールドを止める。
 発電所の倉庫に潜らせたスパイ、ワーナーを訪ねる。
 その前にメディックと武器トレーナーに会うのを忘れるな。"""
 
 > TXT_ILOG1012
 ; MAP04: After talking to Worner.
 Destroy the power crystal that runs the power grid which drives the Order's shields. Use the I.D. to get into the power station. You may want to check out the storeroom above Worner.
-"""送電網を動かしているパワークリスタルを破壊してオーダーのシールドを止める。 
+"""送電網を動かしているパワークリスタルを破壊してオーダーのシールドを止める。
 手に入れたI.D.を使って発電所に入る。
 ワーナーの言う上階の部屋も余裕があったら調べる。"""
 
 > TXT_ILOG1013
 ; MAP04: After talking to "Mr. Crispy".
 Destroy the power crystal that runs the power grid which drives the Order's shields. Go talk to Ketrick in the core area.
-"""送電網を動かしているパワークリスタルを破壊してオーダーのシールドを止める。 
+"""送電網を動かしているパワークリスタルを破壊してオーダーのシールドを止める。
 コアエリアでケトリックと話す。"""
 
 > TXT_ILOG1014
 ; MAP04: After talking to Sammis.
 Destroy the power crystal. Go talk to Ketrick, bring the walkway up using the switches, then use this id for the elevator.
-"""パワークリスタルを破壊してオーダーのシールドを止める。 
+"""パワークリスタルを破壊してオーダーのシールドを止める。
 ケトリックと話し、スイッチを動かし通路を上げ、エレベーターにIDを使う。"""
 
 > TXT_ILOG1015
@@ -8483,8 +8494,8 @@ Find the town entrance that the Order has guarded. Open the door and bring the g
 
 > TXT_ILOG1016
 Take the flamethrower parts to Irale. Find the sewer maintenance door. Find and drain the reclamation tank inside the castle. At the bottom is a hidden entrance to the sewers. Down that entrance is where the gate controls are, somewhere.
-"""火炎放射器の部品をイラールに持っていく。 
-下水道のメンテナンス室を見つけ、 城内の貯水タンクを見つけて排水。 
+"""火炎放射器の部品をイラールに持っていく。
+下水道のメンテナンス室を見つけ、 城内の貯水タンクを見つけて排水。
 その下には下水道への隠された入り口があり、その奥にゲートコントロールがある。"""
 
 > TXT_ILOG1017
@@ -8899,7 +8910,7 @@ I knew you would win, my gallant hero. All fighting has stopped. Your victory wi
 ; 〃
 You have saved our planet and set us free. Now I'd like to thank you... personally. Oh, and by the way: the name is Shauna.
 """あなたはこの星を救い、そして自由を取り戻した。さあ、
-あなたにお礼をするときが来たわね、個人的な意味で... 
+あなたにお礼をするときが来たわね、個人的な意味で...
 ああ、それはそうと、私の本名はシャウナよ。"""
 
 > TXT_SUB_SAD1

@@ -1802,7 +1802,7 @@ Elven Wand
 
 > OB_MPPGOLDWAND
 %o was assaulted by %k's elven wand.
-%o 被 %k 的精灵法杖暗杀了。
+%o 被 %k 的精灵法杖袭击了。
 
 > OB_MPPCROSSBOW
 %o was shafted by %k's ethereal crossbow.
@@ -2154,7 +2154,7 @@ Menelkir
 
 > FN_CBOSS
 Traductus
-特拉杜克塔斯
+特拉杜克图斯
 
 > FN_HERESIARCH
 Heresiarch
@@ -2408,7 +2408,7 @@ Silver and brass gear
 
 > OB_CBOSS
 %o was baptized by Traductus.
-%o 受到了特拉杜克塔斯的洗礼。
+%o 受到了特拉杜克图斯的洗礼。
 
 > OB_HERESIARCH
 %o had %p bones rolled by the Heresiarch.
@@ -2721,11 +2721,11 @@ You picked up the Oracle Pass.
 
 > TXT_HEGRENADES
 You picked up the HE-Grenade Rounds.
-你拾取了HE榴弹。
+你拾取了HE榴弹桶。
 
 > TXT_PHGRENADES
 You picked up the Phosphorus-Grenade Rounds.
-你拾取了磷榴弹。
+你拾取了磷榴弹桶。
 
 > TXT_CLIPOFBULLETS
 You picked up the clip of bullets.
@@ -2783,137 +2783,137 @@ You have super strength!
 
 > TXT_NEEDKEY
 You don't have the key
-キーを持っていない
+你还没有这把钥匙
 
 > TXT_NEED_PASSCARD
 You need a passcard
-パスカード が必要だ
+你需要一张通行卡
 
 > TXT_NEED_PASSCARD_DOOR
 You need a pass card key to open this door
-このドアには パスカード が必要だ
+你需要一张通行卡才能开这扇门
 
 > TXT_NEED_IDCARD
 You need an ID card
-IDカード が必要だ
+你需要一张ID卡
 
 > TXT_NEED_PRISONKEY
 You don't have the key to the prison
-刑務所のキーを持っていない
+你还没有打开监狱的钥匙
 
 > TXT_NEED_HANDPRINT
 Hand print not on file
-手形認証が一致しません
+手印未存档
 
 > TXT_NEED_GOLDKEY
 You need the Gold Key
-ゴールドキーが必要だ
+你需要金钥匙
 
 > TXT_NEED_IDBADGE
 You need an ID Badge
-IDバッジが必要だ
+你需要一枚ID章
 
 > TXT_NEED_IDBADGE_DOOR
 You need an ID Badge to open this door
-このドアには IDバッジ が必要だ
+你需要一枚ID章才能开这扇门
 
 > TXT_NEED_SILVERKEY
 You need the Silver Key
-シルバーキーが必要だ
+你需要银钥匙
 
 > TXT_NEED_BRASSKEY
 You need the Brass Key
-ブラスキーが必要だ
+你需要铜钥匙
 
 > TXT_NEED_REDCRYSTAL
 You need the Red Crystal
-赤水晶のキーが必要だ
+你需要红水晶
 
 > TXT_NEED_BLUECRYSTAL
 You need the Blue Crystal
-青水晶のキーが必要だ
+你需要蓝水晶
 
 > TXT_RETAIL_ONLY
 This area is only available in the retail version of Strife
-このエリアは Strifeの製品版でのみ利用可能です
+这个区域只在零售版的Strife中可用
 
 > TXT_DOES_NOT_WORK
 That doesn't seem to work
-それは作動していない
+看起来无法工作
 
 > TXT_NEED_CHALICE
 You need the chalice!
-聖杯が必要だ!
+你需要圣杯！
 
 > TXT_NEED_OPASS
 You need the Oracle Pass!
-オラクルパスが必要だ!
+你需要神谕通行证！
 
 ; Actor tags
 
 > TAG_PUNCHDAGGER
 Dagger
-ダガー
+匕首
 
 > TAG_STRIFECROSSBOW1
 ; Crossbow with electric bolts
 Crossbow
-クロスボウ
+十字弓
 
 > TAG_STRIFECROSSBOW2
 ; Crossbow with poison bolts
 Crossbow
-クロスボウ
+十字弓
 
 > TAG_ASSAULTGUN
 Assault Gun
-アサルトガン
+突击枪
 
 > TAG_MMLAUNCHER
 Mini Missile Launcher
-ミニミサイルランチャー
+迷你导弹发射器
 
 > TAG_FLAMER
 Flame Thrower
-火炎放射器
+火焰喷射器
 
 > TAG_MAULER1
 Mauler
-マウラー
+毛勒
 
 > TAG_MAULER2
 Mauler
-マウラー
+毛勒
 
 > TAG_GLAUNCHER1
 ; High-explosive grenade launcher
 Grenade Launcher
-グレネードランチャー
+榴弹发射器
 
 > TAG_GLAUNCHER2
 ; White phosphorous grenade launcher
 Grenade Launcher
-グレネードランチャー
+榴弹发射器
 
 > TAG_SIGIL
 Sigil
-シジル
+印记
 
 > TAG_COIN
 Coin
-コイン
+硬币
 
 > TAG_MEDPATCH
 Med patch
-医薬パッチ
+治疗贴
 
 > TAG_MEDICALKIT
 Medical kit
-医療キット
+医疗工具
 
 > TAG_SURGERYKIT
 Surgery Kit
-手術キット
+手术工具
 
 > TAG_BELDINSRING
 Ring
@@ -2921,490 +2921,515 @@ Ring
 
 > TAG_OFFERINGCHALICE
 Offering Chalice
-寄贈された聖杯
+供品圣杯
 
 > TAG_EAR
 Ear
-耳
+耳朵
 
 > TAG_BROKENCOUPLING
 Broken Power Coupling
-壊れたパワーカップリング
+损坏的能量连接器
 
 > TAG_SHADOWARMOR
 Shadow Armor
-シャドウアーマー
+暗影护甲
 
 > TAG_ENVSUIT
 Environmental Suit
-耐環境スーツ
+防护套装
 
 > TAG_GUARDUNIFORM
 Guard Uniform
-ガードの制服
+守卫制服
 
 > TAG_OFFICERSUNIFORM
 Officer's Uniform
-士官の制服
+士官制服
 
 > TAG_FTHROWERPARTS
 Flame Thrower Parts
-火炎放射器の部品
+火焰喷射部件
 
 > TAG_REPORT
 Report
-報告書
+报告
 
 > TAG_INFO
 Info
-情報
+情报
 
 > TAG_TARGETER
 Targeter
-照準器
+瞄准器
 
 > TAG_COMMUNICATOR
 Communicator
-コミュニケーター
+通讯器
 
 > TAG_DEGNINORE
 Degnin Ore
-デグニン鉱石
+德宁矿石
 
 > TAG_GUNTRAINING
 Accuracy
-精度
+准确度
 
 > TAG_HEALTHTRAINING
 Toughness
-タフネス
+韧性
 
 > TAG_SCANNER
 Scanner
-スキャナー
+扫描器
 
 > TAG_PRISONPASS
 Prison Pass
-刑務所の許可証
+监狱许可证
 
 > TAG_ALARM
 Alarm
-警報
+警报
 
 > TAG_AMMOFILLUP
 Ammo
-弾薬
+弹药
 
 > TAG_HEALTHFILLUP
 Health
-体力
+生命
 
 > TAG_TELEPORTERBEACON
 Teleporter Beacon
-テレポータービーコン
+传送器信标
 
 > TAG_METALARMOR
 Metal Armor
-メタルアーマー
+金属护甲
 
 > TAG_LEATHER
 Leather Armor
-レザーアーマー
+皮革护甲
 
 > TAG_HEGRENADES
 HE-Grenade Rounds
-HEグレネード弾
+HE榴弹桶
 
 > TAG_PHGRENADES
 Phosphorus-Grenade Rounds
-白リングレネード弾
+磷榴弹桶
 
 > TAG_CLIPOFBULLETS
 Clip of Bullets
-弾丸のクリップ
+子弹夹
 
 > TAG_BOXOFBULLETS
 Ammo
-弾薬箱
+子弹盒
 
 > TAG_MINIMISSILES
 Mini Missiles
-ミニミサイル
+迷你导弹
 
 > TAG_CRATEOFMISSILES
 Crate of Missiles
-ミサイルの箱
+导弹箱
 
 > TAG_ENERGYPOD
 Energy Pod
-エネルギーポット
+能量荚
 
 > TAG_ENERGYPACK
 Energy Pack
-エネルギーパック
+能量包
 
 > TAG_POISONBOLTS
 Poison Bolts
-ポイズンボルト
+毒箭
 
 > TAG_ELECTRICBOLTS
 Electric Bolts
-エレクトリックボルト
+电击箭
 
 > TAG_AMMOSATCHEL
 Ammo Satchel
-弾薬鞄
+弹药背包
 
 > TAG_BASEKEY
 Base Key
+基地钥匙
 
 > TAG_GOVSKEY
 Govs Key
+政府钥匙
 
 > TAG_PASSCARD
 Passcard
+通行卡
 
 > TAG_IDBADGE
 ID Badge
+ID章
 
 > TAG_PRISONKEY
 Prison Key
+监狱钥匙
 
 > TAG_SEVEREDHAND
 Severed Hand
+切断的手
 
 > TAG_POWER1KEY
 Power1 Key
+能量1钥匙
 
 > TAG_POWER2KEY
 Power2 Key
+能量2钥匙
 
 > TAG_POWER3KEY
 Power3 Key
+能量3钥匙
 
 > TAG_GOLDKEY
 Gold Key
+金钥匙
 
 > TAG_IDCARD
 ID Card
+ID卡
 
 > TAG_SILVERKEY
 Silver Key
+银钥匙
 
 > TAG_ORACLEKEY
 Oracle Key
+神谕钥匙
 
 > TAG_MILITARYID
 Military ID
+军事ID
 
 > TAG_ORDERKEY
 Order Key
+社团钥匙
 
 > TAG_WAREHOUSEKEY
 Warehouse Key
+仓库钥匙
 
 > TAG_BRASSKEY
 Brass Key
+铜钥匙
 
 > TAG_REDCRYSTALKEY
 Red Crystal Key
+红水晶钥匙
 
 > TAG_BLUECRYSTALKEY
 Blue Crystal Key
+蓝水晶钥匙
 
 > TAG_CHAPELKEY
 Chapel Key
+教堂钥匙
 
 > TAG_CATACOMBKEY
 Catacomb Key
+墓穴钥匙
 
 > TAG_SECURITYKEY
 Security Key
+安保钥匙
 
 > TAG_COREKEY
 Core Key
+核心钥匙
 
 > TAG_MAULERKEY
 Mauler Key
+毛勒钥匙
 
 > TAG_FACTORYKEY
 Factory Key
+工厂钥匙
 
 > TAG_MINEKEY
 Mine Key
+矿场钥匙
 
 > TAG_NEWKEY5
 New Key5
+新钥匙5
 
 > TAG_ORACLEPASS
 Oracle Pass
+神谕通行证
 
 > TAG_10GOLD
 10 gold
-10ゴールド
+10金币
 
 > TAG_25GOLD
 25 gold
-25ゴールド
+25金币
 
 > TAG_50GOLD
 50 gold
-50ゴールド
+50金币
 
 > TAG_300GOLD
 300 gold
-300ゴールド
+300金币
 
 > TXT_PERSON
 Person
-一員
+普通人
 
 > TAG_ACOLYTE
 Acolyte
-アコライト
+助手
 
 > TAG_ARMORER
 Armorer
-装甲
+装甲师
 
 > TAG_BARKEEP
 Bar Keep
-酒屋
+酒吧主
 
 > TAG_BEGGAR
 Beggar
-乞食
+乞丐
 
 > TAG_MACIL1
 Macil
-マシル
+马希尔
 
 > TAG_MACIL2
 Macil
-マシル
+马希尔
 
 > TAG_MEDIC
 Medic
-メディック
+医生
 
 > TAG_ORACLE
 Oracle
-オラクル
+祭司
 
 > TAG_PRIEST
 Priest
-プリースト
+牧师
 
 > TAG_RATBUDDY
 Rat Buddy
-ラット バディ
+老鼠巴迪
 
 > TAG_REBEL
 Rebel
-反乱軍
+反叛者
 
 > TAG_TEMPLAR
 Templar
-騎士団員
+圣骑士
 
 > TAG_WEAPONSMITH
 Weapon Smith
-武器工
+武器工匠
 
 > TAG_TALISMANRED
 Red Talisman
-赤の魔除け
+红色护符
 
 > TAG_TALISMANGREEN
 Green Talisman
-緑の魔除け
+绿色护符
 
 > TAG_TALISMANBLUE
 Blue Talisman
-青の魔除け
+蓝色护符
 
 ; Obituaries
 
 > OB_ACOLYTE
 %o was zealously shot down by an Acolyte.
-%o は熱心なアコライトに堕とされた。
+%o 被一位热心的助手击倒了。
 
 > OB_MACIL
 %o should have never rebelled against Macil.
-%o はマシルに歯向かうべきではなかった。
+%o 应该永不背叛马希尔。
 
 > OB_REBEL
 %o was gunned down by a Rebel.
-%o は反乱軍に撃ち殺された。
+%o 被一位反叛者枪杀了。
 
 > OB_BEGGAR
 %o was beaten to death by the poor.
-%o は貧民に殴り殺された。
+%o 被这位贫民殴打致死。
 
 > OB_PEASANT
 %o should have never picked a fight with a civilian.
-%o は庶民に戦いを挑むべきではなかった。
+%o 不应该跟平民挑起战斗。
 
 > OB_ALIENSPECTRE
 %o was struck down by the Spectre.
-%o はスペクトルに討ち滅ぼされた。
+%o 被幽灵打倒了。
 
 > OB_ENTITY
 %o felt the wrath of The One God.
-%o は唯一神の怒りに触れた。
+%o 感受到了唯一神的怒火。
 
 > OB_LOREMASTER
 %o couldn't escape from the Lore Master's grasp.
-%o はロアマスターの手から逃れられなかった。
+%o 无法从贤者的手中逃脱。
 
 > OB_PROGRAMMER
 %o was deleted by the Programmer.
-%o はプログラマーに消去された。
+%o 被程序员删除了。
 
 > OB_STFBISHOP
 %o was blown away by the Bishop.
-%o はビショップに吹き飛ばされた。
+%o 被主教吹飞了。
 
 > OB_SENTINEL
 %o was shot down by a Sentinel.
-%o はセンティネルに堕とされた。
+%o 被哨兵击倒了。
 
 > OB_CRUSADER
 %o was swept away by a Crusader.
-"""%o はクルセーダーに一掃された。
-"""
+%o 被圣战士清除了。
 
 > OB_INQUISITOR
 %o was sentenced by an Inquisitor.
-"""%o は審問官によって宣告された。
-"""
+%o 被审判官宣判了。
 
 > OB_STALKER
 %o was bugged by a Stalker.
-"""%o はストーカーに精神を蝕まれた。
-"""
+%o 被跟踪者侵蚀了。
 
 > OB_TURRET
 %o triggered the automatic defenses.
-%o は警備システムを起動してしまった。
+%o 触发了自动防御。
 
 > OB_TEMPLARHIT
 %o was clawed by a Templar.
-%o は騎士団員に連行された。
+%o 被圣骑士抓住了。
 
 > OB_TEMPLAR
 %o was vaporized by a Templar.
-%o は騎士団員に浄化された。
+%o 被圣骑士净化了。
 
 > OB_REAVERHIT
 %o was sliced open by a Reaver.
-%o はリーバーに切り裂かれた。
+%o 被掠夺者切开了。
 
 > OB_REAVER
 %o was shot down by a Reaver.
-%o はリーバーに撃ち殺された。
+%o 被掠夺者击倒了。
 
 > OB_MPPUNCHDAGGER
 %o was unwittingly backstabbed by %k.
-%o は電気ショックを %k からもらった。
+%o 无意中被 %k 陷害了。
 
 > OB_MPELECTRICBOLT
 %o got bolted to the wall by %k.
-%o は ％k に壁へ打ち付けられた。
+%o 被 %k 拴在了墙上。
 
 > OB_MPPOISONBOLT
 %o received a lethal dose of %k's wrath.
-%o は 致死量の ％k の怒りを盛られた。
+%o 受到了 %k 致死量的怒火。
 
 > OB_MPASSAULTGUN
 %o was drilled full of holes by %k's assault gun.
-%o は %k のアサルトガンで穴だらけにされた。
+%o 被 %k 的突击枪钻得满身是洞。
 
 > OB_MPMINIMISSILELAUNCHER
 %o gulped down %k's missile.
-%o は %k のミサイルを味わった。
+%o 咽下了 %k 的导弹。
 
 > OB_MPSTRIFEGRENADE
 %o was inverted by %k's H-E grenade.
-%o は %k のHE手榴弾によって反逆された。
+%o 被 %k 的HE榴弹炸翻了。
 
 > OB_MPPHOSPHOROUSGRENADE
 %o took a flame bath in %k's phosphorous pyre.
-%o は %k の白リン弾で炎に包まれた。
+%o 被 %k 的磷堆洗了次火浴。
 
 > OB_MPFLAMETHROWER
 %o was barbecued by %k.
-%o は %k に丸焼きにされてしまった。
+%o 被 %k 烧烤了。
 
 > OB_MPMAULER1
 %o was zapped by %k.
-%o は %k から電気ショックを浴びた。
+%o 被 %k 电死了。
 
 > OB_MPMAULER
 %o was viciously vaporized by %k.
-%o は %k の悪辣さにより気化した。
+%o 被 %k 恶意地蒸发了。
 
 > OB_MPSIGIL
 %o bowed down to the sheer power of %k's Sigil.
-%o は %k のシジルによる威圧に屈した。
+%o 屈服于 %k 印记的压倒性力量。
 
 ; Miscellaneous
 
 > TXT_STRIFE_EPI
 Quest for the Sigil
-シジルの探求
+印记任务
 
 > TXT_FREED_PRISONERS
 You've freed the prisoners!
-囚人を解放した!
+你释放了囚犯！
 
 > TXT_DESTROYED_CONVERTER
 You've destroyed the Converter!
-コンバーターを破壊した!
+你摧毁了转换器！
 
 > TXT_COMPLETED_TRAINING
 Congratulations! You have completed the training area
-おめでとう!トレーニングエリアを完了した
+祝贺你！你完成了训练区
 
 > TXT_QUEST_14
 You've blown up the Crystal
-クリスタルを爆破した
+你炸毁了水晶
 
 > TXT_QUEST_16
 You've blown up the Gates
-ゲートを爆破した
+你炸毁了大门
 
 > TXT_QUEST_27
 You've blown up the Computer
-コンピューターを爆破した
+你炸毁了计算机
 
 > TXT_KILLED_BISHOP
 You killed the Bishop!
-ビショップを殺した!
+你杀了主教！
 
 > TXT_KILLED_ORACLE
 You've killed the Oracle!
-オラクルの予言を覆した!
+你杀了祭司！
 
 > TXT_KILLED_MACIL
 You killed Macil!
-マシルを討ち取った!
+你杀了马希尔！
 
 > TXT_KILLED_LOREMASTER
 You've killed the Loremaster!
-ロアマスターを吊り上げた!
+你杀了贤者！
 
 > TXT_YOUFOOL
 You fool! You've set off the alarm.
-バカな真似を! 警報を鳴らしてしまった。
+你真笨！你触发了警报。
 
 > TXT_YOUREDEAD
 You're dead! You set off the alarm.
-絶望的だ! 警報を鳴らしてしまった。
+你死定了！你触发了警报。
 
 > TXT_HAVEENOUGH
 You seem to have enough!
-十分に持ち合わせている!
+你似乎已经受够了！
 
 > TXT_GOAWAY
 Go away!
@@ -3412,20 +3437,20 @@ Go away!
 
 > TXT_COMM0
 Incoming Message...
-传入消息...
+传入消息……
 
 > TXT_COMM1
 Incoming Message from BlackBird...
-ブラックバードからのメッセージが届いた...
+从黑鸟传来消息……
 
 > TXT_FINDHELP
 Find help
-助けを探せ
+寻找帮助
 
 > TXT_TRADE
 ; As in for %u amount of money.
 for %u
-%u ゴールド
+%u 金币
 
 ; Chex Quest
 
@@ -3433,173 +3458,173 @@ for %u
 
 > GOTCHEXARMOR
 Picked up the Chex(R) Armor.
-チェックス(R)アーマー をてにいれた。
+拾取了奇克斯(R)护甲。
 
 > GOTSUPERCHEXARMOR
 Picked up the Super Chex(R) Armor!
-スーパーチェックス(R)アーマー をてにいれた。
+拾取了超级奇克斯(R)护甲。
 
 > GOTWATER
 Picked up a glass of water.
-コップいっぱいの みずをひろった。
+拾取了一杯水。
 
 > GOTREPELLENT
 Picked up slime repellent.
-スライム はんぱつざい をひろった。
+拾取了slime repellent.
 
 > GOTBREAKFAST
 Supercharge Breakfast!
-ちょうしょく スーパーチャージ!
+Supercharge早餐！
 
 > GOTCBLUEKEY
 Picked up a blue key.
-あお のかぎ をひろった。
+拾取了蓝钥匙。
 
 > GOTCYELLOWKEY
 Picked up a yellow key.
-きいろ のかぎ をひろった。
+拾取了黄钥匙。
 
 > GOTCREDKEY
 Picked up a red key.
-あか のかぎ をひろった。
+拾取了红钥匙。
 
 > GOTFRUIT
 Picked up a bowl of fruit.
-フルーツのボウル をひろった。
+拾取了一碗水果。
 
 > GOTVEGETABLESNEED
 Vegetables are REALLY good for you!
-いま とってもひつような やさいのボウルだ!
+蔬菜对你非常非常有益！
 
 > GOTVEGETABLES
 Picked up a bowl of vegetables.
-やさいのボウル をひろった。
+拾取了一碗蔬菜。
 
 > GOTSLIMESUIT
 Found a Slime-Proof Suit
-たい スライム スーツ をてにいれた。
+发现了一件防粘液套装
 
 > GOTCHEXMAP
 Found a Computer Area Map
-コンピューターエリアマップ をてにいれた。
+发现了一张电脑区域地图
 
 > GOTZORCHRECHARGE
 Picked up a mini zorch recharge.
-ミニゾーチ リチャージ をひろった。
+拾取了a mini zorch recharge.
 
 > GOTMINIZORCHPACK
 Picked up a mini zorch pack.
-ミニゾーチ パック をひろった。
+拾取了a mini zorch pack.
 
 > GOTPROPULSORRECHARGE
 Picked up a zorch propulsor recharge.
-ゾーチプロパルサーリチャージ をひろった。
+拾取了a zorch propulsor recharge.
 
 > GOTPROPULSORPACK
 Picked up a zorch propulsor pack.
-ゾーチプロパルサーパック をひろった。
+拾取了a zorch propulsor pack.
 
 > GOTPHASINGZORCHERRECHARGE
 Picked up a phasing zorcher recharge
-フェイシング ゾーチャーリチャージ をひろった。
+拾取了a phasing zorcher recharge
 
 > GOTPHASINGZORCHERPACK
 Picked up a phasing zorcher pack.
-フェイシング ゾーチャーパック をひろった。
+拾取了a phasing zorcher pack.
 
 > GOTLARGEZORCHERRECHARGE
 Picked up a large zorcher recharge.
-ラージ ゾーチャーリチャージ をひろった。
+拾取了a large zorcher recharge.
 
 > GOTLARGEZORCHERPACK
 Picked up a large zorcher pack.
-ラージ ゾーチャーパック をひろった。
+拾取了a large zorcher pack.
 
 > GOTZORCHPACK
 Picked up a Zorchpak!
-ゾーチパックをてにいれた!
+拾取了a Zorchpak!
 
 > GOTLAZDEVICE
 You got the LAZ Device! Woot!
-LAZ デバイスをてにいれた! ワァオ!
+你得到了the LAZ装置！Woot!
 
 > GOTRAPIDZORCHER
 You got the Rapid Zorcher!
-ラピッドゾーチャー をてにいれた!
+你得到了the Rapid Zorcher!
 
 > GOTSUPERBOOTSPORK
 You got the Super Bootspork!
-スーパーさきわれスプーン をてにいれた!
+你得到了超级Bootspork!
 
 > GOTZORCHPROPULSOR
 You got the Zorch Propulsor!
-ロケット ゾーチャー をてにいれた!
+你得到了the Zorch Propulsor!
 
 > GOTPHASINGZORCHER
 You got the Phasing Zorcher!
-フェイシング ゾーチャー をてにいれた!
+你得到了the Phasing Zorcher!
 
 > GOTLARGEZORCHER
 You got the Large Zorcher!
-おおがたゾーチャー をてにいれた!
+你得到了大型Zorcher!
 
 > GOTSUPERLARGEZORCHER
 You got the Mega Zorcher!
-ちょうおおがたゾーチャー をてにいれた!
+你得到了巨型Zorcher!
 
 > GOTMINIZORCHER
 Picked up a Mini Zorcher.
-こがたゾーチャー をてにいれた。
+拾取了迷你Zorcher.
 
 ; Actor tags
 
 > TAG_SPOON
 Spoon
-スプーン
+勺子
 
 > TAG_SPORK
 Super Bootspork
-スーパーさきわれスプーン
+超级Bootspork
 
 > TAG_MINIZORCHER
 Mini Zorcher
-こがたゾーチャー
+迷你Zorcher
 
 > TAG_LARGEZORCHER
 Large Zorcher
-おおがたゾーチャー
+大型Zorcher
 
 > TAG_SUPERLARGEZORCHER
 Super-Large Zorcher
-ちょうおおがたゾーチャー
+超大Zorcher
 
 > TAG_RAPIDZORCHER
 Rapid Zorcher
-れんしゃ ゾーチャー
+Rapid Zorcher
 
 > TAG_ZORCHPROPULSOR
 Zorch Propulsor
-ロケット ゾーチ
+Zorch Propulsor
 
 > TAG_PHASINGZORCHER
 Phasing Zorcher
-フェイシング ゾーチャー
+Phasing Zorcher
 
 > TAG_LAZDEVICE
 LAZ Device
-ラージエリアゾーキング デバイス
+LAZ装置
 
 > OB_COMMONUS
 %o was slimed by a flemoid.
-%o はフレモイドにベトベトにされた。
+%o 被a flemoid粘住了。
 
 > OB_BIPEDICUS
 %o was slimed by a bipedicus.
-%o はバイペディクスにベトベトにされた。
+%o 被a bipedicus粘住了。
 
 > OB_BIPEDICUS2
 %o was slimed by an armored bipedicus.
-%o はアーマードペディクスにベトベトにされた。
+%o 被an armored bipedicus粘住了。
 
 > OB_CYCLOPTIS
 %o was slimed by a cycloptis.
@@ -3607,69 +3632,69 @@ LAZ Device
 
 > OB_FLEMBRANE
 %o was defeated by the Flembrane.
-%o はフレムブランにはいぼくした。
+%o was defeated by the Flembrane.
 
 > OB_MPSPOON
 %o was spoon fed by %k.
-%o は %k にスプーンでたべさせられた。
+%o was spoon fed by %k.
 
 > OB_MPBOOTSPORK
 %o was thoroughly mixed with %k's bootspork.
-%o は %k にスーパーさきわれスプーンでかきまぜられた。
+%o was thoroughly mixed with %k's bootspork.
 
 > OB_MPZORCH
 %o was zorched by %k.
-%o は %k にビリビリさせられた。
+%o was zorched by %k.
 
 > OB_MPMEGAZORCH
 %o was hit by %k's mega-zorcher.
-%o に %k のメガゾーチャーがヒットした。
+%o was hit by %k's mega-zorcher.
 
 > OB_MPRAPIDZORCH
 %o was rapid zorched by %k.
-%o は %k に めをまわされた。
+%o was rapid zorched by %k.
 
 > OB_MPPROPULSOR
 %o was zorched by %k's propulsor.
-%o は %k のロケットゾーチャーにあたった。
+%o was zorched by %k's propulsor.
 
 > OB_MPP_SPLASH
 %o was hit by %k's propulsor.
-%o に %k のロケットゾーチャーがとどいた。
+%o was hit by %k's propulsor.
 
 > OB_MPPHASEZORCH
 %o was phase zorched by %k.
-%o は %k によってスベスベにされた。
+%o was phase zorched by %k.
 
 > OB_MPLAZ_BOOM
 %o fell prey to %k's LAZ device.
-%o は %k のLAZデバイスのえじきになった。
+%o fell prey to %k's LAZ装置。
 
 > OB_MPBFG_SPLASH chex
 %o was lazzed by %k.
-%o は %k にとかされた。
+%o was lazzed by %k.
 
 ; Miscellaneous
 
 > CHUSTR_E1M1
 E1M1: Landing Zone
-E1M1: ちゃくりく ちてん
+E1M1: 着陆区
 
 > CHUSTR_E1M2
 E1M2: Storage Facility
-E1M2: ほかん しせつ
+E1M2: 储存设施
 
 > CHUSTR_E1M3
 E1M3: Experimental Lab
-E1M3: じっけんしつ
+E1M3: 实验室
 
 > CHUSTR_E1M4
 E1M4: Arboretum
-E1M4: じゅもくえん
+E1M4: 植物园
 
 > CHUSTR_E1M5
 E1M5: Caverns of Bazoik
-E1M5: バゾイクの どうくつ
+E1M5: 巴佐伊克洞穴
 
 > CE1TEXT
 """Mission accomplished.
@@ -3682,33 +3707,36 @@ Are you prepared for the next mission?
 
 
 Press the escape key to continue..."""
-"""にんむはかんりょうしました。
+"""任务圆满完成。
 
-きみは つぎのにんむの じゅんびができたかい?
+你准备好下个任务了吗？
 
 
-エスケープ キーをおせば つづけられるよ..."""
+
+
+
+
+按Esc键继续……"""
 
 > CE2TEXT
 You've done it!
-よくやった!
+你已经完成了！
 
 > CE3TEXT
 Wonderful Job!
-ワンダフル!
+干得好！
 
 > CE4TEXT
 Fantastic
-すばらしい!
+好极了
 
 > CLOADNET
 """You can't do load while in a net quest!
 
 Press a key."""
-"""オンラインモードでは セーブデータをロードできません
+"""在网络任务中你不能执行加载！
 
-なにか キーを おしてください。
-"""
+按任意键。"""
 
 > QSPROMPT chex
 """Quicksave over your quest named
@@ -3716,20 +3744,19 @@ Press a key."""
 '%s'?
 
 Press Y or N."""
-"""ぼうけんを このなまえで すぐにセーブしますか?
+"""是否快速保存并覆盖存档名：
 
-"%s"
+“%s”
 
-Yes か No できめてください。"""
+按Y或N键。"""
 
 > QLOADNET chex
 """You can't quickload during a netquest!
 
 Press a key."""
-"""オンラインモードでは セーブデータをロードできません
+"""在网络任务中你不能执行快速加载！
 
-なにか キーを おしてください。
-"""
+按任意键。"""
 
 > QLPROMPT chex
 """Do you want to quickload the quest named
@@ -3737,32 +3764,31 @@ Press a key."""
 '%s'?
 
 Press Y or N."""
-"""ぼうけんを このなまえで すぐにロードしますか?
+"""是否快速加载存档名：
 
-"%s"
+“%s”
 
-Y か N をおしてください。"""
+按Y或N键。"""
 
 > CNEWGAME
 """You can't start a new quest
 while in a network quest.
 
 Press a key."""
-"""オンラインモードでは セーブデータをロードできません
+"""在网络任务中
+你不能开始一个新任务。
 
-なにか キーを おしてください。
-"""
+按任意键。"""
 
 > CNIGHTMARE
 """Careful, this will be tough.
 Do you wish to continue?
 
 Press Y or N."""
-"""きをつけて、これはすごく てごわい。
-ほんとうにはじめますか?
+"""小心，这会很艰难。
+你还希望继续吗？
 
-Y か N をおしてください。
-"""
+按Y或N键。"""
 
 > CSWSTRING
 """This is Chex(R) Quest. look for
@@ -3770,45 +3796,43 @@ Y か N をおしてください。
 future levels at www.chexquest.com.
 
 Press a key."""
-"""これは チェックス(R)クエスト。
+"""这是奇克斯(R)任务。寻找更多关卡
 
-つづきは doomwiki.org/wiki/Chex_Questからさがしてね。
+请访问www.chexquest.com。
 
-なにか キーを おしてください。"""
+按任意键。"""
 
 > NETEND chex
 """You can't end a netquest!
 
 Press a key."""
-"""オンラインモードでは タイトルがめんにはもどれません
+"""你不能结束网络任务！
 
-なにか キーを おしてください。
-"""
+按任意键。"""
 
 > ENDGAME chex
 """Are you sure you want to end the quest?
 
 Press Y or N."""
-"""ほんとうに いまのぼうけんを おわらせますか?
+"""你确认想结束这个任务吗？
 
-Y か N をおしてください。
-"""
+按Y或N键。"""
 
 > STSTR_DQDON chex
 Invincible Mode ON
-むてきモード オン
+无敌模式开启
 
 > STSTR_DQDOFF chex
 Invincible Mode OFF
-むてきモード オフ
+无敌模式关闭
 
 > STSTR_FAADDED chex
 Zorch Added
-ゾーチ ついか
+增加了Zorch
 
 > STSTR_KFAADDED chex
 Super Zorch Added
-スーパーゾーチ ついか
+增加了超级Zorch
 
 > STSTR_CHOPPERS chex
 ... Eat Chex(R)!
@@ -3816,19 +3840,19 @@ Super Zorch Added
 
 > AMMO_CLIP chex
 Mini Zorch Charge
-ミニゾーチ ほきゅう
+迷你Zorch Charge
 
 > AMMO_SHELLS chex
 Large Zorcher Charge
-ラージゾーチャー ほきゅう
+大型Zorcher Charge
 
 > AMMO_ROCKETS chex
 Propulsor Charge
-プロパルサー ほきゅう
+Propulsor Charge
 
 > AMMO_CELLS chex
 Phasing Zorcher Charge
-フェイシング ゾーチャー ほきゅう
+Phasing Zorcher Charge
 
 ; Menus
 
@@ -4167,7 +4191,7 @@ Check ammo for weapon switch
 
 > GMPLYMNU_KILLBOSSSPAWNS
 Icon's death kills its spawns
-罪恶圣象(最终BOSS)死亡时杀死其刷出来的怪物
+罪恶圣像(最终BOSS)死亡时杀死其刷出来的怪物
 
 > GMPLYMNU_NOCOUNTENDMONSTER
 End sector counts for kill %
