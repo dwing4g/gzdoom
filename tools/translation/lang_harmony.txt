@@ -1,0 +1,256 @@
+> NIGHTMARE
+Do you really think you can handle that?\n\npress 'Y' or 'N'...
+"""ホントウニ タイショデキルト
+オモッテイマスカ?
+
+'Y'カ'N'デ オウトウセヨ"""
+
+> AMSTR_MARKEDSPOT
+Spot marked
+スポットヲ マーク シタ
+
+> PD_BLUEO
+Requires the GREEN keycard
+グリーン キーカード ガ ヒツヨウダ
+
+> PD_REDO
+Requires the PURPLE keycard
+イエロー キーカード ガ ヒツヨウダ
+
+> PD_YELLOWO
+Requires the YELLOW keycard
+パープル キーカード ガ ヒツヨウダ
+
+> PD_BLUEK
+Requires the GREEN key
+グリーン キー ガ ヒツヨウダ
+
+> PD_YELLOWK
+Requires the YELLOW key
+イエロー キー ガ ヒツヨウダ
+
+> PD_REDK
+Requires the PURPLE key
+パープル キー ガ ヒツヨウダ
+
+> GOTARMOR
+Picked up armor.
+アーマー ニュウシュ
+
+> GOTMEGA
+Picked up Combat Armor.
+コンバット アーマー ニュウシュ
+
+> GOTMSPHERE
+Superhealth
+スーパー ヘルス
+
+> GOTBLUECARD
+Obtained the GREEN keycard.
+グリーン キーカード ニュウシュ
+
+> GOTYELWCARD
+Obtained the YELLOW keycard.
+イエロー キーカード ニュウシュ
+
+> GOTREDCARD
+Obtained the PURPLE keycard.
+パープル キーカード ニュウシュ
+
+> GOTBLUESKUL
+Obtained the GREEN key.
+グリーン キー ニュウシュ
+
+> GOTYELWSKUL
+Obtained the YELLOW key.
+イエロー キー ニュウシュ
+
+> GOTREDSKUL
+Obtained the PURPLE key.
+パープル キー ニュウシュ
+
+> GOTSTIM
+Healing mushroom
+ヒーリング マッシュルーム
+
+> GOTMEDIKIT
+Acquired: medical kit.
+シュトク: メディカルキット
+
+> GOTMEDINEED
+Acquired: medical kit that you REALLY need.
+シュトク: キンキュウジタイヲ スクウ メディカルキット
+
+> GOTMAP
+Map
+コノ クイキノ マップダ 
+
+> GOTCLIPBOX
+Acquired: case of bullets.
+シュトク: バレット ケース
+
+> GOTROCKET
+Acquired: Grenade.
+シュトク: グレネード
+
+> GOTROCKBOX
+Acquired: Grenades.
+シュトク: グレネード セット
+
+> GOTSHELLBOX
+Acquired: box of shotgun shells.
+シュトク: シェル ボックス
+
+> GOTBACKPACK
+Acquired: ammo backpack.
+シュトク: バックパック
+
+> GOTBFG9000
+Acquired: Grenade.
+シュトク: グレネード
+
+> GOTCHAINGUN
+Acquired: Minigun.
+シュトク: ミニガン
+
+> GOTLAUNCHER
+Acquired: Grenade launcher.
+シュトク: グレネードランチャー
+
+> GOTPLASMA
+Entropy thrower!
+エントロピースロワー!
+
+> GOTSHOTGUN
+Acquired: Shotgun.
+シュトク: ショットガン
+
+> STSTR_DQDON
+God Mode ON
+ゴッドモード オン
+
+> STSTR_DQDOFF
+God Mode OFF
+ゴッドモード オフ
+
+> STSTR_KFAADDED
+All weapons/ ammo/ keys
+スベテノ ブキ/カギ/ダンヤク
+
+> STSTR_FAADDED
+All weapons and ammo
+スベテノ ブキ/ダンヤク
+
+> TXT_HARMMAP01
+Abduction
+アブダクション
+
+> TXT_HARMMAP02
+Harm's Way
+ハーム'ズ ウェイ
+
+> TXT_HARMMAP03
+Owt Mood
+ヤバイムード
+
+> TXT_HARMMAP04
+Megalapolis
+メガラポリス
+
+> TXT_HARMMAP05
+The Hospital
+ホスピタル
+
+> TXT_HARMMAP06
+The Weapons Factory
+ウェポンファクトリー
+
+> TXT_HARMMAP07
+The Underwater Lab
+アンダーウォーターラボ
+
+> TXT_HARMMAP08
+Airstrip One
+エアーシップ ワン
+
+> TXT_HARMMAP09
+The Launch Base
+ランチャーベース
+
+> TXT_HARMMAP10
+The Radioactive Zone
+ラディオアクティブ ゾーン
+
+> TXT_HARMMAP11
+Echidna
+エキドナ
+
+> CLUSTEREXIT1
+"""You feel sick to your stomach...
+Looking in the face of the mutant queen... 
+That thing... That used to be... 
+Your friend... Amira!
+
+Those monsters must have found a way to 
+mutate her and turn her into this
+hideous creature to bear their offspring.
+
+-sigh-
+
+You get yourself together... 
+They are going to pay for making you kill
+your friend...
+
+"Hell has no fury like a woman scorned!"
+
+     = T H E  E N D ="""
+"""貴方はミュータントの女王の顔を見た時
+気分が凄まじく悪くなった...
+その顔は... 見覚えがあった...
+私の親友... アミラ!
+
+モンスター達が彼女に突然変異を引き起こし、
+奴等を産ませ続ける恐ろしい方法を編み出したのだろう。
+
+深い溜め息を吐き、気を取り直す...
+親友を殺した代償を奴等に支払わせるために。
+
+"もうこの地獄に怒れた彼女を蔑むものはない!"
+    = T H E  E N D ="""
+
+> WI_FINISHED
+; This text is deliberately empty
+
+> WI_ENTERING
+; Yellow needs retranslation
+Loading
+ローディング
+
+> SKILL_BABY
+Very Easy
+ベリーイージー
+
+> SKILL_EASY
+Easy
+イージー
+
+> SKILL_NORMAL
+Medium
+ミディアム
+
+> SKILL_HARD
+Hard
+ハード
+
+> SKILL_NIGHTMARE
+Very Hard
+ベリーハード
+
+> HARMQUITMSG
+Thanks for playing
+プレイ シテクレテ カンシャスル
+
+> TXT_D2E1
+Harmony
+; NEED TRANSLATION
+

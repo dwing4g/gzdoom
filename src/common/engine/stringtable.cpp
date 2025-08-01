@@ -609,6 +609,8 @@ const char *FStringTable::CheckString(const char *name, uint32_t *langtable, int
 			}
 		}
 	}
+	if (*name == '$')
+		return CheckString(name + 1, langtable, gender);
 	return nullptr;
 }
 
@@ -637,6 +639,8 @@ const char *FStringTable::GetLanguageString(const char *name, uint32_t langtable
 			return item->strings[gender].GetChars();
 		}
 	}
+	if (*name == '$')
+		return GetLanguageString(name + 1, langtable, gender);
 	return nullptr;
 }
 
