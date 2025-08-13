@@ -1,0 +1,2813 @@
+; Miscellaneous
+
+> PRESSYN
+Press Y or N.
+按Y键确认，按N键取消。
+
+> TXT_YES
+Yes
+是
+
+> TXT_NO
+No
+否
+
+> SAVEDEAD
+"""You can't save if you aren't playing!
+
+Press a key."""
+"""未在游戏中无法保存！
+
+按下任意键。"""
+
+> SAFEMESSAGE
+Do you really want to do this?
+你确定要这么做吗？
+
+> NOTSET
+Not set
+未设置
+
+> QSPROMPT
+"""Quicksave over your game named
+
+'%s'?
+
+Press Y or N."""
+"""快速保存覆盖到存档名
+
+“%s”？
+
+按Y键确认，按N键取消。"""
+
+> QLPROMPT
+"""Do you want to quickload the game named
+
+'%s'?
+
+Press Y or N."""
+"""你确定要快速加载存档名
+
+“%s”？
+
+按Y键确认，按N键取消。"""
+
+> TXT_X_CHEATS
+; This is a gender sensitive message where %s represents the player
+%s cheats
+%s 作弊了
+
+> MSGOFF
+Messages: OFF
+提示：开启
+
+> MSGON
+Messages: ON
+提示：关闭
+
+> TXT_SAY
+Say:
+发言：
+
+> TXT_QUITENDOOM
+Press any key or click anywhere in the window to quit.
+按任意键或点击窗口内任意位置来退出。
+
+; Savegame
+
+> NEWSAVE
+<New Save Game>
+<新存档>
+
+> GGSAVED
+Game saved.
+保存完成。
+
+> SAVECOMMENT_TIME
+Time
+时间
+
+> MNU_LOADGAME
+Load Game
+加载存档
+
+> MNU_SAVEGAME
+Save Game
+保存存档
+
+> MNU_NOPICTURE
+No Picture
+无图像
+
+> MNU_DIFFVERSION
+Different Version
+其它版本
+
+> MNU_NOFILES
+No files
+无文件
+
+> MNU_DELETESG
+"""Do you really want to delete the savegame?
+"""
+"""你真的想要删除此存档吗？
+"""
+
+; General
+
+> OPTVAL_OFF
+Off
+关
+
+> OPTVAL_ON
+On
+开
+
+> OPTVAL_AUTO
+Auto
+自动
+
+> OPTMNU_TITLE
+Options
+选项
+
+> OPTMNU_CONTROLS
+Customize Controls
+自定义控制
+
+> OPTMNU_MOUSE
+Mouse Options
+鼠标选项
+
+> OPTMNU_JOYSTICK
+Controller Options
+控制器选项
+
+> OPTMNU_PLAYER
+Player Setup
+玩家设置
+
+> OPTMNU_GAMEPLAY
+Gameplay Options
+玩法选项
+
+> OPTMNU_AUTOMAP
+Automap Options
+地图选项
+
+> OPTMNU_HUD
+HUD Options
+界面选项
+
+> OPTMNU_MISCELLANEOUS
+Miscellaneous Options
+其它选项
+
+> OPTMNU_SOUND
+Sound Options
+声音选项
+
+> OPTMNU_DISPLAY
+Display Options
+显示选项
+
+> OPTMNU_VIDEO
+Set video mode
+设置视频模式
+
+> OPTMNU_DEFAULTS
+Reset to defaults
+重置成默认
+
+> OPTMNU_RESETTOSAVED
+Reset to last saved
+重置成上次保存的设置
+
+> OPTMNU_WRITEINI
+Save current settings
+保存当前设置
+
+> OPTMNU_CONSOLE
+Go to console
+进入控制台
+
+> OPTMNU_NETWORK
+Network Options
+网络选项
+
+> OPTMNU_REVERB
+Reverb environment editor
+混响环境编辑器
+
+; Customize controls
+
+> CNTRLMNU_SWITCHTEXT1
+ENTER to change, BACKSPACE to clear
+按回车键更改，按退格键清除
+
+> CNTRLMNU_SWITCHTEXT2
+Press new key for control, ESC to cancel
+按一个键作为新键位，按ESC键取消
+
+> CNTRLMNU_CONTROLS
+Controls
+控制键位
+
+> CNTRLMNU_ATTACK
+Fire
+攻击
+
+> CNTRLMNU_ALTATTACK
+Secondary Fire
+副攻击
+
+> CNTRLMNU_RELOAD
+Weapon Reload
+武器装填
+
+> CNTRLMNU_USE
+Use / Open
+使用/打开
+
+> CNTRLMNU_FORWARD
+Move forward
+前移
+
+> CNTRLMNU_BACK
+Move backward
+后移
+
+> CNTRLMNU_MOVELEFT
+Strafe left
+左移
+
+> CNTRLMNU_MOVERIGHT
+Strafe right
+右移
+
+> CNTRLMNU_TURNLEFT
+Turn left
+向左转
+
+> CNTRLMNU_TURNRIGHT
+Turn right
+向右转
+
+> CNTRLMNU_TURN180
+Quick Turn
+快速转身
+
+> CNTRLMNU_JUMP
+Jump
+跳跃
+
+> CNTRLMNU_CROUCH
+Crouch
+按住下蹲
+
+> CNTRLMNU_TOGGLECROUCH
+Crouch Toggle
+切换下蹲
+
+> CNTRLMNU_MOUSELOOK
+Mouse look
+鼠标视角
+
+> CNTRLMNU_LOOKUP
+; Look doesn't change the aim! It only alters the view pitch
+Look up
+向上看
+
+> CNTRLMNU_LOOKDOWN
+Look down
+向下看
+
+> CNTRLMNU_CENTERVIEW
+Center view
+视野居中
+
+> CNTRLMNU_RUN
+Run
+按住奔跑
+
+> CNTRLMNU_TOGGLERUN
+Toggle Run
+切换奔跑
+
+> CNTRLMNU_STRAFE
+Strafe
+按住平移
+
+> CNTRLMNU_SCOREBOARD
+Show Scoreboard
+按住显示分数板
+
+> CNTRLMNU_ACTION
+Action
+动作
+
+> CNTRLMNU_ACTION_TITLE
+Customize Action Controls
+自定义动作控制
+
+> CNTRLMNU_CHAT
+Chat
+聊天
+
+> MNU_MULTIPLAYER
+Multiplayer
+多人游戏
+
+> CNTRLMNU_SAY
+Say
+发言
+
+> CNTRLMNU_CHAT_TITLE
+Customize Chat Controls
+自定义聊天控制
+
+> CNTRLMNU_WEAPONS_TITLE
+Customize Weapon Controls
+自定义武器控制
+
+> CNTRLMNU_INVENTORY_TITLE
+Customize Inventory Controls
+自定义物品控制
+
+> CNTRLMNU_OTHER_TITLE
+Customize Other Controls
+自定义其它控制
+
+> CNTRLMNU_WEAPONS
+Weapons
+武器
+
+> CNTRLMNU_NEXTWEAPON
+Next weapon
+下一个武器
+
+> CNTRLMNU_PREVIOUSWEAPON
+Previous weapon
+上一个武器
+
+> CNTRLMNU_SLOT1
+; Todo - make game specific
+Weapon 1
+武器1
+
+> CNTRLMNU_SLOT2
+; only show appropriate slots per game
+Weapon 2
+武器2
+
+> CNTRLMNU_SLOT3
+Weapon 3
+武器3
+
+> CNTRLMNU_SLOT4
+Weapon 4
+武器4
+
+> CNTRLMNU_SLOT5
+Weapon 5
+武器5
+
+> CNTRLMNU_SLOT6
+Weapon 6
+武器6
+
+> CNTRLMNU_SLOT7
+Weapon 7
+武器7
+
+> CNTRLMNU_SLOT8
+Weapon 8
+武器8
+
+> CNTRLMNU_SLOT9
+Weapon 9
+武器9
+
+> CNTRLMNU_SLOT0
+Weapon 10
+武器10
+
+> CNTRLMNU_INVENTORY
+Inventory
+物品栏
+
+> CNTRLMNU_USEITEM
+Activate item
+激活当前物品
+
+> CNTRLMNU_USEALLITEMS
+Activate all items
+激活全部物品
+
+> CNTRLMNU_NEXTITEM
+Next item
+下一件物品
+
+> CNTRLMNU_PREVIOUSITEM
+Previous item
+上一件物品
+
+> MAPCNTRLMNU_TITLE
+; most are not used yet but will be
+Customize Map Controls
+自定义地图控制
+
+> MAPCNTRLMNU_CONTROLS
+Map Controls
+地图控制
+
+> MAPCNTRLMNU_PANLEFT
+Pan left
+左平移
+
+> MAPCNTRLMNU_PANRIGHT
+Pan right
+右平移
+
+> MAPCNTRLMNU_PANUP
+Pan up
+上平移
+
+> MAPCNTRLMNU_PANDOWN
+Pan down
+下平移
+
+> MAPCNTRLMNU_ZOOMIN
+Zoom in
+放大
+
+> MAPCNTRLMNU_ZOOMOUT
+Zoom out
+缩小
+
+> MAPCNTRLMNU_TOGGLEZOOM
+Toggle zoom
+切换缩放模式
+
+> MAPCNTRLMNU_TOGGLEFOLLOW
+Toggle follow
+切换跟随模式
+
+> MAPCNTRLMNU_TOGGLEGRID
+Toggle grid
+切换网格模式
+
+> MAPCNTRLMNU_ROTATE
+Toggle rotate
+切换旋转模式
+
+> MAPCNTRLMNU_TOGGLETEXTURE
+Toggle texture
+切换纹理模式
+
+> CNTRLMNU_AUTOMAP
+Toggle automap
+切换地图模式
+
+> CNTRLMNU_CHASECAM
+Chasecam
+跟随镜头
+
+> CNTRLMNU_SCREENSHOT
+Screenshot
+截屏
+
+> CNTRLMNU_CONSOLE
+Open console
+打开控制台
+
+> CNTRLMNU_PAUSE
+Pause
+暂停
+
+> CNTRLMNU_DISPLAY_INC
+Increase Display Size
+增加显示尺寸
+
+> CNTRLMNU_DISPLAY_DEC
+Decrease Display Size
+减少显示尺寸
+
+> CNTRLMNU_OPEN_HELP
+Open Help
+打开帮助
+
+> CNTRLMNU_OPEN_SAVE
+Open Save Menu
+打开保存菜单
+
+> CNTRLMNU_OPEN_LOAD
+Open Load Menu
+打开加载菜单
+
+> CNTRLMNU_OPEN_OPTIONS
+Open Options Menu
+打开选项菜单
+
+> CNTRLMNU_OPEN_DISPLAY
+Open Display Menu
+打开显示菜单
+
+> CNTRLMNU_QUICKSAVE
+Quicksave
+快速保存
+
+> CNTRLMNU_QUICKLOAD
+Quickload
+快速加载
+
+> CNTRLMNU_EXIT_TO_MAIN
+Exit to Main Menu
+退出到主菜单
+
+> CNTRLMNU_TOGGLE_MESSAGES
+Toggle Messages
+切换消息模式
+
+> CNTRLMNU_MENU_QUIT
+Quit Game
+退出游戏
+
+> CNTRLMNU_ADJUST_GAMMA
+Adjust Gamma
+调整伽马值
+
+; Mouse
+
+> MOUSEMNU_ENABLEMOUSE
+Enable mouse
+启用鼠标
+
+> MOUSEMNU_MOUSEINMENU
+Enable mouse in menus
+在菜单里启用鼠标
+
+> MOUSEMNU_SHOWBACKBUTTON
+Show back button
+显示后退按钮
+
+> MOUSEMNU_CURSOR
+Cursor
+光标
+
+> MOUSEMNU_SENSITIVITY_X
+Horizontal sensitivity
+水平灵敏度
+
+> MOUSEMNU_SENSITIVITY_Y
+Vertical sensitivity
+垂直灵敏度
+
+> MOUSEMNU_SMOOTHMOUSE
+Smooth mouse movement
+平滑鼠标移动
+
+> MOUSEMNU_TURNSPEED
+Turning speed
+转身速度
+
+> MOUSEMNU_MOUSELOOKSPEED
+Mouselook speed
+鼠标视角速度
+
+> MOUSEMNU_FORWBACKSPEED
+Forward/Backward speed
+前进/后退速度
+
+> MOUSEMNU_STRAFESPEED
+Strafing speed
+平移速度
+
+> MOUSEMNU_ALWAYSMOUSELOOK
+Always Mouselook
+总是使用鼠标视角
+
+> MOUSEMNU_INVERTMOUSE
+Invert Mouse Y
+反转鼠标Y轴
+
+> MOUSEMNU_INVERTMOUSEX
+Invert Mouse X
+反转鼠标X轴
+
+> OPTVAL_UPPERLEFT
+Upper left
+左上
+
+> OPTVAL_UPPERRIGHT
+Upper right
+右上
+
+> OPTVAL_LOWERLEFT
+Lower left
+左下
+
+> OPTVAL_LOWERRIGHT
+Lower right
+右下
+
+> OPTVAL_TOUCHSCREENLIKE
+Touchscreen-like
+触屏式
+
+> OPTSTR_SIMPLEARROW
+Simple arrow
+简易箭头
+
+> OPTSTR_SYSTEMCURSOR
+System cursor
+系统光标
+
+> OPTVAL_DEFAULT
+Default
+默认
+
+; Controller
+
+> JOYMNU_TITLE
+Configure Controller
+配置控制器
+
+> JOYMNU_OPTIONS
+Controller Options
+控制器选项
+
+> JOYMNU_NOMENU
+Block controller input in menu
+在菜单里停用控制器输入
+
+> JOYMNU_ENABLE
+Enable controller support
+启用控制器支持
+
+> JOYMNU_DINPUT
+Enable DirectInput controllers
+启用DirectInput控制器
+
+> JOYMNU_XINPUT
+Enable XInput controllers
+启用XInput控制器
+
+> JOYMNU_PS2
+Enable raw PlayStation 2 adapters
+启用旧的PS2适配器
+
+> JOYMNU_NOCON
+No controllers detected
+未检测到控制器
+
+> JOYMNU_CONFIG
+Configure controllers:
+配置控制器：
+
+> JOYMNU_DISABLED1
+Controller support must be
+支持控制器必须
+
+> JOYMNU_DISABLED2
+; Supposed to be empty in Russian and Serbian.
+enabled to detect any
+启用才能检测到
+
+> JOYMNU_INVALID
+Invalid controller specified for menu
+只在菜单中让控制器无效
+
+> JOYMNU_OVRSENS
+Overall sensitivity
+总体灵敏度
+
+> JOYMNU_AXIS
+Axis Configuration
+轴配置
+
+> JOYMNU_INVERT
+Invert
+反转
+
+> JOYMNU_DEADZONE
+Dead zone
+死区
+
+> JOYMNU_NOAXES
+No configurable axes
+没有可配置的轴
+
+> OPTVAL_NONE
+None
+无
+
+> OPTVAL_TURNING
+Turning
+转身
+
+> OPTVAL_LOOKINGUPDOWN
+Looking Up/Down
+向上/下看
+
+> OPTVAL_MOVINGFORWARD
+Moving Forward
+前移
+
+> OPTVAL_STRAFING
+Strafing
+平移
+
+> OPTVAL_MOVINGUPDOWN
+Moving Up/Down
+上/下移
+
+> OPTVAL_INVERTED
+Inverted
+反转
+
+> OPTVAL_NOTINVERTED
+Not Inverted
+不反转
+
+; Player Menu
+
+> TXT_COLOR_BLUE
+Blue
+蓝色
+
+> TXT_COLOR_RED
+Red
+红色
+
+> TXT_COLOR_GREEN
+Green
+绿色
+
+> TXT_COLOR_GRAY
+Gray
+灰色
+
+> TXT_COLOR_DARKGRAY
+Dark gray
+深灰色
+
+> TXT_COLOR_DARKGREEN
+Dark Green
+深绿色
+
+> TXT_COLOR_BROWN
+Brown
+棕色
+
+> TXT_COLOR_DARKBLUE
+Dark Blue
+深蓝色
+
+> TXT_COLOR_LIGHTRED
+Light Red
+浅红色
+
+> TXT_COLOR_YELLOW
+Yellow
+黄色
+
+> TXT_COLOR_PURPLE
+Purple
+紫色
+
+> TXT_COLOR_DULLGREEN
+Olive
+黄褐色
+
+> TXT_COLOR_BEIGE
+Beige
+米黄色
+
+> TXT_COLOR_LIGHTGREEN
+Light Green
+浅绿色
+
+> TXT_COLOR_LIGHTBLUE
+Light Blue
+浅蓝色
+
+> TXT_COLOR_LIGHTGRAY
+Light Gray
+浅灰色
+
+> TXT_COLOR_LIGHTBROWN
+Light Brown
+浅棕色
+
+> TXT_COLOR_GOLD
+Gold
+金色
+
+> TXT_COLOR_BRIGHTGREEN
+Bright Green
+亮绿色
+
+> TXT_COLOR_RUST
+Rust
+锈色
+
+> PLYRMNU_NAME
+Name
+名称
+
+> PLYRMNU_TEAM
+Team
+团队
+
+> PLYRMNU_PLAYERCOLOR
+Color
+颜色
+
+> PLYRMNU_PLAYERGENDER
+Gender
+性别
+
+> OPTVAL_MALE
+Male
+男
+
+> OPTVAL_FEMALE
+Female
+女
+
+> OPTVAL_NEUTRAL
+Neutral
+中性
+
+> OPTVAL_OTHER
+Object
+其它
+
+> GMPLYMNU_TITLE
+Gameplay Options
+玩法选项
+
+> OPTVAL_ALWAYS
+Always
+总是
+
+> OPTVAL_NEVER
+Never
+从不
+
+> PLYRMNU_AUTOAIM
+Autoaim
+自动瞄准
+
+> PLYRMNU_ALWAYSRUN
+Always Run
+总是奔跑
+
+; Display
+
+> DSPLYMNU_SCREENSIZE
+Screen size
+屏幕尺寸
+
+> DSPLYMNU_VSYNC
+Vertical Sync
+垂直同步
+
+> DSPLYMNU_MODELS
+Models
+模型
+
+> DSPLYMNU_CROSSHAIRSCALE
+Scale crosshair
+准星比例
+
+> DSPLYMNU_BRIGHTNESS
+Brightness
+亮度
+
+> DSPLYMNU_GAMMA
+Gamma correction
+伽马校正
+
+> DSPLYMNU_CONTRAST
+Contrast
+对比度
+
+> DSPLYMNU_SATURATION
+Saturation
+饱和度
+
+> DSPLYMNU_SBSCALE
+Status Bar Scale
+状态栏比例
+
+> DSPLYMNU_MESSAGES
+Messages
+消息
+
+> MSGMNU_CENTERMESSAGES
+Center messages
+居中消息
+
+> MSGMNU_PULSEMESSAGES
+Pulsating message Display
+闪烁消息显示
+
+> MSGMNU_MESSAGESCALE
+Message Scale
+消息比例
+
+; Automap
+
+> MNU_COLORPICKER
+Select Color
+选择颜色
+
+> AUTOMAPMNU_ROTATE
+Rotate automap
+旋转地图
+
+> AUTOMAPMNU_FOLLOW
+Follow player
+跟随玩家
+
+> AUTOMAPMNU_LINEALPHA
+Line alpha
+线条透明度
+
+> AUTOMAPMNU_LINETHICKNESS
+Line thickness
+线条粗细
+
+> MAPCOLORMNU_TITLE
+Customize Map Colors
+自定义地图颜色
+
+> MAPCOLORMNU_DEFAULTMAPCOLORS
+Restore default custom colors
+自定义颜色恢复成默认
+
+; Sound
+
+> SNDMNU_SNDENABLED
+Sound enabled
+音效已启用
+
+> SNDMNU_MUSENABLED
+Music enabled
+音乐已启用
+
+> OPTVAL_4000HZ
+4000 Hz
+4000 Hz
+
+> OPTVAL_8000HZ
+8000 Hz
+8000 Hz
+
+> OPTVAL_11025HZ
+11025 Hz
+11025 Hz
+
+> OPTVAL_22050HZ
+22050 Hz
+22050 Hz
+
+> OPTVAL_32000HZ
+32000 Hz
+32000 Hz
+
+> OPTVAL_44100HZ
+44100 Hz
+44100 Hz
+
+> OPTVAL_48000HZ
+48000 Hz
+48000 Hz
+
+> OPTVAL_64SAMPLES
+64 samples
+64采样
+
+> OPTVAL_128SAMPLES
+128 samples
+128采样
+
+> OPTVAL_256SAMPLES
+256 samples
+256采样
+
+> OPTVAL_512SAMPLES
+512 samples
+512采样
+
+> OPTVAL_1024SAMPLES
+1024 samples
+1024采样
+
+> OPTVAL_2048SAMPLES
+2048 samples
+2048采样
+
+> OPTVAL_4096SAMPLES
+4096 samples
+4096采样
+
+> OPTSTR_AUTO
+Auto
+自动
+
+> OPTSTR_MONO
+Mono
+单声道
+
+> OPTSTR_STEREO
+Stereo
+立体声
+
+> OPTSTR_PROLOGIC
+Dolby Pro Logic Decoder
+杜比Pro逻辑解码器
+
+> OPTSTR_QUAD
+Quad
+四声道
+
+> OPTSTR_SURROUND
+5 speakers
+5声道
+
+> OPTSTR_5POINT1
+5.1 speakers
+5.1声道
+
+> OPTSTR_7POINT1
+7.1 speakers
+7.1声道
+
+> OPENALMNU_PLAYBACKDEVICE
+Playback device
+播放设备
+
+> OPENALMNU_ENABLEEFX
+Enable EFX
+开启EFX
+
+> OPENALMNU_RESAMPLER
+Resampler
+重采样
+
+> SNDMNU_SFXVOLUME
+Sounds volume
+音效音量
+
+> SNDMNU_MENUVOLUME
+Menu volume
+菜单音量
+
+> SNDMNU_MUSICVOLUME
+Music volume
+音乐音量
+
+> SNDMNU_MIDIDEVICE
+MIDI device
+MIDI设备
+
+> SNDMNU_BACKGROUND
+Sound in Background
+背景音效
+
+> SNDMNU_UNDERWATERREVERB
+Underwater reverb
+水下混响
+
+> SNDMNU_RANDOMIZEPITCHES
+Randomize pitches
+随机声调
+
+> SNDMNU_CHANNELS
+Sound channels
+声道
+
+> SNDMNU_BACKEND
+Sound backend
+声音后台
+
+> SNDMNU_OPENAL
+OpenAL options
+OpenAL选项
+
+> SNDMNU_RESTART
+Restart sound
+重启声音
+
+> SNDMNU_ADVANCED
+Advanced options
+高级选项
+
+> SNDMNU_MODREPLAYER
+Module replayer options
+MOD播放选项
+
+> SNDMNU_MIDIPLAYER
+Midi player options
+MIDI播放选项
+
+> SNDMNU_MENUSOUND
+Sound in Menus
+菜单中的音效
+
+> ADVSNDMNU_TITLE
+Advanced Sound Options
+高级声音选项
+
+> ADVSNDMNU_SAMPLERATE
+Sample rate
+采样率
+
+> ADVSNDMNU_HRTF
+HRTF
+HRTF
+
+> ADVSNDMNU_OPLSYNTHESIS
+OPL Synthesis
+OPL合成器
+
+> ADVSNDMNU_OPLNUMCHIPS
+Number of emulated OPL chips
+模拟OPL芯片数
+
+> ADVSNDMNU_OPLGAIN
+Gain
+增益
+
+> ADVSNDMNU_OPLFULLPAN
+Full MIDI stereo panning
+全MIDI立体声偏移
+
+> ADVSNDMNU_OPLCORES
+OPL Emulator Core
+OPL模拟器核心
+
+> ADVSNDMNU_MIDIVOICES
+MIDI voices
+MIDI语音
+
+> ADVSNDMNU_FLUIDSYNTH
+FluidSynth
+FluidSynth
+
+> ADVSNDMNU_GLOBAL
+Global
+全局
+
+> ADVSNDMNU_FREEVERB
+Freeverb
+Freeverb
+
+> ADVSNDMNU_GLOBAL_FREEVERB
+Global Freeverb
+全局Freeverb
+
+> ADVSNDMNU_FLUIDPATCHSET
+Patch set
+补丁设置
+
+> ADVSNDMNU_FLUIDGAIN
+Gain
+增益
+
+> ADVSNDMNU_REVERB
+Reverb
+混响
+
+> ADVSNDMNU_REVERB_LEVEL
+Reverb Level
+混响等级
+
+> ADVSNDMNU_CHORUS
+Chorus
+和声
+
+> ADVSNDMNU_TIMIDITY
+Timidity++
+Timidity++
+
+> ADVSNDMNU_ADLMIDI
+ADLMidi
+ADLMidi
+
+> ADVSNDMNU_OPNMIDI
+OPNMidi
+OPNMidi
+
+> ADVSNDMNU_TIMIDITYCONFIG
+Timidity config file
+Timidity配置文件
+
+> ADVSNDMNU_TIMIDITYVOLUME
+Relative volume
+相对音量
+
+> ADVSNDMNU_WILDMIDI
+WildMidi
+WildMidi
+
+> ADVSNDMNU_WILDMIDICONFIG
+WildMidi config file
+WildMidi配置文件
+
+> ADVSNDMNU_SELCONFIG
+Select configuration
+选择配置
+
+> ADVSNDMNU_ADVRESAMPLING
+Advanced Resampling
+高级重采样
+
+> ADVSNDMNU_OPLBANK
+OPL Bank
+OPL Bank
+
+> ADVSNDMNU_ADLOPLCORES
+OPL Emulator Core
+OPL模拟器核心
+
+> ADVSNDMNU_RUNPCMRATE
+Run emulator at PCM rate
+按PCM速率运行模拟器
+
+> ADVSNDMNU_ADLNUMCHIPS
+Number of emulated OPL chips
+模拟OPL芯片数
+
+> ADVSNDMNU_ADLGAIN
+Gain
+增益
+
+> ADVSNDMNU_VLMODEL
+Volume model
+音量模型
+
+> ADVSNDMNU_CHANALLOC
+Channel allocation method
+通道分配方法
+
+> ADVSNDMNU_AUTOARPEGGIO
+Automatic arpeggio
+自动琶音
+
+> ADVSNDMNU_OPNCORES
+OPN2 Emulator Core
+OPN2模拟器核心
+
+> ADVSNDMNU_GUSEMULATION
+GUS Emulation
+GUS模拟
+
+> ADVSNDMNU_GUSCONFIG
+GUS config file
+GUS配置文件
+
+> ADVSNDMNU_DMXGUS
+Read DMXGUS lumps
+读取DMXGUS块
+
+> ADVSNDMNU_GUSMEMSIZE
+GUS memory size
+GUS内存大小
+
+> ADVSNDMNU_OPNNUMCHIPS
+Number of emulated OPN chips
+模拟OPN芯片数
+
+> ADVSNDMNU_OPNGAIN
+Gain
+增益
+
+> ADVSNDMNU_VLMODEL
+Volume model
+音量模型
+
+> ADVSNDMNU_CHANALLOC
+Channel allocation method
+通道分配方法
+
+> ADVSNDMNU_AUTOARPEGGIO
+Automatic arpeggio
+自动琶音
+
+> ADVSNDMNU_ADLCUSTOMBANK
+Use custom WOPL bank
+使用自定义WOPL库
+
+> ADVSNDMNU_ADLUSEWADBANK
+Use WAD's GENMIDI bank as custom bank
+使用WAD的GENMIDI库作为自定义库
+
+> ADVSNDMNU_OPLBANKFILE
+WOPL Bank file
+WOPL库文件
+
+> ADVSNDMNU_OPNCUSTOMBANK
+Use custom WOPN bank
+使用自定义WOPN库
+
+> ADVSNDMNU_OPNBANKFILE
+WOPN Bank file
+WOPN库文件
+
+> OPTVAL_ALIASING
+Aliasing
+混叠
+
+> OPTVAL_LINEAR_1
+; This setting is duplicated threefold in order to allow for different grammatical gender endings
+Linear
+线性
+
+> OPTVAL_LINEAR_2
+Linear
+线性
+
+> OPTVAL_LINEAR_3
+Linear
+线性
+
+> OPTVAL_NEAREST
+Nearest
+最邻近
+
+> OPTVAL_PCF_LOW
+PCF (Low)
+PCF(低)
+
+> OPTVAL_PCF_MEDIUM
+PCF (Medium)
+PCF(中)
+
+> OPTVAL_PCF_HIGH
+PCF (High)
+PCF(高)
+
+> OPTVAL_CUBIC
+Cubic
+方波
+
+> OPTVAL_BLEP
+Band-limited step
+带宽限制步进
+
+> OPTVAL_LINEARSLOW
+Linear (Slower)
+线性(较慢)
+
+> OPTVAL_BLAM
+Band-limited linear
+带宽限制线性
+
+> OPTVAL_CUBICSLOW
+Cubic (Slower)
+方波(较慢)
+
+> OPTVAL_SINC
+Sinc
+正弦波
+
+> OPTVAL_NOTEONOFFONLY
+Note on/off only
+仅记录开/关
+
+> OPTVAL_FULLRAMPING
+Full ramping
+完全音量平滑
+
+> MODMNU_MASTERVOLUME
+Master volume
+主音量
+
+> MODMNU_QUALITY
+Quality
+质量
+
+> MODMNU_VOLUMERAMPING
+Volume ramping
+音量放大
+
+> OPTVAL_LIBXMP
+libXMP
+libXMP
+
+> OPTVAL_DUMB
+Dumb
+Dumb
+
+> MODMNU_CHIPOMATIC
+Chip-o-matic
+芯片自动化
+
+> OPTVAL_MAMEOPL2
+MAME OPL2
+MAME OPL2
+
+> OPTVAL_DOSBOXOPL3
+DOSBox OPL3
+DOSBox OPL3
+
+> OPTVAL_JAVAOPL3
+Java OPL3
+Java OPL3
+
+> OPTVAL_ESFMu
+ESFMu OPL3
+ESFMu OPL3
+
+> OPTVAL_YMFMOPL2
+YMFM OPL2
+YMFM OPL2
+
+> OPTVAL_YMFMOPL3
+YMFM OPL3
+YMFM OPL3
+
+> OPTVAL_NUKEDOPL3
+Nuked OPL3
+Nuked OPL3
+
+> OPTVAL_LLENUKEDOPL2
+Nuked OPL2-LLE (Extra heavy!)
+Nuked OPL2-LLE (特重!)
+
+> OPTVAL_LLENUKEDOPL3
+Nuked OPL3-LLE (Extra heavy!)
+Nuked OPL3-LLE (特重!)
+
+> OPTVAL_MAMEOPN2
+MAME YM2612
+MAME YM2612
+
+> OPTVAL_NP2OPNA
+Neko Project II Kai OPNA
+Neko Project II Kai OPNA
+
+> OPTVAL_MAMEOPNA
+MAME YM2608
+MAME YM2608
+
+> OPTVAL_PMDWINOPNA
+PMDWin OPNA
+PMDWin OPNA
+
+> OPTVAL_OPALOPL3
+Opal OPL3
+Opal OPL3
+
+> OPTVAL_NUKEDOPL3174
+Nuked OPL3 v1.7.4
+Nuked OPL3 v1.7.4
+
+> OPTVAL_NUKEDOPN2YM3438
+Nuked OPN2 (YM3438)
+Nuked OPN2 (YM3438)
+
+> OPTVAL_NUKEDOPN2YM2612
+Nuked OPN2 (YM2612)
+Nuked OPN2 (YM2612)
+
+> OPTVAL_GENSOPN2
+GENS YM2612
+GENS YM2612
+
+> OPTVAL_YMFMOPN2
+YMFM OPN2
+YMFM OPN2
+
+> OPTVAL_YMFMOPNA
+YMFM OPNA
+YMFM OPNA
+
+> ADLVLMODEL_AUTO
+Auto (Use setup of bank)
+自动(使用库设置)
+
+> OPNVLMODEL_AUTO
+Auto (Use setup of bank)
+自动(使用库设置)
+
+> ADLVLMODEL_GENERIC
+Generic
+通用
+
+> OPNVLMODEL_GENERIC
+Generic
+通用
+
+> ADLVLMODEL_NATIVE
+OPL Native
+OPL本机
+
+> OPNVLMODEL_NATIVE
+OPN Native
+OPN本机
+
+> ADLVLMODEL_DMX
+DMX (Accurate, with AM bug)
+DMX(精确的，带AM bug)
+
+> OPNVLMODEL_DMX
+Like in DMX
+类似DMX
+
+> ADLVLMODEL_APOGEE
+Apogee (Accurate, with AM bug)
+Apogee(精确的，带AM bug)
+
+> OPNVLMODEL_APOGEE
+Like in Apogee Sound System
+类似Apogee声音系统
+
+> OPNVLMODEL_WIN9X
+Win9X-like
+Win9X式
+
+> ADLVLMODEL_WIN9X
+Win9X-like (SB16)
+Win9X式(SB16)
+
+> ADLVLMODEL_WIN9XGENERIC
+Win9X-like (Generic FM)
+Win9X式(通用FM)
+
+> ADLVLMODEL_DMX_FIXED
+DMX (Without AM voice bug)
+DMX(没有AM语音bug)
+
+> ADLVLMODEL_APOGEE_FIXED
+Apogee (Without AM voice bug)
+Apogee(没有AM语音bug)
+
+> ADLVLMODEL_AIL
+IBM Audio Library Interface
+IBM音频库接口
+
+> ADLVLMODEL_HMI
+HMI Sound Operating System
+HMI声音操作系统
+
+> ADLVLMODEL_HMIOLD
+HMI SOS (Old, with bugs)
+HMI SOS(旧式，含bugs)
+
+> ADLCHANALLOC_AUTO
+Auto
+自动
+
+> ADLCHANALLOC_OFFDELAY
+Sound-off delay measured
+测量过的关闭声音延迟
+
+> ADLCHANALLOC_SAMEINST
+Reuse first released of the same instrument
+重用相同乐器的首次释放
+
+> ADLCHANALLOC_ANYREL
+Reuse any first released note
+重用所有首次释放的音符
+
+> OPTVAL_UNLIMITED
+Unlimited
+无限制
+
+> OPTVAL_256K
+256K
+256K
+
+> OPTVAL_512K
+512K
+512K
+
+> OPTVAL_768K
+768K
+768K
+
+> OPTVAL_1024K
+1024K
+1024K
+
+; Postprocessing
+
+> OPTVAL_UNCHARTED2
+Uncharted 2
+Uncharted 2
+
+> OPTVAL_HEJLDAWSON
+Hejl Dawson
+Hejl Dawson
+
+> OPTVAL_REINHARD
+Reinhard
+Reinhard
+
+> OPTVAL_PALETTE
+Palette
+调色板
+
+> OPTVAL_LOW
+Low
+低
+
+> OPTVAL_MEDIUM
+Medium
+中
+
+> OPTVAL_HIGH
+High
+高
+
+> OPTVAL_EXTREME
+Extreme
+极高
+
+> OPTVAL_OBVERSEFIRST
+Obverse
+正面
+
+> OPTVAL_REVERSEFIRST
+Reverse
+反面
+
+> GLMNU_POSTPROCESS
+Postprocessing
+后处理
+
+> GLPREFMNU_TONEMAP
+Tonemap Mode
+色调映射模式
+
+> GLPREFMNU_LENS
+Lens distortion effect
+镜头失真效果
+
+> GLPREFMNU_FXAA
+FXAA Quality
+FXAA质量
+
+> GLPREFMNU_DITHER
+Dither output
+抖动输出
+
+> GLPREFMNU_PALTONEMAPORDER
+Tonemap Palette Order
+色调映射调色板顺序
+
+> GLPREFMNU_PALTONEMAPPOWER
+Tonemap Palette Exponent
+色调映射调色板指数
+
+> GLPREFMNU_MULTISAMPLE
+Multisample
+多重采样
+
+> GLPREFMNU_BLOOM
+Bloom effect
+泛光效果
+
+> GLPREFMNU_SSAO
+Ambient occlusion quality
+环境光遮蔽质量
+
+> GLPREFMNU_SSAO_PORTALS
+Portals with AO
+入口带环境光遮蔽
+
+> GLPREFMNU_MENUBLUR
+Menu Blur
+菜单模糊
+
+> GLPREFMNU_ENVIRONMENTMAPMIRROR
+Environment map on mirrors
+镜面使用环境映射
+
+> GLPREFMNU_RENDERQUALITY
+Rendering quality
+渲染质量
+
+> OPTVAL_SPEED
+Speed
+速度
+
+> OPTVAL_QUALITY
+Quality
+质量
+
+> GLPREFMNU_SECLIGHTMODE
+Sector light mode
+区域光照模式
+
+> GLPREFMNU_FOGMODE
+Fog mode
+雾效模式
+
+> OPTVAL_RADIAL
+Radial
+放射
+
+> OPTVAL_STANDARD
+Standard
+标准
+
+; Texture options
+
+> GLTEXMNU_TEXFILTER
+Texture Filter mode
+纹理过滤模式
+
+> GLTEXMNU_ANISOTROPIC
+Anisotropic filter
+各项异性过滤
+
+> OPTVAL_NONENEARESTMIPMAP
+None (nearest mipmap)
+无(mip映射使用最邻近)
+
+> OPTVAL_NONELINEARMIPMAP
+None (linear mipmap)
+无(mip映射使用双线性)
+
+> OPTVAL_NONETRILINEAR
+None (trilinear)
+无(三线性)
+
+> OPTVAL_BILINEAR
+Bilinear
+双线性
+
+> OPTVAL_TRILINEAR
+Trilinear
+三线性
+
+> OPTVAL_2X
+2x
+2x
+
+> OPTVAL_4X
+4x
+4x
+
+> OPTVAL_8X
+8x
+8x
+
+> OPTVAL_16X
+16x
+16x
+
+> OPTVAL_32X
+32x
+32x
+
+> GLTEXMNU_TITLE
+Texture Options
+纹理选项
+
+> GLTEXMNU_TEXENABLED
+Textures enabled
+纹理已启用
+
+> GLTEXMNU_ENABLEHIRES
+Enable hires textures
+启用高精度纹理
+
+> GLTEXMNU_HQRESIZE
+High Quality Resize mode
+高质量缩放模式
+
+> GLTEXMNU_HQRESIZEMULT
+High Quality Resize multiplier
+高质量缩放倍率
+
+> GLTEXMNU_HQRESIZEWARN
+This mode requires %d times more video memory
+这种模式需要%d倍以上的显存
+
+> GLTEXMNU_RESIZETEX
+Resize textures
+缩放纹理
+
+> GLTEXMNU_RESIZESPR
+Resize sprites
+缩放精灵
+
+> GLTEXMNU_RESIZEFNT
+Resize fonts
+缩放字体
+
+> GLTEXMNU_RESIZESKN
+Resize model skins
+缩放模型皮肤
+
+> GLTEXMNU_PRECACHETEX
+Precache GL textures
+预缓存GL纹理
+
+> VIDMNU_TITLE
+Video Mode
+视频模式
+
+> OPTVAL_SCALENEAREST
+Scaled (Nearest)
+缩放(最邻近)
+
+> OPTVAL_SCALELINEAR
+Scaled (Linear)
+缩放(线性)
+
+> OPTVAL_LETTERBOX
+Letterbox
+信箱边框
+
+> OPTVAL_STRETCH
+Stretch
+拉伸
+
+> VIDMNU_RENDERMODE
+Render Mode
+渲染模式
+
+> VIDMNU_FULLSCREEN
+Fullscreen
+全屏
+
+> VIDMNU_HIDPI
+Retina/HiDPI support
+视网膜/高DPI支持
+
+> VIDMNU_ASPECTRATIO
+Aspect ratio
+宽高比
+
+> VIDMNU_FORCEASPECT
+Force aspect ratio
+强制宽高比
+
+> VIDMNU_CROPASPECT
+Forced ratio style
+强制比例风格
+
+> VIDMNU_5X4ASPECTRATIO
+Enable 5:4 aspect ratio
+启用5:4宽高比
+
+> VIDMNU_SCALEMODE
+Resolution scale
+分辨率比例
+
+> VIDMNU_SCALEFACTOR
+Scale Factor
+比例因子
+
+> VIDMNU_USELINEAR
+Use Linear Scaling (Fullscreen)
+使用线性缩放(全屏)
+
+> VIDMNU_CUSTOMRES
+Custom Pixel Scaling
+自定义像素缩放
+
+> VIDMNU_CUSTOMX
+Custom Width
+自定义宽度
+
+> VIDMNU_CUSTOMY
+Custom Height
+自定义高度
+
+> VIDMNU_APPLYW
+Apply Changes (Windowed)
+应用修改(窗口化)
+
+> VIDMNU_APPLYFS
+Apply Changes (Fullscreen)
+应用修改(全屏)
+
+> VIDMNU_RESPRESET
+Choose Resolution Preset
+选择分辨率预设
+
+> VIDMNU_RESPRESETTTL
+Custom Resolution Presets
+自定义分辨率预设
+
+> VIDMNU_RESPRESETHEAD
+Preset Resolution Modes
+预设分辨率模式
+
+> VIDMNU_ASPECT43
+4:3 Aspect
+4:3宽高比
+
+> VIDMNU_ASPECT54
+5:4 Aspect
+5:4宽高比
+
+> VIDMNU_ASPECT169
+16:9 Aspect
+16:9宽高比
+
+> VIDMNU_ASPECT1610
+16:10 Aspect
+16:10宽高比
+
+> VIDMNU_ASPECT219
+21:9 Aspect
+21:9宽高比
+
+> OPTVAL_NORMAL
+Normal
+正常
+
+> OPTVAL_LOWEST
+; This describes vid_scalemode 1, which represents the lowest possible scaling to fill the allocated screen area
+Lowest Possible Scale
+比例尽可能最小
+
+> OPTVAL_CUSTOM
+Custom
+自定义
+
+> VIDMNU_MAXFPS
+Max FPS
+最大帧率
+
+> OPTVAL_60FPS
+60 fps
+60帧/秒
+
+> OPTVAL_75FPS
+75 fps
+75帧/秒
+
+> OPTVAL_90FPS
+90 fps
+90帧/秒
+
+> OPTVAL_120FPS
+120 fps
+120帧/秒
+
+> OPTVAL_144FPS
+144 fps
+144帧/秒
+
+> OPTVAL_200FPS
+200 fps
+200帧/秒
+
+> VIDMNU_PREFERBACKEND
+Preferred Rendering API
+优先渲染API
+
+> OPTVAL_OPENGL
+OpenGL
+OpenGL
+
+> OPTVAL_VULKAN
+Vulkan
+Vulkan
+
+> OPTVAL_OPENGLES
+; Rendering backend
+OpenGL ES
+OpenGL ES
+
+; Miscellaneous Options
+
+> MISCMNU_MERGEKEYS
+Merge left+right Alt/Ctrl/Shift
+合并左+右Alt/Ctrl/Shift键
+
+> MISCMNU_WINFULLSCREENTOGGLE
+Alt-Enter toggles fullscreen
+Alt+回车键切换全屏
+
+> MISCMNU_MACFULLSCREENTOGGLE
+Command-F toggles fullscreen
+Command+F键切换全屏
+
+> MISCMNU_ENABLEAUTOSAVES
+Enable autosaves
+启用自动保存
+
+> MISCMNU_AUTOSAVECOUNT
+Number of autosaves
+自动保存上限数量
+
+> MISCMNU_SAVELOADCONFIRMATION
+Save/Load confirmation
+保存/加载时需要确认
+
+> MISCMNU_NOCHEATS
+Disable keyboard cheats
+禁用键盘作弊
+
+> MISCMNU_QUICKSAVEROTATION
+Quicksave rotation
+快速保存间隔
+
+> MISCMNU_QUICKSAVECOUNT
+Number of quicksaves in rotation
+快速保存上限数量
+
+> MISCMNU_CLEANMENU
+Disable Menu Clean Scaling
+禁用菜单缩放
+
+> MISCMNU_PAUSEINBACKGROUND
+Pause game in background
+后台运行时暂停游戏
+
+> HUDMNU_CROSSHAIR
+Default Crosshair
+默认准星
+
+> HUDMNU_CROSSHAIRCOLOR
+Crosshair color
+准星颜色
+
+> HUDMNU_CROSSHAIRHEALTH
+Crosshair shows health
+准星显示生命值
+
+> HUDMNU_CROSSHAIRSCALE
+Scale crosshair
+准星比例
+
+> OPTVAL_YES_STANDARD
+; copied from elsewhere
+Standard
+标准
+
+> OPTVAL_YES_ENHANCED
+Enhanced
+增强
+
+> OPTMNU_LANGUAGE
+Language
+语言
+
+; Reverb editor
+
+> TXT_UNDOCHANGES
+Undo Changes
+撤回更改
+
+> REVMNU_SELECT
+Select Environment
+选择环境
+
+> REVMNU_TEST
+Test Environment
+测试回声
+
+> REVMNU_EDIT
+Edit Environment
+编辑环境
+
+> REVMNU_NEW
+New Environment
+新建环境
+
+> REVMNU_REVERT
+Revert settings
+还原设置
+
+> REVMNU_ENVIRONMENT_SIZE
+; Please translate only if you know how to properly name this technical jargon!
+Environment Size
+环境大小
+
+> REVMNU_ENVIRONMENT_DIFFUSION
+Environment Diffusion
+环境传播
+
+> REVMNU_ROOM
+Room
+房间
+
+> REVMNU_ROOM_HF
+Room HF
+房间HF
+
+> REVMNU_ROOM_LF
+Room LF
+房间LF
+
+> REVMNU_DECAY_TIME
+Decay Time
+衰减时间
+
+> REVMNU_DECAY_HF_RATIO
+Decay HF Ratio
+衰减HF率
+
+> REVMNU_DECAY_LF_RATIO
+Decay LF Ratio
+衰减LF率
+
+> REVMNU_REFLECTIONS
+Reflections
+反射
+
+> REVMNU_REFLECTIONS_DELAY
+Reflections Delay
+反射延迟
+
+> REVMNU_REFLECTIONS_PAN_X
+Reflections Pan X
+反射X定位
+
+> REVMNU_REFLECTIONS_PAN_Y
+Reflections Pan Y
+反射Y定位
+
+> REVMNU_REFLECTIONS_PAN_Z
+Reflections Pan Z
+反射Z定位
+
+> REVMNU_REVERB
+Reverb
+混响
+
+> REVMNU_REVERB_DELAY
+Reverb Delay
+混响延迟
+
+> REVMNU_REVERB_PAN_X
+Reverb Pan X
+混响X定位
+
+> REVMNU_REVERB_PAN_Y
+Reverb Pan Y
+混响Y定位
+
+> REVMNU_REVERB_PAN_Z
+Reverb Pan Z
+混响Z定位
+
+> REVMNU_ECHO_TIME
+Echo Time
+回声时间
+
+> REVMNU_ECHO_DEPTH
+Echo Depth
+回声深度
+
+> REVMNU_MODULATION_TIME
+Modulation Time
+调制时间
+
+> REVMNU_MODULATION_DEPTH
+Modulation Depth
+调制深度
+
+> REVMNU_AIR_ABSORPTION_HF
+Air Absorption HF
+空气吸收HF
+
+> REVMNU_HF_REFERENCE
+HF Reference
+HF参考值
+
+> REVMNU_LF_REFERENCE
+LF Reference
+LF参考值
+
+> REVMNU_ROOM_ROLLOFF_FACTOR
+Room Rolloff Factor
+房间滚降因子
+
+> REVMNU_DIFFUSION
+Diffusion
+传播
+
+> REVMNU_DENSITY
+Density
+密度
+
+> REVMNU_Reflections_Scale
+Reflections Scale
+反射比例
+
+> REVMNU_Reflections_Delay_Scale
+Reflections Delay Scale
+反射延迟比例
+
+> REVMNU_Decay_Time_Scale
+Decay Time Scale
+衰减时间比例
+
+> REVMNU_Decay_HF_Limit
+Decay HF Limit
+衰减HF限制
+
+> REVMNU_Reverb_Scale
+Reverb Scale
+混响比例
+
+> REVMNU_Reverb_Delay_Scale
+Reverb Delay Scale
+混响延迟比例
+
+> REVMNU_Echo_Time_Scale
+Echo Time Scale
+回声时间比例
+
+> REVMNU_Modulation_Time_Scale
+Modulation Time Scale
+调制时间比例
+
+> REVMNU_Based_on
+Based on
+基于
+
+> REVMNU_Name
+Name
+名称
+
+> REVMNU_ID_1
+ID #1
+ID #1
+
+> REVMNU_ID_2
+ID #2
+ID #2
+
+> REVMNU_Create
+Create
+创建
+
+> REVMNU_Save
+Save...
+保存...
+
+> REVMNU_File_name
+File name
+文件名
+
+> REVMNU_Environments_to_save
+Environments to save
+保存环境
+
+; Vulkan
+
+> DSPLYMNU_VKOPT
+Vulkan Options (Experimental)
+Vulkan选项(实验版)
+
+> VK_TITLE
+Vulkan Options
+Vulkan选项
+
+> VKMNU_ENABLE
+Enable Vulkan
+启用Vulkan
+
+> VKMNU_DEVICE
+Vulkan Device ID
+Vulkan设备ID
+
+> VKMNU_HDR
+High Dynamic Range
+高动态范围
+
+> VK_WARNING
+Warning: The Vulkan renderer is highly experimental!
+警告: Vulkan渲染器处于高度实验阶段！
+
+> VK_RESTART
+These options will require a restart to take effect.
+这些选项需要重启才能生效。
+
+> VKMNU_DEVICESELECT
+; This is not yet implemented - but it is planned
+Select Vulkan Device
+选择Vulkan设备
+
+; Texture scaling
+
+> OPTVAL_SCALENX
+ScaleNx
+ScaleNx
+
+> OPTVAL_NORMALNX
+NormalNx
+NormalNx
+
+> OPTVAL_HQNX
+hqNx
+hqNx
+
+> OPTVAL_HQNXMMX
+hqNx MMX
+hqNx MMX
+
+> OPTVAL_NXBRZ
+xBRZ
+xBRZ
+
+> OPTVAL_OLD_NXBRZ
+Old xBRZ
+旧式xBRZ
+
+; Option Search
+
+> OS_TITLE
+Option Search
+选项搜索
+
+> OS_ANY
+Search for any term
+搜索任意条目
+
+> OS_ALL
+Search for all terms
+搜索全部条目
+
+> OS_NO_RESULTS
+No results found.
+无搜索结果。
+
+> OS_LABEL
+Search:
+搜索：
+
+; Blood Bath Announcer
+
+> TXT_OBITUARY1
+%k boned %o like a fish
+%k 像对鱼一样剔了 %o 的骨
+
+> TXT_OBITUARY2
+%k castrated %o
+%k 阉割了 %o
+
+> TXT_OBITUARY3
+%k creamed %o
+%k 彻底打败了 %o
+
+> TXT_OBITUARY4
+%k decimated %o
+%k 消灭了 %o
+
+> TXT_OBITUARY5
+%k destroyed %o
+%k 毁灭了 %o
+
+> TXT_OBITUARY6
+%k diced %o
+%k 切碎了 %o
+
+> TXT_OBITUARY7
+%k disembowled %o
+%k 解脱了 %o
+
+> TXT_OBITUARY8
+%k flattened %o
+%k 拍扁了 %o
+
+> TXT_OBITUARY9
+%k gave %o Anal Justice
+%k 对 %o 使出千年杀
+
+> TXT_OBITUARY10
+%k gave AnAl MaDnEsS to %o
+%k 对 %o 使出疯狂千年杀。
+
+> TXT_OBITUARY11
+%k killed %o
+%k 杀死了 %o
+
+> TXT_OBITUARY12
+%k made mincemeat out of %o
+%o 把 %k 剁成了肉馅
+
+> TXT_OBITUARY13
+%k massacred %o
+%k 屠杀了 %o
+
+> TXT_OBITUARY14
+%k mutilated %o
+%k 肢解了 %o
+
+> TXT_OBITUARY15
+%k reamed %o
+%k 给 %o 开了个洞
+
+> TXT_OBITUARY16
+%k ripped %o a new orifice
+%k 给 %o 撕了个新洞
+
+> TXT_OBITUARY17
+%k slaughtered %o
+%k 宰了 %o
+
+> TXT_OBITUARY18
+%k smashed %o
+%k 击飞了 %o
+
+> TXT_OBITUARY19
+%k sodomized %o
+%o 爆菊了 %k
+
+> TXT_OBITUARY20
+%k splattered %o
+%k 把 %o 撒了一地
+
+> TXT_OBITUARY21
+%k squashed %o
+%k 踩扁了 %o
+
+> TXT_OBITUARY22
+%k throttled %o
+%k 勒死了 %o
+
+> TXT_OBITUARY23
+%k wasted %o
+%k 废了 %o
+
+> TXT_OBITUARY24
+%k body bagged %o
+%k 把 %o 装进了裹尸袋
+
+> TXT_OBITUARY25
+%k sent %o to Hell
+%k 把 %o 送进地狱
+
+> TXT_OBITUARY26
+%k toasted %o
+%o 烧烤了 %k
+
+> TXT_OBITUARY27
+%k snuffed %o
+%o 灭了 %k
+
+> TXT_OBITUARY28
+%k hosed %o
+%k 把 %o 喷得到处都是
+
+> TXT_OBITUARY29
+%k sprayed %o
+%k 把 %o 洒得到处都是
+
+> TXT_OBITUARY30
+%k made dog meat out of %o
+%k 把 %o 做成了狗粮
+
+> TXT_OBITUARY31
+%k beat %o like a cur
+%k 像对野狗一样痛扁 %o
+
+> TXT_SELFOBIT1
+%o is excrement
+%o 成了便便
+
+> TXT_SELFOBIT2
+%o is hamburger
+%o 成了汉堡
+
+> TXT_SELFOBIT3
+%o suffered scrotum separation
+%o 的蛋碎了
+
+> TXT_SELFOBIT4
+%o volunteered for population control
+%o 自愿参加了人口控制
+
+> TXT_SELFOBIT5
+%o has suicided
+%o 自杀了
+
+> TXT_SELFOBIT6
+%o received the Darwin Award
+%o 被授予了达尔文奖
+
+> USE_GENERIC_FONT
+; This is not a text to be translated but an engine switch for complex languages.
+""""""
+1
+
+> REQUIRED_CHARACTERS
+; This should list all uppercase characters that are REQUIRED for proper language display. If it is acceptable that accents get omitted a character should NOT be listed here!
+
+> OPTMNU_FULLOPTIONS
+Full options menu
+菜单列出完整选项
+
+> OPTMNU_SIMPLEON
+Simple options menu
+菜单列出简要选项
+
+> OPTMNU_OPENCONFIG
+Browse Game Config
+浏览游戏配置
+
+> OPTMNU_OPENSCREENSHOTS
+Browse Screenshots
+浏览截图
+
+> OPTMNU_OPENSAVES
+Browse Saved Games
+浏览游戏存档
+
+> MOUSEMNU_SWAPBUTTONS
+Swap mouse buttons
+交换鼠标按钮
+
+; Additional menu texts
+
+> OPTVAL_ONLYMODIFIED
+Only modified
+仅修改的
+
+> TXT_UNKNOWN
+Unknown
+未知
+
+> OPTVAL_HUD
+HUD
+HUD
+
+> OPTVAL_AUTOMAP
+Automap
+地图
+
+> OPTVAL_HUDANDMAP
+HUD + Automap
+HUD+地图
+
+> TXT_SAVEGAMENEEDS
+This savegame needs these files
+此存档需要这些文件
+
+> OPTMNU_MULTIPLAYER
+Multiplayer Options
+多人游戏选项
+
+> OPTMNU_INPUT
+Input Options
+输入选项
+
+> OPTMNU_SYSTEM
+System Options
+系统选项
+
+> OPTMNU_LIGHT
+Light Options
+光照选项
+
+> OPTMNU_SPRITE
+Sprite Options
+精灵选项
+
+> GLPREFMNU_CORONAS
+Coronas
+光晕
+
+> DSPLYMNU_APPEARANCE
+Appearance
+外观
+
+> DSPLYMNU_ADVANCED
+Advanced Display Options
+高级显示选项
+
+; IWAD/Game picker
+
+> PICKER_SELECT
+Select which game file to run.
+选择运行哪个游戏文件。
+
+> PICKER_PLAY
+Play Game
+玩游戏
+
+> PICKER_EXIT
+Exit
+退出
+
+> PICKER_GENERAL
+General
+一般
+
+> PICKER_EXTRA
+Extra Graphics
+额外图像
+
+> PICKER_FULLSCREEN
+Fullscreen
+全屏
+
+> PICKER_NOAUTOLOAD
+Disable autoload
+禁用自动加载
+
+> PICKER_DONTASK
+Don't ask me again
+不要再问我
+
+> PICKER_LIGHTS
+Lights
+光照
+
+> PICKER_BRIGHTMAPS
+Brightmaps
+光照图
+
+> PICKER_WIDESCREEN
+Widescreen
+宽屏
+
+> PICKER_ADDPARM
+Additional Parameters:
+附加参数：
+
+> PICKER_WELCOME
+Welcome to %s!
+欢迎来到 %s!
+
+> PICKER_VERSION
+Version %s
+版本 %s
+
+> PICKER_PREFERBACKEND
+Rendering API
+渲染API
+
+> PICKER_TAB_PLAY
+Game
+游戏
+
+> JOYMNU_JOYENABLE
+; Option to enable or disable individual controllers/joysticks when configuring it in the Controller Options menu
+Enable this controller
+启用此控制器
+
+> CNTRLMNU_OPEN_MAIN
+Open Main Menu
+打开主菜单
+
+; New content
+
+> MODMNU_REPLAYER
+Module replayer
+模块播放器
+
+> JOYMNU_JOYENABLEINBACKGROUND
+; This is enabled per-controller, it means to enable "this" controller in the background when GZDoom is not in focus.
+Allow Background Controller Input
+在后台也允许控制器输入
+
+> MISCMNU_SAVEORDER
+; Order to sort the list of saved games in the save and load game menu. This used to only be alphabetical.
+Save Game Sorting Order
+存档排列顺序
+
+> OPTVAL_ALPHABETICAL
+Alphabetical
+字母顺序
+
+> OPTVAL_LASTSAVEDTIME
+Last Saved Time
+上次保存时间
+
+> PICKER_PLAYHOST
+Host Game
+创建主机
+
+> PICKER_PLAYJOIN
+Join Game
+加入游戏
+
+> PICKER_REMPARM
+Remember Parameters
+记住参数
+
+> PICKER_SUPPORTWADS
+; For stuff like id24.
+Load Support WADs
+加载支持的WADs
+
+> PICKER_TAB_MULTI
+Multiplayer
+多人游戏
+
+> PICKER_LOADSAVE
+Load Save File:
+加载存档文件：
+
+> PICKER_REMSAVE
+Remember Save File
+记住存档文件
+
+> PICKER_HOST
+; As in, to host a game.
+Host
+主机
+
+> PICKER_JOIN
+Join
+加入
+
+> PICKER_NETMODE
+Networking Mode:
+网络模式：
+
+> PICKER_NETAUTO
+Auto (recommended)
+自动(推荐)
+
+> PICKER_NETSERVER
+; Connections are routed through the host instead of all players connecting to each other individually.
+Packet-Server
+数据包服务器
+
+> PICKER_NETPEER
+; Players connect to each other individually.
+Peer-to-Peer
+点对点
+
+> PICKER_NETRATE
+Packet Ticrate:
+数据包帧率：
+
+> PICKER_NETBACKUP
+; Sends out duplicate copies of packets to help with spotty connections e.g. wifi.
+Send Backup Packets
+发送备份数据包
+
+> PICKER_GAMEMODE
+Game Modes:
+游戏模式：
+
+> PICKER_COOP
+Co-op
+合作
+
+> PICKER_DM
+Deathmatch
+死斗
+
+> PICKER_TDM
+Team Deathmatch
+团队死斗
+
+> PICKER_TEAM
+; Which team the player wants to be assigned to.
+Team #:
+团队#：
+
+> PICKER_ALTDM
+Use Alternate Deathmatch Rules
+使用替换的死斗规则
+
+> PICKER_PLAYERS
+Max Players:
+最多玩家：
+
+> PICKER_PORT
+Host Port:
+主机端口：
+
+> PICKER_PLAYERHINT
+; Max number of players.
+Max 64
+最多64
+
+> PICKER_PORTHINT
+; GZDoom's default port.
+Default 5029
+默认5029
+
+> PICKER_TEAMHINT
+; Team 255 randomizes which team the player gets put on.
+255 = Random
+255 = 随机
+
+> PICKER_IP
+Host IP:
+主机IP:
+
+> PICKER_TDMLABEL
+Team Deathmatch:
+团队死斗：
+
+> TXT_SAYTEAM
+; Same context as TXT_SAY.
+Say (Team):
+发言(团队)：
+
+> MISCMNU_DISCORDRPC
+Discord Rich Presence
+Discord上呈现详细状态
+

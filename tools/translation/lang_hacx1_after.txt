@@ -1,0 +1,785 @@
+> QUITMSG1
+These bugs too tough for ya?
+テメェにはあんなバグ 厳しかないだろ?
+
+> QUITMSG
+Are you sure you want to\njack out of the action?
+もしかして逃げ出そうとしてないよな?
+
+> QUITMSG2
+Trying to quit? And you call yourself a hacker?
+終了させる? それでハッカー自称してたのか?
+
+> QUITMSG3
+Get back here before I send a virus up your tailpipe!
+さっさと戻らねえと そのケツ穴にウィルスぶっこむぞ!
+
+> QUITMSG4
+Real hackers never jack out of the action.
+本物のハッカーなら頭を銃で撃ち抜くことはしない。
+
+> QUITMSG5
+C'mon! You haven't seen the best part yet!
+おいおい! お楽しみはこれからだぜ!
+
+> QUITMSG6
+Give up now, and cyberspace is toast!
+さっさと止めて、サイバースペースに乾杯だ!
+
+> QUITMSG7
+GENIE sends its best regards, scumbag!
+GENIEがベストの挨拶を送るぜ、カス野郎!
+
+> QUITMSG8
+Hmm. So much for being a hero, Hacker.
+うーん。英雄とはこの程度だったのか、ハッカー。
+
+> QUITMSG9
+What? You'd rather go back to the pen?
+何? 今更ペンで計算するのか?
+
+> QUITMSG10
+Shoulda taken the blue pill.
+青いピルを採るべきではなかったな。
+
+> QUITMSG11
+The name of the game ain't Twitch n' Run!
+ゲーム名は 萎え落ち小僧 じゃねえぞ!
+
+> QUITMSG12
+No worries. Saving the world can wait, right?
+気にはしない、世界を救うのは何時でも出来る、だろ?
+
+> QUITMSG13
+Guess it's time to make like the 'net and split!
+ネット切断している暇は無いだろ!
+
+> QUITMSG14
+Don't go off and forget about HacX, now!
+HacXを忘れんじゃねえぞ、な!
+
+> OB_SUICIDE
+%o deleted %hself from the universe.
+%o はこの宇宙から消滅した。
+
+> OB_FALLING
+%o formed a crater the size of Kansas.
+%o はカンザス州程のクレーターを生成した。
+
+> OB_CRUSH
+%o became a human pancake.
+%o は人肉パンケーキになった。
+
+> OB_EXIT
+%o tried to jack out.
+%o は逃げ出そうとした。
+
+> OB_WATER
+%o swam like a brick.
+%o はカナヅチだった。
+
+> OB_SLIME
+%o went nuclear.
+%o はニュークリアーと化した。
+
+> OB_LAVA
+%o took a hot bath.
+%o は熱湯風呂に浸かった。
+
+> OB_BARREL
+%o overdosed on nitro glycerine.
+%o はニトロを過剰摂取した。
+
+> OB_SPLASH
+%o is flayed into tiny little pieces.
+%o は細かい粒をぶち撒けられた。
+
+> OB_R_SPLASH
+%o wanted to see what %g looked like inside-out.
+%o は %g が裏返しになるのを望んだ。
+
+> OB_ROCKET
+%o wanted to see what %g looked like inside-out.
+%o は %g が裏返しになるのを望んだ。
+
+> OB_KILLEDSELF
+%o deleted %hself from the universe.
+%o はこの宇宙から消滅した。
+
+> OB_THUG
+%o is no longer the dominant species.
+%o はもはや優性種ではなくなった。
+
+> OB_ANDROID
+%o plugged in to the wrong machine.
+%o は違うマシンに接続してしまった。
+
+> OB_MONSTRUCT
+%o got %hself a monster of a cyber-jockey-derriere-kicking.
+%o は己に サイバー-ジョッキー-デリエレ-キッキング を取り入れた。
+
+> OB_ICE
+%o got ICEd.
+%o は冷えた。
+
+> OB_BUZZER
+%o feels a little buzzed.
+%o は少し賑やかになった。
+
+> OB_STEALTH
+%o uncovers a rather shocking development.
+%o はかなり衝撃的な開発を発見した。
+
+> OB_DMAN
+%o was erased from cyberspace.
+%o はサイバースペースに消去された。
+
+> OB_GLASS
+%o gave %hself a glass jaw.
+%o は自身にグラスジョーを取り付けた。
+
+> OB_MANIAC
+%o's life membership was terminated.
+%o のメンバーシップ生活は終幕した。
+
+> OB_MANIACHIT
+%o died in some random method I cannot fathom.
+%o は計算外の乱数で死んだ。
+
+> OB_TERMIN
+%o was fried by a femme fatale freak.
+%o はファム ファタル フリークに揚げられた。
+
+> OB_TERMINHIT
+; This text is not gender neutral, obviously...
+%o got a little close to the opposite sex.
+%o は少し異性に成り果てた。
+
+> OB_REPLI
+%o said goodbye to an old friend.
+%o は古い友人に別れを告げた。
+
+> OB_REPLIHIT
+%o was stabbed in the back by an old friend.
+%o は古い友人に背中を刺された。
+
+> OB_PHAGE
+%o was weeded out by natural selection.
+%o は自然淘汰によって除草された。
+
+> OB_THORN
+%o couldn't escape a thorny death.
+%o は棘のある死から逃げられなかった。
+
+> OB_SUMATIC
+%o took a sumo punch to the groin.
+%o は股座にスモウ ハリテを食らった。
+
+> OB_GENIE
+%o didn't get %p three wishes.
+%o は %p に三願を望まなかった。
+
+> OB_MINE
+%o tried to pet a mine.
+%o は地雷を愛撫しようとした。
+
+> OB_MPKICK
+%o took %k's Bruce Lee fu-kick to the face.
+%o の顔に %k のブルースリーキックを当てた。
+
+> OB_MPREZNATOR
+%o fell apart via %k's shocking revelation.
+%o は %k の衝撃的な啓示によりバラバラになった。
+
+> OB_MPXPISTOL
+%o took a double-dose of %k's punishment.
+%o は %k の懲罰を二度受けた。
+
+> OB_MPTAZER
+%o was shut down by %k's shock-stick.
+%o は %k のショックスティックでシャットダウンした。
+
+> OB_MPCRYOGUN
+%o got a face-full of %k's ice-cold wrath.
+%o は %k の冷めた表情で凍った。
+
+> OB_MPUZI
+%o was drilled full of holes by %k, gangsta-style.
+%o はギャングの様な %k に蜂の巣にされた。
+
+> OB_MPZOOKA
+%o ate %k's photon bomb.
+%o は %k のフォトンボムを食らった。
+
+> OB_MPZ_SPLASH
+%o was reduced to a neat pile of photons by %k.
+%o は %k によって蛍光灯にされた。
+
+> OB_MPANTIGUN
+; Physically this is utter nonsense, of course.
+%o was reduced to antimatter by %k.
+%o は %k のにより反物質に変換された。
+
+> OB_MPNUKE
+%o swallowed %k's nuke.
+%o は %k の核を飲み干した。
+
+> OB_MPNUKESPLASH
+%o went nuclear from %k's mass destruction spree.
+%o は %k の虐殺ごっこの犠牲者になった。
+
+> OB_MPTELEFRAG
+%o was turned inside-out by %k.
+%o は %k に裏返しにされた。
+
+> OB_MONTELEFRAG
+%o's atomic structure was split apart.
+%o の原子構造は分解された。
+
+> OB_DEFAULT
+%o spontaneously expired.
+%o の有効期限が自発的に切れた
+
+> GOTNUKER
+You grab a NUKER! Suck on this!
+NUEKR を奪った! 覚悟しろ!
+
+> GOTUZI
+You got an UZI!!
+UZI をゲットした!!
+
+> GOTREZNATOR
+A HOIG Reznator - FRY some butt
+HOIGレジネイター - ぶっ潰してやれ
+
+> GOTPHOTONZOOKA
+You got a Photon 'Zooka!
+フォトン'ゾーカ をゲットした!
+
+> GOTBIGSTICK
+You carry a Big Stick!
+ビッグスティック を手に取った!
+
+> GOTTAZER
+You got a Tazer!!
+テイザー をゲットした!
+
+> GOTCRYOGUN
+You grab a Cryogun! FREEZE!
+クライォガン を奪った! フリーズ!
+
+> GOTROUNDS
+You grab some rounds!
+幾つかのラウンド を奪った!
+
+> GOTROUNDSCASE
+You grab a case of rounds!
+ケースのラウンド を奪った!
+
+> GOTTORPEDO
+; Was "grap" for some reason.
+You grab a Torpedo!
+トルペード を奪った!
+
+> GOTTORPEDOS
+You grab a case of Torpedos!
+トルペードのケース を奪った!
+
+> GOTMOLECULES
+You grab a molecule module!
+モーレキュールモヂュール を奪った!
+
+> GOTMOLECULESTANK
+You grab a tank full of molecules!
+タンク満タンのモーレキュール を奪った!
+
+> GOTCARTRIDGES
+You grab some Cartridges!
+残弾のカートリッジ を奪った!
+
+> GOTCARTRIDGESCASE
+You grab a case of Cartridges!
+カートリッジケース を奪った!
+
+> GOTVALISE
+You grab a Valise stuffed with goods!
+代物を詰めたバリス を奪った!
+
+> GOTFORCEFIELD
+Force Field!
+フォースフィールド!
+
+> GOTMICROTEL
+007Microtel
+007マイクロテル
+
+> GOTENKBLIND
+You are EnK Blind!
+EnKブラインドみてえだ!
+
+> GOTRUBBERBOOTS
+Vulcan rubber Boots!
+バルカンラバーブーツ!
+
+> GOTSIARRAY
+SI Array mapping!
+SIアーレイ マッピング!
+
+> GOTINFRARED
+Infrared Visor!
+赤外線バイザー!
+
+> GOTINHALER
+Breathe deep, Inhaler!
+深呼吸だ、インヘイラー!
+
+> GOTHYPONEED
+A dose of Hydergine from a Hypo saves you!
+ハイポで ヒデルギン をキメた!
+
+> GOTHYPO
+You grab a Hypo!
+ハイポ を奪った!
+
+> GOTKEYCARD
+You found a KeyCard!
+キーカードを見つけた!
+
+> GOTCKEY
+You found a C-Key!
+C-keyを見つけた!
+
+> GOTPASSWORD
+You found a Password!
+パスワードを見つけた!
+
+> GOTBLUEZKEY
+You found a blue Z-Key!
+ブルー Z-Key を見つけた!
+
+> GOTYELWZKEY
+You found a yellow Z-Key!
+イエローZ-Key を見つけた!
+
+> GOTREDZKEY
+You found a red Z-Key!
+レッド Z-Key を見つけた!
+
+> GOTBODYARMOR
+Body Armor!
+ボディーアーマー!
+
+> GOTCENTROPHENOXINE
+Centrophenoxine
+セントロフェノキシン!
+
+> GOTKEVLARVEST
+You grab a Kevlar vest!
+ケブラーベスト を奪った!
+
+> GOTSKEVLARVEST
+You grab Super Kevlar vest!
+スーパーケブラーベスト を奪った!
+
+> GOTMICROKIT
+You grab a MicroKit!
+マイクロキット を奪った!
+
+> GOTDAMPENER
+You grab a Dampener!
+ダンプナー を奪った!
+
+> PD_CKEY
+You need a C-Key to access this item!
+アクセスには C-key が必要だ!
+
+> PD_KEYCARD
+You need a KeyCard to access this item!
+アクセスには キーカード が必要だ!
+
+> PD_PASSWORD
+You need a Password to access this item!
+アクセスには パスワード が必要だ!
+
+> PD_BLUEZKEY
+You need a Blue Z-Key to make this work
+アクセスには ブルーZ-key が必要だ!
+
+> PD_REDZKEY
+You need a Red Z-Key to make this work!
+アクセスには レッドZ-key が必要だ!
+
+> PD_YELWZKEY
+You need a Yellow Z-Key to make this work!
+アクセスには イエローZ-key が必要だ!
+
+> X1TEXT
+"""Twenty mill in gold doesn't seem worth all
+this aggravation, does it, hacker? Makes
+the pen look like a freakin' picnic!
+
+Butt-ugly bio-mutations and your fellow
+Humans hung from a ceiling like
+food sacks.
+
+What the hell is this GENIE? Like no
+computer you've ever hacked!
+
+You better find the next terminal, slice
+a ride through c-space, dice some mutant
+butt, and get the hell out of Dodge!
+
+"""
+"""20ミリの金塊にこの重大な事態の価値を見出せない、
+それとも、ハッカーの仕業か?
+幻覚のピクニックってワケでもねえ!
+グロいバイオミュータントと人間の仲間が食肉のように
+天井から吊るされている。
+
+GENIEとは一体何なんだ? 少なくともこれまで
+ハックしたことのないコンピューターだってことだ!
+
+次のターミナルを抜け、c-spaceに乗り込み、
+ミュータントのダニ共を切り裂いて、このふざけた
+場所から抜け出すんだ!"""
+
+> X2TEXT
+"""Where are all the people?!
+
+Paris is a ghost town, unless you consider
+mutant bugs outstanding citizens.
+
+You've hit bloody resistance. Man, can
+these bugs fight! Lucky for you they're not
+the brightest porch lights on the block.
+
+But you've gotten some of the informatics
+the subcommittee wants. And it's nasty!
+
+Human neural fluids feed these bugs! No
+wonder the neighborhood's getting kind of
+sparse. Report to the subcommittee. And
+watch your back...
+"""
+"""皆何処に行った?!
+
+パリはゴーストタウンと化した、突然変異したバグ共が
+未解決なまま自分以外の住民はいなくなった。
+
+マジな敵対にぶち当たった。野郎、こんなバグ共と戦えと!
+幸運なことに先行きの見えない事態ではない。
+だがここでインフォーマティクスとサブコミッティが
+望んでいた物を探し当てた。厄介なことにな!
+
+人の神経液をバグ共が餌にしている! 近くに転がっていた
+者が損壊していたのも納得がいく、サブコミッティに
+報告しなければ。背中に気をつけながらな...
+"""
+
+> X3TEXT
+"""Civilization as you knew it is nada!
+
+No friends, no family. No more people.
+Not normal people, anyway.
+
+Only one thing left...GENIE!
+And if you have to go to the end of the
+universe you'll find its mutant butt!
+'cause now you're pissed!
+
+And the gold? Hell, this is for free.
+
+.....(to be continued)....."""
+"""俺の知っている文明は崩壊した!
+
+友も。家族も。住民も。まともなヤツは何もかも
+消え失せた。
+
+だがまだ一つ残っている...GENIE!
+このまま銀河の終焉を迎えたらミュータントのクソになる!
+それだけは御免だ!
+
+それで金は? 有り得ん、これはフリーだ。
+
+...だがこれ以上続くことはない..."""
+
+> X5TEXT
+"""You're alive!
+
+What are those odds, hacker?!
+'cause it's crawling with bugs.
+
+You can't reach the subcommittee, which
+means it's been compromised.
+
+
+You... are alone."""
+"""俺は生きている!
+
+何か勝ち目はあるか、ハッカー?!
+バグ共がそこいらを蠢いている。
+サブコミッティに繋がらないのは、侵入されたと
+思っていいだろう。
+
+俺は...また一人だ。"""
+
+
+> TXT_HACXMAP01
+GenEmp Corp.
+GenEmpコーポ
+
+> TXT_HACXMAP02
+Tunnel Town
+トンネル タウン
+
+> TXT_HACXMAP03
+Lava Annex
+ラバ アネックス
+
+> TXT_HACXMAP04
+Alcatraz
+アルカトラズ
+
+> TXT_HACXMAP05
+Cyber Circus
+サイバーサークル
+
+> TXT_HACXMAP06
+Digi-Ota
+デジ - オータ
+
+> TXT_HACXMAP07
+The Great Wall
+ザ - グレート ウォール
+
+> TXT_HACXMAP08
+Garden of Delights
+ガーデン オブ デライト
+
+> TXT_HACXMAP09
+Hidden Fortress
+ヒドゥン フォートレス
+
+> TXT_HACXMAP10
+Anarchist Dream
+アナーキスト ドリーム
+
+> TXT_HACXMAP11
+Notus Us!
+ワレラノ ノータス
+
+> TXT_HACXMAP12
+Gothik Gauntlet
+ゴシック ガントレット
+
+> TXT_HACXMAP13
+The Sewers
+ザ・サワー
+
+> TXT_HACXMAP14
+Trode Wars
+トレード ウォーズ
+
+> TXT_HACXMAP15
+Twilight of Enk's
+Enkタチ ノ トワイライト
+
+> TXT_HACXMAP16
+Protean Cybex
+プロテアン サイベックス
+
+> TXT_HACXMAP17
+River of Blood
+リバー オブ ブラッド
+
+> TXT_HACXMAP18
+Bizarro
+ビザロ
+
+> TXT_HACXMAP19
+The War Rooms
+ザ・ウォー ルーム
+
+> TXT_HACXMAP20
+Intruder Alert!
+シンニュウシャ アリ!
+
+> TXT_HACXMAP31
+Desiccant Room
+ダスキン ルーム
+
+> STSTR_CLEV
+"""Now Arriving At...
+"""
+今到着した...
+
+> STSTR_CHOPPERS
+; Printed when entering the idchoppers cheat, which gives the player a chainsaw
+...gonna fry your ass!
+...ケツまくれ!
+
+> STSTR_BEHOLD
+; Hacx's content here was totally useless so it got removed. However, this string has to be defined and minimally altered so that the Dehacked replacement is not being triggered.
+inVuln, Str, Inviso, Rad, Allmap, or Lite-amp?
+V,I,S,R,A,Lのどれだ?
+
+> STSTR_BEHOLDX
+Let's Get Serious!
+マジになったぜ!
+
+> STSTR_NCON
+Cyberslicer Mode ON
+サイバースライサーモード オン
+
+> STSTR_NCOFF
+Cyberslicer Mode OFF
+サイバースライサーモード オフ
+
+> STSTR_NOMUS
+Selection: Impossible 
+選択: 不可能
+
+> STSTR_MUS
+; Should probably not be translated...
+"""Pump Up The Volume
+"""
+音量を上げろよ
+
+> STSTR_KFAADDED
+INIT-Twitch n'Kill Mode
+INIT-Twitch n'Killモード
+
+> STSTR_FAADDED
+So be it, Hacker.
+好きにしろ、ハッカー。
+
+> STSTR_DQDON
+Cyberpotence Mode ON
+サイバーポテンスモード オン
+
+> STSTR_DQDOFF
+Cyberpotence Mode OFF
+サイバーポテンスモード オフ
+
+> AMSTR_FOLLOWON
+Tracking ON
+トラッキング オン
+
+> AMSTR_FOLLOWOFF
+Tracking OFF
+トラッキング オフ
+
+> DOSY
+- press Y to run away! -
+-Y でトンズラだ!-
+
+> ENDGAME
+"""Are you insane or maladjusted?
+Well? Yes or No!"""
+"""お前はイカれた社会不適合者だろ?
+あぁ?イエスかノーか言え!"""
+
+> NIGHTMARE
+"""Are you sure? You can't handle
+this skill, hacker!
+
+Press Y to die. 
+"""
+"""本気か?
+アンタの手に負えないぞ、ハッカー!
+
+死にたきゃYを押せ。"""
+
+> QSPROMPT
+; For most languages the original Doom text should suffice.
+"""Quicksave over your data named
+
+'%s'?
+
+Press Y or N."""
+"""この名称で上書きするのか?
+
+'%s'
+
+YかNで答えろ。"""
+
+> QLPROMPT
+"""Do you want to quickload the data named
+
+'%s'?
+
+Press Y or N."""
+"""この名称をすぐロードするのか?
+
+'%s'
+
+YかNで答えろ。"""
+
+> CC_THUG
+Thug
+チンピラ
+
+> CC_ANDROID
+Android
+アンドロイド
+
+> CC_ICE
+ICE
+アイス
+
+> CC_BUZZER
+Buzzer
+ブザー
+
+> CC_DMAN
+D-Man
+; NEED TRANSLATION
+
+> CC_PHAGE
+Phage
+ファージ
+
+> CC_MONSTRUCT
+Monstruct
+モンストラクト
+
+> CC_MECH
+Mecha Maniac
+メカマニア
+
+> CC_TERMI
+Terminatrix
+ターミネイトリクス
+
+> CC_THORN
+Thorn Thing
+ソーンツィン
+
+> CC_MAJONG
+Majong 7
+マージャン 7
+
+> CC_HERO
+Dan Evanger
+ダン エブァンガー
+
+> SKILL_BABY
+Please don't shoot!
+撃たないでくれ!
+
+> SKILL_EASY
+Aargh, I need health!
+キメてくれ!
+
+> SKILL_NORMAL
+Let's rip them apart!
+ばらまいてやれ!
+
+> SKILL_HARD
+I am immortal!
+とっととくたばれ!
+
+> SKILL_NIGHTMARE
+Insanity!
+イカれてやがる!
+
