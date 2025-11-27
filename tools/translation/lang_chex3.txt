@@ -1,0 +1,349 @@
+> GOTBLUEFLEM
+; Flem = phlegm
+Picked up a blue flemkey.
+ブルー フレムキー をみつけた
+
+> GOTYELLOWFLEM
+Picked up a yellow flemkey.
+イエローフレムキー をみつけた
+
+> GOTREDFLEM
+Picked up a red flemkey.
+レッド フレムキー をみつけた
+
+> GOTGOGGLES
+Found Ultra Goggles
+ウルトラゴーグル をみつけた
+
+> PD_BLUECO
+You need a blue key to activate this object
+このそうちは ブルー キー がひつようだ
+
+> PD_REDCO
+You need a red key to activate this object
+このそうちは レッド キー がひつようだ
+
+> PD_YELLOWCO
+You need a yellow key to activate this object
+このそうちは イエローキー がひつようだ
+
+> PD_BLUEFO
+You need a blue flemkey to activate this object
+このそうちは ブルー キーがひつようだ
+
+> PD_REDFO
+You need a red flemkey to activate this object
+このそうちは レッド キーがひつようだ
+
+> PD_YELLOWFO
+You need a yellow flemkey to activate this object
+このそうちは イエローキーがひつようだ
+
+> PICKUP_PISTOL_DROPPED
+Picked up a zorcher.
+ゾーチャー をひろった
+
+> STSTR_KFAADDED
+Zorch and keys added
+ゾーチ と キーがとどいた
+
+> HUSTR_E1M1
+E1M1: Landing Zone
+E1M1: ちゃくち ちてん
+
+> HUSTR_E1M2
+E1M2: Storage Facility
+E1M2: ちょぞう しせつ
+
+> HUSTR_E1M3
+E1M3: Laboratory
+E1M3: ラボラトリー
+
+> HUSTR_E1M4
+E1M4: Arboretum
+E1M4: じゅもく園
+
+> HUSTR_E1M5
+E1M5: Caverns of Bazoik
+E1M5: バゾイクのどうくつ
+
+> HUSTR_E2M1
+E2M1: Spaceport
+E2M1: スペースポート
+
+> HUSTR_E2M2
+E2M2: Cinema
+E2M2: シネマ
+
+> HUSTR_E2M3
+E2M3: Chex Museum
+E2M3: チェックス ミュージアム
+
+> HUSTR_E2M4
+E2M4: City Streets
+E2M4: シティーストリート
+
+> HUSTR_E2M5
+E2M5: Sewer System
+E2M5: サワーシステム
+
+> HUSTR_E3M1
+E3M1: Central Command
+E3M1: 中央しれいとう
+
+> HUSTR_E3M2
+E3M2: United Cereals
+E3M2: ユナイテッド シリアル
+
+> HUSTR_E3M3
+E3M3: Villa Chex
+E3M3: チェックスのべっそう
+
+> HUSTR_E3M4
+E3M4: Provincial Park
+E3M4: 州立公園
+
+> HUSTR_E3M5
+E3M5: Meteor Spaceship
+E3M5: メテオスペースシップ
+
+> CC_ZOMBIE
+Commonus
+コモンズ
+
+> CC_SHOTGUN
+Bipedicus
+バイピディクス
+
+> CC_IMP
+Bipedicus with Armor
+アーマードバイピディクス
+
+> CC_DEMON
+Stridicus
+ステュリクス
+
+> CC_LOST
+Flem Mine
+フレムマイン
+
+> CC_CACO
+Super Cycloptis
+スーパーサイクロプティス
+
+> CC_BARON
+Maximus
+マクシムス
+
+> CC_SPIDER
+The Flembomination
+フレンボミネーション
+
+> CC_CYBER
+Lord Snotfolus
+ロード スノフォールス
+
+> CC_HERO
+Chex Warrior
+チェックスのせんし
+
+> PD_BLUEC
+You need a blue key to open this door
+このとびらは ブルー キー がひつようだ
+
+> PD_REDC
+You need a red key to open this door
+このとびらは レッド キー がひつようだ
+
+> PD_YELLOWC
+You need a yellow key to open this door
+このとびらは イエローキー がひつようだ
+
+> PD_BLUEF
+You need a blue flemkey to open this door
+このとびらは ブルー キーがひつようだ
+
+> PD_REDF
+You need a red flemkey to open this door
+このとびらは レッド キーがひつようだ
+
+> PD_YELLOWF
+You need a yellow flemkey to open this door
+このとびらは イエローキーがひつようだ
+
+> OB_SLIME
+%o sinks into some slime.
+%o はスライムにしずんだ。
+
+> OB_LAVA
+%o sinks into some slime.
+%o はスライムにしずんだ。
+
+> OB_POWERSTRAND
+%o was hit by inter-dimensional slime!
+%o は いじげんスライムまみれになった!
+
+> OB_KILLEDSELF
+%o was hit by inter-dimensional slime!
+%o は いじげんスライムまみれになった!
+
+> OB_STRIDICUS
+%o was boogered by a stridicus.
+%o は ステュリクスに おびやかされた。
+
+> OB_FLEMMINE
+%o was gooed by a flem mine.
+%o はフレムマインに ヒドいめにあった。
+
+> OB_SUPERCYCLOPTIS
+%o was slimed by a super cycloptis.
+%o はスーパーサイクロプティスに とかされた。
+
+> OB_MAXIMUS
+%o was defeated by a Maximus.
+%o はマクシムスに 敗北した。
+
+> OB_LARVA
+%o was gooed by a larva.
+%o はラーバに ヒドいめにあわされた。
+
+> OB_QUADRUMPUS
+%o was slimed by a Quadrumpus.
+%o はクワッドロンプスに スライムにされた。
+
+> OB_FLEMBOMINATION
+%o was defeated by the Flembomination.
+%o はフレンボミネーションに敗北した。
+
+> OB_SNOTFOLUS
+%o was defeated by Lord Snotfolus.
+%o はロード スノフォールスに敗北した。
+
+> OB_MPR_SPLASH
+%o was hit by %k's propulsor.
+%o に %k のロケットゾーチがとどいた。
+
+> OB_MPBFG_SPLASH
+%o was lazzed by %k.
+%o は %k にとかされた。
+
+> E1TEXT
+"""After sending the monstrous Flembrane
+back to his own dimension, you free the
+captives. Yet flemoids are everywhere!
+You and the captives make a break for
+your spaceship. The flemoids slime your
+ship, but you narrowly escape into orbit.
+During the return you are congratulated
+for the daring rescue, but you issue a
+warning...
+We haven't seen the last of the Flemoids.
+
+Unfortunately you are correct. For as you
+return home, you find that the Flemoids
+have somehow followed you here. Prepare
+for Chex Quest 2: Terror in Chex City!"""
+"""巨大なフレムブレンを元の次元に送り ほりょを解放した。
+けれども、フレモイドはまだまだいる!
+フレモイドは 君の宇宙船を スライムまみれにしたため、
+君と ほりょは 船をこわし せまい道をたどって にげだした。
+目的地に たどりついたとき、君の 大たんな救出の成功を
+いわった。しかし 君はけいかいしていた...
+さいごのフレモイドはどこにいったか。
+
+ざんねんながら けいかいは 正しかった。
+家に着くと、フレモイドが 君を探していた形跡が見つかった。
+
+チェックス クエスト2 : チェックス シティーのきょうふ
+に そなえろ!
+"""
+
+> E2TEXT
+"""You zorch the remaining flemoids who had
+gathered in the sewers. Chex City has been
+saved. It seems that the Flemoid threat
+has finally ended.
+
+
+Ten years pass in peace and prosperity.
+But the Flemoids were not defeated and
+their desire to control the nutritionally 
+rich cereal dimension has not diminished.
+They have gathered all their forces, opened
+a gigantic inter-dimensional rift in space
+and now a great ball of slime is headed
+straight for the cereals' planet!
+
+Get ready for
+Chex Quest 3: Invasion!"""
+"""君は 下水道に集まっていたフレモイドを
+ぶっとばして、チェックス シティーを守った。
+フレモイドの きょういはようやく なくなったようだ。
+
+
+平和と はんえいの中で10年がたった。
+しかしフレモイドは敗北しておらず、えいようのある
+シリアルを せいふくするという野望は のこっていた。
+かれらは全ての力を集め、宇宙に巨大な次元のさけめを
+開いた。そして今や大きなボールオブスライムが
+シリアルプラネットに真っ直ぐ向かっている!
+
+チェックスクエスト3 : インベーション
+の じゅんびだ!"""
+
+> E3TEXT
+"""With one final blast, you zorch Lord
+Snotfolus back to his own dimension!
+Against all the odds you have single-
+handedly foiled the invasion!
+
+You truly hope that the Flemoids have
+finally learned their lesson and will
+never again return to the cereal
+dimension.
+
+
+
+But if they do you know you will be
+ready for them!"""
+"""さいごのいちげきで、ロード スノフォールスを元の次元に
+もどした。君一人で全てのオーズのしゅうげきを 阻止した!
+
+君は フレモイド達のことを みんなに教え、再び
+シリアル ディメンジョンに ぎゃくしゅうをしかけて
+こないよう ねがった。
+
+
+しかし、そんな考えを持っていたとしても
+君にはかなわないと思い知るだろう!"""
+
+> M_EPI1
+Rescue on Bazoik
+バゾイクからのきゅうしゅつ
+
+> M_EPI2
+Terror in Chex City
+チェックスシティーのきょうふ
+
+> M_EPI3
+Invasion!
+しんにゅう!
+
+; Note: chex3.wad currently does not have Tag properties defined for the following! Added for completeness' sake (or for mods to utilize)
+
+> TAG_GOGGLES
+Ultra Goggles
+; NEED TRANSLATION
+
+> TAG_BLUEFLEMKEY
+Blue Flemkey
+; NEED TRANSLATION
+
+> TAG_YELLOWFLEMKEY
+Yellow Flemkey
+; NEED TRANSLATION
+
+> TAG_REDFLEMKEY
+Red Flemkey
+; NEED TRANSLATION
+

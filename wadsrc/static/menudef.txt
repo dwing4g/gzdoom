@@ -3096,6 +3096,7 @@ OptionString "LanguageOptions"
 	"ru", "Русский (Russian)"
 	"sr", "Српски (Serbian)"
 	"tr", "Türkçe (Turkish)"
+	"chs", "简体中文 (Simplified Chinese)"
 }
 
 /*=======================================

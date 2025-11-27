@@ -1,0 +1,258 @@
+> NIGHTMARE
+Do you really think you can handle that?\n\npress 'Y' or 'N'...
+你真认为能接受得了？\n\n按“Y”确认，按“N”取消……
+
+> AMSTR_MARKEDSPOT
+Spot marked
+已做标记点
+
+> PD_BLUEO
+Requires the GREEN keycard
+需要绿钥匙卡
+
+> PD_REDO
+Requires the PURPLE keycard
+需要紫钥匙卡
+
+> PD_YELLOWO
+Requires the YELLOW keycard
+需要黄钥匙卡
+
+> PD_BLUEK
+Requires the GREEN key
+需要绿钥匙
+
+> PD_YELLOWK
+Requires the YELLOW key
+需要黄钥匙
+
+> PD_REDK
+Requires the PURPLE key
+需要紫钥匙
+
+> GOTARMOR
+Picked up armor.
+拾取了护甲。
+
+> GOTMEGA
+Picked up Combat Armor.
+拾取了战斗护甲。
+
+> GOTMSPHERE
+Superhealth
+超级治疗
+
+> GOTBLUECARD
+Obtained the GREEN keycard.
+获得了绿钥匙卡。
+
+> GOTYELWCARD
+Obtained the YELLOW keycard.
+获得了黄钥匙卡。
+
+> GOTREDCARD
+Obtained the PURPLE keycard.
+获得了紫钥匙卡。
+
+> GOTBLUESKUL
+Obtained the GREEN key.
+获得了绿钥匙。
+
+> GOTYELWSKUL
+Obtained the YELLOW key.
+获得了黄钥匙。
+
+> GOTREDSKUL
+Obtained the PURPLE key.
+获得了紫钥匙。
+
+> GOTSTIM
+Healing mushroom
+治疗蘑菇
+
+> GOTMEDIKIT
+Acquired: medical kit.
+获取了：医疗工具。
+
+> GOTMEDINEED
+Acquired: medical kit that you REALLY need.
+获取了：你急需的医疗工具。
+
+> GOTMAP
+Map
+地图
+
+> GOTCLIPBOX
+Acquired: case of bullets.
+获取了：一箱子弹。
+
+> GOTROCKET
+Acquired: Grenade.
+获取了：手雷。
+
+> GOTROCKBOX
+Acquired: Grenades.
+获取了：手雷包。
+
+> GOTSHELLBOX
+Acquired: box of shotgun shells.
+获取了：一盒霰弹枪子弹。
+
+> GOTBACKPACK
+Acquired: ammo backpack.
+获取了：弹药背包。
+
+> GOTBFG9000
+Acquired: Grenade.
+获取了：手雷。
+
+> GOTCHAINGUN
+Acquired: Minigun.
+获取了：机枪。
+
+> GOTLAUNCHER
+Acquired: Grenade launcher.
+获取了：榴弹发射器。
+
+> GOTPLASMA
+Entropy thrower!
+熵投掷器！
+
+> GOTSHOTGUN
+Acquired: Shotgun.
+获取了：霰弹枪。
+
+> STSTR_DQDON
+God Mode ON
+上帝模式开启
+
+> STSTR_DQDOFF
+God Mode OFF
+上帝模式关闭
+
+> STSTR_KFAADDED
+All weapons/ ammo/ keys
+全武器/弹药/钥匙
+
+> STSTR_FAADDED
+All weapons and ammo
+全武器和弹药
+
+> TXT_HARMMAP01
+Abduction
+绑架
+
+> TXT_HARMMAP02
+Harm's Way
+险境
+
+> TXT_HARMMAP03
+Owt Mood
+怪异心境
+
+> TXT_HARMMAP04
+Megalapolis
+巨型都市
+
+> TXT_HARMMAP05
+The Hospital
+医院
+
+> TXT_HARMMAP06
+The Weapons Factory
+武器工厂
+
+> TXT_HARMMAP07
+The Underwater Lab
+水下实验室
+
+> TXT_HARMMAP08
+Airstrip One
+一号机场
+
+> TXT_HARMMAP09
+The Launch Base
+发射基地
+
+> TXT_HARMMAP10
+The Radioactive Zone
+放射区
+
+> TXT_HARMMAP11
+Echidna
+厄喀德那
+
+> CLUSTEREXIT1
+"""You feel sick to your stomach...
+Looking in the face of the mutant queen... 
+That thing... That used to be... 
+Your friend... Amira!
+
+Those monsters must have found a way to 
+mutate her and turn her into this
+hideous creature to bear their offspring.
+
+-sigh-
+
+You get yourself together... 
+They are going to pay for making you kill
+your friend...
+
+"Hell has no fury like a woman scorned!"
+
+     = T H E  E N D ="""
+"""你感到胃里一阵翻腾……
+凝视着眼前这只变异女皇……
+那只怪物……曾是……
+你的朋友……阿米拉！
+
+那些怪物一定找到了某种方法，
+将她突变为这个畸形的可怕生物，
+为它们繁衍后代。
+
+——唉——
+
+你振作起来……
+他们要为逼你亲手杀死
+你的朋友而付出代价……
+
+“地狱的怒火，怎比得上一个被鄙视的女人！”
+
+     ＝ 剧 终 ＝"""
+
+> WI_FINISHED
+; This text is deliberately empty
+
+> WI_ENTERING
+; Yellow needs retranslation
+Loading
+正在加载
+
+> SKILL_BABY
+Very Easy
+非常简单
+
+> SKILL_EASY
+Easy
+简单
+
+> SKILL_NORMAL
+Medium
+普通
+
+> SKILL_HARD
+Hard
+困难
+
+> SKILL_NIGHTMARE
+Very Hard
+非常困难
+
+> HARMQUITMSG
+Thanks for playing
+感谢体验
+
+> TXT_D2E1
+Harmony
+哈莫尼
+
