@@ -2893,7 +2893,7 @@ Assault gun
 > TXT_RYES1_SCRIPT02_D9096_WELLH
 ; 〃 (〃)
 Well, here you go sir!
-好的，给您，先生。
+好的，给您，先生！
 
 > TXT_RNO1_SCRIPT02_D9096_OBVIO
 ; 〃 (〃)
@@ -3423,7 +3423,7 @@ Irale will set you right up!
 > TXT_DLG_SCRIPT02_D40932_IMKIN
 ; MAP02: Harris.
 I'm kinda a talent broker for the rebels. A guy who's as good as you could make a lot of gold... if you hooked up with the right people.
-我其实是个叛军的人才中介。一个像你这样的人如果能结识对的人，肯定能赚大钱……
+我其实是个叛军的人才中介。一个像你这样的人如果能结识对的人……肯定能赚大钱。
 
 > TXT_RPLY0_SCRIPT02_D40932_IMINT
 ; 〃
@@ -4331,7 +4331,7 @@ Nuts, if I'm going down, then so are you. Guards!!
 > TXT_DLG_SCRIPT04_D21224_BUSIN
 ; 〃
 Business my ass. Help, guards, I've got a live one.
-谈个屁生意。来人啊，守卫们，我抓到活的了！
+谈个屁生意。来人啊，守卫们，我抓到活的了。
 
 > TXT_DLG_SCRIPT04_D22740_AHIGO
 ; MAP04: Worner.
@@ -4396,7 +4396,7 @@ What kind of weapons?
 > TXT_DLG_SCRIPT04_D33352_AREYO
 ; 〃
 Are you deaf? I just told you how busy I am. Get back to work.
-你聋了吗？我刚跟你说我有多忙。快回去干活！
+你聋了吗？我刚跟你说我有多忙。快回去干活。
 
 > TXT_DLG_SCRIPT04_D34868_WHOAR
 ; MAP04: Reactor Core → Southern alarm green door
@@ -4903,7 +4903,7 @@ Where is this located?
 > TXT_DLG_SCRIPT10_D13644_ONEOF
 ; 〃
 One of our captains, Richter, is waiting for you by the waterfall in the commons. He has seen the facility and can guide you inside. Stop this atrocity, now.
-我们的一个队长里希特正在公共区的瀑布旁等你。他见过那个设施，可以带你进去。立刻制止这种暴行！
+我们的一个队长里希特正在公共区的瀑布旁等你。他见过那个设施，可以带你进去。立刻制止这种暴行。
 
 > TXT_RPLY0_SCRIPT10_D13644_THEYL
 ; 〃
@@ -6488,7 +6488,7 @@ The master doesn't like visitors. He likes all of his work to remain undisturbed
 > TXT_RPLY0_SCRIPT27_D0_WHYST
 ; 〃
 Why's that.
-为什么？
+为什么。
 
 > TXT_RYES0_SCRIPT27_D0_BECAU
 ; 〃
@@ -7245,7 +7245,7 @@ Let me at 'em!
 > TXT_RYES0_SCRIPT34_D30320_THATS
 ; 〃
 That's the spirit.
-这才是精神！
+很有精神。
 
 > TXT_DLG_SCRIPT34_D31836_WELCO
 ; 〃
@@ -7500,7 +7500,7 @@ Don't enter the town hall. It's not safe anymore, our cover's been blown. Kill a
 > TXT_ILOG6 strifeteaser
 ; MAP33: In front of "Irale's shop" with the com unit and the Crusaders dead.
 The door next to the weapons shop will open once all the Crusaders are dead. Inside the store room there's a teleporter, use it, and it'll bring you to us
-武器店旁边的门会在所有十字军都被消灭后打开。进入储物室后会发现一个传送器，使用它就能来到我们这里。
+武器店旁边的门会在所有十字军都被消灭后打开。进入储物室后会发现一个传送器，使用它就能来到我们这里
 
 > TXT_ILOG7 strifeteaser
 ; MAP33: In front of "Irale's shop" with the com unit and the Crusaders alive.
@@ -7510,7 +7510,7 @@ The door next to the weapons shop will open once all the Crusaders are dead. Ins
 > TXT_ILOG8 strifeteaser
 ; MAP33: Room with the flamethrower.
 Kill as many of the big robots, Crusaders, as you can. When you're done, I'll guide you to Macil
-尽可能多地消灭大型机器人——十字军。完成后我会带你去找马希尔。
+尽可能多地消灭大型机器人——十字军。完成后我会带你去找马希尔
 
 > TXT_ILOG9 strifeteaser
 ; MAP34: After leaving the teleporter.
@@ -7702,7 +7702,7 @@ The factory is next to the mines. The degnin ore is magnetic and explosive, just
 > TXT_ILOG97
 ; MAP14: After crossing the entrance yard.\n(drone ≈ slave)
 Without letting down your guard, look for deposits of ore. These poor souls are drones. Their synaptic functions are being jammed by RC implants. We destroy the transmitter, and they're free.
-别放松警惕，留意矿石的矿脉。这些可怜的灵魂成了无人机，他们的神经功能正被RC植入体干扰。如果我们摧毁发射器，他们就能获得自由！
+别放松警惕，留意矿石的矿脉。这些可怜的灵魂成了无人机，他们的神经功能正被RC植入体干扰。如果我们摧毁发射器，他们就能获得自由。
 
 > TXT_ILOG99
 ; MAP14: After James's room.
@@ -7893,7 +7893,7 @@ Find the chalice in the sanctuary chapel and bring it to Harris upstairs in the 
 
 > TXT_ILOG1102
 Find the Governor's mansion and talk to the Governor to get your reward
-找到总督宅邸并与总督交谈以领取奖励。
+找到总督宅邸并与总督交谈以领取奖励
 
 > TXT_ILOG1201
 Congratulations! You have earned our gratitude. Visit the medic and weapons trainer and they will get you ready for what lies ahead. Feel free to wander around within the base.
@@ -8530,7 +8530,7 @@ Are we really supposed to trust a guy whose inner sanctum is green?
 > TXT_SUB_LOG55
 ; MAP12: After talking to the Oracle.
 Crimson and Obsidian? Why can't he say red and black.
-猩红与黑曜石？他为什么不说红色和黑色？
+猩红与黑曜石？他为什么不说红色和黑色。
 
 > TXT_SUB_LOG56
 ; MAP11: Afther talking to the Oracle and leaving the cave.
@@ -8859,7 +8859,7 @@ Shit. Now you've blown it!
 > TXT_SUB_LOG211
 ; MAP15: Computer destroyed + Room 1
 Come on! Let's get the hell out of here.
-快点！咱们赶紧离开这儿！
+快点！咱们赶紧离开这儿。
 
 > TXT_SUB_LOG212
 Ooh. You don't mess around.
@@ -8900,7 +8900,7 @@ Keep doing that and you'll go blind... but I like it.
 
 > TXT_SUB_LOG221
 Guess they won't be inviting us back to dinner!
-看来他们不会再邀请我们回去吃饭了
+看来他们不会再邀请我们回去吃饭了！
 
 > TXT_SUB_LOG222
 We need to get to the top floor.
@@ -9093,7 +9093,7 @@ Judging by recent history, I guess stealth is out.
 ; This remark is for information about the maulers in the warehouse.
 """Hmm. No fuss, no muss, nothing for mom to clean up... Get me one, please.
 """
-嗯，干净利落，妈妈也不用收拾……给我买一个，好吗。
+嗯，干净利落，妈妈也不用收拾……给我一个，好吗。
 
 > TXT_BBSUB_SCRIPT31_D0_OHNOI
 ; MAP31

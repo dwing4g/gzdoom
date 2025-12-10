@@ -59,11 +59,11 @@ Press Y or N."""
 
 > MSGOFF
 Messages: OFF
-提示：开启
+消息：关闭
 
 > MSGON
 Messages: ON
-提示：关闭
+消息：开启
 
 > TXT_SAY
 Say:
